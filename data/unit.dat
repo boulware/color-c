@@ -1,0 +1,19 @@
+unit "Warrior"
+traits 10 5 2
+moveset "Rest" "Strike" "Rig Up" "Rally"
+
+unit "Rogue"
+traits 6 6 1
+moveset "Rest" "Strike" "Steal"
+
+unit "Archer"
+traits 4 8 1
+moveset "Rest" "Shoot" "Split Arrow"
+
+unit "Wolf"
+traits 4 4 0
+moveset "Strike" "Rally"
+
+unit "Slime"
+traits 8 1 0
+moveset "Strike"

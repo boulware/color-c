@@ -1,0 +1,36 @@
+ability "Strike"
+self_required 0 1 0
+change_to_target -1 0 0
+target_class "single_unit"
+
+ability "Rest"
+change_to_self 1 1 0
+target_class "self"
+
+ability "Rig Up"
+self_required 0 0 1
+change_to_target 0 0 1
+change_to_self 0 0 -1
+target_class "single_unit_not_self"
+
+ability "Rally"
+self_required 0 1 0
+change_to_target 0 1 0
+target_class "all_allies"
+
+ability "Steal"
+self_required 0 4 0
+target_required 0 0 1
+change_to_self 0 0 1
+change_to_target 0 0 -1
+target_class "single_unit"
+
+ability "Shoot"
+self_required 0 1 0
+change_to_target -1 0 0
+target_class "single_unit_not_self"
+
+ability "Split Arrow"
+self_required 0 4 0
+change_to_target -1 0 0
+target_class "all_enemies"

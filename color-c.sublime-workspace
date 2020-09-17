@@ -1,0 +1,2123 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"padding",
+				"padding_multiplier"
+			],
+			[
+				"label",
+				"label_size"
+			],
+			[
+				"rendered",
+				"rendered_size"
+			],
+			[
+				"Render",
+				"RenderUtf32Char"
+			],
+			[
+				"temp_",
+				"temp_ability"
+			],
+			[
+				"Parse",
+				"ParseNextAsTraitSet"
+			],
+			[
+				"ability",
+				"ability_indices"
+			],
+			[
+				"moveset",
+				"moveset_max_size"
+			],
+			[
+				"valid_",
+				"valid_unit_data"
+			],
+			[
+				"NexT",
+				"NextTokenAsDoubleQuotedString"
+			],
+			[
+				"Data",
+				"DataTable"
+			],
+			[
+				"unit",
+				"unit_schematic"
+			],
+			[
+				"Alloc",
+				"AllocDataTable"
+			],
+			[
+				"abil",
+				"ability_name"
+			],
+			[
+				"mem",
+				"member_string"
+			],
+			[
+				"is",
+				"is_valid_double_quoted_string"
+			],
+			[
+				"target",
+				"target_class_token"
+			],
+			[
+				"valid",
+				"valid_ability_data"
+			],
+			[
+				"token",
+				"tokens_valid"
+			],
+			[
+				"Next",
+				"NextTokenAsDoubleQuotedString"
+			],
+			[
+				"name",
+				"name_token"
+			],
+			[
+				"load",
+				"load_success"
+			],
+			[
+				"tone",
+				"token_without_quotes"
+			],
+			[
+				"unt",
+				"unit_found"
+			],
+			[
+				"ParseN",
+				"ParseNextAsDoubleQuotedString"
+			],
+			[
+				"L",
+				"LoadFileIntoSizedBufferAndNullTerminate"
+			],
+			[
+				"bytes",
+				"bytes_remaining"
+			],
+			[
+				"Seek",
+				"SeekChar"
+			],
+			[
+				"skipped",
+				"skipped_at_least_once"
+			],
+			[
+				"next",
+				"next_token"
+			],
+			[
+				"Char",
+				"CharInString"
+			],
+			[
+				"toen",
+				"token_matches"
+			],
+			[
+				"at",
+				"at_least_one_right_side_trim_char"
+			],
+			[
+				"start",
+				"start_string_length"
+			],
+			[
+				"Buffer",
+				"BufferBytesRemaining"
+			],
+			[
+				"Buff",
+				"BufferBytesRemaining"
+			],
+			[
+				"char",
+				"char_code"
+			],
+			[
+				"utf32",
+				"utf32_chars"
+			],
+			[
+				"byte",
+				"byte_count"
+			],
+			[
+				"Utf32",
+				"Utf32String_fixed"
+			],
+			[
+				"test",
+				"test_string"
+			],
+			[
+				"glyph",
+				"glyph"
+			],
+			[
+				"filesize",
+				"filesize_low"
+			],
+			[
+				"file",
+				"filesize_high"
+			],
+			[
+				"fruits",
+				"fruits_file"
+			],
+			[
+				"WM_INPUT",
+				"WM_INPUTLANGCHANGE"
+			],
+			[
+				"utf2",
+				"utf32_panther"
+			],
+			[
+				"string",
+				"string_out"
+			],
+			[
+				"utf8",
+				"utf8_string"
+			],
+			[
+				"string_",
+				"string_bmp_size"
+			],
+			[
+				"gly",
+				"glyph"
+			],
+			[
+				"Tex",
+				"TexImage2D"
+			],
+			[
+				"glyh",
+				"glyph_bmp"
+			],
+			[
+				"pixel",
+				"pixel_count"
+			],
+			[
+				"GLTEXT",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"freet",
+				"freetype_init_error"
+			],
+			[
+				"window",
+				"window_size"
+			],
+			[
+				"windo",
+				"window_size"
+			],
+			[
+				"bufer",
+				"buffer_length"
+			],
+			[
+				"buff",
+				"buffer_length"
+			],
+			[
+				"gl",
+				"GL"
+			],
+			[
+				"Write",
+				"WriteStringToFile"
+			],
+			[
+				"prepass",
+				"prepass_fbo"
+			],
+			[
+				"hovere",
+				"hovered_id"
+			],
+			[
+				"world",
+				"world_pos_pixels"
+			],
+			[
+				"GL_RGB",
+				"GL_RGB32F"
+			],
+			[
+				"Prep",
+				"PrepassShaderProgram"
+			],
+			[
+				"GL_COLR",
+				"GL_COLOR_ATTACHMENT1"
+			],
+			[
+				"GLT",
+				"GL_TEXTURE_MIN_FILTER"
+			],
+			[
+				"angle",
+				"angle_z_to_forward"
+			],
+			[
+				"SetAct",
+				"SetActiveSampledTexture"
+			],
+			[
+				"Draw",
+				"DrawEntity"
+			],
+			[
+				"cm",
+				"cam_pos"
+			],
+			[
+				"Trans",
+				"TransformScale"
+			],
+			[
+				"parti",
+				"partial1"
+			],
+			[
+				"ax",
+				"axis_rot"
+			],
+			[
+				"dot",
+				"dot_selected"
+			],
+			[
+				"ID",
+				"GetNextObjectID"
+			],
+			[
+				"Check",
+				"CheckPointAgainstPlane"
+			],
+			[
+				"Plane",
+				"PlaneSide"
+			],
+			[
+				"Textv",
+				"TexturedVertexGroup"
+			],
+			[
+				"BindData",
+				"BindDataToGroupNoFree"
+			],
+			[
+				"top",
+				"top_left"
+			],
+			[
+				"Text",
+				"TexturedVertex"
+			],
+			[
+				"q_",
+				"q_left"
+			],
+			[
+				"forwardfrom",
+				"forward_from_quaternion"
+			],
+			[
+				"pitch",
+				"pitch_change"
+			],
+			[
+				"norma",
+				"normalize"
+			],
+			[
+				"Rotate",
+				"RotateAroundNormalizedAxis"
+			],
+			[
+				"right",
+				"right_q"
+			],
+			[
+				"cam",
+				"cam_orientation"
+			],
+			[
+				"cam_",
+				"cam_rot"
+			],
+			[
+				"blue",
+				"blue_texture"
+			],
+			[
+				"green",
+				"green_texture"
+			],
+			[
+				"darw",
+				"draw_ray"
+			],
+			[
+				"max_",
+				"max_run_speed"
+			],
+			[
+				"forwa",
+				"forward_component"
+			],
+			[
+				"for",
+				"forward_component"
+			],
+			[
+				"rocket",
+				"rocket_hit_point"
+			],
+			[
+				"radi",
+				"radial_component"
+			],
+			[
+				"player",
+				"player_velocity"
+			],
+			[
+				"gapple",
+				"grapple_hook"
+			],
+			[
+				"restor",
+				"restoring_magnitude"
+			],
+			[
+				"grapp",
+				"grapple_length"
+			],
+			[
+				"grappl",
+				"grapple_length"
+			],
+			[
+				"grapple",
+				"grapple_length"
+			],
+			[
+				"grapple_",
+				"grapple_point"
+			],
+			[
+				"text",
+				"texture_path"
+			],
+			[
+				"closest",
+				"closest_colliding_distance"
+			],
+			[
+				"closes",
+				"closest_colliding_distance"
+			],
+			[
+				"cloe",
+				"closest_colliding_distance"
+			],
+			[
+				"cube_count",
+				"cube_count_x"
+			],
+			[
+				"plaer",
+				"player"
+			],
+			[
+				"Tri",
+				"TriangleNormal"
+			],
+			[
+				"Tir",
+				"TriangleCentroid"
+			],
+			[
+				"tri",
+				"tri_count"
+			],
+			[
+				"GL_TEXTURE",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"siz",
+				"item_size"
+			],
+			[
+				"normal",
+				"normal_list"
+			],
+			[
+				"normal_",
+				"normal_index"
+			],
+			[
+				"norm",
+				"normal_index"
+			],
+			[
+				"neraest",
+				"nearest_vertex_casted"
+			],
+			[
+				"nearestcol",
+				"nearest_colliding_cube_index"
+			],
+			[
+				"nearest",
+				"nearest_colliding_cube_index"
+			],
+			[
+				"nearestcollid",
+				"nearest_colliding_cube_index"
+			],
+			[
+				"Collid",
+				"CollideAndSlideAabbs"
+			],
+			[
+				"nearestcoll",
+				"nearest_colliding_cube_index"
+			],
+			[
+				"colli",
+				"colliding_distance"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/game.cpp",
+			"settings":
+			{
+				"buffer_size": 4120,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 958 files for \"RenderUtf8Line\"\n\nD:\\work\\programming\\color-c\\src\\game.cpp:\n  123  \tVec2i mouse_pos;\n  124  \tplatform->GetMousePos(&mouse_pos.x, &mouse_pos.y);\n  125: \tRenderUtf8Line(c::medium_text, {0.f,0.f}, \"mouse: (%d,%d)\", mouse_pos.x, mouse_pos.y);\n  126  \n  127  \tButton(RemoveOneVigorFromFirstAlly, \"Damage\");\n\nD:\\work\\programming\\color-c\\src\\text_render.cpp:\n   94  // but usually will only be slightly larger)\n   95  Vec2f\n   96: RenderUtf8Line(u32 size, Vec2f origin, const char *string, ...)\n   97  {\n   98  \tgl->UseProgram(game->uv_shader);\n   ..\n  107  \tif(formatted_length > c::max_text_render_length)\n  108  \t{\n  109: \t\tlog(\"RenderUtf8Line() received a string longer than c::max_text_render_length (%d). \"\n  110  \t\t\t\"The string is still rendered, but clipped.\",\n  111  \t\t\tc::max_text_render_length);\n\nD:\\work\\programming\\color-c\\src\\text_render.h:\n   14  void RenderUtf32String(Utf32String text, Vec2f origin, u32 size);\n   15  void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, FT_Face face);\n   16: Vec2f RenderUtf8Line(u32 size, Vec2f origin, const char *string, ...);\n   17  void RenderS32AsString(u32 value, Vec2f origin, u32 size);\n   18  \n\nD:\\work\\programming\\color-c\\src\\unit.cpp:\n  286  \tif(schematic == nullptr) return;\n  287  \n  288: \tpos = RenderUtf8Line(c::medium_text, pos, schematic->name);\n  289: \tpos = RenderUtf8Line(c::medium_text, pos, \"Vigor: %d/%d\", unit.cur_traits.vigor, schematic->max_traits.vigor);\n  290: \tpos = RenderUtf8Line(c::medium_text, pos, \"Focus: %d/%d\", unit.cur_traits.focus, schematic->max_traits.focus);\n  291: \tpos = RenderUtf8Line(c::medium_text, pos, \"Armor: %d/%d\", unit.cur_traits.armor, schematic->max_traits.armor);\n  292  \n  293: \tpos = RenderUtf8Line(c::medium_text, pos, \"Abilities:\");\n  294  \tfor(int i=0; i<c::moveset_max_size; i++)\n  295  \t{\n  ...\n  297  \t\tif(ability == nullptr) break;\n  298  \n  299: \t\tpos = RenderUtf8Line(c::medium_text, pos, \"    %s\", ability->name);\n  300  \t}\n  301  }\n\n10 matches across 4 files\n",
+			"settings":
+			{
+				"buffer_size": 2004,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/unit.cpp",
+			"settings":
+			{
+				"buffer_size": 12895,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/imgui.cpp",
+			"settings":
+			{
+				"buffer_size": 342,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/imgui.h",
+			"settings":
+			{
+				"buffer_size": 288,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/log.txt",
+			"settings":
+			{
+				"buffer_size": 699334,
+				"encoding": "Western (Windows 1252)",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/draw.cpp",
+			"settings":
+			{
+				"buffer_size": 1129,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/text_render.cpp",
+			"settings":
+			{
+				"buffer_size": 6804,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/vec.h",
+			"settings":
+			{
+				"buffer_size": 1284,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/math.h",
+			"settings":
+			{
+				"buffer_size": 362,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/math.cpp",
+			"settings":
+			{
+				"buffer_size": 703,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/vec.cpp",
+			"settings":
+			{
+				"buffer_size": 4073,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/game.h",
+			"settings":
+			{
+				"buffer_size": 523,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/draw.h",
+			"settings":
+			{
+				"buffer_size": 159,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/color_vertex.glsl",
+			"settings":
+			{
+				"buffer_size": 265,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/uv_vertex.glsl",
+			"settings":
+			{
+				"buffer_size": 326,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"open",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"space",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"ortho",
+				"Project: Refresh Folders"
+			],
+			[
+				"util",
+				"Permute Lines: Reverse"
+			],
+			[
+				"incre",
+				"Increment Selection"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"selec",
+				"SelectiveUppercase: Uppercase selection words"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"increm",
+				"Increment Selection"
+			],
+			[
+				"Inc",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"inc",
+				"Increment Selection"
+			],
+			[
+				"increme",
+				"Increment Selection"
+			],
+			[
+				"package control",
+				"Package Control: Install Package"
+			],
+			[
+				"project",
+				"Project: Add Folder"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"build",
+				"Disable/Enable buildview for this window"
+			],
+			[
+				"syntax",
+				"Preferences: Settings – Syntax Specific"
+			],
+			[
+				"buildv",
+				"Disable/Enable buildview for this window"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"toggle menu",
+				"View: Toggle Menu"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 157.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/work/programming/color-c"
+	],
+	"file_history":
+	[
+		"/D/work/programming/color-c/src/vec.cpp",
+		"/D/work/programming/fps/fps.sublime-project",
+		"/D/work/programming/color-c/src/text_render.cpp",
+		"/D/work/programming/color-c/src/game.h",
+		"/D/work/programming/color-c/src/text_render.h",
+		"/D/work/programming/color-c/src/color_vertex.glsl",
+		"/D/work/programming/color-c/src/log.txt",
+		"/D/work/programming/color-c/src/color_fragment.glsl",
+		"/D/work/programming/color-c/src/opengl.h",
+		"/D/work/programming/color-c/src/opengl.cpp",
+		"/D/work/programming/color-c/src/win32_platform.cpp",
+		"/D/work/programming/color-c/src/fragment_uv.glsl",
+		"/D/work/programming/color-c/src/vertex_uv.glsl",
+		"/D/work/programming/fps/src/draw.h",
+		"/D/work/programming/fps/src/vertex.h",
+		"/D/work/programming/color-c/src/vec.h",
+		"/D/work/programming/color-c/src/const.h",
+		"/D/work/programming/color-c/src/unit.cpp",
+		"/D/work/programming/color-c/src/unit.h",
+		"/D/work/programming/fps/src/win32_platform_layer.cpp",
+		"/D/work/programming/color-c/src/platform.h",
+		"/D/work/programming/color-c/src/data_table.h",
+		"/D/work/programming/color-c/src/log.cpp",
+		"/D/work/programming/color-c/src/win32_platform.h",
+		"/D/work/programming/color-c/src/data_table.cpp",
+		"/D/work/programming/color-c/src/math.cpp",
+		"/D/work/programming/color-c/src/util.h",
+		"/D/work/programming/color-c/src/text_parsing.cpp",
+		"/D/work/programming/color-c/src/text_parsing.h",
+		"/D/work/programming/color-c/src/strings.cpp",
+		"/D/work/programming/color-c/src/strings.h",
+		"/D/work/programming/color-c/data/unit.dat",
+		"/D/work/programming/color-c/data/ability.dat",
+		"/D/work/programming/_archive/trait-game(python)/.dato/units.dato",
+		"/D/work/programming/_archive/timer/log.txt",
+		"/D/work/programming/_archive/trait-game(python)/.dato/enemies.dato",
+		"/D/work/programming/_archive/card_rpg/main.cpp",
+		"/D/work/programming/_archive/timer/main.py",
+		"/D/work/programming/color-c/src/types.h",
+		"/D/work/programming/color-c/src/util.cpp",
+		"/D/work/programming/color-c/src/csv.h",
+		"/D/work/programming/color-c/src/game.cpp",
+		"/D/work/programming/color-c/src/bitmap.cpp",
+		"/D/work/programming/color-c/data/abilities.dat",
+		"/C/Users/Harm/Desktop/current_remedybg/remedybg_0_3_0_6/README.txt",
+		"/D/work/programming/color-c/abilities.dat",
+		"/D/work/programming/playground/main.cpp",
+		"/D/work/programming/_archive/trait-game(python)/.dato/actions.dato",
+		"/D/work/programming/color-c/src/csv.cpp",
+		"/D/work/programming/lang/src/log.txt",
+		"/D/work/programming/lang/src/text_render.h",
+		"/D/work/programming/lang/src/freetype_wrapper.cpp",
+		"/D/work/programming/lang/src/freetype_wrapper.h",
+		"/D/work/programming/lang/src/text_render.cpp",
+		"/D/work/programming/lang/src/platform.h",
+		"/D/work/programming/lang/src/win32_platform.cpp",
+		"/D/work/programming/lang/src/strings.cpp",
+		"/D/work/programming/lang/src/strings.h",
+		"/D/work/programming/lang/build/b.bat",
+		"/D/work/programming/lang/data/test_string.txt",
+		"/D/work/programming/lang/src/game.h",
+		"/D/work/programming/lang/src/game.cpp",
+		"/D/work/programming/lang/data/fruits.csv",
+		"/D/work/programming/color-c/todo.txt",
+		"/D/work/programming/lang/data/Der Panther.txt",
+		"/D/work/programming/lang/src/log.cpp",
+		"/D/work/programming/lang/src/fragment.glsl",
+		"/D/work/programming/lang/src/math.cpp",
+		"/D/work/programming/lang/src/opengl.cpp",
+		"/D/work/programming/fps/src/opengl.cpp",
+		"/D/work/programming/fps/src/opengl.h",
+		"/D/work/programming/lang/build/freetype/include/freetype/freetype.h",
+		"/D/work/programming/lang/build/freetype/include/ft2build.h",
+		"/D/work/programming/lang/src/bitmap.h",
+		"/D/work/programming/lang/src/bitmap.cpp",
+		"/D/work/programming/lang/src/food.h",
+		"/D/work/programming/lang/src/csv.cpp",
+		"/D/work/programming/lang/src/csv.h",
+		"/D/work/programming/lang/src/const.h",
+		"/D/work/programming/lang/src/food.cpp",
+		"/D/work/programming/lang/data/Der Panther (short).txt",
+		"/D/work/programming/lang/src/lang.h",
+		"/D/work/programming/lang/src/util.cpp",
+		"/D/work/programming/lang/src/util.h",
+		"/D/work/programming/fps/src/util.cpp",
+		"/D/work/programming/lang/src/vec.h",
+		"/D/work/programming/lang/src/vertex.glsl",
+		"/D/work/programming/lang/src/math.h",
+		"/D/work/programming/lang/src/types.h",
+		"/D/work/programming/lang/src/opengl.h",
+		"/D/work/programming/fps/src/shaders/prepass.vs.glsl",
+		"/D/work/programming/fps/src/shaders/prepass.fs.glsl",
+		"/D/work/programming/fps/src/shaders/default_3d.fs.glsl",
+		"/D/work/programming/fps/src/shaders/default_3d.vs.glsl",
+		"/D/work/programming/fps/src/shaders/basic.vs.glsl",
+		"/D/work/programming/fps/src/shaders/basic.fs.glsl",
+		"/D/work/programming/fps/src/shaders/overlay.vs.glsl",
+		"/D/work/programming/fps/src/shaders/overlay.fs.glsl",
+		"/D/work/programming/lang/data/colors.csv",
+		"/D/work/programming/fps/src/vec.cpp",
+		"/D/work/programming/fps/src/vec.h",
+		"/D/work/programming/lang/fragment.glsl",
+		"/D/work/programming/lang/vertex.glsl",
+		"/D/work/programming/fps/src/main.cpp",
+		"/D/work/programming/lang/todo.txt",
+		"/D/work/programming/fps/src/draw.cpp",
+		"/D/work/programming/fps/src/util.h",
+		"/D/work/programming/fps/src/entity.h",
+		"/D/work/programming/fps/src/entity.cpp",
+		"/D/work/programming/fps/src/game.cpp",
+		"/D/work/programming/lang/log.txt",
+		"/D/work/programming/fps/src/game.h",
+		"/D/work/programming/lang/src/log.h",
+		"/D/work/programming/fps/src/log.cpp",
+		"/D/work/programming/fps/src/platform.h",
+		"/D/work/programming/fps/build/b.bat",
+		"/D/work/programming/fps/src/types.h",
+		"/D/work/programming/lang/game.cpp",
+		"/D/work/programming/lang/b.bat",
+		"/D/work/programming/lang/win32_platform.cpp",
+		"/D/work/programming/lang/main.cpp",
+		"/D/work/programming/lang/fruits.csv",
+		"/D/work/programming/playground/b.bat",
+		"/D/work/programming/fps/src/3d.cpp",
+		"/C/Users/Harm/Downloads/4280d9-Firebreather/README.txt",
+		"/C/Users/Harm/Downloads/ScriptHookV_1.0.1868.4/readme.txt",
+		"/C/Users/Harm/HealthInsurance.txt",
+		"/D/work/programming/fps/src/obj_loading.cpp"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 118.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"RenderUtf8Line",
+			"color_",
+			"BufferData",
+			"uv_",
+			"RenderUtf32Char",
+			"uv_",
+			"uv_vao",
+			"default_",
+			"ActiveTexture"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"uv_",
+			"color_",
+			"_RenderUtf32Char",
+			"color_",
+			"color_vao",
+			"uv_"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/game.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4120,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3635,
+								3635
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1261.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2004,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										176,
+										190
+									],
+									[
+										448,
+										462
+									],
+									[
+										649,
+										663
+									],
+									[
+										1040,
+										1054
+									],
+									[
+										1285,
+										1299
+									],
+									[
+										1353,
+										1367
+									],
+									[
+										1472,
+										1486
+									],
+									[
+										1591,
+										1605
+									],
+									[
+										1718,
+										1732
+									],
+									[
+										1896,
+										1910
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								1295,
+								1295
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/unit.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12895,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7648,
+								7648
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3442.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/imgui.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 342,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								182,
+								182
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/imgui.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 288,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								280,
+								280
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/log.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 699334,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								680667,
+								680667
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 274605.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 6,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1129,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								183,
+								199
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/text_render.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6804,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3244,
+								3244
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1287.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/vec.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1284,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								328,
+								294
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/math.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 362,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								351,
+								351
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/math.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 703,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								40,
+								40
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/vec.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4073,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								545,
+								545
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 234.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "src/game.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4120,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1374,
+								1374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 273.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/game.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 523,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 78.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/draw.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 159,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								83,
+								59
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "src/color_vertex.glsl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 265,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								265,
+								265
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "src/uv_vertex.glsl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 326,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 188.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/buildbat.sublime-build",
+	"project": "color-c.sublime-project",
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"math",
+				"src\\math.h"
+			],
+			[
+				"vec",
+				"src\\vec.h"
+			],
+			[
+				"log",
+				"src\\log.txt"
+			],
+			[
+				"game",
+				"src\\game.cpp"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"imgui",
+				"src\\imgui.cpp"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"openg",
+				"src\\opengl.h"
+			],
+			[
+				"uv_ver",
+				"src\\uv_vertex.glsl"
+			],
+			[
+				"opengl",
+				"src\\opengl.cpp"
+			],
+			[
+				"verte",
+				"src\\vertex.glsl"
+			],
+			[
+				"frag",
+				"src\\fragment_uv.glsl"
+			],
+			[
+				"win32",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"vertex",
+				"src\\vertex.glsl"
+			],
+			[
+				"vert",
+				"src\\vertex.glsl"
+			],
+			[
+				"plat",
+				"src\\platform.h"
+			],
+			[
+				"openl",
+				"src\\opengl.cpp"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"render",
+				"src\\text_render.cpp"
+			],
+			[
+				"win",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"data",
+				"src\\data_table.cpp"
+			],
+			[
+				"util",
+				"src\\util.h"
+			],
+			[
+				"game.h",
+				"src\\game.h"
+			],
+			[
+				"unit",
+				"src\\unit.cpp"
+			],
+			[
+				"text",
+				"src\\text_parsing.h"
+			],
+			[
+				"string",
+				"src\\strings.cpp"
+			],
+			[
+				"abil",
+				"data\\ability.dat"
+			],
+			[
+				"typ",
+				"src\\types.h"
+			],
+			[
+				"ability",
+				"data\\ability.dat"
+			],
+			[
+				"textp",
+				"src\\text_parsing.h"
+			],
+			[
+				"textpars",
+				"src\\text_parsing.h"
+			],
+			[
+				"abili",
+				"data\\abilities.dat"
+			],
+			[
+				"abi",
+				"data\\abilities.dat"
+			],
+			[
+				"bitma",
+				"src\\bitmap.cpp"
+			],
+			[
+				"platform",
+				"src\\platform.h"
+			],
+			[
+				"cvs",
+				"src\\csv.h"
+			],
+			[
+				"csv",
+				"src\\csv.cpp"
+			],
+			[
+				"b",
+				"build\\b.bat"
+			],
+			[
+				"food",
+				"src\\food.h"
+			],
+			[
+				"stringsh",
+				"src\\strings.h"
+			],
+			[
+				"platof",
+				"src\\platform.h"
+			],
+			[
+				"game.c",
+				"src\\game.cpp"
+			],
+			[
+				"strin",
+				"src\\strings.cpp"
+			],
+			[
+				"platf",
+				"src\\platform.h"
+			],
+			[
+				"bitmap",
+				"src\\bitmap.cpp"
+			],
+			[
+				"pant",
+				"data\\Der Panther.txt"
+			],
+			[
+				"b.bat",
+				"build\\b.bat"
+			],
+			[
+				"types",
+				"src\\types.h"
+			],
+			[
+				"openglc",
+				"src\\opengl.cpp"
+			],
+			[
+				"platfo",
+				"src\\platform.h"
+			],
+			[
+				"log.t",
+				"src\\log.txt"
+			],
+			[
+				"openglh",
+				"src\\opengl.h"
+			],
+			[
+				"opengl.h",
+				"src\\opengl.h"
+			],
+			[
+				"log.",
+				"src\\log.txt"
+			],
+			[
+				"log.txt",
+				"src\\log.txt"
+			],
+			[
+				"log.c",
+				"src\\log.cpp"
+			],
+			[
+				"game.cp",
+				"lang\\src\\game.cpp"
+			],
+			[
+				"bat",
+				"fps\\build\\b.bat"
+			],
+			[
+				"open",
+				"fps\\src\\opengl.h"
+			],
+			[
+				"platfor",
+				"fps\\src\\platform.h"
+			],
+			[
+				"frui",
+				"lang\\fruits.csv"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"main",
+				"src\\main.cpp"
+			],
+			[
+				"Triangle",
+				"src\\triangle.h"
+			],
+			[
+				"transfor",
+				"src\\transform.h"
+			],
+			[
+				"utilc",
+				"src\\util.cpp"
+			],
+			[
+				"obj",
+				"src\\obj_loading.cpp"
+			],
+			[
+				"transformh",
+				"src\\transform.h"
+			],
+			[
+				"utilh",
+				"src\\util.h"
+			],
+			[
+				"entity",
+				"src\\entity.h"
+			],
+			[
+				"a",
+				"assets\\axes.bmp"
+			],
+			[
+				"eni",
+				"src\\entity.h"
+			],
+			[
+				"vech",
+				"src\\vec.h"
+			],
+			[
+				"prepass",
+				"src\\shaders\\prepass.fs.glsl"
+			],
+			[
+				"logtxt",
+				"src\\log.txt"
+			],
+			[
+				"pre",
+				"src\\shaders\\prepass.vs.glsl"
+			],
+			[
+				"prepas",
+				"src\\shaders\\prepass.fs.glsl"
+			],
+			[
+				"inputh",
+				"src\\input.h"
+			],
+			[
+				"quater",
+				"src\\quaternion.h"
+			],
+			[
+				"type",
+				"src\\types.h"
+			],
+			[
+				"transf",
+				"src\\transform.h"
+			],
+			[
+				"manc",
+				"src\\main.cpp"
+			],
+			[
+				"transform",
+				"src\\transform.h"
+			],
+			[
+				"mainc",
+				"src\\main.cpp"
+			],
+			[
+				"ut",
+				"src\\util.cpp"
+			],
+			[
+				"logc",
+				"src\\log.cpp"
+			],
+			[
+				"mai",
+				"src\\main.cpp"
+			],
+			[
+				"quat",
+				"src\\quaternion.cpp"
+			],
+			[
+				"quaterh",
+				"src\\quaternion.h"
+			],
+			[
+				"qu",
+				"src\\quaternion.cpp"
+			],
+			[
+				"prep",
+				"src\\shaders\\prepass.vs.glsl"
+			],
+			[
+				"quaternionh",
+				"src\\quaternion.h"
+			],
+			[
+				"lo",
+				"src\\log.txt"
+			],
+			[
+				"util.h",
+				"src\\util.h"
+			],
+			[
+				"uti.c",
+				"src\\util.cpp"
+			],
+			[
+				"vec.h",
+				"src\\vec.h"
+			],
+			[
+				"plane",
+				"src\\plane.cpp"
+			],
+			[
+				"random",
+				"src\\random.cpp"
+			],
+			[
+				"mani",
+				"src\\main.cpp"
+			],
+			[
+				"vecp",
+				"src\\vec.cpp"
+			],
+			[
+				"todo",
+				"src\\todo.txt"
+			],
+			[
+				"macro",
+				"src\\macros.h"
+			],
+			[
+				"game.",
+				"src\\game.cpp"
+			],
+			[
+				"vec.cp",
+				"src\\vec.cpp"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"util.",
+				"src\\util.cpp"
+			],
+			[
+				"main.c",
+				"src\\main.cpp"
+			],
+			[
+				"ipu",
+				"src\\input.h"
+			],
+			[
+				"logxt",
+				"src\\log.txt"
+			],
+			[
+				"util.c",
+				"src\\util.cpp"
+			],
+			[
+				"rpe",
+				"src\\shaders\\prepass.vs.glsl"
+			],
+			[
+				"draw.",
+				"src\\draw.cpp"
+			],
+			[
+				"input.h",
+				"src\\input.h"
+			],
+			[
+				"draw.c",
+				"src\\draw.cpp"
+			],
+			[
+				"vec.",
+				"src\\vec.cpp"
+			],
+			[
+				"main.",
+				"src\\main.cpp"
+			],
+			[
+				"obj_",
+				"src\\obj_loading.cpp"
+			],
+			[
+				"over",
+				"src\\shaders\\overlay.vs.glsl"
+			],
+			[
+				"input",
+				"src\\input.cpp"
+			],
+			[
+				"overl",
+				"src\\shaders\\overlay.vs.glsl"
+			],
+			[
+				"games",
+				"fps\\src\\gamestate.h"
+			],
+			[
+				"gls",
+				"src\\shaders\\overlay.vs.glsl"
+			],
+			[
+				"bbat",
+				"build\\b.bat"
+			],
+			[
+				"b.b",
+				"build\\b.bat"
+			],
+			[
+				"utilcp",
+				"src\\util.cpp"
+			],
+			[
+				"2in",
+				".vs\\main\\v16\\ipch\\AutoPCH\\28f5de021c911b1f\\WIN32_PLATFORM_LAYER.ipch"
+			],
+			[
+				"uti.",
+				"src\\util.cpp"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 198.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

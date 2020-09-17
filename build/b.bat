@@ -1,0 +1,3 @@
+@echo off
+cl.exe ../src/game.cpp /LD /Fegame.dll /nologo /Zi /I "../src/freetype/include" /link /LIBPATH:"%~dp0\libs" user32.lib gdi32.lib opengl32.lib freetype.lib /EXPORT:GameUpdateAndRender /EXPORT:GameHook /EXPORT:GameInit /out:../game.dll /incremental:no /pdb:game.pdb
+cl.exe ../src/win32_platform.cpp /Fegame.exe /Zi /nologo /I "../src/freetype/include" /link user32.lib gdi32.lib opengl32.lib /out:../game.exe /incremental:no /pdb:lang.pdb
