@@ -4,97 +4,12 @@
 #include "data_table.h"
 #include "const.h"
 #include "text_parsing.h"
+#include "ability.h"
 
 enum class Team
 {
 	allies,
 	enemies
-};
-
-enum class TargetClass
-{
-	self,
-	single_ally,
-	single_ally_not_self,
-	all_allies,
-	all_allies_not_self,
-	single_enemy,
-	all_enemies,
-	single_unit,
-	single_unit_not_self,
-	all_units
-};
-
-const char *TargetClass_filestrings[] = {
-	"self",
-	"single_ally",
-	"single_ally_not_self",
-	"all_allies",
-	"all_allies_not_self",
-	"single_enemy",
-	"all_enemies",
-	"single_unit",
-	"single_unit_not_self",
-	"all_units"
-};
-
-const char *TargetClass_userstrings[] = {
-	"Self",
-	"Single Ally",
-	"Single Ally (Not Self)",
-	"All Allies",
-	"All Allies (Not Self)",
-	"Single Enemy",
-	"All Enemies",
-	"Single Unit",
-	"Single Unit (Not Self)",
-	"All"
-};
-
-struct TraitSet
-{
-	s32 vigor, focus, armor;
-
-	s32 &operator[](size_t index);
-};
-
-s32 &TraitSet::operator[](size_t index)
-{
-	return *((s32*)this + index); // 0-vigor, 1-focus, 2-armor
-}
-
-TraitSet operator+(TraitSet a, TraitSet b)
-{
-	return {a.vigor+b.vigor, a.focus+b.focus, a.armor+b.armor};
-}
-
-TraitSet operator+=(TraitSet &a, TraitSet b)
-{
-	a = a + b;
-	return a;
-}
-
-s32 *begin(TraitSet &trait_set)
-{
-	return (s32*)&trait_set;
-}
-
-s32 *end(TraitSet &trait_set)
-{
-	return (s32*)(&trait_set + 1);
-}
-
-struct Ability
-{
-	bool init;
-
-	char name[c::max_ability_name_length+1];
-	TraitSet self_required;		// traits required to use this ability
-	TraitSet target_required;	// traits required for the TARGET to have, in order for this ability to be used against it
-	TraitSet change_to_self;	// the change to the source's traits upon use
-	TraitSet change_to_target;	// the change to the target's traits upon use
-
-	TargetClass target_class;	// what kinds of units this ability can target (allies, single unit, teams, self, etc.)
 };
 
 struct UnitSchematic

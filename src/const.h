@@ -110,6 +110,9 @@ namespace c
 
 	const TextLayout trait_bar_value_text_layout = {&text_render::default_font, c::white, 16, c::align_center, false};
 
+	const TextLayout trait_change_preview_text_layout = {&text_render::default_font, c::white, 16, c::align_leftcenter, false};
+	const float trait_change_preview_h_offset = 5.f;
+
 	// End turn button
 	const Vec2f end_turn_button_offset = {20.f, 100.f};
 	const Vec2f end_turn_button_size = {150.f, 50.f};
@@ -150,6 +153,9 @@ namespace c
 
 	const int max_tree_node_children = 2;
 	const int trait_count = 3;
+
+	const int max_ability_tier_count = 3;
+	const int max_effect_count = 10;
 };
 
 #endif

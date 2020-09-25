@@ -706,33 +706,57 @@ DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color colo
 	DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), "%d/%d", preview, max);
 
 	// Draw overheal box and number value if there is any overheal (previewed overheal > 0)
-	if(preview > max or current > max)
+	// if(preview > max or current > max)
+	// {
+	// 	TextLayout overheal_layout = c::def_text_layout;
+	// 	overheal_layout.font_size = 16;
+	// 	overheal_layout.align = c::align_leftcenter;
+	// 	Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};
+
+	// 	if(overheal_change_sign == 0)
+	// 	{
+	// 		DrawText(overheal_layout, overheal_text_pos, "%d", current-max);
+	// 	}
+	// 	else if(overheal_change_sign > 0)
+	// 	{
+	// 		overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", m::Max(0, current-max)).x;
+
+	// 		Color flashing_color = {0.f, 1.f, 0.f, flash_timer};
+	// 		overheal_layout.color = flashing_color;
+	// 		DrawText(overheal_layout, overheal_text_pos, " +%d", preview-max);
+	// 	}
+	// 	else if(overheal_change_sign < 0)
+	// 	{
+	// 		overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", current-max).x;
+
+	// 		Color flashing_color = {1.f, 0.f, 0.f, flash_timer};
+	// 		overheal_layout.color = flashing_color;
+	// 		DrawText(overheal_layout, overheal_text_pos, " -%d", current-max);
+	// 	}
+	// }
+
+	 Vec2f trait_change_text_pos = RectTopRight(bar_rect) + Vec2f{c::trait_change_preview_h_offset, 0.5f*bar_rect.size.y};
+
+	// Draw change to trait to the right of the trait bar
+	if(preview == current)
 	{
-		TextLayout overheal_layout = c::def_text_layout;
-		overheal_layout.font_size = 16;
-		overheal_layout.align = c::align_leftcenter;
-		Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};
+		// Draw nothing if no change.
+	}
+	else if(preview > current)
+	{
+		// Draw green "+X" if trait is increasing
 
-		if(overheal_change_sign == 0)
-		{
-			DrawText(overheal_layout, overheal_text_pos, "%d", current-max);
-		}
-		else if(overheal_change_sign > 0)
-		{
-			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", m::Max(0, current-max)).x;
+		TextLayout layout = c::trait_change_preview_text_layout;
+		layout.color = {0.f, 1.f, 0.f, flash_timer};
+		DrawText(layout, trait_change_text_pos, "+%d", preview-current);
+	}
+	else if(preview < current)
+	{
+		// Draw red "-X" if trait is decreasing
 
-			Color flashing_color = {0.f, 1.f, 0.f, flash_timer};
-			overheal_layout.color = flashing_color;
-			DrawText(overheal_layout, overheal_text_pos, " +%d", preview-max);
-		}
-		else if(overheal_change_sign < 0)
-		{
-			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", current-max).x;
-
-			Color flashing_color = {1.f, 0.f, 0.f, flash_timer};
-			overheal_layout.color = flashing_color;
-			DrawText(overheal_layout, overheal_text_pos, " -%d", current-max);
-		}
+		TextLayout layout = c::trait_change_preview_text_layout;
+		layout.color = {1.f, 0.f, 0.f, flash_timer};
+		DrawText(layout, trait_change_text_pos, "-%d", current-preview);
 	}
 
 	return(Vec2f{0.f, c::trait_bar_size.y});

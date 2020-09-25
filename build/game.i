@@ -41011,6 +41011,9 @@ namespace c
 
 	const TextLayout trait_bar_value_text_layout = {&text_render::default_font, c::white, 16, c::align_center, false};
 
+	const TextLayout trait_change_preview_text_layout = {&text_render::default_font, c::white, 16, c::align_leftcenter, false};
+	const float trait_change_preview_h_offset = 5.f;
+
 	
 	const Vec2f end_turn_button_offset = {20.f, 100.f};
 	const Vec2f end_turn_button_size = {150.f, 50.f};
@@ -41051,9 +41054,12 @@ namespace c
 
 	const int max_tree_node_children = 2;
 	const int trait_count = 3;
+
+	const int max_ability_tier_count = 3;
+	const int max_effect_count = 10;
 };
 
-#line 156 "D:\\work\\programming\\color-c\\src\\const.h"
+#line 162 "D:\\work\\programming\\color-c\\src\\const.h"
 #line 6 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\global.h"
 
@@ -41137,12 +41143,32 @@ u32 DigitToUtf32Char(u32 digit);
 
 #line 68 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
 #line 7 "D:\\work\\programming\\color-c\\src\\unit.h"
+#line 1 "D:\\work\\programming\\color-c\\src\\ability.h"
 
-enum class Team
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\traitset.h"
+
+
+
+struct TraitSet
 {
-	allies,
-	enemies
+	s32 vigor, focus, armor;
+
+	s32 &operator[](size_t index);
 };
+
+TraitSet operator+(TraitSet a, TraitSet b);
+TraitSet operator+=(TraitSet &a, TraitSet b);
+s32 *begin(TraitSet &trait_set);
+s32 *end(TraitSet &trait_set);
+
+
+#line 18 "D:\\work\\programming\\color-c\\src\\traitset.h"
+#line 5 "D:\\work\\programming\\color-c\\src\\ability.h"
+#line 1 "D:\\work\\programming\\color-c\\src\\target_class.h"
+
+
 
 enum class TargetClass
 {
@@ -41184,38 +41210,32 @@ const char *TargetClass_userstrings[] = {
 	"All"
 };
 
-struct TraitSet
-{
-	s32 vigor, focus, armor;
+#line 45 "D:\\work\\programming\\color-c\\src\\target_class.h"
+#line 6 "D:\\work\\programming\\color-c\\src\\ability.h"
 
-	s32 &operator[](size_t index);
+enum class EffectType
+{
+	Damage,
+	Steal,
 };
 
-s32 &TraitSet::operator[](size_t index)
+struct Effect
 {
-	return *((s32*)this + index); 
-}
+	
+	
+	
+	
 
-TraitSet operator+(TraitSet a, TraitSet b)
-{
-	return {a.vigor+b.vigor, a.focus+b.focus, a.armor+b.armor};
-}
+	EffectType type;
+	void *parameters;
+};
 
-TraitSet operator+=(TraitSet &a, TraitSet b)
+struct AbilityTier
 {
-	a = a + b;
-	return a;
-}
-
-s32 *begin(TraitSet &trait_set)
-{
-	return (s32*)&trait_set;
-}
-
-s32 *end(TraitSet &trait_set)
-{
-	return (s32*)(&trait_set + 1);
-}
+	
+	TraitSet required_traits;
+	Effect effects[c::max_effect_count];
+};
 
 struct Ability
 {
@@ -41228,6 +41248,24 @@ struct Ability
 	TraitSet change_to_target;	
 
 	TargetClass target_class;	
+};
+
+
+
+
+
+
+
+
+
+
+#line 54 "D:\\work\\programming\\color-c\\src\\ability.h"
+#line 8 "D:\\work\\programming\\color-c\\src\\unit.h"
+
+enum class Team
+{
+	allies,
+	enemies
 };
 
 struct UnitSchematic
@@ -41298,7 +41336,7 @@ TargetSet GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability
 
 char *TraitSetString(TraitSet traits);
 
-#line 169 "D:\\work\\programming\\color-c\\src\\unit.h"
+#line 84 "D:\\work\\programming\\color-c\\src\\unit.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\global.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\passive_skill_tree.h"
 
@@ -68468,33 +68506,57 @@ DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color colo
 	DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), "%d/%d", preview, max);
 
 	
-	if(preview > max || current > max)
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+
+	 Vec2f trait_change_text_pos = RectTopRight(bar_rect) + Vec2f{c::trait_change_preview_h_offset, 0.5f*bar_rect.size.y};
+
+	
+	if(preview == current)
 	{
-		TextLayout overheal_layout = c::def_text_layout;
-		overheal_layout.font_size = 16;
-		overheal_layout.align = c::align_leftcenter;
-		Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};
+		
+	}
+	else if(preview > current)
+	{
+		
 
-		if(overheal_change_sign == 0)
-		{
-			DrawText(overheal_layout, overheal_text_pos, "%d", current-max);
-		}
-		else if(overheal_change_sign > 0)
-		{
-			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", m::Max(0, current-max)).x;
+		TextLayout layout = c::trait_change_preview_text_layout;
+		layout.color = {0.f, 1.f, 0.f, flash_timer};
+		DrawText(layout, trait_change_text_pos, "+%d", preview-current);
+	}
+	else if(preview < current)
+	{
+		
 
-			Color flashing_color = {0.f, 1.f, 0.f, flash_timer};
-			overheal_layout.color = flashing_color;
-			DrawText(overheal_layout, overheal_text_pos, " +%d", preview-max);
-		}
-		else if(overheal_change_sign < 0)
-		{
-			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", current-max).x;
-
-			Color flashing_color = {1.f, 0.f, 0.f, flash_timer};
-			overheal_layout.color = flashing_color;
-			DrawText(overheal_layout, overheal_text_pos, " -%d", current-max);
-		}
+		TextLayout layout = c::trait_change_preview_text_layout;
+		layout.color = {1.f, 0.f, 0.f, flash_timer};
+		DrawText(layout, trait_change_text_pos, "-%d", current-preview);
 	}
 
 	return(Vec2f{0.f, c::trait_bar_size.y});
@@ -68797,6 +68859,35 @@ TestDistributionAndLog()
 	for(int i=0; i<range; i++) log("%u: %u", i, buckets[i]);
 }
 #line 46 "../src/game.cpp"
+#line 1 "D:\\work\\programming\\color-c\\src\\traitset.cpp"
+
+
+s32 &TraitSet::operator[](size_t index)
+{
+	return *((s32*)this + index); 
+}
+
+TraitSet operator+(TraitSet a, TraitSet b)
+{
+	return {a.vigor+b.vigor, a.focus+b.focus, a.armor+b.armor};
+}
+
+TraitSet operator+=(TraitSet &a, TraitSet b)
+{
+	a = a + b;
+	return a;
+}
+
+s32 *begin(TraitSet &trait_set)
+{
+	return (s32*)&trait_set;
+}
+
+s32 *end(TraitSet &trait_set)
+{
+	return (s32*)(&trait_set + 1);
+}
+#line 47 "../src/game.cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
@@ -68945,7 +69036,7 @@ GameInit()
 
 
 
-#line 195 "../src/game.cpp"
+#line 196 "../src/game.cpp"
 
 extern "C" void
 GameUpdateAndRender()
@@ -68971,7 +69062,7 @@ GameUpdateAndRender()
 		
 
 
-#line 221 "../src/game.cpp"
+#line 222 "../src/game.cpp"
 	}
 
 	
@@ -69014,7 +69105,7 @@ GameUpdateAndRender()
 	
 	
 	UpdateBattle(&game->current_battle);
-	#line 264 "../src/game.cpp"
+	#line 265 "../src/game.cpp"
 
 
 	if(game->draw_debug_text)

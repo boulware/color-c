@@ -43,6 +43,7 @@ Game *game = nullptr;
 #include "timer.cpp"
 #include "oscillating_timer.cpp"
 #include "random.cpp"
+#include "traitset.cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
