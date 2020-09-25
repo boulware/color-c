@@ -1,10 +1,23 @@
 #include "data_table.h"
 
+void *
+DataTable::operator[](int index)
+{
+	if(IsValidIndex(*this, index))
+	{
+		return (data + entry_size*index);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 DataTable
 AllocDataTable(int entry_size, int entry_max)
 {
 	DataTable table;
-	table.data = (u8*)malloc(entry_size*entry_max);
+	table.data = (u8*)calloc(entry_size*entry_max, 1);
 	table.entry_size = entry_size;
 	table.entry_count = 0;
 	table.entry_max = entry_max;
@@ -17,6 +30,8 @@ bool IsValidIndex(DataTable table, int index)
 	return(index >= 0 and index < table.entry_count);
 }
 
+// If there's not enough room in the DataTable, returns nullptr.
+// Otherwise, returns pointer to the newly created entry.
 void *
 CreateEntry(DataTable *table)
 {
@@ -35,34 +50,46 @@ int DataTableEntriesRemaining(DataTable table)
 	return(table.entry_max - table.entry_count);
 }
 
-bool
-GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target, int *index)
+// Returns -1 if no entry's member matches the given string.
+int
+GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target)
 {
-	bool found_entry = false;
+	int index = -1;
 
 	for(int i=0; i<table.entry_count; i++)
 	{
-		char *member_string = *(char**)(table.data + i*table.entry_size + member_offset);
+		char *member_string = (char*)(table.data + i*table.entry_size + member_offset);
 		if(CompareStrings(member_string, target))
 		{
-			found_entry = true;
-			*index = i;
+			index = i;
 			break;
 		}
 	}
 
-	return found_entry;
+	return index;
 }
 
-void *
-GetEntryByIndex(DataTable table, int index)
+// void *
+// GetEntryByIndex(DataTable table, int index)
+// {
+// 	if(IsValidIndex(table, index))
+// 	{
+// 		return (void *)(table.data + table.entry_size*index);
+// 	}
+// 	else
+// 	{
+// 		return nullptr;
+// 	}
+// }
+
+template <typename Type>
+int GetIndexByName(DataTable table, const char *entry_name)
 {
-	if(IsValidIndex(table, index))
-	{
-		return (void *)(table.data + table.entry_size*index);
-	}
-	else
-	{
-		return nullptr;
-	}
+	return GetEntryIndexByStringMember(table, MemberOffset(Type,name), entry_name);
+}
+
+template <typename Type>
+Type *GetEntryByName(DataTable table, const char *entry_name)
+{
+	return (Type*)table[GetIndexByName<Type>(table, entry_name)];
 }

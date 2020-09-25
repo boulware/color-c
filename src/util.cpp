@@ -1,5 +1,7 @@
 #include "util.h"
 
+#include "memory.h"
+
 void
 CopyMemoryBlock(void *dst, void *src, int count) {
 	for(int i=0; i<count; i++)
@@ -23,7 +25,7 @@ size_t
 StringLength(const char *str)
 {
 	size_t i = 0;
-	while(str[i++] != '\0');
+	while(str[i] != '\0') i++;
 	return i;
 }
 
@@ -94,4 +96,37 @@ CopyStringN_unsafe(char *dst, const char *src, size_t n)
 	{
 		dst[i] = src[i];
 	}
+}
+
+// You must guarantee that *src has at least n bytes allocated before calling this
+void
+CopyString(char *dst, const char *src, size_t n_max)
+{
+	size_t i;
+	for(i=0; i<n_max; ++i)
+	{
+		dst[i] = src[i];
+		if(src[i] == '\0') break;
+	}
+
+	if(i==n_max) dst[n_max-1] = '\0';
+}
+
+char *
+TempFormatString(const char *fmt, va_list args)
+{
+	char *formatted_string = ScratchString(c::max_formatted_string_length);
+
+	int formatted_length = vsprintf(formatted_string, fmt, args);
+	if(formatted_length > c::max_formatted_string_length)
+	{
+		log(__FUNCTION__ " received a string longer (after applying formatting) "
+			"than c::max_formatted_string_length (%d). "
+			"The string is still formatted, but clipped to max formatted string length.",
+			c::max_formatted_string_length);
+
+		formatted_string[c::max_formatted_string_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
+	}
+
+	return formatted_string;
 }

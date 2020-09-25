@@ -3,87 +3,108 @@
 #include "opengl.h"
 #include "math.h"
 #include "draw.h"
+#include "memory.h"
 
-void
-_RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face)
+Font
+LoadFontData(FT_Face face, int size)
 {
-	float scale = size / (float)face->units_per_EM;
+	Font font;
+	float scale = (float)size/(float)(face->units_per_EM >> 6);
+	font.ascender = scale*(float)(face->ascender >> 6);
+	font.base_size = size;
+	font.height = scale*(float)(face->height >> 6);
 
-	// Generate character texture
-	FT_Load_Char(face, utf32_char, FT_LOAD_RENDER);
+	// Metric tables
+	font.advance_x = (int*)malloc(256*sizeof(int));
+	font.bitmap_left = (int*)malloc(256*sizeof(int));
+	font.bitmap_top = (int*)malloc(256*sizeof(int));
 
-	Bitmap char_bmp = AllocBitmap(face->glyph->bitmap.width,
-								  face->glyph->bitmap.rows);
-	auto &alpha_map = face->glyph->bitmap;
-
-	u32 pixel_count = char_bmp.width*char_bmp.height;
-	for(int i=0; i<pixel_count; i++)
+	// Texture tables
+	font.gl_texture = (GLuint*)malloc(256*sizeof(int));
+	font.texture_size = (Vec2i*)malloc(256*sizeof(Vec2i));
+	for(int i=0; i<256; i++)
 	{
-		char_bmp.pixels[i].r = u8(alpha_map.buffer[i]*color.r);
-		char_bmp.pixels[i].g = u8(alpha_map.buffer[i]*color.g);
-		char_bmp.pixels[i].b = u8(alpha_map.buffer[i]*color.b);
-		char_bmp.pixels[i].a = u8(alpha_map.buffer[i]);
+		font.gl_texture[i] = GenerateAndBindTexture();
 	}
 
-	gl->TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, char_bmp.width, char_bmp.height,
-				   0, GL_BGRA, GL_UNSIGNED_BYTE, char_bmp.pixels);
+	FT_Set_Pixel_Sizes(face, 0, size);
+	for(int i=0; i<256; i++)
+	{
+		FT_Load_Char(face, i, FT_LOAD_RENDER);
+		font.advance_x[i] = face->glyph->advance.x >> 6;
+		font.bitmap_left[i] = face->glyph->bitmap_left;
+		font.bitmap_top[i] = face->glyph->bitmap_top;
+		font.texture_size[i] = {(s32)face->glyph->bitmap.width, (s32)face->glyph->bitmap.rows};
 
-	// Drawing texture to screen
-	Vec2f char_pos = {pen->x + (face->glyph->bitmap_left),
-					  pen->y - (face->glyph->bitmap_top) + scale*(face->ascender)};
+		Bitmap char_bmp = AllocBitmap(face->glyph->bitmap.width,
+									  face->glyph->bitmap.rows);
+		auto &alpha_map = face->glyph->bitmap;
 
-	GLfloat verts[] = {
-		char_pos.x, char_pos.y, 0.f, 0.f,
-		char_pos.x+char_bmp.width, char_pos.y, 1.f, 0.f,
-		char_pos.x, char_pos.y+char_bmp.height, 0.f, 1.f,
-		char_pos.x+char_bmp.width, char_pos.y+char_bmp.height, 1.f, 1.f
-	};
+		u32 pixel_count = char_bmp.width*char_bmp.height;
+		for(int i=0; i<pixel_count; i++)
+		{
+			char_bmp.pixels[i].r = u8(alpha_map.buffer[i]);
+			char_bmp.pixels[i].g = u8(alpha_map.buffer[i]);
+			char_bmp.pixels[i].b = u8(alpha_map.buffer[i]);
+			char_bmp.pixels[i].a = u8(alpha_map.buffer[i]);
+		}
 
-	pen->x += (face->glyph->advance.x >> 6);
-	//pen->y -= scale*(face->glyph->metrics.horiBearingY >> 6);
+		gl->BindTexture(GL_TEXTURE_2D, font.gl_texture[i]);
+		gl->TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, char_bmp.width, char_bmp.height,
+					   0, GL_BGRA, GL_UNSIGNED_BYTE, char_bmp.pixels);
 
-	gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW);
-	gl->DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		DeallocBitmap(&char_bmp);
+	}
 
-	DeallocBitmap(&char_bmp);
+	font.is_init = true;
+	return font;
 }
 
 float
-LineSize(u32 pixel_size)
+TextLayoutScale(TextLayout layout)
 {
-	FT_Face face = game->default_font.face;
-	FT_Set_Pixel_Sizes(face, 0, pixel_size);
-	float scale = pixel_size / (float)face->units_per_EM;
-	return scale*(game->default_font.face->height);
+	return (float)layout.font_size / (float)layout.font->base_size;
 }
 
-// void
-// RenderUtf8String(const char *string, Vec2f origin, u32 size)
-// {
-// 	gl->BindVertexArray(game->uv_vao);
-// 	gl->BindBuffer(GL_ARRAY_BUFFER, game->uv_vbo);
+void
+_RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
+{
+	TIMED_BLOCK;
 
-// 	StringBuffer buffer = CreateStringBuffer(string);
-// 	u32 utf32_char;
-// 	Vec2f pen = origin;
+	//float scale = size / (float)font.face->units_per_EM;
+	float scale = (float)size/(float)font.base_size;
+	gl->BindTexture(GL_TEXTURE_2D, font.gl_texture[utf32_char]);
 
-// 	FT_Face face = game->default_font.face;
-// 	FT_Set_Pixel_Sizes(face, 0, size);
-// 	float scale = size / (float)face->units_per_EM;
+	// Drawing texture to screen
+	Vec2i texture_size = font.texture_size[utf32_char];
+	Vec2f char_size = scale*Vec2f{(float)texture_size.x, (float)texture_size.y};
+	Vec2f char_pos = {pen->x + scale*font.bitmap_left[utf32_char],
+					  pen->y - scale*font.bitmap_top[utf32_char] + scale*font.ascender};
 
-// 	while(NextAsUtf32Char(&buffer, &utf32_char))
-// 	{
-// 		if(utf32_char == '\n')
-// 		{
-// 			pen.y += LineSize(size);
-// 			pen.x = origin.x;
-// 		}
-// 		else
-// 		{
-// 			_RenderUtf32Char(utf32_char, &pen, size, face);
-// 		}
-// 	}
-// }
+	GLfloat char_verts[] = {
+		char_pos.x, char_pos.y, 0.f, 0.f,
+		char_pos.x+char_size.x, char_pos.y, 1.f, 0.f,
+		char_pos.x, char_pos.y+char_size.y, 0.f, 1.f,
+		char_pos.x+char_size.x, char_pos.y+char_size.y, 1.f, 1.f
+	};
+
+	pen->x += scale*font.advance_x[utf32_char];
+
+	gl->BufferData(GL_ARRAY_BUFFER, sizeof(char_verts), char_verts, GL_DYNAMIC_DRAW);
+	gl->DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+float
+LineSize(TextLayout layout)
+{
+	TIMED_BLOCK;
+
+	if(!layout.font->is_init) return 0.f;
+
+	float scale = TextLayoutScale(layout);
+	return TextLayoutScale(layout)*(layout.font->height);
+}
+
 
 // Renders characters of *string until a null byte or a newline character is reached,
 // or until c::max_text_render_length is reached.
@@ -91,30 +112,15 @@ LineSize(u32 pixel_size)
 // (Note: the size isn't exact to the pixel, but should be guaranteed to be at least larger than the rendered string,
 // but usually will only be slightly larger; but may be consistently too small when using things like accented chars,
 // because the size is calculated using TTF metrics)
-
 Vec2f
-SizeUtf8Line(u32 pixel_size, const char *string, ...)
+SizeUtf8Line(TextLayout layout, const char *string)
 {
-	va_list args;
-	va_start(args, string);
+	TIMED_BLOCK;
 
-	char formatted_string[c::max_text_render_length];
-	int formatted_length = vsprintf(formatted_string, string, args);
-	if(formatted_length > c::max_text_render_length)
-	{
-		log("Utf8LineSize() received a string longer than c::max_text_render_length (%d). "
-			"The string is still sized, but clipped to the max render length.",
-			c::max_text_render_length);
-
-		formatted_string[c::max_text_render_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
-	}
-
-	StringBuffer buffer = CreateStringBuffer(formatted_string);
+	StringBuffer buffer = CreateStringBuffer(string);
 	u32 utf32_char;
 	Vec2f pen = {0.f,0.f};
-
-	FT_Face face = game->default_font.face;
-	FT_Set_Pixel_Sizes(face, 0, pixel_size);
+	float scale = TextLayoutScale(layout);
 
 	while(NextAsUtf32Char(&buffer, &utf32_char))
 	{
@@ -124,42 +130,33 @@ SizeUtf8Line(u32 pixel_size, const char *string, ...)
 		}
 		else
 		{
-			//_RenderUtf32Char(utf32_char, &pen, size, face);
-			FT_Load_Char(face, utf32_char, FT_LOAD_DEFAULT);
-			pen.x += (face->glyph->advance.x >> 6);
+			pen.x += scale*layout.font->advance_x[utf32_char];
 		}
 	}
 
-
-	return Vec2f{pen.x, LineSize(pixel_size)};
+	return Vec2f{pen.x, LineSize(layout)};
 }
 
 Vec2f
-DrawTextColor(u32 size, Vec2f origin, Color color, const char *string, ...)
+DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 {
-	ActivateUvShader(game->temp_texture);
+	TIMED_BLOCK;
 
-	va_list args;
-	va_start(args, string);
+	ActivateUvShader(layout.color);
 
-	char formatted_string[c::max_text_render_length];
-	int formatted_length = vsprintf(formatted_string, string, args);
-	if(formatted_length > c::max_text_render_length)
-	{
-		log("DrawText() received a string longer than c::max_text_render_length (%d). "
-			"The string is still rendered, but clipped.",
-			c::max_text_render_length);
-
-		formatted_string[c::max_text_render_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
-	}
+	char *formatted_string;
+	mFormatString(formatted_string, string);
 
 	StringBuffer buffer = CreateStringBuffer(formatted_string);
 	u32 utf32_char;
-	Vec2f pen = origin;
+	Vec2f text_size = SizeUtf8Line(layout, formatted_string);
 
-	FT_Face face = game->default_font.face;
-	FT_Set_Pixel_Sizes(face, 0, size);
-	float scale = size / (float)face->units_per_EM;
+	if(layout.align == c::align_bottomcenter)
+	{
+		int a=0;
+	}
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
 
 	while(NextAsUtf32Char(&buffer, &utf32_char))
 	{
@@ -169,34 +166,116 @@ DrawTextColor(u32 size, Vec2f origin, Color color, const char *string, ...)
 		}
 		else
 		{
-			_RenderUtf32Char(utf32_char, &pen, size, color, face);
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
 		}
 	}
 
-	return Vec2f{pen.x-origin.x, LineSize(size)};
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+// Just draw text as easily as possible (default text layout, at (0,0))
+void EasyDrawText(const char *string, ...)
+{
+	char *formatted_string;
+	mFormatString(formatted_string, string);
+
+	DrawText(c::def_text_layout, {0.f,0.f}, formatted_string);
 }
 
 Vec2f
-DrawText(u32 size, Vec2f origin, const char *string, ...)
+ErrorDrawText(Vec2f origin, const char *string, ...)
 {
-	va_list args;
-	va_start(args, string);
+	TextLayout layout = c::error_text_layout;
 
-	char formatted_string[c::max_text_render_length];
-	int formatted_length = vsprintf(formatted_string, string, args);
-	if(formatted_length > c::max_text_render_length)
-	{
-		log("DrawText() received a string longer than c::max_text_render_length (%d). "
-			"The string is still rendered, but clipped.",
-			c::max_text_render_length);
+	char *formatted_string;
+	mFormatString(formatted_string, string);
 
-		formatted_string[c::max_text_render_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
-	}
+	Vec2f text_size = DrawText(layout, origin, formatted_string);
+	origin = AlignRect({origin, text_size}, layout.align).pos;
 
-	return DrawTextColor(size, origin, c::white, formatted_string);
+	Color flash_color = layout.color;
+	flash_color.a = g::error_flash_counter;
+	DrawFilledRect({origin, text_size}, flash_color);
+
+	return text_size;
 }
 
-
+void
+DrawDummyText(TextLayout layout, Vec2f pos)
+{
+	pos.y += DrawText(layout, pos, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.").y;
+	pos.y += DrawText(layout, pos, "Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique.").y;
+	pos.y += DrawText(layout, pos, "Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla.").y;
+	pos.y += DrawText(layout, pos, "Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit.").y;
+	pos.y += DrawText(layout, pos, "Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus.").y;
+	pos.y += DrawText(layout, pos, "Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus.").y;
+	pos.y += DrawText(layout, pos, "Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem.").y;
+	pos.y += DrawText(layout, pos, "Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet.").y;
+	pos.y += DrawText(layout, pos, "Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus.").y;
+	pos.y += DrawText(layout, pos, "Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante.").y;
+	pos.y += DrawText(layout, pos, "Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum.").y;
+	pos.y += DrawText(layout, pos, "Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus.").y;
+	pos.y += DrawText(layout, pos, "Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh.").y;
+	pos.y += DrawText(layout, pos, "Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada.").y;
+	pos.y += DrawText(layout, pos, "Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare.").y;
+	pos.y += DrawText(layout, pos, "Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris.").y;
+	pos.y += DrawText(layout, pos, "Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor.").y;
+	pos.y += DrawText(layout, pos, "Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam.").y;
+	pos.y += DrawText(layout, pos, "Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor.").y;
+	pos.y += DrawText(layout, pos, "Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc.").y;
+	pos.y += DrawText(layout, pos, "Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus.").y;
+	pos.y += DrawText(layout, pos, "Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam.").y;
+	pos.y += DrawText(layout, pos, "Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna.").y;
+	pos.y += DrawText(layout, pos, "Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet.").y;
+	pos.y += DrawText(layout, pos, "Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum.").y;
+	pos.y += DrawText(layout, pos, "Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor.").y;
+	pos.y += DrawText(layout, pos, "Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue.").y;
+	pos.y += DrawText(layout, pos, "Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque.").y;
+	pos.y += DrawText(layout, pos, "Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam.").y;
+	pos.y += DrawText(layout, pos, "Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis.").y;
+	pos.y += DrawText(layout, pos, "Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus.").y;
+	pos.y += DrawText(layout, pos, "Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum.").y;
+	pos.y += DrawText(layout, pos, "Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate.").y;
+	pos.y += DrawText(layout, pos, "Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique.").y;
+	pos.y += DrawText(layout, pos, "Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla.").y;
+	pos.y += DrawText(layout, pos, "In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis.").y;
+	pos.y += DrawText(layout, pos, "Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis.").y;
+	pos.y += DrawText(layout, pos, "Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam.").y;
+	pos.y += DrawText(layout, pos, "Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur.").y;
+	pos.y += DrawText(layout, pos, "Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis.").y;
+	pos.y += DrawText(layout, pos, "Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem.").y;
+	pos.y += DrawText(layout, pos, "Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum.").y;
+	pos.y += DrawText(layout, pos, "Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus.").y;
+	pos.y += DrawText(layout, pos, "Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula.").y;
+	pos.y += DrawText(layout, pos, "Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum.").y;
+	pos.y += DrawText(layout, pos, "Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh.").y;
+	pos.y += DrawText(layout, pos, "Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum.").y;
+	pos.y += DrawText(layout, pos, "Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus.").y;
+	pos.y += DrawText(layout, pos, "Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia.").y;
+	pos.y += DrawText(layout, pos, "Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie.").y;
+	pos.y += DrawText(layout, pos, "Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis.").y;
+	pos.y += DrawText(layout, pos, "Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper.").y;
+	pos.y += DrawText(layout, pos, "Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu.").y;
+	pos.y += DrawText(layout, pos, "Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium.").y;
+	pos.y += DrawText(layout, pos, "Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit.").y;
+	pos.y += DrawText(layout, pos, "Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue.").y;
+	pos.y += DrawText(layout, pos, "Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien.").y;
+	pos.y += DrawText(layout, pos, "Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium.").y;
+	pos.y += DrawText(layout, pos, "Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi.").y;
+	pos.y += DrawText(layout, pos, "Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada.").y;
+	pos.y += DrawText(layout, pos, "Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat.").y;
+	pos.y += DrawText(layout, pos, "In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam.").y;
+	pos.y += DrawText(layout, pos, "Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum.").y;
+	pos.y += DrawText(layout, pos, "Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna.").y;
+	pos.y += DrawText(layout, pos, "Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan.").y;
+	pos.y += DrawText(layout, pos, "In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat.").y;
+	pos.y += DrawText(layout, pos, "Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante.").y;
+}
 
 // void
 // RenderS32AsString(u32 value, Vec2f origin, u32 size)

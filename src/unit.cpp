@@ -3,6 +3,16 @@
 #include "util.h"
 #include "text_parsing.h"
 
+Unit **begin(TargetSet &target_set)
+{
+	return target_set.units;
+}
+
+Unit **end(TargetSet &target_set)
+{
+	return target_set.units + (target_set.size);
+}
+
 bool
 ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set)
 {
@@ -32,6 +42,8 @@ ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set)
 bool
 ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 {
+	if(!buffer or !ability) return false;
+
 	bool valid_ability_data = true;
 	char *initial = buffer->p;
 	Ability temp_ability = {};
@@ -83,9 +95,9 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 
 			if(valid_ability_data)
 			{
-				for(int i=0; i<sizeof(TargetClass_strings)/sizeof(char*); i++)
+				for(int i=0; i<sizeof(TargetClass_filestrings)/sizeof(char*); i++)
 				{
-					if(CompareBytesN(target_class_token.start, TargetClass_strings[i], target_class_token.length))
+					if(CompareBytesN(target_class_token.start, TargetClass_filestrings[i], target_class_token.length))
 					{
 						temp_ability.target_class = (TargetClass)i;
 						break;
@@ -102,8 +114,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 	if(valid_ability_data)
 	{
 		*ability = temp_ability;
-		ability->name = (char*)calloc(name_token.length+1, 1);
-		CopyStringN_unsafe(ability->name, name_token.start, name_token.length);
+		CopyString(ability->name, name_token.start, m::Min(sizeof(ability->name), name_token.length+1));
 
 		return true;
 	}
@@ -119,14 +130,16 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 }
 
 bool
-ParseNextAsUnitData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable ability_table)
+ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable ability_table)
 {
+	if(!buffer or !unit_schematic) return false;
+
 	bool valid_unit_data = true;
 	char *initial = buffer->p;
 	UnitSchematic temp_unit_schematic = {};
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		temp_unit_schematic.ability_indices[i] = -1; // -1 is considered an empty ability slot
+		temp_unit_schematic.ability_table_indices[i] = -1; // -1 is considered an empty ability slot
 	}
 
 	bool header_valid = ConfirmNextToken(buffer, "unit");
@@ -169,8 +182,9 @@ ParseNextAsUnitData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable abi
 				Token ability_name_token;
 				if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))
 				{
-					if(!GetEntryIndexByStringMember(ability_table, MemberOffset(Ability, name),
-												   ability_name_token.start, &temp_unit_schematic.ability_indices[i]))
+					temp_unit_schematic.ability_table_indices[i] = GetIndexByName<Ability>(ability_table, ability_name_token.start);
+
+					if(temp_unit_schematic.ability_table_indices[i] == -1)
 					{
 						// Found an ability name string for moveset, but it's not an ability
 						// that exists in the ability table.
@@ -193,8 +207,7 @@ ParseNextAsUnitData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable abi
 	if(valid_unit_data)
 	{
 		*unit_schematic = temp_unit_schematic;
-		unit_schematic->name = (char*)calloc(name_token.length+1, 1);
-		CopyStringN_unsafe(unit_schematic->name, name_token.start, name_token.length);
+		CopyString(unit_schematic->name, name_token.start, m::Min(sizeof(unit_schematic->name), name_token.length+1));
 
 		return true;
 	}
@@ -212,6 +225,8 @@ ParseNextAsUnitData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable abi
 bool
 LoadAbilityFile(const char *filename, DataTable *table)
 {
+	if(!filename or !table) return false;
+
 	Buffer file;
 	bool load_success = platform->LoadFileIntoSizedBufferAndNullTerminate(filename, &file);
 	if(!load_success) return false;
@@ -225,11 +240,12 @@ LoadAbilityFile(const char *filename, DataTable *table)
 
 		if(DataTableEntriesRemaining(*table) >= 1)
 		{
-			Ability temp_ability;
+			Ability temp_ability = {};
 			if(ParseNextAsAbilityData(&file, &temp_ability))
 			{
 				Ability *ability = (Ability*)CreateEntry(table);
 				*ability = temp_ability;
+				ability->init = true;
 				ability_count_loaded += 1;
 			}
 			else
@@ -245,8 +261,10 @@ LoadAbilityFile(const char *filename, DataTable *table)
 }
 
 bool
-LoadUnitFile(const char *filename, DataTable *table, DataTable ability_table)
+LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, DataTable ability_table)
 {
+	if(!filename or !unit_schematic_table) return false;
+
 	Buffer file;
 	bool load_success = platform->LoadFileIntoSizedBufferAndNullTerminate(filename, &file);
 	if(!load_success) return false;
@@ -258,13 +276,14 @@ LoadUnitFile(const char *filename, DataTable *table, DataTable ability_table)
 		bool found_unit = SeekNextLineThatBeginsWith(&file, "unit");
 		if(!found_unit) break;
 
-		if(DataTableEntriesRemaining(*table) >= 1)
+		if(DataTableEntriesRemaining(*unit_schematic_table) >= 1)
 		{
-			UnitSchematic temp_unit_schematic;
-			if(ParseNextAsUnitData(&file, &temp_unit_schematic, ability_table))
+			UnitSchematic temp_unit_schematic = {};
+			if(ParseNextAsUnitSchematicData(&file, &temp_unit_schematic, ability_table))
 			{
-				UnitSchematic *unit_schematic = (UnitSchematic*)CreateEntry(table);
+				UnitSchematic *unit_schematic = (UnitSchematic*)CreateEntry(unit_schematic_table);
 				*unit_schematic = temp_unit_schematic;
+				unit_schematic->init = true;
 				unit_count_loaded += 1;
 			}
 			else
@@ -274,159 +293,58 @@ LoadUnitFile(const char *filename, DataTable *table, DataTable ability_table)
 		}
 	}
 
-	//log("Loaded %zu unit schematics from file: %s", unit_count_loaded, filename);
+	if(c::verbose_success_logging)
+	{
+		log("Loaded %zu unit schematics from file: %s", unit_count_loaded, filename);
+	}
 	FreeBuffer(&file);
 	return true;
 }
 
-void
-DrawUnitInfo(Unit unit, Vec2f pos)
+// On success, returns pointer to newly created unit, which is placed in g::unit_table.
+// Returns nullptr if unit creation fails for any reason.
+Unit *
+CreateUnit(int schematic_index, Team team)
 {
-	UnitSchematic *schematic = (UnitSchematic*)GetEntryByIndex(game->unit_table, unit.schematic_index);
-	if(schematic == nullptr) return;
+	DataTable ability_table = g::ability_table;
 
-	pos.y += DrawText(c::medium_text, pos, schematic->name).y;
-	pos.y += DrawText(c::medium_text, pos, "Vigor: %d/%d", unit.cur_traits.vigor, schematic->max_traits.vigor).y;
-	pos.y += DrawText(c::medium_text, pos, "Focus: %d/%d", unit.cur_traits.focus, schematic->max_traits.focus).y;
-	pos.y += DrawText(c::medium_text, pos, "Armor: %d/%d", unit.cur_traits.armor, schematic->max_traits.armor).y;
+	UnitSchematic *schematic = (UnitSchematic*)g::unit_schematic_table[schematic_index];
+	if(schematic == nullptr) return nullptr;
+	if(!schematic->init) return nullptr; // Invalid schematic
 
-	pos.y += DrawText(c::medium_text, pos, "Abilities:").y;
-
-	ImguiContainer layout = {};
-	layout.pos = pos;
-	layout.max_size = {0.f, 0.f};
-	layout.font_size = 24;
-
-	SetActiveContainer(&layout);
+	Unit *unit = (Unit*)CreateEntry(&g::unit_table);
+	CopyString(unit->name, schematic->name, sizeof(unit->name));
+	unit->team = team;
+	unit->max_traits = schematic->max_traits;
+	unit->cur_traits = schematic->max_traits;
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		Ability *ability = (Ability*)GetEntryByIndex(game->ability_table, schematic->ability_indices[i]);
-		if(ability == nullptr) break;
-
-		Button(ability->name);
-	}
-}
-
-// Return false if failed to find unit with given name
-bool
-CreateUnit(const char *name, Team team, Unit *unit)
-{
-	int index;
-	bool found_entry = GetEntryIndexByStringMember(game->unit_table, MemberOffset(UnitSchematic, name), name, &index);
-	if(!found_entry) return false;
-
-	UnitSchematic *schematic = (UnitSchematic*)GetEntryByIndex(game->unit_table, index);
-
-	*unit = {};
-	unit->schematic_index = index;
-	unit->cur_traits = schematic->max_traits;
-	unit->team = team;
-	unit->active = true;
-	return true;
-}
-
-const char *
-GetUnitName(Unit unit)
-{
-	UnitSchematic *schematic = (UnitSchematic*)GetEntryByIndex(game->unit_table, unit.schematic_index);
-	if(schematic == nullptr) return nullptr;
-
-	return schematic->name;
-}
-
-UnitSchematic *
-GetSchematicFromUnit(Unit unit)
-{
-	return (UnitSchematic*)GetEntryByIndex(game->unit_table, unit.schematic_index);
-}
-
-const char *
-AbilityNameFromIndex(int index)
-{
-	Ability *ability = (Ability*)GetEntryByIndex(game->ability_table, index);
-	if(ability == nullptr) return nullptr;
-
-	return ability->name;
-}
-
-void
-DrawUnitHudData(Unit unit)
-{
-	UnitSchematic *schematic = GetSchematicFromUnit(unit);
-	if(schematic == nullptr)
-	{
-		log("Tried to draw HUD data for unit with invalid schematic_index.");
-		return;
-	}
-
-	float bottom_offset = 150.f;
-	Vec2f pen = {0.f, (float)c::window_height-bottom_offset};
-	DrawFilledRect({pen, {c::window_width,bottom_offset}}, {0.1f,0.1f,0.1f});
-	DrawLine(pen, pen+Vec2f{c::window_width,0.f}, c::white);
-
-	float left_padding = 20.f;
-	float top_padding = 10.f;
-	pen.x += left_padding;
-	pen.y += top_padding;
-
-	// Draw name and traits
-	pen.y += DrawText(32, pen, schematic->name).y;
-
-	float name_trait_padding = 20.f;
-	pen.y += name_trait_padding;
-	pen.y += DrawText(16, pen, "Vigor: %d/%d",
-							unit.cur_traits.vigor, schematic->max_traits.vigor).y;
-	pen.y += DrawText(16, pen, "Focus: %d/%d",
-							unit.cur_traits.focus, schematic->max_traits.focus).y;
-	pen.y += DrawText(16, pen, "Armor: %d/%d",
-							unit.cur_traits.armor, schematic->max_traits.armor).y;
-
-	// Ability buttons
-	float ability_left_offset = 200.f;
-	float ability_top_offset = 10.f;
-	ImguiContainer layout = {};
-	layout.pos = {ability_left_offset, (float)c::window_height-bottom_offset+ability_top_offset};
-	layout.font_size = 16;
-	SetActiveContainer(&layout);
-
-	for(int i : schematic->ability_indices)
-	{
-		Ability *ability = (Ability*)GetEntryByIndex(game->ability_table, i);
+		Ability *ability = (Ability*)g::ability_table[schematic->ability_table_indices[i]];
 		if(ability == nullptr) continue;
-
-		const char *ability_name = ability->name;
-		Vec2f button_start_pos = layout.pen;
-		Color button_color = c::white;
-		Color hover_color = c::yellow;
-
-		if(game->_selected_ability == ability)
-		{
-			button_color = c::orange;
-			hover_color = c::orange;
-		}
-
-		auto response = ButtonColor(button_color, hover_color, ability_name);
-		if(response.pressed)
-		{
-			SetSelectedAbility(ability);
-		}
-
-		if(game->_selected_ability == ability)
-		{
-			float button_height = layout.pen.y - button_start_pos.y;
-			float active_box_size = game->target_cursor.size.x;
-			float offset = -0.5f*button_height;
-			Vec2f pos = layout.pos + layout.pen + Vec2f{offset,offset};
-			pos = {pos.x, pos.y};
-
-			DrawSprite(game->target_cursor, Round(pos));
-		}
+		unit->abilities[i] = *ability;
 	}
+	unit->cur_action_points = 0;
+	unit->max_action_points = 1;
+
+	unit->init = true;
+	return unit;
+}
+
+Unit *
+CreateUnitByName(const char *name, Team team)
+{
+	if(!name) return nullptr;
+
+	int index = GetIndexByName<UnitSchematic>(g::unit_schematic_table, name);
+	return CreateUnit(index, team);
 }
 
 bool
 CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability)
 {
+	if(!source or !target or !ability) return false;
+	if(!source->init or !target->init or !ability->init) return false;
+
 	TargetClass tc = ability->target_class;
 	if(tc == TargetClass::self)
 	{
@@ -476,10 +394,11 @@ CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability)
 TargetSet
 GenerateValidTargetSet(Unit *source, Ability *ability, TargetSet all_targets)
 {
-	TargetSet valid_targets = {};
-	if(source == nullptr or ability == nullptr) return valid_targets;
+	if(!source or !ability) return TargetSet{};
+	if(!source->init or !ability->init) return TargetSet{};
 
-	for(Unit *target : all_targets.units)
+	TargetSet valid_targets = {};
+	for(Unit *target : all_targets)
 	{
 		if(CheckValidAbilityTarget(source, target, ability))
 		{
@@ -493,19 +412,31 @@ GenerateValidTargetSet(Unit *source, Ability *ability, TargetSet all_targets)
 TargetSet
 GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability, TargetSet all_targets)
 {
-	TargetSet inferred_target_set = {};
+	TIMED_BLOCK;
+
+	if(!source or !selected_target or !ability) return TargetSet{};
+	if(!source->init or !selected_target->init or !ability->init) return TargetSet{};
+
+	// Sanitize all_targets not to include nullptrs nor units that are not initialized.
+	TargetSet all_targets_clean = {};
+	for(Unit *unit : all_targets)
+	{
+		if(!unit or !unit->init) continue;
+		AddUnitToTargetSet(unit, &all_targets_clean);
+	}
 
 	// Return empty set if the target is invalid.
 	if(!CheckValidAbilityTarget(source, selected_target, ability))
 	{
-		return inferred_target_set;
+		return TargetSet{};
 	}
 
+	TargetSet inferred_target_set = {};
 	TargetClass tc = ability->target_class;
 	if(tc == TargetClass::all_allies)
 	{
 		// All targets that are on the same team as the source
-		for(Unit *unit : all_targets.units)
+		for(Unit *unit : all_targets_clean)
 		{
 			if(unit->team == source->team)
 			{
@@ -516,7 +447,7 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 	else if(tc == TargetClass::all_allies_not_self)
 	{
 		// All targets that are on the same team as the source, excluding the source.
-		for(Unit *unit : all_targets.units)
+		for(Unit *unit : all_targets_clean)
 		{
 			if(unit != source and unit->team == source->team)
 			{
@@ -524,10 +455,26 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 			}
 		}
 	}
+	else if(tc == TargetClass::single_ally_not_self)
+	{
+		// if(selected target is ally _AND_ selected target is not self)
+		if(selected_target->team == source->team and selected_target != source)
+		{
+			AddUnitToTargetSet(selected_target, &inferred_target_set);
+		}
+	}
+	else if(tc == TargetClass::single_unit_not_self)
+	{
+		// if(selected target is not self)
+		if(selected_target != source)
+		{
+			AddUnitToTargetSet(selected_target, &inferred_target_set);
+		}
+	}
 	else if(tc == TargetClass::all_enemies)
 	{
 		// All targets that are not on the same team as the source.
-		for(Unit *unit : all_targets.units)
+		for(Unit *unit : all_targets_clean)
 		{
 			if(unit->team != source->team)
 			{
@@ -538,15 +485,14 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 	else if(tc == TargetClass::all_units)
 	{
 		// All targets
-		inferred_target_set = all_targets;
+		inferred_target_set = all_targets_clean;
 	}
 	else
 	{
 		// Single-target abilities need no inference. The inferred target set is
-		// always equal to the selected target.
+		// always equal to the selected target if it's a valid target.
 		// At the time of writing this comment, this includes:
-		// 		self, single_ally, single_ally_not_self,
-		//		single_enemy, single_unit, single_unit_not_self
+		// 		self, single_ally, single_enemy, single_unit
 
 		AddUnitToTargetSet(selected_target, &inferred_target_set);
 	}
@@ -555,29 +501,12 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 }
 
 bool
-AbilityIsSelected()
-{
-	if(game->_selected_ability == nullptr) return false;
-	else return true;
-}
-
-bool
-IsSelectedAbility(Ability *ability)
-{
-	return(ability == game->_selected_ability);
-}
-
-void
-SetSelectedAbility(Ability *ability)
-{
-	game->_selected_ability = ability;
-	game->_selected_ability_valid_targets = GenerateValidTargetSet(game->selected_unit, ability, game->all_targets);
-}
-
-bool
 UnitInTargetSet(Unit *unit, TargetSet target_set)
 {
-	for(Unit *unit_in_set : target_set.units)
+	if(!unit) return false;
+	if(!unit->init) return false;
+
+	for(Unit *unit_in_set : target_set)
 	{
 		if(unit == unit_in_set) return true;
 	}
@@ -588,13 +517,283 @@ UnitInTargetSet(Unit *unit, TargetSet target_set)
 void
 AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 {
+	if(!unit or !target_set) return;
+	if(!unit->init) return;
+
 	// Do nothing if target set is already at max size
 	if(target_set->size >= c::max_target_count) return;
 
-	// Do nothing if [*unit] is already part of the set
+// Do nothing if [*unit] is already part of the set
 	if(UnitInTargetSet(unit, *target_set)) return;
 
 	// Add the unit to the set
 	target_set->units[target_set->size++] = unit;
 }
 
+void
+ApplyAbilityToTargetSet(Unit *source, Ability ability, TargetSet target_set)
+{
+	if(!source) return;
+	if(!source->init) return;
+
+	source->cur_traits += ability.change_to_self;
+
+	for(Unit *unit : target_set)
+	{
+		unit->cur_traits += CalculateAdjustedDamage(unit->cur_traits, ability.change_to_target);
+		//unit->cur_traits += ability.change_to_target;
+
+		if(unit->cur_traits.vigor <= 0) unit->init = false;
+
+		for(s32 &trait : unit->cur_traits)
+		{
+			trait = m::Max(0, trait);
+		}
+	}
+}
+
+Vec2f
+DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer)
+{
+	TIMED_BLOCK;
+
+	const Rect bar_rect = {pos, c::trait_bar_size};
+
+	// If the max value is 0, don't draw the trait bar.
+	if(max <= 0)
+	{
+		//ErrorDrawText(pos, "max <= 0");
+		return Vec2f{};
+	}
+	else if(current < 0)
+	{
+		ErrorDrawText(pos, "current < 0");
+		return Vec2f{};
+	}
+	else if(preview < 0)
+	{
+		ErrorDrawText(pos, "preview < 0");
+		return Vec2f{};
+	}
+
+	// Cases:
+	//
+	// NO CHANGE
+	//		1) Trait is not being changed (preview == current)
+	//			=> Color bar proportionally to current/max
+	//			=> If there's overheal, draw it as "X", where X=current-max
+	//
+	// INCREASING
+	//		2) normal range => normal range
+	//			=> Color bar proportionally to current/max
+	//			=> Flash N pips, where N=preview-current
+	//		3) normal range => overheal
+	//			=> Color bar proportionally to current/max
+	//			=> Flash N pips, where N=max-current
+	//			=> Draw "0+X" as overheal, where X=preview-max
+	//		4) overheal => overheal
+	//			=> Fill bar
+	//			=> Draw "X+Y" as overheal, where X=current_overheal, Y=preview-current
+	//
+	// DECREASING
+	//		5) normal range => normal range
+	//			=> Color bar proportionally to preview/max
+	//			=> Flash N pips, where N=current-preview
+	//		6) overheal => normal range
+	//			=> Color bar proportionally to preview/max
+	//			=> Flash N pips, where N=max-preview
+	//			=> Draw "X-Y", where X=current_overheal, Y=current_overheal
+	//		7) overheal => overheal
+	//			=> Fill bar
+	//			=> Draw "X-Y" as overheal, where X=current_overheal, Y=current-preview
+
+	int solid_pip_count = 0;
+	int flash_pip_count = 0;
+	int overheal_change_sign = 0; // <0 if negative, 0 if unchanged, >0 if positive
+	if(preview == current)
+	{
+		// Case 1 (No change)
+		solid_pip_count = m::Max(0, m::Min(current, max));
+		flash_pip_count = 0;
+		overheal_change_sign = 0;
+	}
+	else if(preview > current and current <= max and preview <= max)
+	{
+		// Case 2 (increase; normal => normal)
+		solid_pip_count = current;
+		flash_pip_count = preview-current;
+		overheal_change_sign = 0;
+	}
+	else if(preview > current and current <= max and preview > max)
+	{
+		// Case 3 (increase; normal => overheal)
+		solid_pip_count = current;
+		flash_pip_count = max-current;
+		overheal_change_sign = 1;
+	}
+	else if(preview > current and current > max and preview > max)
+	{
+		// Case 4 (increase; overheal => overheal)
+		solid_pip_count = max;
+		flash_pip_count = 0.f;
+		overheal_change_sign = 1;
+	}
+	else if(preview < current and current <= max and preview <= max)
+	{
+		// Case 5 (decrease; normal => normal)
+		solid_pip_count = preview;
+		flash_pip_count = current-preview;
+		overheal_change_sign = 0;
+	}
+	else if(preview < current and current > max and preview <= max)
+	{
+		// Case 6 (decrease; overheal => normal)
+		solid_pip_count = preview;
+		flash_pip_count = max-preview;
+		overheal_change_sign = -1;
+	}
+	else if(preview < current and current > max and preview > max)
+	{
+		// Case 7 (decrease; overheal => overheal)
+		solid_pip_count = max;
+		flash_pip_count = 0;
+		overheal_change_sign = -1;
+	}
+	else if(c::verbose_error_logging)
+	{
+		log("Invalid case encountered in function " __FUNCTION__ " (current:%d, max:%d, preview:%d)",
+			current, max, preview);
+
+		return Vec2f{};
+	}
+
+	float pip_width = c::trait_bar_size.x / max;
+	float solid_bar_width = solid_pip_count * pip_width;
+	float flash_bar_width = flash_pip_count * pip_width;
+
+	Rect solid_rect = {bar_rect.pos, {solid_bar_width, c::trait_bar_size.y}};
+	Rect flash_rect = {RectTopRight(solid_rect), {flash_bar_width, c::trait_bar_size.y}};
+
+	DrawFilledRect(solid_rect, color);
+	if(preview < current)
+	{
+		// Flash red if trait is being decreased
+		Color flashing_red = {1.f, 0.f, 0.f, flash_timer};
+		DrawFilledRect(flash_rect, flashing_red);
+	}
+	if(preview > current)
+	{
+		// Flash green if trait is being increased
+		Color flashing_green = {0.f, 1.f, 0.f, flash_timer};
+		DrawFilledRect(flash_rect, flashing_green);
+	}
+
+	DrawUnfilledRect(bar_rect, c::white);
+
+
+	// for(int i=0; i<max; i++)
+	// {
+	// 	// double-width line
+	// 	DrawLine(bar_rect.pos + Vec2f{i*pip_width, 0.f},
+	// 			 bar_rect.pos + Vec2f{i*pip_width, bar_rect.size.y},
+	// 			 c::white);
+	// 	DrawLine(bar_rect.pos + Vec2f{i*pip_width+1, 0.f},
+	// 			 bar_rect.pos + Vec2f{i*pip_width+1, bar_rect.size.y},
+	// 			 c::white);
+	// }
+
+	//DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), "%d/%d", m::Min(preview, max), max);
+	DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), "%d/%d", preview, max);
+
+	// Draw overheal box and number value if there is any overheal (previewed overheal > 0)
+	if(preview > max or current > max)
+	{
+		TextLayout overheal_layout = c::def_text_layout;
+		overheal_layout.font_size = 16;
+		overheal_layout.align = c::align_leftcenter;
+		Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};
+
+		if(overheal_change_sign == 0)
+		{
+			DrawText(overheal_layout, overheal_text_pos, "%d", current-max);
+		}
+		else if(overheal_change_sign > 0)
+		{
+			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", m::Max(0, current-max)).x;
+
+			Color flashing_color = {0.f, 1.f, 0.f, flash_timer};
+			overheal_layout.color = flashing_color;
+			DrawText(overheal_layout, overheal_text_pos, " +%d", preview-max);
+		}
+		else if(overheal_change_sign < 0)
+		{
+			overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, "%d", current-max).x;
+
+			Color flashing_color = {1.f, 0.f, 0.f, flash_timer};
+			overheal_layout.color = flashing_color;
+			DrawText(overheal_layout, overheal_text_pos, " -%d", current-max);
+		}
+	}
+
+	return(Vec2f{0.f, c::trait_bar_size.y});
+}
+
+// void
+// DrawTraitSet(Vec2f pos, TraitSet cur_traits, TraitSet max_traits)
+// {
+// 	pos += DrawTraitBarWithPreview(pos, cur_traits.vigor, max_traits.vigor,
+// 								   cur_traits.vigor, c::red); // Vigor
+// 	pos += DrawTraitBarWithPreview(pos, cur_traits.focus, max_traits.focus,
+// 								   cur_traits.focus, c::lt_blue); // Focus
+// 	pos += DrawTraitBarWithPreview(pos, cur_traits.armor, max_traits.armor,
+// 								   cur_traits.armor, c::gold); // Armor
+// }
+
+void
+DrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer)
+{
+	pos += DrawTraitBarWithPreview(pos, cur_traits.vigor, max_traits.vigor,
+								   preview_traits.vigor, c::red, flash_timer); // Vigor
+	pos += DrawTraitBarWithPreview(pos, cur_traits.focus, max_traits.focus,
+								   preview_traits.focus, c::lt_blue, flash_timer); // Focus
+	pos += DrawTraitBarWithPreview(pos, cur_traits.armor, max_traits.armor,
+								   preview_traits.armor, c::gold, flash_timer); // Armor
+}
+
+char *
+TraitSetString(TraitSet traits)
+{
+	char *traitset_string = ScratchString(c::max_traitset_string_size);
+
+	bool prepend_space = false; // Track whether a trait has been written yet, so we know to prepend a space.
+	char *p = traitset_string;
+
+	const int trait_count = 3;
+	char trait_chars[trait_count+1] = "VFA";
+	for(int i=0; i<trait_count; i++)
+	{
+		if(traits[i] == 0) continue;
+
+		char format_string[5];
+		char *f = format_string;
+		if(prepend_space) *f++ = ' ';
+		*f++ = '%';
+		*f++ = 'd';
+		*f++ = trait_chars[i];
+		*f = '\0';
+
+		int substring_length = snprintf(p, c::max_traitset_string_size, format_string, traits[i]);
+		if(substring_length < 0 or substring_length > c::max_traitset_string_size)
+		{
+			// snprintf had an encoding error or traitset_string wasn't large enough.
+			traitset_string[0] = '\0';
+			return traitset_string;
+		}
+		p += substring_length;
+
+		prepend_space = true;
+	}
+
+	*p = '\0';
+	return traitset_string;
+}

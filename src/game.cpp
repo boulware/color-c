@@ -1,11 +1,14 @@
-#include "ft2build.h"
-#include FT_FREETYPE_H
+#include <intrin.h>
+#include <ctime>
+
+#include "macros.h"
+#include "const.h"
+#include "global.h"
+#include "debug.h"
 
 #include "platform.h"
 #include "opengl.h"
 #include "game.h"
-
-#include "const.h"
 
 #define MAX_SHADER_SOURCE_SIZE 10000
 #define MAX_SHADER_LOG_SIZE 10000
@@ -21,7 +24,6 @@ Game *game = nullptr;
 #include "bitmap.cpp"
 #include "vec.cpp"
 #include "strings.cpp"
-//#include "csv.cpp"
 #include "text_render.cpp"
 #include "freetype_wrapper.cpp"
 #include "text_parsing.cpp"
@@ -32,8 +34,15 @@ Game *game = nullptr;
 #include "image.cpp"
 #include "types.cpp"
 #include "sprite.cpp"
-
+#include "align.cpp"
+#include "memory.cpp"
+#include "debug.cpp"
+#include "battle.cpp"
 #include "unit.cpp"
+#include "passive_skill_tree.cpp"
+#include "timer.cpp"
+#include "oscillating_timer.cpp"
+#include "random.cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
@@ -46,6 +55,26 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 extern "C" void
 GameInit()
 {
+	memory::per_frame_arena = AllocateArena();
+
+	InitLcgSystemSeed(&random::default_lcg);
+
+	game->temp_texture = GenerateAndBindTexture();
+	gl->Enable(GL_BLEND);
+	gl->BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	//gl->BlendEquation()
+
+	if(InitFreetype(&game->ft_lib))
+	{
+		FT_Face roboto_face = LoadFontFaceFromFile("resource/Roboto-Bold.ttf", game->ft_lib);
+		text_render::default_font = LoadFontData(roboto_face, 64);
+
+		g::def_ui_container.pos = {0.f,0.f};
+		g::def_ui_container.max_size = {0.f,0.f};
+		g::def_ui_container.pen = {0.f,0.f};
+		g::def_ui_container.button_layout = c::def_button_layout;
+	}
+
 	input::global_input = &game->input;
 
 	game->color_shader = GenerateShaderProgramFromFiles("src/color_vertex.glsl", "src/color_fragment.glsl");
@@ -56,7 +85,6 @@ GameInit()
 	gl->BindFragDataLocation(game->uv_shader, 0, "frag_color");
 	gl->ProgramUniform1i(game->uv_shader, 1, 0); // sampling texture index; default 0 index
 
-	game->window_size = {800.f, 600.f};
 	gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&game->window_size);
 	gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);
 
@@ -82,190 +110,195 @@ GameInit()
 							0, 0);
 
 	gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	//gl->Enable(GL_BLEND);
+	gl->Enable(GL_BLEND);
 
-	if(InitFreetype(&game->ft_lib))
+	// Ability table
+	g::ability_table = AllocDataTable(sizeof(Ability), c::ability_table_partition_size);
+	LoadAbilityFile("data/ability.dat", &g::ability_table);
+
+	// Unit schematic table
+	g::unit_schematic_table = AllocDataTable(sizeof(UnitSchematic), c::unit_schematic_table_partition_size);
+	LoadUnitSchematicFile("data/unit_schematic.dat", &g::unit_schematic_table, g::ability_table);
+
+	// Unit table
+	g::unit_table = AllocDataTable(sizeof(Unit), c::unit_table_partition_size);
+
+	// Passive skill table
+	g::passive_skill_table = AllocDataTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
 	{
-		game->default_font = LoadFontFromFile("resource/Roboto-Bold.ttf", game->ft_lib);
+		PassiveSkill passives[] = {{"Equilibrium"}, {"Potency"}, {"Constitution"}, {"Bravery"}, {"Stoicism"}};
+
+		for(PassiveSkill passive : passives)
+		{
+			*(PassiveSkill*)CreateEntry(&g::passive_skill_table) = passive;
+		}
 	}
 
-	game->temp_texture = GenerateAndBindTexture();
+	game->player_party[0] = CreateUnitByName("Mage", Team::allies);
+	game->player_party[1] = CreateUnitByName("Warrior", Team::allies);
+	game->player_party[2] = CreateUnitByName("Archer", Team::allies);
+	game->player_party[3] = CreateUnitByName("Cleric", Team::allies);
 
-	// Game
-	game->ability_table = AllocDataTable(sizeof(Ability), c::ability_table_partition_size);
-	LoadAbilityFile("data/ability.dat", &game->ability_table);
+	game->current_battle = {};
+	game->current_battle.hud = {{0.f, game->window_size.y-c::hud_offset_from_bottom}, {game->window_size.x, c::hud_offset_from_bottom}};
 
-	game->unit_table = AllocDataTable(sizeof(UnitSchematic), c::unit_table_partition_size);
-	LoadUnitFile("data/unit.dat", &game->unit_table, game->ability_table);
+	// CreateUnit("Wolf", Team::enemies, &game->enemies[0]);
+	// CreateUnit("Slime", Team::enemies, &game->enemies[1]);
 
-	CreateUnit("Rogue", Team::allies, &game->allies[0]);
-	CreateUnit("Warrior", Team::allies, &game->allies[1]);
-	CreateUnit("Archer", Team::allies, &game->allies[2]);
-
-	CreateUnit("Wolf", Team::enemies, &game->enemies[0]);
-	CreateUnit("Slime", Team::enemies, &game->enemies[1]);
-
-	for(Unit &unit : game->allies)
+	// Generate unit slots
 	{
-		// void AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
-		AddUnitToTargetSet(&unit, &game->all_targets);
+		Vec2f pos = {50.f, 200.f};
+
+		for(Vec2f &slot : game->current_battle.unit_slots)
+		{
+			slot = pos;
+			pos.x += c::unit_slot_size.x + c::unit_slot_padding;
+		}
 	}
-	for(Unit &unit : game->enemies)
+
+	// Place units in unit slots
+	for(int i=0; i<c::max_party_size; i++)
 	{
-		AddUnitToTargetSet(&unit, &game->all_targets);
+		game->current_battle.units[i] = game->player_party[i];
 	}
+	game->current_battle.units[c::max_party_size+0] = CreateUnitByName("Dragon", Team::enemies);
+	// game->current_battle.units[c::max_party_size+1] = CreateUnitByName("Slime", Team::enemies);
+	// game->current_battle.units[c::max_party_size+2] = CreateUnitByName("Wolf", Team::enemies);
+	// game->current_battle.units[c::max_party_size+3] = CreateUnitByName("Slime", Team::enemies);
+
 
 	// imgui
-	game->debug_container.pos = {0.f,0.f};
+	game->debug_container = g::def_ui_container;
 	game->debug_container.max_size = {300.f,200.f};
-	game->debug_container.pen = {0.f,0.f};
-	game->debug_container.font_size = 24;
-
-	game->ally_container.pos = {100.f, 200.f};
-	game->ally_container.max_size = {0.f, 0.f};
-	game->ally_container.pen = {0.f,0.f};
-	game->ally_container.font_size = 24;
-
-	game->enemy_container = game->ally_container;
-	game->enemy_container.pos = {400.f, 200.f};
 
 	// Cursor
-	//platform->HideCursor();
 	game->pointer_cursor = LoadBitmapFileIntoSprite("resource/cursor.bmp");
-	game->target_cursor = LoadBitmapFileIntoSprite("resource/target.bmp", Alignment::center);
+	game->target_cursor = LoadBitmapFileIntoSprite("resource/target.bmp", c::align_center);
+	game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
+
+	InitiateBattle(&game->current_battle);
+
+	// Debug
+	debug::start_count = __rdtsc();
+	//debug::timed_block_array_size = __COUNTER__;
+	debug::cycles_per_second = platform->PerformanceCounterFrequency();
+	game->draw_debug_text = false;
+	game->test_float = 0.f;
 }
+
+#define OPTIMIZE false
+#if OPTIMIZE
+#define OPTIMIZING_FUNCTION _RenderUtf32Char
+#define SLOW_FUNCTION PASTE(OPTIMIZING_FUNCTION, Slow)
+#define FAST_FUNCTION PASTE(OPTIMIZING_FUNCTION, Fast)
+#endif
 
 extern "C" void
 GameUpdateAndRender()
 {
-	// Right click cancels all selections.
+	//TIMED_BLOCK;
+	debug::timed_block_array_size = __COUNTER__;
+
+	if(g::error_flash_increasing)
+	{
+		g::error_flash_counter += c::error_flash_speed;
+		if(g::error_flash_counter > 1.f) g::error_flash_increasing = false;
+	}
+	else
+	{
+		g::error_flash_counter -= c::error_flash_speed;
+		if(g::error_flash_counter < 0.f) g::error_flash_increasing = true;
+	}
+
+	ClearArena(&memory::per_frame_arena);
+
+	if(Pressed(vk::F5))
+	{
+		#if OPTIMIZE
+		if(OPTIMIZING_FUNCTION == SLOW_FUNCTION) OPTIMIZING_FUNCTION = FAST_FUNCTION;
+		else OPTIMIZING_FUNCTION = SLOW_FUNCTION;
+		#endif
+	}
+
+	// Reset timed block data
+	if(Pressed(vk::R))
+	{
+		for(int i=0; i<debug::timed_block_array_size; i++)
+		{
+			TIMED_BLOCK_ARRAY[i].hit_count = 0;
+			TIMED_BLOCK_ARRAY[i].total_cycle_count = 0;
+		}
+	}
+
+	if(Pressed(vk::F1)) game->draw_debug_text = !game->draw_debug_text;
+
+	Vec2f pos = {1600.f,0.f};
+	TextLayout frametime_layout = c::def_text_layout;
+	frametime_layout.align = c::align_topright;
+	pos.y += DrawText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).y;
+
+	// Right click cancels selected ability if one is selected.
+	// If no ability is selected, cancels selected unit if one is selected.
+	// If neither a unit nor ability is selected, do nothing
 	if(Pressed(vk::rmb))
 	{
-		game->selected_unit = nullptr;
-		SetSelectedAbility(nullptr);
+		if(game->current_battle.selected_ability != nullptr)
+		{
+			game->current_battle.selected_ability = nullptr;
+			game->current_battle.selected_ability_valid_target_set = {};
+		}
+		else if(game->current_battle.selected_unit != nullptr)
+		{
+			game->current_battle.selected_unit = nullptr;
+		}
 	}
 
 	// Reset pen position to container origin for all gui containers
 	ResetImguiContainer(&game->debug_container);
-	ResetImguiContainer(&game->ally_container);
-	ResetImguiContainer(&game->enemy_container);
 
 	// Clear inferred target set.
 	// We build it from scratch every frame.
-	game->_inferred_target_set = {};
+	#if 1
+	UpdateBattle(&game->current_battle);
+	#endif
 
 
-	// Process ally unit buttons
-	SetActiveContainer(&game->ally_container);
-	for(Unit &unit : game->allies)
+	if(game->draw_debug_text)
 	{
-		// Skip inactive units
-		if(!unit.active) continue;
-
-		// Get unit name for button label
-		const char *unit_name = GetUnitName(unit);
-		if(unit_name == nullptr) continue;
-
-		unit.last_button_pos = game->ally_container.pos + game->ally_container.pen;
-
-		if(game->_selected_ability != nullptr)
-		{
-			// An ability is selected
-			auto response = ButtonColor(c::grey, c::red, unit_name);
-			if(response.pressed)
-			{
-				// Unit button was clicked while an ability was selected/targeting
-				//if(CheckValidAbilityTarget(game->selected_unit, &unit, ))
-				{
-					// The target selected for the ability is a valid target
-					//ApplyAbilityToTarget(source, target, ability);
-					game->test_int++;
-				}
-			}
-			if(response.hovered)
-			{
-				game->_inferred_target_set =
-					GenerateInferredTargetSet(game->selected_unit, &unit,
-											  game->_selected_ability, game->all_targets);
-			}
-		}
-		else
-		{
-			// No ability is selected
-			auto response = ButtonColor(c::grey, c::white, unit_name);
-			if(response.pressed)
-			{
-				game->selected_unit = &unit;
-				SetSelectedAbility(nullptr);
-			}
-		}
+		DrawTimedBlockData();
 	}
 
-	// Process enemy unit buttons
-	SetActiveContainer(&game->enemy_container);
-	for(Unit &unit : game->enemies)
+	// Log timed block data and exit game.
+	if(Pressed(vk::escape))
 	{
-		// Skip inactive units
-		if(!unit.active) continue;
-
-		// Get unit name for button label
-		const char *unit_name = GetUnitName(unit);
-		if(unit_name == nullptr) continue;
-
-		Color button_color, hover_color;
-		if(game->_selected_ability != nullptr)
+		LogToFile("logs/DebugTimings.txt", "-----------------------");
+		for(int i=0; i<debug::timed_block_array_size; i++)
 		{
-			auto response = ButtonColor(c::grey, c::red, unit_name);
-			if(response.pressed)
+			TimedBlockEntry *entry = TIMED_BLOCK_ARRAY+i;
+			if(entry->function_name == nullptr) continue;
+
+			if(entry->hit_count > 0)
 			{
-				// Unit button was clicked while an ability was selected/targeting
-				//if(CheckValidAbilityTarget(game->selected_unit, &unit, game->selected_ability))
-				{
-					// The target selected for the ability is a valid target
-					//ApplyAbilityToTarget(source, target, ability);
-					game->test_int++;
-				}
+				LogToFile("logs/DebugTimings.txt",
+						  "%s : (hit %llu, cycles %llu, c/h %llu)",
+						  entry->function_name,
+						  entry->hit_count,
+						  entry->total_cycle_count,
+						  entry->total_cycle_count/entry->hit_count);
 			}
-			if(response.hovered)
+			else
 			{
-				game->_inferred_target_set =
-					GenerateInferredTargetSet(game->selected_unit, &unit,
-											  game->_selected_ability, game->all_targets);
+				LogToFile("logs/DebugTimings.txt",
+						  "%s : (hit %llu, cycles %llu, c/h ?)",
+						  entry->function_name,
+						  entry->hit_count,
+						  entry->total_cycle_count);
 			}
+
 		}
-		else
-		{
-			auto response = ButtonColor(c::grey, c::white, unit_name);
-			if(response.pressed)
-			{
-				game->selected_unit = &unit;
-				SetSelectedAbility(nullptr);
-			}
-		}
+
+		game->exit_requested = true;
 	}
-
-	for(Unit *unit : game->_inferred_target_set.units)
-	{
-		float active_box_size = game->target_cursor.size.x;
-		float offset = -0.5f*GetButtonHeight();
-		Vec2f pos = imgui::active_container->pos + imgui::active_container->pen + Vec2f{offset,offset};
-		pos = {pos.x, pos.y};
-
-		DrawSprite(game->target_cursor, Round(pos));
-	}
-
-	// Draw unit information on HUD for currently selected unit.
-	if(game->selected_unit != nullptr)
-	{
-		DrawUnitHudData(*game->selected_unit);
-	}
-
-	// Draw cursor
-	Sprite cursor;
-	if(game->_selected_ability == nullptr) cursor = game->pointer_cursor;
-	else cursor = game->target_cursor;
-	DrawSprite(cursor, game->mouse_pos);
-
-	// Test
-	DrawText(16, {0.f,0.f}, "ability count: %d", game->test_int);
 }
+
+TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

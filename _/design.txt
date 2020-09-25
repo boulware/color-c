@@ -1,0 +1,8 @@
+1) Why trait bars with a max value and then write the overheal number next to it? A few reasons:
+	a) 	A dynamic pip bar is a bit confusing, because it's not clear when the max value is increasing or decreasing;
+		the only visual cue would be all the pip separator lines being moved, but the bar would stay the same size
+		(unless you grow the bar, but then you run into issues with UI layout with bars growing very large or small)
+	b)	Game balance issues where it might be possible to increase your max trait values arbitrarily high by stalling
+		inside a fight. Fixing the max value at the beginning of a fight allows people to use overheal as a mechanic
+		within fights and also opens up design possibilities for skills or passives related to overhealed traits
+		(such as being able to add 1 point of an overhealed trait to your maximimum trait value at the end of every fight)

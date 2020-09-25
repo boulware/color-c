@@ -55,6 +55,23 @@
 #define GL_LINE                           0x1B01
 #define GL_FILL                           0x1B02
 #define GL_READ_ONLY                      0x88B8
+#define GL_BLEND                          0x0BE2
+#define GL_FUNC_ADD                       0x8006
+#define GL_FUNC_REVERSE_SUBTRACT          0x800B
+#define GL_FUNC_SUBTRACT                  0x800A
+#define GL_MIN                            0x8007
+#define GL_MAX                            0x8008
+#define GL_SRC_COLOR                      0x0300
+#define GL_ONE_MINUS_SRC_COLOR            0x0301
+#define GL_SRC_ALPHA                      0x0302
+#define GL_ONE_MINUS_SRC_ALPHA            0x0303
+#define GL_DST_ALPHA                      0x0304
+#define GL_ONE_MINUS_DST_ALPHA            0x0305
+#define GL_DST_COLOR                      0x0306
+#define GL_ONE_MINUS_DST_COLOR            0x0307
+#define GL_SRC_ALPHA_SATURATE             0x0308
+#define GL_ZERO                           0
+#define GL_ONE                            1
 
 #define GL_POINTS                         0x0000
 #define GL_LINES                          0x0001
@@ -157,6 +174,9 @@ typedef void		fnsig_glPixelStorei(GLenum pname, GLint param);
 typedef void		fnsig_glPolygonMode(GLenum face, GLenum mode);
 typedef void 	   *fnsig_glMapNamedBuffer(GLuint buffer, GLenum access);
 typedef GLboolean	fnsig_glUnmapNamedBuffer(GLuint buffer);
+typedef void		fnsig_glBlendEquation (GLenum mode);
+typedef void		fnsig_glBlendFunc (GLenum sfactor, GLenum dfactor);
+
 
 // ProgramUniform...()
 typedef void 		fnsig_glProgramUniform1i(GLuint program, GLint location, GLint v0);
@@ -335,6 +355,9 @@ struct OpenGL {
 	mOpenGLFunction(ProgramUniformMatrix4x2dv);
 	mOpenGLFunction(ProgramUniformMatrix3x4dv);
 	mOpenGLFunction(ProgramUniformMatrix4x3dv);
+
+	mOpenGLFunction(BlendEquation);
+	mOpenGLFunction(BlendFunc);
 };
 
 bool

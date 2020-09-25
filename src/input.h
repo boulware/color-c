@@ -31,6 +31,16 @@ namespace vk
 	const u8 x = 'X'; const u8 X = 'X';
 	const u8 y = 'Y'; const u8 Y = 'Y';
 	const u8 z = 'Z'; const u8 Z = 'Z';
+	const u8 num0 = '0';
+	const u8 num1 = '1';
+	const u8 num2 = '2';
+	const u8 num3 = '3';
+	const u8 num4 = '4';
+	const u8 num5 = '5';
+	const u8 num6 = '6';
+	const u8 num7 = '7';
+	const u8 num8 = '8';
+	const u8 num9 = '9';
 	const u8 left = 0x25;
 	const u8 up = 0x26;
 	const u8 right = 0x27;
@@ -50,10 +60,13 @@ namespace vk
 	const u8 space = 0x20;
 	const u8 shift = 0x10;
 	const u8 ctrl = 0x11;
+	const u8 alt = 0x12;
+	const u8 tab = 0x09;
 	const u8 tilde = 0xC0;
 	const u8 grave = 0xC0;
 	const u8 RightBracket = 0xDD;
 	const u8 NumpadMinus = 0x6D;
+	const u8 esc = 0x1B; const u8 escape = 0x1B;
 
 	// Mouse
 	const u8 LMB = 0x01; const u8 lmb = 0x01;
@@ -68,6 +81,7 @@ struct InputState
 	u8 pressed_keys[256];
 	u8 released_keys[256];
 	s8 down_keys[256];
+	Vec2f mouse_pos;
 };
 
 namespace input
@@ -78,5 +92,6 @@ namespace input
 bool Down(u8 key);
 bool Pressed(u8 key);
 bool Released(u8 key);
+Vec2f MousePos();
 
 #endif

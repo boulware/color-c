@@ -120,6 +120,45 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+
+s64 performance_frequency;
+
+s64
+win32_PerformanceFrequencyAsS64()
+{
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
+	return freq.QuadPart;
+}
+
+s64
+win32_PerformanceCounterFrequency()
+{
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
+	return freq.QuadPart;
+}
+
+s64
+win32_CurrentTime()
+{
+	LARGE_INTEGER count;
+	QueryPerformanceCounter(&count);
+	return count.QuadPart;
+}
+
+float
+win32_TimeElapsedMs(s64 start, s64 end)
+{
+	return (float)(end-start)/performance_frequency*1000.f;
+}
+
+void *
+win32_AllocateMemory(size_t size)
+{
+	return VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+}
+
 void
 win32_ShowCursor()
 {
@@ -255,70 +294,20 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 	}
 }
 
-// Utf32String
-// win32_LoadUtf8FileAsUtf32String(const char *filename)
-// {
-// 	u8 *data;
-// 	size_t byte_count;
-// 	bool success = win32_LoadFileIntoSizedBuffer(filename, &data, &byte_count);
+void
+WIN32_DELETE_OPENGL_WINDOW(HWND hwnd)
+{
+	//HGLRC hRc = wglGetCurrentContext();
+	wglDeleteContext(wc.rc);
+	DestroyWindow(wc.hwnd);
+	QUIT_GAME = true;
+}
 
-// 	if(!success) return {};
-
-// 	u32 *utf32_chars = (u32*)malloc(4*byte_count);
-// 	size_t c = 0; // current index into data[]
-// 	size_t c_utf = 0; // current index into utf32_chars
-
-// 	while(c < byte_count)
-// 	{
-// 		u8 first_byte = data[c];
-// 		u32 char_code = 0;
-
-// 		if(u8((first_byte >> 7) | utf8_mask_1byte) == utf8_mask_1byte)
-// 		{
-// 			char_code = first_byte;
-// 			c += 1;
-// 		}
-// 		else if (u8((first_byte >> 5) | utf8_mask_2byte) == utf8_mask_2byte)
-// 		{
-// 			char_code += data[c+1] & 0b00111111;
-// 			char_code += (data[c+0] & 0b00011111) << 6;
-// 			c += 2;
-// 		}
-// 		else if (u8((first_byte >> 4) | utf8_mask_3byte) == utf8_mask_3byte)
-// 		{
-// 			char_code += data[c+2] & 0b00111111;
-// 			char_code += (data[c+1] & 0b00111111) << 6;
-// 			char_code += (data[c+0] & 0b00001111) << 12;
-// 			c += 3;
-// 		}
-// 		else if(u8((first_byte >> 3) | utf8_mask_4byte) == utf8_mask_4byte)
-// 		{
-// 			char_code += data[c+3] & 0b00111111;
-// 			char_code += (data[c+2] & 0b00111111) << 6;
-// 			char_code += (data[c+1] & 0b00111111) << 12;
-// 			char_code += (data[c+0] & 0b00000111) << 18;
-// 			c += 4;
-// 		}
-// 		else
-// 		{
-// 			log("Encountered invalid utf-8 starting byte (decimal: %u)", char_code);
-// 		}
-
-// 		utf32_chars[c_utf++] = char_code;
-// 	}
-
-// 	Utf32String string = {};
-// 	string.chars = (u32*)malloc(4*c_utf);
-// 	string.char_count = c_utf;
-// 	for(int i=0; i<c_utf; i++) {
-// 		string.chars[i] = utf32_chars[i];
-// 	}
-
-// 	free(data);
-// 	free(utf32_chars);
-
-// 	return string;
-// }
+void
+win32_ExitGame()
+{
+	WIN32_DELETE_OPENGL_WINDOW(wc.hwnd);
+}
 
 void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 {
@@ -333,14 +322,34 @@ void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 
 	RegisterClassEx(&window_class);
 
-	RECT window_rect = {0,0,c::window_width,c::window_height};
-	AdjustWindowRectEx(&window_rect	, WS_OVERLAPPEDWINDOW, FALSE, NULL);
-	wc.hwnd = CreateWindowEx(0, window_class_name, "LangL", WS_OVERLAPPEDWINDOW,
-							 CW_USEDEFAULT,
-							 CW_USEDEFAULT,
+	RECT window_rect = {};
+	DWORD window_style = 0;
+	if(c::fullscreen)
+	{
+		window_style = WS_POPUP;
+		game->window_size = {(float)c::fullscreen_window_width, (float)c::fullscreen_window_height};
+		window_rect = {0,0,c::fullscreen_window_width,c::fullscreen_window_height};
+	}
+	else
+	{
+		window_style = WS_OVERLAPPEDWINDOW;
+		game->window_size = {(float)c::windowed_window_width, (float)c::windowed_window_height};
+		window_rect = {0,0,c::windowed_window_width,c::windowed_window_height};
+	}
+
+	AdjustWindowRectEx(&window_rect, window_style, FALSE, NULL);
+	wc.hwnd = CreateWindowEx(0,
+							 window_class_name,
+							 "LangL",
+							 window_style,
+							 0,
+							 0,
 							 window_rect.right - window_rect.left,
 							 window_rect.bottom - window_rect.top,
 							 NULL, NULL, hInstance, NULL);
+
+	RECT test;
+	GetWindowRect(wc.hwnd, &test);
 
 	wc.hdc = GetDC(wc.hwnd);
 	PIXELFORMATDESCRIPTOR pfd = {};
@@ -371,9 +380,13 @@ void WIN32_BIND_PLATFORM_FUNCTIONS(Platform *platform)
 	mBindPlatformFunction(LoadFileIntoSizedBufferAndNullTerminate);
 	mBindPlatformFunction(ShowCursor);
 	mBindPlatformFunction(HideCursor);
+	//mBindPlatformFunction(ExitGame);
+	mBindPlatformFunction(AllocateMemory);
+	mBindPlatformFunction(PerformanceCounterFrequency);
+
+	platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
 
 	#undef mBindPlatformFunction
-	//platform->LoadUtf8FileAsUtf32String = win32_LoadUtf8FileAsUtf32String;
 }
 
 void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
@@ -500,6 +513,9 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
 	mBindExtendedOpenGLFunction(ProgramUniformMatrix3x4dv);
 	mBindExtendedOpenGLFunction(ProgramUniformMatrix4x3dv);
 
+	mBindExtendedOpenGLFunction(BlendEquation);
+	mBindBaseOpenGLFunction(BlendFunc);
+
 	#undef mBindBaseOpenGLFunction
 	#undef mBindExtendedOpenGLFunction
 
@@ -509,6 +525,8 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
 int WINAPI
 wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+	performance_frequency = win32_PerformanceFrequencyAsS64();
+
 	platform = new Platform{};
 	gl = new OpenGL{};
 	game = new Game{};
@@ -522,7 +540,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	void (*GameHook)(Platform*, OpenGL*, Game*);
 	void (*GameInit)();
 	void (*GameUpdateAndRender)();
-	HMODULE game_module = LoadLibraryA("game.dll");
+	HMODULE game_module = LoadLibraryA("D:/work/programming/color-c/game.dll");
 	if(game_module == NULL)
 	{
 		log("Failed to load library game.dll");
@@ -540,6 +558,8 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	MSG msg;
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 
+	//platform->SwapIntervalEXT(0);
+
 	while(!QUIT_GAME)
 	{
 		while(PeekMessage(&msg, wc.hwnd, NULL, NULL, PM_REMOVE) != 0)
@@ -548,20 +568,31 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 			DispatchMessage(&msg);
 		}
 
+		s64 before_update = win32_CurrentTime();
+
+		// START update
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		GetKeyboardState((BYTE*)&game->input.down_keys);
-		win32_GetMousePosF(&game->mouse_pos.x, &game->mouse_pos.y);
-
+		win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);
 		GameUpdateAndRender();
 
 		// Clear pressed/released for next frame.
 		memset(&game->input.pressed_keys, 0, 256);
 		memset(&game->input.released_keys, 0, 256);
 
+		// END update
+
+		s64 after_update = win32_CurrentTime();
+		float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
+		game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
+
 		SwapBuffers(wc.hdc);
+
+		if(game->exit_requested) QUIT_GAME = true;
 	}
 
+	win32_ExitGame();
 	FreeLibrary(game_module);
 
 	return 0;

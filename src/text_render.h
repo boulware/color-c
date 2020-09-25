@@ -2,19 +2,50 @@
 #define TEXT_RENDER_H
 
 #include "vec.h"
+#include "color.h"
 #include "strings.h"
+#include "freetype_wrapper.h"
+#include "align.h"
+#include "opengl.h"
 
-namespace c
+struct Font
 {
-	const int max_text_render_length = 1024;
-}
+	//FT_Face face;
+	bool is_init;
+	int base_size;
+	int ascender;
+	//int units_per_EM;
+	int height;
 
-float LineSize(u32 pixel_size);
+	// Metric tables
+	int *advance_x;
+	int *bitmap_left;
+	int *bitmap_top;
 
-void RenderUtf32String(Utf32String text, Vec2f origin, u32 size);
-void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
-Vec2f SizeUtf8Line(u32 pixel_size, const char *string, ...);
-Vec2f DrawText(u32 size, Vec2f origin, const char *string, ...);
-void RenderS32AsString(u32 value, Vec2f origin, u32 size);
+	// Texture table
+	GLuint *gl_texture;
+	Vec2i *texture_size;
+};
+
+namespace text_render
+{
+	Font default_font;
+};
+
+struct TextLayout
+{
+	Font *font;
+	Color color;
+	int font_size;
+	Align align;
+	bool draw_debug;
+};
+
+float LineSize(TextLayout layout);
+
+//void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
+//Vec2f SizeUtf8Line(TextLayout layout, const char *string, ...);
+Vec2f DrawText(TextLayout layout, Vec2f origin, const char *string, ...);
+void EasyDrawText(const char *string, ...);
 
 #endif

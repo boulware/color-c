@@ -5,7 +5,7 @@
 
 struct Color
 {
-	float r,g,b;
+	float r,g,b,a;
 };
 
 #endif

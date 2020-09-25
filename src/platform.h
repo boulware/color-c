@@ -13,36 +13,47 @@ typedef void fnsig_WriteLineToFile(char*, char*);
 typedef void fnsig_SwapBuffers();
 typedef void fnsig_GetMousePos(int*, int*);
 typedef void fnsig_SetMousePos(int, int);
-typedef void fnsig_ExitGame();
+//typedef void fnsig_ExitGame();
 typedef bool fnsig_WindowIsFocused();
 typedef bool fnsig_WindowIsActive();
 typedef void fnsig_CopyMemoryBlock(void*, void*, int);
 typedef void fnsig_ShowCursor();
 typedef void fnsig_HideCursor();
-typedef	bool fnsig_wglSwapIntervalEXT(int);
+typedef	bool fnsig_SwapIntervalEXT(int);
 typedef u32 fnsig_GetFileSize(const char*);
 typedef bool fnsig_LoadFileIntoSizedBufferAndNullTerminate(const char *, Buffer *);
+typedef void *fnsig_AllocateMemory(size_t size);
+typedef s64 fnsig_PerformanceCounterFrequency();
 //typedef Utf32String fnsig_LoadUtf8FileAsUtf32String(const char *);
 
 struct Platform {
-	fnsig_LoadFileIntoFixedBufferAndNullTerminate *LoadFileIntoFixedBufferAndNullTerminate;
-	fnsig_LoadFileIntoMemory *LoadFileIntoMemory;
-	fnsig_LoadTextFileIntoMemory *LoadTextFileIntoMemory;
-	fnsig_LoadFileIntoMemoryAndNullTerminate *LoadFileIntoMemoryAndNullTerminate;
-	fnsig_WriteLineToFile *WriteLineToFile;
-	fnsig_SwapBuffers *SwapBuffers;
-	fnsig_GetMousePos *GetMousePos;
-	fnsig_SetMousePos *SetMousePos;
-	fnsig_ExitGame *ExitGame;
-	fnsig_WindowIsFocused *WindowIsFocused;
-	fnsig_WindowIsActive *WindowIsActive;
-	fnsig_CopyMemoryBlock *CopyMemoryBlock;
-	fnsig_ShowCursor *ShowCursor;
-	fnsig_HideCursor *HideCursor;
-	fnsig_wglSwapIntervalEXT *SwapIntervalEXT;
-	fnsig_GetFileSize *GetFileSize;
-	fnsig_LoadFileIntoSizedBufferAndNullTerminate *LoadFileIntoSizedBufferAndNullTerminate;
-	//fnsig_LoadUtf8FileAsUtf32String *LoadUtf8FileAsUtf32String;
+	#define mPlatformFunction(name) fnsig_##name *name;
+	// e.g.,
+	// MemberFunction(WriteLineToFile);
+	// =>
+	// fnsig_WriteLineToFile *WriteLineToFile;
+
+	mPlatformFunction(LoadFileIntoFixedBufferAndNullTerminate);
+	mPlatformFunction(LoadFileIntoMemory);
+	mPlatformFunction(LoadTextFileIntoMemory);
+	mPlatformFunction(LoadFileIntoMemoryAndNullTerminate);
+	mPlatformFunction(WriteLineToFile);
+	mPlatformFunction(SwapBuffers);
+	mPlatformFunction(GetMousePos);
+	mPlatformFunction(SetMousePos);
+	//mPlatformFunction(ExitGame);
+	mPlatformFunction(WindowIsFocused);
+	mPlatformFunction(WindowIsActive);
+	mPlatformFunction(CopyMemoryBlock);
+	mPlatformFunction(ShowCursor);
+	mPlatformFunction(HideCursor);
+	mPlatformFunction(SwapIntervalEXT);
+	mPlatformFunction(GetFileSize);
+	mPlatformFunction(LoadFileIntoSizedBufferAndNullTerminate);
+	mPlatformFunction(AllocateMemory);
+	mPlatformFunction(PerformanceCounterFrequency);
+
+	#undef mPlatformFunction
 };
 
 #endif

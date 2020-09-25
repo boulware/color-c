@@ -1,0 +1,2 @@
+1) Fully implement turns (*AP restrictions, end turn button, enemies use abilities on their turn and then pass turn back)
+2) Enemy intent icons (hovering over shows the action preview) (have a full enemy turn intent icon above all the single intent icons which shows the overall result of all enemy actions?)

@@ -9,13 +9,21 @@ struct DataTable
 	int entry_size; 	// Size of each entry
 	int entry_count; 	// # of valid entries currently in the table
 	int entry_max;		// # of entries that currently allocated *data can hold
+
+	void *operator[](int index);
 };
 
 DataTable AllocDataTable(int entry_size, int entry_max);
 bool IsValidIndex(DataTable table, int index);
 void *CreateEntry(DataTable *table);
 int DataTableEntriesRemaining(DataTable table);
-bool GetEntryIndexByStringMember(DataTable table, int member_offset, const char *target, int *index);
+int GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target);
 void *GetEntryByIndex(DataTable table, int index);
+
+template <typename Type>
+int GetIndexByName(DataTable table, const char *entry_name);
+
+template <typename Type>
+Type *GetEntryByName(DataTable table, const char *entry_name);
 
 #endif

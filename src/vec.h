@@ -66,12 +66,6 @@ Vec4f operator*(Mat4f mat, Vec4f vec);
 Mat4f operator*(Mat4f a, Mat4f b);
 Mat4f transpose(Mat4f a);
 
-enum class Alignment
-{
-	top_left,
-	center
-};
-
 struct Rect
 {
 	Vec2f pos;

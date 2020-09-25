@@ -135,14 +135,14 @@ Bitmap LoadArgbBitmapFromFile(const char *filename)
 }
 
 Sprite
-LoadBitmapFileIntoSprite(const char *filename, Alignment align = Alignment::top_left)
+LoadBitmapFileIntoSprite(const char *filename, Align align = c::align_topleft)
 {
 	Bitmap bitmap = LoadArgbBitmapFromFile(filename);
 
 	Sprite sprite = {};
 	sprite.texture = GenerateAndBindTexture();
 	sprite.size = {(float)bitmap.width, (float)bitmap.height};
-	if(align == Alignment::center)
+	if(align == c::align_center)
 	{
 		sprite.origin = 0.5f * sprite.size;
 	}

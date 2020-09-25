@@ -20,5 +20,5 @@ void DeallocBitmap(Bitmap *bitmap);
 void Blit(Bitmap src, Bitmap dst, Vec2f pos);
 //void FillBitmap(Bitmap target, Pixel color);
 Bitmap LoadArgbBitmapFromFile(const char *filename);
-Sprite LoadBitmapFileIntoSprite(const char *filename, Alignment align);
+Sprite LoadBitmapFileIntoSprite(const char *filename, Align align);
 #endif

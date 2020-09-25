@@ -20,7 +20,8 @@ GenerateAndBindTexture()
 void
 DrawSprite(Sprite sprite, Vec2f pos, Vec2f size={-1.f,-1.f})
 {
-	ActivateUvShader(sprite.texture);
+	ActivateUvShader();
+	gl->BindTexture(GL_TEXTURE_2D, sprite.texture);
 
 	if(size == Vec2f{-1.f,-1.f})
 	{

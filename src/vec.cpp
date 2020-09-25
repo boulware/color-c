@@ -278,3 +278,15 @@ bool PointInRect(Rect rect, Vec2f point)
 			point.y >= rect.pos.y and
 			point.y < rect.pos.y + rect.size.y);
 }
+
+Vec2f
+RectTopRight(Rect rect)
+{
+	return rect.pos + Vec2f{rect.size.x, 0.f};
+}
+
+Vec2f
+RectCenter(Rect rect)
+{
+	return rect.pos + 0.5f*rect.size;
+}

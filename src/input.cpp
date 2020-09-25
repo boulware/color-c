@@ -18,3 +18,9 @@ Released(u8 key)
 {
 	return(input::global_input->released_keys[key] == 1);
 }
+
+Vec2f
+MousePos()
+{
+	return(input::global_input->mouse_pos);
+}

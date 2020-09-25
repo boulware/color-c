@@ -1,10 +1,10 @@
 ability "Strike"
 self_required 0 1 0
-change_to_target -1 0 0
+change_to_target -5 0 0
 target_class "single_unit"
 
 ability "Rest"
-change_to_self 1 1 0
+change_to_target 1 1 0
 target_class "self"
 
 ability "Rig Up"
@@ -23,14 +23,53 @@ self_required 0 4 0
 target_required 0 0 1
 change_to_self 0 0 1
 change_to_target 0 0 -1
-target_class "single_unit"
+target_class "single_unit_not_self"
 
 ability "Shoot"
 self_required 0 1 0
-change_to_target -1 0 0
+change_to_target -2 0 0
 target_class "single_unit_not_self"
 
 ability "Split Arrow"
 self_required 0 4 0
 change_to_target -1 0 0
 target_class "all_enemies"
+
+ability "Taunt"
+self_required 0 4 0
+change_to_target 0 -2 0
+target_class "single_unit_not_self"
+
+ability "Confuse"
+self_required 0 6 0
+change_to_target 0 -2 0
+target_class "single_unit"
+
+ability "Meditate"
+self_required 0 0 0
+change_to_target 0 2 0
+target_class "self"
+
+ability "Corrosion"
+self_required 0 6 0
+change_to_target -1 0 -1
+target_class "all_enemies"
+
+ability "Vitalize"
+self_required 0 5 0
+change_to_target 4 0 0
+target_class "single_ally"
+
+ability "Rewind"
+self_required 0 5 0
+target_class "single_unit"
+
+ability "Swipe"
+self_required 10 0 0
+change_to_target -3 0 0
+target_class "all_enemies"
+
+ability "Breathe Fire"
+self_required 0 5 0
+change_to_target -5 0 0
+target_class "single_unit_not_self"
