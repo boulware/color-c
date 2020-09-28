@@ -23,7 +23,6 @@ Game *game = nullptr;
 #include "math.cpp"
 #include "bitmap.cpp"
 #include "vec.cpp"
-#include "strings.cpp"
 #include "text_render.cpp"
 #include "freetype_wrapper.cpp"
 #include "text_parsing.cpp"
@@ -44,6 +43,13 @@ Game *game = nullptr;
 #include "oscillating_timer.cpp"
 #include "random.cpp"
 #include "traitset.cpp"
+#include "ability.cpp"
+#include "target_class.cpp"
+#include "editor.cpp"
+#include "string.cpp"
+#include "utf32string.cpp"
+
+#include "meta_print(manual).cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
@@ -57,23 +63,18 @@ extern "C" void
 GameInit()
 {
 	memory::per_frame_arena = AllocateArena();
+	memory::permanent_arena = AllocateArena();
 
 	InitLcgSystemSeed(&random::default_lcg);
 
 	game->temp_texture = GenerateAndBindTexture();
 	gl->Enable(GL_BLEND);
 	gl->BlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	//gl->BlendEquation()
 
 	if(InitFreetype(&game->ft_lib))
 	{
 		FT_Face roboto_face = LoadFontFaceFromFile("resource/Roboto-Bold.ttf", game->ft_lib);
 		text_render::default_font = LoadFontData(roboto_face, 64);
-
-		g::def_ui_container.pos = {0.f,0.f};
-		g::def_ui_container.max_size = {0.f,0.f};
-		g::def_ui_container.pen = {0.f,0.f};
-		g::def_ui_container.button_layout = c::def_button_layout;
 	}
 
 	input::global_input = &game->input;
@@ -116,13 +117,16 @@ GameInit()
 	// Ability table
 	g::ability_table = AllocDataTable(sizeof(Ability), c::ability_table_partition_size);
 	LoadAbilityFile("data/ability.dat", &g::ability_table);
+	auto ability_table_copy = g::ability_table;
 
 	// Unit schematic table
 	g::unit_schematic_table = AllocDataTable(sizeof(UnitSchematic), c::unit_schematic_table_partition_size);
 	LoadUnitSchematicFile("data/unit_schematic.dat", &g::unit_schematic_table, g::ability_table);
+	auto schematic_table_copy = g::unit_schematic_table;
 
 	// Unit table
 	g::unit_table = AllocDataTable(sizeof(Unit), c::unit_table_partition_size);
+	auto unit_table_copy = g::unit_table;
 
 	// Passive skill table
 	g::passive_skill_table = AllocDataTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
@@ -135,7 +139,7 @@ GameInit()
 		}
 	}
 
-	game->player_party[0] = CreateUnitByName("Mage", Team::allies);
+	game->player_party[0] = CreateUnitByName("Rogue", Team::allies);
 	game->player_party[1] = CreateUnitByName("Warrior", Team::allies);
 	game->player_party[2] = CreateUnitByName("Archer", Team::allies);
 	game->player_party[3] = CreateUnitByName("Cleric", Team::allies);
@@ -167,9 +171,8 @@ GameInit()
 	// game->current_battle.units[c::max_party_size+2] = CreateUnitByName("Wolf", Team::enemies);
 	// game->current_battle.units[c::max_party_size+3] = CreateUnitByName("Slime", Team::enemies);
 
-
 	// imgui
-	game->debug_container = g::def_ui_container;
+	game->debug_container = c::def_ui_container;
 	game->debug_container.max_size = {300.f,200.f};
 
 	// Cursor
@@ -178,6 +181,7 @@ GameInit()
 	game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
 	InitiateBattle(&game->current_battle);
+	StartEditor(&game->editor_state);
 
 	// Debug
 	debug::start_count = __rdtsc();
@@ -185,20 +189,32 @@ GameInit()
 	debug::cycles_per_second = platform->PerformanceCounterFrequency();
 	game->draw_debug_text = false;
 	game->test_float = 0.f;
-}
 
-#define OPTIMIZE false
-#if OPTIMIZE
-#define OPTIMIZING_FUNCTION _RenderUtf32Char
-#define SLOW_FUNCTION PASTE(OPTIMIZING_FUNCTION, Slow)
-#define FAST_FUNCTION PASTE(OPTIMIZING_FUNCTION, Fast)
-#endif
+	game->current_state = GameState::Editor;
+
+//
+	#define OPTIMIZE false
+	#if OPTIMIZE
+	#define OPTIMIZING_FUNCTION ClearArena
+	#define SLOW_FUNCTION PASTE(OPTIMIZING_FUNCTION, Slow)
+	#define FAST_FUNCTION PASTE(OPTIMIZING_FUNCTION, Fast)
+	OPTIMIZING_FUNCTION = PASTE(OPTIMIZING_FUNCTION, Slow);
+	#endif
+}
 
 extern "C" void
 GameUpdateAndRender()
 {
 	//TIMED_BLOCK;
 	debug::timed_block_array_size = __COUNTER__;
+
+	// Utf32String foo = {};
+	// foo.length = 5;
+	// foo.max_length = 100;
+	// foo.data = (u32*)0x123456;
+	// String foo_as_string = AsString(foo);
+	// //EasyDrawText("%.*s", (int)foo_as_string.length, foo_as_string.data);
+	// DrawTextMultiline(c::def_text_layout, {0.f,0.f}, "%.*s", (int)foo_as_string.length, foo_as_string.data);
 
 	if(g::error_flash_increasing)
 	{
@@ -211,8 +227,6 @@ GameUpdateAndRender()
 		if(g::error_flash_counter < 0.f) g::error_flash_increasing = true;
 	}
 
-	ClearArena(&memory::per_frame_arena);
-
 	if(Pressed(vk::F5))
 	{
 		#if OPTIMIZE
@@ -220,6 +234,8 @@ GameUpdateAndRender()
 		else OPTIMIZING_FUNCTION = SLOW_FUNCTION;
 		#endif
 	}
+
+	ClearArena(&memory::per_frame_arena);
 
 	// Reset timed block data
 	if(Pressed(vk::R))
@@ -231,7 +247,7 @@ GameUpdateAndRender()
 		}
 	}
 
-	if(Pressed(vk::F1)) game->draw_debug_text = !game->draw_debug_text;
+	if(Pressed(vk::tilde)) game->draw_debug_text = !game->draw_debug_text;
 
 	Vec2f pos = {1600.f,0.f};
 	TextLayout frametime_layout = c::def_text_layout;
@@ -246,7 +262,7 @@ GameUpdateAndRender()
 		if(game->current_battle.selected_ability != nullptr)
 		{
 			game->current_battle.selected_ability = nullptr;
-			game->current_battle.selected_ability_valid_target_set = {};
+//			game->current_battle.selected_ability_valid_target_set = {};
 		}
 		else if(game->current_battle.selected_unit != nullptr)
 		{
@@ -257,17 +273,25 @@ GameUpdateAndRender()
 	// Reset pen position to container origin for all gui containers
 	ResetImguiContainer(&game->debug_container);
 
-	// Clear inferred target set.
-	// We build it from scratch every frame.
-	#if 1
-	UpdateBattle(&game->current_battle);
-	#endif
+	// Function keys to switch between game states.
+	if(Pressed(vk::F1)) game->current_state = GameState::Battle;
+	if(Pressed(vk::F2)) game->current_state = GameState::Editor;
 
+	if(game->current_state == GameState::Battle)
+	{
+		UpdateBattle(&game->current_battle);
+	}
+	else if(game->current_state == GameState::Editor)
+	{
+		UpdateAndDrawEditor(&game->editor_state);
+	}
 
 	if(game->draw_debug_text)
 	{
 		DrawTimedBlockData();
 	}
+
+	//DrawText(c::def_text_layout, {500.f,500.f}, "%zu", ArenaBytesAllocated(memory::per_frame_arena));
 
 	// Log timed block data and exit game.
 	if(Pressed(vk::escape))

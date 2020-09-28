@@ -1,7 +1,6 @@
 #include "bitmap.h"
 
 #include "math.h"
-#include "strings.h"
 #include "util.h"
 #include "sprite.h"
 

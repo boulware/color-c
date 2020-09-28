@@ -11,8 +11,6 @@ namespace g
 {
 	Font default_font;
 
-	ImguiContainer def_ui_container;
-
 	DataTable ability_table;
 	DataTable unit_schematic_table;
 	DataTable unit_table;

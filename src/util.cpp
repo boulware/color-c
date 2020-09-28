@@ -25,7 +25,7 @@ size_t
 StringLength(const char *str)
 {
 	size_t i = 0;
-	while(str[i] != '\0') i++;
+	while(str[i] != '\0') ++i;
 	return i;
 }
 
@@ -129,4 +129,18 @@ TempFormatString(const char *fmt, va_list args)
 	}
 
 	return formatted_string;
+}
+
+	int const c0_control_first = 0x0;
+	int const c0_control_last = 0x1F;
+	int const c1_control_first = 0x7F; // It's technically 0x80, but DEL is an "unofficial" control character.
+	int const c1_control_last = 0x9F;
+
+bool
+IsUtf32ControlChar(u32 c)
+{
+	if(c >= c0_control_first and c <= c0_control_last) return true;
+	if(c >= c1_control_first and c <= c1_control_last) return true;
+
+	return false;
 }

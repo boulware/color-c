@@ -2,7 +2,6 @@
 #define PLATFORM_H
 
 #include "types.h"
-#include "strings.h"
 #include "text_parsing.h"
 
 typedef bool fnsig_LoadFileIntoFixedBufferAndNullTerminate(const char *, u8 *, u32);

@@ -59226,3 +59226,3635 @@ Enemy intent was invalid upon cast attempt (unit index=3). Skipping.
 -------------------
 -------------------
 -------------------
+-------------------
+Encountered invalid ability data in buffer at address: 0000017DA9B497D0 ("ability "Strike"
+self_required ")
+Encountered invalid unit data in buffer at address: 0000017DA9B49BF0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+ParseNextAsS32() found illegal character (()
+-------------------
+-------------------
+ParseNextAsS32() found illegal character (()
+-------------------
+ParseNextAsS32() found illegal character (()
+-------------------
+ParseNextAsS32() found illegal character (,)
+-------------------
+-------------------
+-------------------
+ParseNextAsAbilityData() encountered invalid ability tier: 0
+Encountered invalid ability data in buffer at address: 0000013C913B0D30 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000013C913B0D30 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 0000017BC22DDD60 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 000001E8E834FD50 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid unit data in buffer at address: 00000257D2A1CD00 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 000001B77B9839E0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid unit data in buffer at address: 000001CDA0368B80 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid unit data in buffer at address: 000001F002EEDA60 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid unit data in buffer at address: 0000020775700840 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid unit data in buffer at address: 000001B99C503C90 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 000002A8776EED50 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 000001F64C070DD0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 000001D98E5CA030 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000001D990AF1850 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 0000018D42F416B0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000018D4332D2D0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 00000284D5391650 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 00000284D577E570 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 00000240F4DA3390 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 00000240F5171800 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 000001CC54CC8FB0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000001CC5727EBE0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 0000026FD5B7FDC0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000026FD5B80200 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 0000028EF4BAA840 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000028EF4BAAC80 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 000001FAF78EBCC0 ("ability "Tiered Strike"
+tier 0")
+-------------------
+Encountered invalid ability data in buffer at address: 000002469A2080D0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000002469C621B30 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 0000028D89193B50 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000028D89551E40 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 0000024E0C679200 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000024E0EC6DA90 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 000001F69ED191E0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000001F69ED19620 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 000001F1AEE3E9D0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000001F1B212A7D0 ("unit "Warrior"
+traits 10 5 3
+m")
+-------------------
+Encountered invalid ability data in buffer at address: 00000282113591D0 ("ability "Tiered Strike"
+tier 0")
+-------------------
+Encountered invalid ability data in buffer at address: 00000258EF8516B0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 00000258EFC0D2E0 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+Encountered invalid ability data in buffer at address: 000002647604F3F0 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 000002647604F830 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+Encountered invalid ability data in buffer at address: 000001649D43BE00 ("ability "Tiered Strike"
+tier 0")
+-------------------
+Encountered invalid ability data in buffer at address: 000001DE8C64AE20 ("ability "Tiered Strike"
+tier 0")
+-------------------
+Encountered invalid ability data in buffer at address: 0000029882AC9060 ("ability "Tiered Strike"
+tier 0")
+Encountered invalid unit data in buffer at address: 0000029882834970 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 000001B977408850 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+-------------------
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 0000027EF9692350 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+-------------------
+-------------------
+Encountered invalid ability data in buffer at address: 0000027008878870 ("ability "Rig Up"
+requires (0,0,")
+Encountered invalid unit data in buffer at address: 0000027008878700 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+Encountered invalid ability data in buffer at address: 000001ECE4743DD0 ("ability "Rig Up"
+requires (0,0,")
+Encountered invalid unit data in buffer at address: 000001ECE46FAFE0 ("unit "Warrior"
+traits (10,5,3)")
+-------------------
+Encountered invalid ability data in buffer at address: 00000286C40FC290 ("ability "Rig Up"
+requires (0,0,")
+-------------------
+Encountered invalid unit data in buffer at address: 000001A44C2BDA8D ("unit "Rogue"
+traits (6,6,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 000001D897E199CD ("unit "Rogue"
+traits (6,6,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 0000023C9430041D ("unit "Rogue"
+traits (6,6,2)
+mo")
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 00000231C20AC3ED ("unit "Rogue"
+traits (6,6,2)
+mo")
+-------------------
+-------------------
+Encountered invalid unit data in buffer at address: 0000020BE27C6755 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 000001D9CB0C1D9D ("unit "Rogue"
+traits (6,6,2)
+mo")
+Encountered invalid unit data in buffer at address: 000001D9CB0C1F36 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 000001AC379B3CED ("unit "Rogue"
+traits (6,6,2)
+mo")
+Encountered invalid unit data in buffer at address: 000001AC379B3E86 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 000001D202ABB6CD ("unit "Rogue"
+traits (6,6,2)
+mo")
+Encountered invalid unit data in buffer at address: 000001D202ABB866 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 0000025D9D21D125 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 0000015E43D34F15 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+Encountered invalid unit data in buffer at address: 000001C032A2CC05 ("unit "Slime"
+traits (8,1,2)
+mo")
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+Failed to compile shader source file (src/color_vertex.glsl):
+0(13) : error C1503: undefined variable "depth"
+
+Failed to generate shader program.
+-------------------
+Failed to compile shader source file (src/color_vertex.glsl):
+0(13) : error C1503: undefined variable "depth"
+
+Failed to generate shader program.
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+imgui::active_container->text_layout has no font loaded when it was expected to have one.
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+8
+8
+8
+27
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+-------------------
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+repeated
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+13
+13
+13
+27
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+tick
+tick
+tick
+tick
+tick
+tick
+utf32-translated stream in win32 platform layer reached maximum size.
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+127
+27
+-------------------
+97
+115
+100
+102
+97
+115
+100
+102
+97
+100
+102
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+102
+100
+102
+115
+100
+102
+115
+100
+102
+127
+127
+127
+127
+127
+127
+127
+127
+102
+100
+115
+102
+115
+100
+102
+127
+127
+127
+27
+-------------------
+102
+108
+107
+115
+100
+106
+102
+107
+108
+106
+107
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+27
+-------------------
+9
+9
+9
+27
+-------------------
+13
+-------------------
+13
+27
+-------------------
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+27
+-------------------
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+127
+27
+-------------------
+27
+-------------------
+102
+108
+107
+115
+100
+106
+102
+108
+107
+115
+100
+102
+127
+-------------------
+102
+108
+107
+100
+115
+106
+102
+108
+127
+102
+107
+106
+100
+115
+107
+102
+107
+115
+108
+100
+106
+102
+115
+108
+27
+-------------------
+102
+107
+115
+108
+100
+108
+107
+106
+102
+127
+102
+106
+106
+102
+102
+106
+102
+106
+102
+106
+107
+108
+115
+102
+106
+102
+106
+102
+106
+102
+115
+102
+108
+107
+106
+102
+100
+102
+102
+102
+100
+102
+100
+102
+8
+8
+8
+8
+8
+8
+27
+-------------------
+102
+100
+102
+106
+8
+8
+8
+8
+102
+106
+100
+115
+107
+108
+102
+127
+27
+-------------------
+102
+100
+115
+106
+107
+102
+100
+115
+102
+107
+106
+127
+102
+107
+106
+108
+100
+115
+106
+102
+127
+DeleteRange() received invalid indices for string (start=0, end=19)
+8
+127
+DeleteRange() received invalid indices for string (start=0, end=18)
+8
+8
+127
+DeleteRange() received invalid indices for string (start=0, end=16)
+8
+8
+127
+DeleteRange() received invalid indices for string (start=0, end=14)
+127
+DeleteRange() received invalid indices for string (start=0, end=14)
+127
+DeleteRange() received invalid indices for string (start=0, end=14)
+127
+DeleteRange() received invalid indices for string (start=0, end=14)
+127
+DeleteRange() received invalid indices for string (start=0, end=14)
+27
+-------------------
+106
+100
+107
+108
+115
+106
+102
+108
+107
+100
+106
+102
+127
+102
+100
+107
+106
+115
+108
+102
+106
+115
+100
+107
+108
+102
+106
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+8
+10
+106
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+102
+100
+107
+106
+115
+108
+102
+106
+115
+100
+8
+8
+8
+8
+8
+8
+102
+100
+8
+8
+27
+-------------------
+102
+102
+8
+8
+102
+102
+102
+102
+8
+8
+8
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+127
+8
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+8
+8
+8
+8
+8
+8
+8
+8
+27
+-------------------
+106
+108
+107
+106
+108
+107
+106
+107
+108
+106
+102
+107
+108
+100
+115
+106
+107
+108
+115
+100
+102
+27
+-------------------
+102
+106
+100
+97
+115
+100
+102
+115
+100
+102
+127
+102
+100
+102
+115
+106
+107
+100
+108
+102
+106
+115
+107
+108
+100
+106
+102
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+127
+DeleteRange() received invalid indices for string (start=0, end=26)
+27
+-------------------
+102
+106
+100
+107
+108
+102
+106
+100
+107
+102
+106
+127
+102
+107
+108
+100
+115
+106
+108
+102
+107
+106
+115
+100
+102
+127
+102
+108
+107
+106
+100
+115
+108
+107
+102
+100
+127
+102
+107
+108
+100
+106
+115
+108
+107
+102
+115
+100
+102
+115
+127
+102
+107
+108
+106
+100
+115
+108
+107
+102
+106
+115
+100
+106
+102
+107
+100
+106
+102
+127
+106
+102
+108
+115
+106
+102
+107
+100
+102
+106
+107
+100
+102
+127
+102
+108
+107
+100
+115
+106
+102
+115
+100
+102
+127
+108
+107
+106
+115
+100
+102
+108
+107
+106
+115
+100
+102
+127
+115
+108
+107
+100
+106
+102
+108
+107
+115
+100
+102
+127
+108
+107
+102
+106
+115
+100
+127
+115
+100
+108
+107
+102
+106
+115
+100
+108
+107
+102
+127
+115
+108
+107
+100
+106
+102
+107
+127
+100
+108
+107
+106
+102
+115
+100
+102
+127
+102
+107
+108
+100
+115
+106
+102
+127
+115
+100
+108
+107
+102
+106
+115
+108
+107
+100
+102
+106
+127
+106
+102
+106
+102
+102
+102
+106
+97
+97
+8
+8
+8
+8
+8
+8
+8
+8
+8
+27
+-------------------
+102
+115
+100
+107
+102
+102
+100
+115
+102
+100
+102
+27
+-------------------
+102
+106
+107
+100
+106
+102
+107
+108
+100
+106
+102
+127
+102
+108
+107
+100
+115
+107
+108
+100
+102
+106
+102
+102
+102
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+116
+101
+115
+116
+115
+101
+116
+115
+116
+97
+101
+100
+100
+101
+102
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+27
+-------------------
+49
+50
+51
+52
+53
+54
+49
+61
+8
+8
+50
+8
+51
+8
+52
+8
+53
+8
+49
+8
+49
+49
+51
+27
+-------------------
+116
+101
+115
+116
+115
+101
+116
+115
+102
+102
+106
+108
+106
+115
+102
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+97
+8
+8
+8
+8
+8
+8
+127
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+116
+104
+105
+115
+32
+105
+115
+32
+97
+32
+116
+101
+115
+116
+46
+33
+8
+8
+33
+231
+191
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+32
+102
+102
+102
+102
+102
+102
+102
+100
+115
+102
+8
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+102
+8
+102
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+8
+102
+8
+8
+8
+116
+101
+115
+116
+8
+8
+8
+8
+8
+8
+8
+9
+107
+106
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+27
+-------------------
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+9
+102
+100
+115
+102
+100
+115
+102
+9
+102
+9
+102
+9
+102
+9
+102
+9
+9
+9
+9
+9
+9
+9
+27
+-------------------
+9
+9
+9
+9
+9
+9
+9
+27
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+InsertChar() received invalid pos for string (pos=6)
+InsertChar() received invalid pos for string (pos=6)
+InsertChar() received invalid pos for string (pos=6)
+InsertChar() received invalid pos for string (pos=6)
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------
+-7864320
+-7864320
+-7864320
+-7864320
+-7864320
+-7864320
+-7864320
+-7864320
+-------------------
+7864320
+7864320
+7864320
+7864320
+7864320
+-------------------
+4287102976
+7864320
+-------------------
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+7864320
+-------------------
+4287102976
+4287102976
+4287102976
+4287102976
+7864320
+15728640
+7864320
+7864320
+7864320
+-------------------
+7864320
+7864320
+7864320
+7864320
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+4287102976
+-------------------
+-7864320
+-7864320
+-7864320
+7864320
+7864320
+7864320
+7864320
+-------------------
+-120
+-120
+-120
+120
+120
+120
+-------------------
+-120
+-120
+-120
+-120
+-120
+-120
+120
+120
+120
+120
+120
+120
+-120
+-120
+-120
+-120
+-240
+-120
+-120
+-120
+-120
+-240
+-120
+-120
+-120
+-120
+-120
+-120
+-120
+-120
+-120
+-120
+120
+120
+240
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+120
+-------------------
+-------------------
+-------------------
+-------------------
+-------------------

@@ -16,9 +16,11 @@ namespace c
 	const Color lt_blue = {0.25f,0.25f,1.f,1.f};
 	const Color black 	= {0.f,0.f,0.f,1.f};
 	const Color white 	= {1.f,1.f,1.f,1.f};
-	const Color grey 	= {0.5f,0.5f,0.5f,1.f};
-	const Color lt_grey = {0.7f,0.7f,0.7f,1.f};
-	const Color dk_grey = {0.2f,0.2f,0.2f,1.f};
+
+	const Color dk_grey = {0.1f,0.1f,0.1f,1.f};
+	const Color grey 	= {0.3f,0.3f,0.3f,1.f};
+	const Color lt_grey = {0.5f,0.5f,0.5f,1.f};
+
 	const Color yellow	= {1.f,1.f,0.f,1.f};
 	const Color gold 	= {0.8f,0.8f,0.f,1.f};
 	const Color orange	= {1.f,0.4f,0.f,1.f};
@@ -30,6 +32,7 @@ namespace c
 	const Align align_bottomleft = {AlignX::left, AlignY::bottom};
 	const Align align_topcenter = {AlignX::center, AlignY::top};
 	const Align align_leftcenter = {AlignX::left, AlignY::center};
+	const Align align_rightcenter = {AlignX::right, AlignY::center};
 	const Align align_bottomcenter = {AlignX::center, AlignY::bottom};
 
 	const int max_formatted_string_length = 1024;
@@ -43,6 +46,16 @@ namespace c
 
 	const bool verbose_success_logging = false;
 	const bool verbose_error_logging = true;
+
+	int const c0_control_first = 0x0;
+	int const c0_control_last = 0x1F;
+	int const c1_control_first = 0x7F; // It's technically 0x80, but DEL is an "unofficial" control character.
+	int const c1_control_last = 0x9F;
+
+	u32 const control_code_backspace = 0x8;
+	u32 const control_code_tab = 0x9;
+	u32 const control_code_return = 0xD;
+	u32 const control_code_DEL = 0x7F;
 
 	const int printable_ascii_start = int(' ');
 	const int printable_ascii_end = int('~')+1;
@@ -63,16 +76,101 @@ namespace c
 	const int max_unit_name_length = 20;
 	const int max_ability_name_length = 20;
 	const int max_passive_skill_name_length = 20;
+	const int max_effects_text_length = 1024;
 
 	// Debug
 	const float error_flash_speed = 0.017f;
 
-	// UI
-	const TextLayout def_text_layout = {&text_render::default_font, c::white, 32, c::align_topleft, false};
-	const TextLayout error_text_layout = {&text_render::default_font, c::red, 12, c::align_topleft, true};
-	const ButtonLayout def_button_layout = {{&text_render::default_font, c::grey, 32, c::align_center, false},
-											c::grey, c::white, c::white, c::align_topleft};
+	// Drawing depths
+	const float near_plane = 0.f;
+	const float far_plane = 1000.f;
+	const float clip_A = 2/(far_plane-near_plane); // [A] in z'=Az+B (the depth=>clip space eqn)
+	const float clip_B = -(far_plane+near_plane)/(far_plane-near_plane); // [B] in z'=Az+B
 
+	const float hud_draw_depth = 100.f;
+
+	// UI
+	const TextLayout def_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 32,
+		.align = c::align_topleft,
+		.draw_debug = false
+	};
+
+	const TextLayout error_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::red,
+		.font_size = 12,
+		.align = c::align_topleft,
+		.draw_debug = true
+	};
+
+	const ButtonLayout def_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::grey,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::grey,
+		.button_hover_color = c::white,
+		.label_hover_color = c::white,
+		.align = c::align_topleft
+	};
+
+	const TextLayout small_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_topleft,
+		.draw_debug = false
+	};
+
+	const Vec2f def_text_entry_size = {300.f, 50.f};
+	TextEntryLayout const def_text_entry_layout = {
+		.size = c::def_text_entry_size,
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 16,
+			.align = c::align_topleft,
+			.draw_debug = false
+		},
+		.text_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 32,
+			.align = c::align_leftcenter,
+			.draw_debug = false,
+			.max_width = c::def_text_entry_size.x
+		},
+		.align = c::align_topleft
+	};
+
+	ImguiContainer const def_ui_container = {
+		.button_layout = c::def_button_layout,
+		.text_entry_layout = c::def_text_entry_layout
+	};
+
+	// Editor
+	const int max_field_text_length = 30;
+	const int max_field_label_length = 30;
+
+	// const ButtonLayout editor_list_button_layout = {
+	// 	.label_layout = {
+	// 		.font = &text_render::default_font,
+	// 		.color = c::grey,
+	// 		.font_size = 32,
+	// 		.align = c::align_center,
+	// 		.draw_debug = false
+	// 	},
+	// 	.button_color = c::grey,
+	// 	.button_hover_color = c::white,
+	// 	.label_hover_color = c::white,
+	// 	.align = c::align_topleft
+	// };
 
 	// Unit frame
 	const Vec2f unit_slot_size = {125.f, 400.f};
@@ -84,58 +182,137 @@ namespace c
 	const float overheal_text_h_offset = 5.f;
 
 	const Vec2f action_points_text_offset = {0.5f*unit_slot_size.x, 100.f};
-	const TextLayout action_points_text_layout = {&text_render::default_font, c::grey, 16, c::align_topcenter, false};
-
-	const Vec2f ability_info_box_size = {300.f,150.f};
-	const Color ability_info_bg_color = {0.1f,0.1f,0.1f,1.f};
+	const TextLayout action_points_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::grey,
+		.font_size = 16,
+		.align = c::align_topcenter,
+		.draw_debug = false
+	};
 
 	// Unit info HUD
 	const float hud_offset_from_bottom = 250.f;
+	const Vec2f hud_unit_name_offset = {20.f,10.f};
 	const Vec2f hud_ability_button_size = {300.f, 50.f};
 	const Vec2f hud_ability_buttons_offset = {350.f, 10.f};
-	const Vec2f hud_ability_info_offset = {700.f, 20.f};
 	const float hud_ability_button_padding = 5.f;
 
-	const ButtonLayout ability_button_layout =
-		{{&text_render::default_font, c::white, 32, c::align_center, false},
-		c::white, c::white, c::white, c::align_topleft};
+	const Vec2f ability_info_box_size = {500.f,225.f};
+	const Color ability_info_bg_color = {0.1f, 0.1f, 0.1f, 1.f};
+	const Vec2f hud_ability_info_offset = {700.f, 10.f};
 
-	const ButtonLayout selected_ability_button_layout =
-		{{&text_render::default_font, c::orange, 32, c::align_center, false},
-		c::orange, c::orange, c::orange, c::align_topleft};
 
-	const ButtonLayout hovered_ability_button_layout =
-		{{&text_render::default_font, c::yellow, 32, c::align_center, false},
-		c::yellow, c::yellow, c::yellow, c::align_topleft};
+	// const ButtonLayout ability_button_layout =
+	// 	{{&text_render::default_font, c::white, 32, c::align_center, false},
+	// 	c::white, c::white, c::white, c::align_topleft};
 
-	const TextLayout trait_bar_value_text_layout = {&text_render::default_font, c::white, 16, c::align_center, false};
+	const ButtonLayout unselected_ability_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::white,
+		.button_hover_color = c::yellow,
+		.label_hover_color = c::yellow,
+		.align = c::align_topleft
+	};
 
-	const TextLayout trait_change_preview_text_layout = {&text_render::default_font, c::white, 16, c::align_leftcenter, false};
+	const ButtonLayout selected_ability_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::orange,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::orange,
+		.button_hover_color = c::orange,
+		.label_hover_color = c::orange,
+		.align = c::align_topleft
+	};
+
+
+	const TextLayout trait_bar_value_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_center,
+		.draw_debug = false};
+
+	const TextLayout trait_change_preview_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_leftcenter,
+		.draw_debug = false};
+
+
 	const float trait_change_preview_h_offset = 5.f;
 
 	// End turn button
 	const Vec2f end_turn_button_offset = {20.f, 100.f};
 	const Vec2f end_turn_button_size = {150.f, 50.f};
 	const Rect end_turn_button_rect = {end_turn_button_offset, end_turn_button_size};
-	const ButtonLayout end_button_normal_layout =
-		{{&text_render::default_font, c::white, 32, c::align_center, false},
-		c::white, c::green, c::green, c::align_topleft};
+	const ButtonLayout end_button_normal_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::white,
+		.button_hover_color = c::green,
+		.label_hover_color = c::green,
+		.align = c::align_topleft};
 
 	const float end_button_clicked_time_s = 0.1f; // How long the button flashes after being clicked before greying out.
-	const ButtonLayout end_button_clicked_layout =
-		{{&text_render::default_font, c::red, 32, c::align_center, false},
-		c::red, c::red, c::red, c::align_topleft};
+	const ButtonLayout end_button_clicked_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::red,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::red,
+		.button_hover_color = c::red,
+		.label_hover_color = c::red,
+		.align = c::align_topleft};
 
-	const ButtonLayout end_button_disabled_layout =
-		{{&text_render::default_font, c::dk_grey, 32, c::align_center, false},
-		c::dk_grey, c::dk_grey, c::dk_grey, c::align_topleft};
+	const ButtonLayout end_button_disabled_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::dk_grey,
+			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::dk_grey,
+		.button_hover_color = c::dk_grey,
+		.label_hover_color = c::dk_grey,
+		.align = c::align_topleft
+	};
 
 	// Enemy intents
-	const Vec2f enemy_intent_offset = {0.5f*c::unit_slot_size.x, -50.f};
+	const Vec2f enemy_intent_offset = {0.5f*unit_slot_size.x, -50.f};
 	const Vec2f enemy_intent_button_size = {150.f, 40.f};
-	const ButtonLayout enemy_intent_button_layout =
-		{{&text_render::default_font, c::grey, 16, c::align_center, false},
-		c::grey, c::lt_grey, c::lt_grey, c::align_center};
+	const ButtonLayout enemy_intent_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::grey,
+			.font_size = 16,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::grey,
+		.button_hover_color = c::lt_grey,
+		.label_hover_color = c::lt_grey,
+		.align = c::align_center
+	};
 
 	// traitset string format: "%dV %dF %dA"
 	// This requires space for up to:

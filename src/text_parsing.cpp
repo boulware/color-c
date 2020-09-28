@@ -81,6 +81,11 @@ IsDigit(char c)
 	return(c >= '0' and c <= '9');
 }
 
+bool IsAlpha(char c)
+{
+	return((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z'));
+}
+
 s32
 CharToInt(char c)
 {
@@ -95,7 +100,7 @@ CharToInt(char c)
 	}
 }
 
-// Return true if any characters were skipped
+// Skips all characters in char array *skip, and returns true if any characters were skipped
 bool
 SkipChars(Buffer *buffer, const char *skip)
 {
@@ -175,31 +180,52 @@ ParseNextAsS32(Buffer *buffer, s32 *value)
 
 	SkipChars(buffer, c::whitespace);
 	size_t bytes_remaining = BufferBytesRemaining(*buffer);
+	bool start_of_token_found = false;
+	bool at_least_one_digit_found = false;
 	for(int _=0; _<bytes_remaining; _++)
 	{
 		if(IsDigit(*buffer->p))
 		{
+			if(!start_of_token_found) start_of_token_found = true;
+			at_least_one_digit_found = true;
+
 			result *= 10;
 			result += CharToInt(*buffer->p);
 		}
-		else if(IsWhitespace(*buffer->p))
-		{
-			// We've reached the end of the token
-			break;
-		}
 		else if(*buffer->p == '-')
 		{
-			multiplier = -1;
+			if(!start_of_token_found)
+			{
+				multiplier = -1;
+				start_of_token_found = true;
+			}
+			else break;
 		}
 		else if(*buffer->p == '+')
 		{
-			multiplier = +1;
+			if(!start_of_token_found)
+			{
+				multiplier = +1;
+				start_of_token_found = true;
+			}
+			else break;
 		}
 		else
 		{
-			log("ParseNextAsS32() found illegal character (%c)", *buffer->p);
-			valid_token = false;
-			break;
+			//log("ParseNextAsS32() found illegal character (%c)", *buffer->p);
+			if(start_of_token_found and at_least_one_digit_found)
+			{
+				// We've found the start of the token and interpreted at least one digit, so this s32 is valid.
+				// This will be considered the end of the s32. We'll break out and write to the output value.
+				break;
+			}
+			else
+			{
+				// The characters found in the buffer didn't match a valid s32 interpetation, so we'll
+				// reset the buffer to its initial position and not write to the output value.
+				valid_token = false;
+				break;
+			}
 		}
 
 		buffer->p++;
@@ -261,6 +287,27 @@ CheckNextChar(Buffer *buffer, char c)
 }
 
 bool
+ConfirmNextChar(Buffer *buffer, char c)
+{
+	char *initial = buffer->p;
+
+	// If the char we're confirming is whitespace, we check for whitespace at current buffer pos and return...
+	if(CharInString(c, c::whitespace) and CharInString(*buffer->p, c::whitespace)) return true;
+
+	// ... otherwise, we skip all the beginning whitespace
+	SkipChars(buffer, c::whitespace);
+	if(*buffer->p++ == c)
+	{
+		return true;
+	}
+	else
+	{
+		buffer->p = initial;
+		return false;
+	}
+}
+
+bool
 SeekNextLineThatBeginsWith(Buffer *buffer, const char *start_string)
 {
 	size_t start_string_length = StringLength(start_string);
@@ -270,6 +317,7 @@ SeekNextLineThatBeginsWith(Buffer *buffer, const char *start_string)
 		{
 			return true;
 		}
+		if(buffer->data == buffer->p) ++buffer->p;
 	}
 
 	// We fail because 1) Never found a new line, 2) Found a newline but there were not enough remaining bytes to be
@@ -289,6 +337,7 @@ SeekAfterNextLineThatBeginsWith(Buffer *buffer, const char *start_string)
 			buffer->p += start_string_length-1;
 			return true;
 		}
+
 	}
 
 	// We fail because 1) Never found a new line, 2) Found a newline but there were not enough remaining bytes to be
@@ -443,6 +492,22 @@ DigitToUtf32Char(u32 digit)
 	if(digit < 0 or digit > 9) return 0;
 
 	return(u32('0')+digit);
+}
+
+bool
+TokenMatchesString(Token token, const char *string)
+{
+	for(int i=0; i<token.length; i++)
+	{
+		if(token.start[i] != string[i]) return false;
+
+		// We're assuming that tokens are not null-terminated (the length of a token should
+		// always correspond to the non-null-terminated length)
+		// In this case, we've reached the end of [string] before the end of token, so we don't consider it a match.
+		if(string[i] == '\0') return false;
+	}
+
+	return true;
 }
 
 // bool

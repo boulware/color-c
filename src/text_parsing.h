@@ -41,6 +41,7 @@ struct Token
 
 bool IsWhitespace(char c);
 bool IsDigit(char c);
+bool IsAlpha(char c);
 
 char FirstTokenChar(Token token);
 char LastTokenChar(Token token);
@@ -52,6 +53,7 @@ bool SeekChar(Buffer *buffer, char c);
 bool SeekAfterChar(Buffer *buffer, char c);
 bool SeekBeforeChar(Buffer *buffer, char c);
 bool CheckNextChar(Buffer *buffer, char c);
+bool ConfirmNextChar(Buffer *buffer, char c);
 
 bool SkipChars(Buffer *buffer, const char *skip);
 Token NextToken(Buffer *buffer, const char *trim);
@@ -63,5 +65,7 @@ bool CharInString(char target, const char *string);
 
 bool NextAsUtf32Char(StringBuffer *buffer, u32 *utf32_char);
 u32 DigitToUtf32Char(u32 digit);
+
+bool TokenMatchesString(Token token, const char *string);
 
 #endif

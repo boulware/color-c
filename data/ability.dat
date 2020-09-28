@@ -1,75 +1,85 @@
 ability "Strike"
-self_required 0 1 0
-change_to_target -5 0 0
-target_class "single_unit"
+tier 0
+requires (0,0,0)
+effect Damage single_unit (1,0,0)
+tier 1
+requires (5,0,0)
+effect Damage single_unit (2,0,0)
+tier 2
+requires (10,0,0)
+effect DamageIgnoreArmor single_unit (4,0,0)
 
 ability "Rest"
-change_to_target 1 1 0
-target_class "self"
+tier 0
+effect Restore self (1,1,0)
 
 ability "Rig Up"
-self_required 0 0 1
-change_to_target 0 0 1
-change_to_self 0 0 -1
-target_class "single_unit_not_self"
+requires (0,0,1)
+tier 0
+effect Gift single_ally (0,0,1)
 
 ability "Rally"
-self_required 0 1 0
-change_to_target 0 1 0
-target_class "all_allies"
+tier 0
+requires (0,1,0)
+effect Restore all_allies (0,1,0)
 
-ability "Steal"
-self_required 0 4 0
-target_required 0 0 1
-change_to_self 0 0 1
-change_to_target 0 0 -1
-target_class "single_unit_not_self"
+ability "Steal Armor"
+requires (0,4,0)
+tier 0
+effect Steal single_unit (0,0,1)
 
 ability "Shoot"
-self_required 0 1 0
-change_to_target -2 0 0
-target_class "single_unit_not_self"
+tier 0
+requires (0,1,0)
+effect Damage single_unit (2,0,0)
 
 ability "Split Arrow"
-self_required 0 4 0
-change_to_target -1 0 0
-target_class "all_enemies"
+tier 0
+requires (0,4,0)
+effect Damage all_enemies (1,0,0)
 
 ability "Taunt"
-self_required 0 4 0
-change_to_target 0 -2 0
-target_class "single_unit_not_self"
+tier 0
+requires (0,4,0)
+effect Damage single_unit (0,2,0)
 
 ability "Confuse"
-self_required 0 6 0
-change_to_target 0 -2 0
-target_class "single_unit"
+tier 0
+requires (0,6,0)
+effect Damage all_enemies (0,2,0)
 
 ability "Meditate"
-self_required 0 0 0
-change_to_target 0 2 0
-target_class "self"
+tier 0
+requires (0,0,0)
+effect Restore self (0,2,0)
 
 ability "Corrosion"
-self_required 0 6 0
-change_to_target -1 0 -1
-target_class "all_enemies"
+tier 0
+requires (0,6,0)
+effect Damage single_unit (1,0,1)
 
 ability "Vitalize"
-self_required 0 5 0
-change_to_target 4 0 0
-target_class "single_ally"
+tier 0
+requires (0,5,0)
+effect Restore single_unit (4,0,0)
 
 ability "Rewind"
-self_required 0 5 0
-target_class "single_unit"
+tier 0
+requires (0,5,0)
 
 ability "Swipe"
-self_required 10 0 0
-change_to_target -3 0 0
-target_class "all_enemies"
+tier 0
+requires (10,0,0)
+effect Damage all_enemies (3,0,0)
 
 ability "Breathe Fire"
-self_required 0 5 0
-change_to_target -5 0 0
-target_class "single_unit_not_self"
+tier 0
+requires (0,0,0)
+effect Damage self (2,0,0)
+effect Damage single_unit (2,0,0)
+tier 1
+requires (25,5,0)
+effect Damage single_unit (8,0,0)
+tier 2
+requires (30,5,0)
+effect Damage single_unit (12,0,0)

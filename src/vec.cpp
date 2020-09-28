@@ -280,6 +280,12 @@ bool PointInRect(Rect rect, Vec2f point)
 }
 
 Vec2f
+RectTopLeft(Rect rect)
+{
+	return rect.pos;
+}
+
+Vec2f
 RectTopRight(Rect rect)
 {
 	return rect.pos + Vec2f{rect.size.x, 0.f};
@@ -289,4 +295,16 @@ Vec2f
 RectCenter(Rect rect)
 {
 	return rect.pos + 0.5f*rect.size;
+}
+
+Vec2f
+RectRightCenter(Rect rect)
+{
+	return rect.pos + Vec2f{1.f*rect.size.x, 0.5f*rect.size.y};
+}
+
+Vec2f
+RectBottomRight(Rect rect)
+{
+	return rect.pos + rect.size;
 }

@@ -20,6 +20,14 @@ ActivateUvShader(Color color={1.f,1.f,1.f})
 }
 
 void
+SetDrawDepth(float depth)
+{
+	float clip_space_depth = c::clip_A*depth+c::clip_B;
+	gl->ProgramUniform1f(game->uv_shader, 3, clip_space_depth);
+	gl->ProgramUniform1f(game->color_shader, 2, clip_space_depth);
+}
+
+void
 DrawUnfilledRect(Rect rect, Color color)
 {
 	ActivateColorShader(color);

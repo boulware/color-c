@@ -29,16 +29,18 @@ const char *TargetClass_filestrings[] = {
 };
 
 const char *TargetClass_userstrings[] = {
-	"Self",
-	"Single Ally",
-	"Single Ally (Not Self)",
-	"All Allies",
-	"All Allies (Not Self)",
-	"Single Enemy",
-	"All Enemies",
-	"Single Unit",
-	"Single Unit (Not Self)",
-	"All"
+	"self",
+	"single ally",
+	"single ally (not self)",
+	"all allies",
+	"all allies (not self)",
+	"single enemy",
+	"all enemies",
+	"single unit",
+	"single unit (not self)",
+	"all"
 };
+
+bool ParseNextAsTargetClass(Buffer *buffer, TargetClass *target_class);
 
 #endif

@@ -17,4 +17,6 @@ void DrawLine(Vec2f start, Vec2f end, Color color);
 
 ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *label, ...);
 
+void SetDrawDepth(float depth);
+
 #endif

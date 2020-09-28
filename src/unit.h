@@ -43,6 +43,8 @@ struct TargetSet
 {
 	int size;
 	Unit *units[c::max_target_count];
+
+	Unit *operator[](int index);
 };
 
 Unit **begin(TargetSet &target_set);
@@ -59,10 +61,10 @@ void DrawUnitHudData(Unit unit);
 void DrawTraitSet(Vec2f pos, TraitSet cur_traits, TraitSet max_traits);
 Vec2f DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer);
 void DrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer);
-void DrawAbilityInfoBox(Vec2f pos, Ability ability, Align align);
+//void DrawAbilityInfoBox(Vec2f pos, Ability ability, Align align);
 
 void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
-TargetSet GenerateValidTargetSet(Unit *source, Ability *ability, TargetSet all_targets);
+TargetSet GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets);
 //bool AbilityIsSelected();
 //bool IsSelectedAbility(Ability *ability);
 void SetSelectedAbility(Ability *ability);
@@ -70,14 +72,13 @@ void SetSelectedAbility(Ability *ability);
 bool UnitInTargetSet(Unit *unit, TargetSet target_set);
 void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
 
-void ApplyAbilityToTargetSet(Unit *source, Ability ability, TargetSet target_set);
-
 UnitSchematic *GetUnitSchematic(Unit unit);
 
-bool CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability);
+bool CheckValidAbilityTarget(Unit *source, Unit *target, Effect *effect);
 
-TargetSet GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability, TargetSet all_targets);
+TargetSet GenerateInferredTargetSet(Unit *source, Unit *selected_target, Effect *effect, TargetSet all_targets);
 
 char *TraitSetString(TraitSet traits);
+int DetermineAbilityTier(Unit *caster, Ability *ability);
 
 #endif

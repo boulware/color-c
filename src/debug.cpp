@@ -17,10 +17,10 @@ DrawTimedBlockData()
 			max_average_cycles = m::Max(avg_cycles, max_average_cycles);
 
 			Vec2f text_size = DrawText(function_cycles_layout, pos,
-									   "function: %s count %llu, cycles %llu, avg %llu",
+									   "%s count %llu, cycles %.3e, avg %llu",
 									   TIMED_BLOCK_ARRAY[i].function_name,
 									   TIMED_BLOCK_ARRAY[i].hit_count,
-									   TIMED_BLOCK_ARRAY[i].total_cycle_count,
+									   (double)TIMED_BLOCK_ARRAY[i].total_cycle_count,
 									   avg_cycles);
 			max_right_extent = m::Max(max_right_extent, pos.x + text_size.x);
 			pos.y += text_size.y;

@@ -4,6 +4,7 @@
 #include "math.h"
 #include "draw.h"
 #include "memory.h"
+#include "utf32string.h"
 
 Font
 LoadFontData(FT_Face face, int size)
@@ -151,14 +152,190 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 	u32 utf32_char;
 	Vec2f text_size = SizeUtf8Line(layout, formatted_string);
 
-	if(layout.align == c::align_bottomcenter)
-	{
-		int a=0;
-	}
 	origin = AlignRect({origin, text_size}, layout.align).pos;
 	Vec2f pen = origin;
 
 	while(NextAsUtf32Char(&buffer, &utf32_char))
+	{
+		if(utf32_char == '\n')
+		{
+			break;
+		}
+		else
+		{
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+		}
+	}
+
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+Vec2f
+DrawText(TextLayout layout, Vec2f origin, String string)
+{
+	TIMED_BLOCK;
+
+	ActivateUvShader(layout.color);
+
+	//StringBuffer buffer = CreateStringBuffer(string.data);
+	u32 utf32_char;
+	Vec2f text_size = SizeText(layout, string);
+
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
+
+	for(int i=0; i<string.length; i++)
+	{
+		u32 utf32_char;
+		Utf8ToUtf32(string, i, &utf32_char);
+		if(utf32_char == '\n')
+		{
+			break;
+		}
+		else
+		{
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+		}
+	}
+
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+Vec2f
+DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
+{
+	TIMED_BLOCK;
+
+	ActivateUvShader(layout.color);
+
+	char *formatted_string;
+	mFormatString(formatted_string, string);
+
+	StringBuffer buffer = CreateStringBuffer(formatted_string);
+	u32 utf32_char;
+	Vec2f text_size = SizeUtf8Line(layout, formatted_string);
+
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
+
+	while(NextAsUtf32Char(&buffer, &utf32_char))
+	{
+		if(utf32_char == '\n')
+		{
+			pen.x = origin.x;
+			pen.y += LineSize(layout);
+		}
+		else
+		{
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+		}
+	}
+
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+Vec2f
+SizeText(TextLayout layout, String string, int char_count)
+{
+	TIMED_BLOCK;
+
+	Vec2f pen = {0.f,0.f};
+	float scale = TextLayoutScale(layout);
+
+	// Consider the whole string.
+	if(char_count < 0)
+	{
+		char_count = string.length;
+	}
+	else
+	{
+		int a =0;
+	}
+
+	// Iterate over each char, gets its x-advance, and add it to the size.
+	for(int i=0; i<char_count; i++)
+	{
+		u32 utf32_char;
+		Utf8ToUtf32(string, i, &utf32_char);
+		if(utf32_char == '\n')
+		{
+			break;
+		}
+		else
+		{
+			pen.x += scale*layout.font->advance_x[utf32_char];
+		}
+	}
+
+	return Vec2f{pen.x, LineSize(layout)};
+}
+
+// [char_count] is an optional parameter which will count only that number of chars
+// in the size, rather than the entire string. A negative char_count will use the
+// whole string.
+Vec2f
+SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
+{
+	TIMED_BLOCK;
+
+	Vec2f pen = {0.f,0.f};
+	float scale = TextLayoutScale(layout);
+
+	// Consider the whole string.
+	if(char_count < 0)
+	{
+		char_count = string.length;
+	}
+	else
+	{
+		int a =0;
+	}
+
+	// Iterate over each char, gets its x-advance, and add it to the size.
+	for(int i=0; i<char_count; i++)
+	{
+		u32 utf32_char = CharAt(&string, i);
+		if(utf32_char == '\n')
+		{
+			break;
+		}
+		else
+		{
+			pen.x += scale*layout.font->advance_x[utf32_char];
+		}
+	}
+
+	return Vec2f{pen.x, LineSize(layout)};
+}
+
+Vec2f
+DrawTextUtf32(TextLayout layout, Vec2f origin, Utf32String string)
+{
+	TIMED_BLOCK;
+
+	ActivateUvShader(layout.color);
+
+	Vec2f text_size = SizeTextUtf32(layout, string);
+
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
+
+	for(u32 utf32_char : string)
 	{
 		if(utf32_char == '\n')
 		{
@@ -376,3 +553,9 @@ DrawDummyText(TextLayout layout, Vec2f pos)
 // 		gl->DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 // 	}
 // }
+
+bool
+ValidFont(Font *font)
+{
+	return(font and font->is_init);
+}

@@ -67,6 +67,8 @@ namespace vk
 	const u8 RightBracket = 0xDD;
 	const u8 NumpadMinus = 0x6D;
 	const u8 esc = 0x1B; const u8 escape = 0x1B;
+	const u8 backspace = 0x08;
+	const u8 del = 0x2E;
 
 	// Mouse
 	const u8 LMB = 0x01; const u8 lmb = 0x01;
@@ -80,8 +82,17 @@ struct InputState
 {
 	u8 pressed_keys[256];
 	u8 released_keys[256];
-	s8 down_keys[256];
+	u8 repeated_keys[256];
+	u8 down_keys[256];
 	Vec2f mouse_pos;
+	int mouse_scroll;
+
+	// A utf-32 encoded bytestream which is updated by the platform with translated characters
+	// just before the update and render is called. It is variable-length, and its length is
+	// determined by how many translated characters were caught by the platform (in the case of
+	// Windows, in the WM_CHAR event) since the beginning of the last frame. The platform should
+	// null terminate it.
+	u32 *utf32_translated_stream;
 };
 
 namespace input
@@ -92,6 +103,8 @@ namespace input
 bool Down(u8 key);
 bool Pressed(u8 key);
 bool Released(u8 key);
+bool Repeated(u8 key);
 Vec2f MousePos();
+int MouseScroll();
 
 #endif

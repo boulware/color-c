@@ -2,6 +2,18 @@
 #define IMGUI_H
 
 #include "text_render.h"
+#include "string.h"
+
+struct ListPanelLayout
+{
+	Rect rect;
+};
+
+struct ListPanelResponse
+{
+	int hovered_index;
+	int pressed_index;
+};
 
 struct ButtonLayout
 {
@@ -11,6 +23,16 @@ struct ButtonLayout
 	Align align;
 };
 
+struct TextEntryLayout
+{
+	Vec2f size;
+	TextLayout label_layout;
+	TextLayout text_layout;
+	Align align;
+};
+
+
+
 struct ImguiContainer
 {
 	Vec2f pos; // Top left corner of container in window coordinates
@@ -19,6 +41,7 @@ struct ImguiContainer
 	//int font_size;
 
 	ButtonLayout button_layout;
+	TextEntryLayout text_entry_layout;
 };
 
 struct ButtonResponse
@@ -26,6 +49,15 @@ struct ButtonResponse
 	bool pressed;
 	bool hovered;
 	Rect rect;
+};
+
+struct TextEntryResponse
+{
+	bool pressed;
+	bool hovered;
+
+	// -1 if not clicked. >=0 if the element was clicked, representing what text cursor pos the click corresponded to
+	int clicked_cursor_pos;
 };
 
 namespace imgui
@@ -36,6 +68,10 @@ namespace imgui
 
 ButtonResponse Button(const char *label, ...);
 float GetButtonHeight(ImguiContainer container);
+
+ListPanelResponse ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count);
+
+//TextEntryResponse TextEntry(const char *text, int cursor_pos);
 
 void ResetImguiContainer(ImguiContainer *container);
 void SetActiveContainer(ImguiContainer *container);

@@ -4,8 +4,7 @@
 #include "const.h"
 #include "log.h"
 #include "vec.h"
-#include "string.h"
-#include "food.h"
+#include "utf32string.h"
 #include "freetype_wrapper.h"
 #include "unit.h"
 #include "data_table.h"
@@ -13,10 +12,20 @@
 #include "imgui.h"
 #include "sprite.h"
 #include "battle.h"
+#include "editor.h"
+
+enum class GameState
+{
+	MainMenu,
+	Battle,
+	Editor,
+};
 
 struct Game
 {
 	bool exit_requested;
+
+	GameState current_state;
 
 	LogState log_state;
 	float frame_time_ms;
@@ -39,6 +48,8 @@ struct Game
 
 	Unit *player_party[c::max_party_size];
 	Battle current_battle;
+
+	Editor editor_state;
 
 	Sprite pointer_cursor;
 	Sprite target_cursor;

@@ -3,6 +3,13 @@
 #include "util.h"
 #include "text_parsing.h"
 
+Unit *TargetSet::operator[](int index)
+{
+	if(index < 0 or index >= size) return nullptr;
+
+	return units[index];
+}
+
 Unit **begin(TargetSet &target_set)
 {
 	return target_set.units;
@@ -13,121 +20,7 @@ Unit **end(TargetSet &target_set)
 	return target_set.units + (target_set.size);
 }
 
-bool
-ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set)
-{
-	char *initial = buffer->p;
-	TraitSet temp;
 
-	// true && true = true
-	// true && false = false
-
-	bool tokens_valid = true;
-	tokens_valid = tokens_valid && ParseNextAsS32(buffer, &temp.vigor);
-	tokens_valid = tokens_valid && ParseNextAsS32(buffer, &temp.focus);
-	tokens_valid = tokens_valid && ParseNextAsS32(buffer, &temp.armor);
-
-	if(tokens_valid)
-	{
-		*trait_set = temp;
-		return true;
-	}
-	else
-	{
-		buffer->p = initial;
-		return false;
-	}
-}
-
-bool
-ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
-{
-	if(!buffer or !ability) return false;
-
-	bool valid_ability_data = true;
-	char *initial = buffer->p;
-	Ability temp_ability = {};
-
-	bool header_valid = ConfirmNextToken(buffer, "ability");
-	if(!header_valid) valid_ability_data = false;
-
-	Token name_token;
-	bool is_valid_name = NextTokenAsDoubleQuotedString(buffer, &name_token);
-	if(!is_valid_name)
-	{
-		valid_ability_data = false;
-	}
-
-	bool end_of_ability_data = false;
-	while(valid_ability_data and !end_of_ability_data)
-	{
-		char *before_token = buffer->p;
-		Token token = NextToken(buffer);
-
-		if(BufferBytesRemaining(*buffer) == 0 or CompareStrings(token.start, "ability"))
-		{
-			// reset buffer to before the previous token was fetched, since it's not part of the current
-			// ability data
-			buffer->p = before_token;
-			end_of_ability_data = true;
-		}
-		else if(CompareStrings(token.start, "self_required"))
-		{
-			valid_ability_data = ParseNextAsTraitSet(buffer, &temp_ability.self_required);
-		}
-		else if(CompareStrings(token.start, "target_required"))
-		{
-			valid_ability_data = ParseNextAsTraitSet(buffer, &temp_ability.target_required);
-		}
-		else if(CompareStrings(token.start, "change_to_target"))
-		{
-			valid_ability_data = ParseNextAsTraitSet(buffer, &temp_ability.change_to_target);
-		}
-		else if(CompareStrings(token.start, "change_to_self"))
-		{
-			 valid_ability_data = ParseNextAsTraitSet(buffer, &temp_ability.change_to_self);
-		}
-		else if(CompareStrings(token.start, "target_class"))
-		{
-			// target_class string (e.g., "single_unit", "self", "all_allies", etc.)
-			Token target_class_token;
-			valid_ability_data = NextTokenAsDoubleQuotedString(buffer, &target_class_token);
-
-			if(valid_ability_data)
-			{
-				for(int i=0; i<sizeof(TargetClass_filestrings)/sizeof(char*); i++)
-				{
-					if(CompareBytesN(target_class_token.start, TargetClass_filestrings[i], target_class_token.length))
-					{
-						temp_ability.target_class = (TargetClass)i;
-						break;
-					}
-				}
-			}
-		}
-		else
-		{
-			valid_ability_data = false;
-		}
-	}
-
-	if(valid_ability_data)
-	{
-		*ability = temp_ability;
-		CopyString(ability->name, name_token.start, m::Min(sizeof(ability->name), name_token.length+1));
-
-		return true;
-	}
-	else
-	{
-		buffer->p = initial;
-		size_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));
-		log("Encountered invalid ability data in buffer at address: %p (\"%.*s\")",
-			buffer->p, number_of_bytes_to_print, buffer->p);
-
-		return false;
-	}
-}
 
 bool
 ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable ability_table)
@@ -163,18 +56,18 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 		char *before_token = buffer->p;
 		Token token = NextToken(buffer);
 
-		if(BufferBytesRemaining(*buffer) == 0 or CompareStrings(token.start, "unit"))
+		if(BufferBytesRemaining(*buffer) == 0 or TokenMatchesString(token, "unit"))
 		{
 			// reset buffer to before the previous token was fetched, since it's not part of the current
 			// ability data
 			buffer->p = before_token;
 			end_of_unit_data = true;
 		}
-		else if(CompareStrings(token.start, "traits"))
+		else if(TokenMatchesString(token, "traits"))
 		{
 			valid_unit_data = ParseNextAsTraitSet(buffer, &temp_unit_schematic.max_traits);
 		}
-		else if(CompareStrings(token.start, "moveset"))
+		else if(TokenMatchesString(token, "moveset"))
 		{
 			// Look for *up to* moveset_max_size strings of ability names
 			for(int i=0; i<c::moveset_max_size; i++)
@@ -223,44 +116,6 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 }
 
 bool
-LoadAbilityFile(const char *filename, DataTable *table)
-{
-	if(!filename or !table) return false;
-
-	Buffer file;
-	bool load_success = platform->LoadFileIntoSizedBufferAndNullTerminate(filename, &file);
-	if(!load_success) return false;
-
-	size_t ability_count_loaded = 0;
-
-	while(BufferBytesRemaining(file) > 0)
-	{
-		bool found_ability = SeekNextLineThatBeginsWith(&file, "ability");
-		if(!found_ability) break;
-
-		if(DataTableEntriesRemaining(*table) >= 1)
-		{
-			Ability temp_ability = {};
-			if(ParseNextAsAbilityData(&file, &temp_ability))
-			{
-				Ability *ability = (Ability*)CreateEntry(table);
-				*ability = temp_ability;
-				ability->init = true;
-				ability_count_loaded += 1;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}
-
-	//log("Loaded %zu abilities from file: %s", ability_count_loaded, filename);
-	FreeBuffer(&file);
-	return true;
-}
-
-bool
 LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, DataTable ability_table)
 {
 	if(!filename or !unit_schematic_table) return false;
@@ -288,7 +143,7 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 			}
 			else
 			{
-				break;
+				continue;
 			}
 		}
 	}
@@ -340,39 +195,38 @@ CreateUnitByName(const char *name, Team team)
 }
 
 bool
-CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability)
+CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 {
-	if(!source or !target or !ability) return false;
-	if(!source->init or !target->init or !ability->init) return false;
+	if(!ValidUnit(caster) or !ValidUnit(target)) return false;
 
-	TargetClass tc = ability->target_class;
+	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::self)
 	{
-		return(source == target);
+		return(caster == target);
 	}
 	else if(tc == TargetClass::single_ally)
 	{
-		return(source->team == target->team);
+		return(caster->team == target->team);
 	}
 	else if(tc == TargetClass::single_ally_not_self)
 	{
-		return(source->team == target->team and source != target);
+		return(caster->team == target->team and caster != target);
 	}
 	else if(tc == TargetClass::all_allies)
 	{
-		return(source->team == target->team);
+		return(caster->team == target->team);
 	}
 	else if(tc == TargetClass::all_allies_not_self)
 	{
-		return(source->team == target->team and source != target);
+		return(caster->team == target->team and caster != target);
 	}
 	else if(tc == TargetClass::single_enemy)
 	{
-		return(source->team != target->team);
+		return(caster->team != target->team);
 	}
 	else if(tc == TargetClass::all_enemies)
 	{
-		return(source->team != target->team);
+		return(caster->team != target->team);
 	}
 	else if(tc == TargetClass::single_unit)
 	{
@@ -380,7 +234,7 @@ CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability)
 	}
 	else if(tc == TargetClass::single_unit_not_self)
 	{
-		return(source != target);
+		return(caster != target);
 	}
 	else if(tc == TargetClass::all_units)
 	{
@@ -392,17 +246,16 @@ CheckValidAbilityTarget(Unit *source, Unit *target, Ability *ability)
 }
 
 TargetSet
-GenerateValidTargetSet(Unit *source, Ability *ability, TargetSet all_targets)
+GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets)
 {
-	if(!source or !ability) return TargetSet{};
-	if(!source->init or !ability->init) return TargetSet{};
+	if(!ValidUnit(caster)) return TargetSet{};
 
 	TargetSet valid_targets = {};
 	for(Unit *target : all_targets)
 	{
-		if(CheckValidAbilityTarget(source, target, ability))
+		if(CheckValidEffectTarget(caster, target, effect))
 		{
-			valid_targets.units[valid_targets.size++] = target;
+			AddUnitToTargetSet(target, &valid_targets);
 		}
 	}
 
@@ -410,35 +263,34 @@ GenerateValidTargetSet(Unit *source, Ability *ability, TargetSet all_targets)
 }
 
 TargetSet
-GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability, TargetSet all_targets)
+GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, TargetSet all_targets)
 {
 	TIMED_BLOCK;
 
-	if(!source or !selected_target or !ability) return TargetSet{};
-	if(!source->init or !selected_target->init or !ability->init) return TargetSet{};
+	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return TargetSet{};
 
-	// Sanitize all_targets not to include nullptrs nor units that are not initialized.
-	TargetSet all_targets_clean = {};
-	for(Unit *unit : all_targets)
-	{
-		if(!unit or !unit->init) continue;
-		AddUnitToTargetSet(unit, &all_targets_clean);
-	}
-
-	// Return empty set if the target is invalid.
-	if(!CheckValidAbilityTarget(source, selected_target, ability))
+	// Return empty target set if the explicit target is invalid.
+	if(!CheckValidEffectTarget(caster, selected_target, effect))
 	{
 		return TargetSet{};
 	}
 
+	// Sanitize all_targets not to include invalid units (nullptr or not init)
+	TargetSet all_targets_clean = {};
+	for(Unit *unit : all_targets)
+	{
+		if(!ValidUnit(unit)) continue;
+		AddUnitToTargetSet(unit, &all_targets_clean);
+	}
+
 	TargetSet inferred_target_set = {};
-	TargetClass tc = ability->target_class;
+	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::all_allies)
 	{
-		// All targets that are on the same team as the source
+		// All targets that are on the same team as the caster
 		for(Unit *unit : all_targets_clean)
 		{
-			if(unit->team == source->team)
+			if(unit->team == caster->team)
 			{
 				AddUnitToTargetSet(unit, &inferred_target_set);
 			}
@@ -446,10 +298,10 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 	}
 	else if(tc == TargetClass::all_allies_not_self)
 	{
-		// All targets that are on the same team as the source, excluding the source.
+		// All targets that are on the same team as the caster, excluding the caster.
 		for(Unit *unit : all_targets_clean)
 		{
-			if(unit != source and unit->team == source->team)
+			if(unit != caster and unit->team == caster->team)
 			{
 				AddUnitToTargetSet(unit, &inferred_target_set);
 			}
@@ -458,7 +310,7 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 	else if(tc == TargetClass::single_ally_not_self)
 	{
 		// if(selected target is ally _AND_ selected target is not self)
-		if(selected_target->team == source->team and selected_target != source)
+		if(selected_target->team == caster->team and selected_target != caster)
 		{
 			AddUnitToTargetSet(selected_target, &inferred_target_set);
 		}
@@ -466,17 +318,17 @@ GenerateInferredTargetSet(Unit *source, Unit *selected_target, Ability *ability,
 	else if(tc == TargetClass::single_unit_not_self)
 	{
 		// if(selected target is not self)
-		if(selected_target != source)
+		if(selected_target != caster)
 		{
 			AddUnitToTargetSet(selected_target, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::all_enemies)
 	{
-		// All targets that are not on the same team as the source.
+		// All targets that are not on the same team as the caster.
 		for(Unit *unit : all_targets_clean)
 		{
-			if(unit->team != source->team)
+			if(unit->team != caster->team)
 			{
 				AddUnitToTargetSet(unit, &inferred_target_set);
 			}
@@ -517,39 +369,16 @@ UnitInTargetSet(Unit *unit, TargetSet target_set)
 void
 AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 {
-	if(!unit or !target_set) return;
-	if(!unit->init) return;
+	if(!ValidUnit(unit) or !target_set) return;
 
 	// Do nothing if target set is already at max size
 	if(target_set->size >= c::max_target_count) return;
 
-// Do nothing if [*unit] is already part of the set
+	// Do nothing if [*unit] is already part of the set
 	if(UnitInTargetSet(unit, *target_set)) return;
 
 	// Add the unit to the set
 	target_set->units[target_set->size++] = unit;
-}
-
-void
-ApplyAbilityToTargetSet(Unit *source, Ability ability, TargetSet target_set)
-{
-	if(!source) return;
-	if(!source->init) return;
-
-	source->cur_traits += ability.change_to_self;
-
-	for(Unit *unit : target_set)
-	{
-		unit->cur_traits += CalculateAdjustedDamage(unit->cur_traits, ability.change_to_target);
-		//unit->cur_traits += ability.change_to_target;
-
-		if(unit->cur_traits.vigor <= 0) unit->init = false;
-
-		for(s32 &trait : unit->cur_traits)
-		{
-			trait = m::Max(0, trait);
-		}
-	}
 }
 
 Vec2f
@@ -820,4 +649,17 @@ TraitSetString(TraitSet traits)
 
 	*p = '\0';
 	return traitset_string;
+}
+
+int
+DetermineAbilityTier(Unit *caster, Ability *ability)
+{
+	for(int i=c::max_ability_tier_count-1; i>=0; --i)
+	{
+		if(caster->cur_traits >= ability->tiers[i].required_traits) return i;
+	}
+
+	// The caster doesn't have the required traits to use the ability at all.
+	// We return a negative value to indicate this case.
+	return -1;
 }
