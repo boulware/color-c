@@ -15,7 +15,8 @@ void DrawFilledRect(Vec2f pos, Vec2f size, Color color);
 
 void DrawLine(Vec2f start, Vec2f end, Color color);
 
-ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *label, ...);
+ButtonResponse DrawButton(ButtonLayout layout, Rect rect, String label);
+ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *c_string);
 
 void SetDrawDepth(float depth);
 

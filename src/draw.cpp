@@ -94,12 +94,9 @@ DrawHealthbar()
 }
 
 ButtonResponse
-DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
+DrawButton(ButtonLayout layout, Rect rect, String label)
 {
 	ButtonResponse response = {};
-
-	char *formatted_label;
-	mFormatString(formatted_label, label);
 
 	Rect aligned_button_rect = AlignRect(rect, layout.align);
 	response.rect = aligned_button_rect;
@@ -110,7 +107,7 @@ DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
 		DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
 		TextLayout hovered_layout = layout.label_layout;
 		hovered_layout.color = layout.label_hover_color;
-		DrawText(hovered_layout, RectCenter(aligned_button_rect), formatted_label);
+		DrawText(hovered_layout, RectCenter(aligned_button_rect), label);
 
 		response.hovered = true;
 		if(Pressed(vk::LMB)) response.pressed = true;
@@ -119,8 +116,14 @@ DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
 	{
 		// Button is NOT being hovered
 		DrawUnfilledRect(aligned_button_rect, layout.button_color);
-		DrawText(layout.label_layout, RectCenter(aligned_button_rect), formatted_label);
+		DrawText(layout.label_layout, RectCenter(aligned_button_rect), label);
 	}
 
 	return response;
+}
+
+ButtonResponse
+DrawButton(ButtonLayout layout, Rect rect, const char *c_string)
+{
+	return DrawButton(layout, rect, StringFromCString(c_string));
 }

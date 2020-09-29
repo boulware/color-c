@@ -13,7 +13,7 @@ struct Utf32String
 	int length;
 	int max_length;
 	u32 *data;
-	Vec2f pos;
+//	Vec2f pos;
 };
 
 u32 &CharAt(Utf32String *string, u32 index);

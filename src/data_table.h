@@ -26,4 +26,8 @@ int GetIndexByName(DataTable table, const char *entry_name);
 template <typename Type>
 Type *GetEntryByName(DataTable table, const char *entry_name);
 
+template <typename Type>
+int
+GetIndexByName(DataTable table, String search_string);
+
 #endif

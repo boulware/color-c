@@ -31,6 +31,12 @@ MousePos()
 	return(input::global_input->mouse_pos);
 }
 
+bool
+MouseInRect(Rect rect)
+{
+	return(PointInRect(rect, MousePos()));
+}
+
 int
 MouseScroll()
 {

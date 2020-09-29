@@ -42,7 +42,7 @@ void FreeBuffer(Buffer *buffer);
 size_t BufferBytesRemaining(Buffer buffer);
 size_t BufferBytesRemaining(StringBuffer buffer);
 
-enum class TokenType
+enum class TokenType_
 {
 	Unknown,
 	Pound,
@@ -58,7 +58,7 @@ enum class TokenType
 
 struct Token
 {
-	TokenType type;
+	TokenType_ type;
 	char *start;
 	size_t length;
 };

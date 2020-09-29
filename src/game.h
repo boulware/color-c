@@ -46,7 +46,7 @@ struct Game
 
 	FT_Library ft_lib;
 
-	Unit *player_party[c::max_party_size];
+	UnitSet player_party;
 	Battle current_battle;
 
 	Editor editor_state;

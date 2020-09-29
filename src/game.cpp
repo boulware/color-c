@@ -17,6 +17,8 @@ Platform *platform = nullptr;
 OpenGL *gl = nullptr;
 Game *game = nullptr;
 
+#include "meta_print.cpp"
+
 #include "log.cpp"
 #include "util.cpp"
 #include "opengl.cpp"
@@ -48,8 +50,6 @@ Game *game = nullptr;
 #include "editor.cpp"
 #include "string.cpp"
 #include "utf32string.cpp"
-
-#include "meta_print(manual).cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
@@ -139,10 +139,10 @@ GameInit()
 		}
 	}
 
-	game->player_party[0] = CreateUnitByName("Rogue", Team::allies);
-	game->player_party[1] = CreateUnitByName("Warrior", Team::allies);
-	game->player_party[2] = CreateUnitByName("Archer", Team::allies);
-	game->player_party[3] = CreateUnitByName("Cleric", Team::allies);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
 
 	game->current_battle = {};
 	game->current_battle.hud = {{0.f, game->window_size.y-c::hud_offset_from_bottom}, {game->window_size.x, c::hud_offset_from_bottom}};
@@ -162,11 +162,11 @@ GameInit()
 	}
 
 	// Place units in unit slots
-	for(int i=0; i<c::max_party_size; i++)
-	{
-		game->current_battle.units[i] = game->player_party[i];
-	}
-	game->current_battle.units[c::max_party_size+0] = CreateUnitByName("Dragon", Team::enemies);
+	// for(int i=0; i<c::max_party_size; i++)
+	// {
+	// 	game->current_battle.units[i] = game->player_party[i];
+	// }
+	//game->current_battle.units[c::max_party_size+0] = CreateUnitByName("Dragon", Team::enemies);
 	// game->current_battle.units[c::max_party_size+1] = CreateUnitByName("Slime", Team::enemies);
 	// game->current_battle.units[c::max_party_size+2] = CreateUnitByName("Wolf", Team::enemies);
 	// game->current_battle.units[c::max_party_size+3] = CreateUnitByName("Slime", Team::enemies);
@@ -180,7 +180,10 @@ GameInit()
 	game->target_cursor = LoadBitmapFileIntoSprite("resource/target.bmp", c::align_center);
 	game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
-	InitiateBattle(&game->current_battle);
+	UnitSet battle_units = game->player_party;
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+
+	InitiateBattle(&game->current_battle, battle_units);
 	StartEditor(&game->editor_state);
 
 	// Debug
@@ -190,9 +193,13 @@ GameInit()
 	game->draw_debug_text = false;
 	game->test_float = 0.f;
 
-	game->current_state = GameState::Editor;
+	game->current_state = GameState::Battle;
 
-//
+	// To use this, set OPTIMIZE to true, convert the original function into a function pointer
+	// with the name OPTIMIZING_FUNCTION, and declare two functions named with "Slow" and "Fast"
+	// appended to the name set in OPTIMIZING_FUNCTION. aowtc: F5 toggles between slow and fast in
+	// GameUpdateAndRender.
+	// e.g., Foo, FooSlow, FooFast
 	#define OPTIMIZE false
 	#if OPTIMIZE
 	#define OPTIMIZING_FUNCTION ClearArena
@@ -290,6 +297,8 @@ GameUpdateAndRender()
 	{
 		DrawTimedBlockData();
 	}
+
+	//DrawTextMultiline(c::def_text_layout, {500.0f,400.0f}, AsString(&game->editor_state));
 
 	//DrawText(c::def_text_layout, {500.f,500.f}, "%zu", ArenaBytesAllocated(memory::per_frame_arena));
 

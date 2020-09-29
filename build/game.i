@@ -40760,6 +40760,7 @@ CheckOpenGLBinds(const OpenGL *opengl)
 
 
 
+
 struct Arena
 {
 	void *start;
@@ -40782,7 +40783,7 @@ void *AllocFromArena(Arena *arena, size_t byte_count, bool zero=false);
 void *AllocTemp(size_t byte_count);
 void *AllocPerma(size_t byte_count);
 
-#line 27 "D:\\work\\programming\\color-c\\src\\memory.h"
+#line 28 "D:\\work\\programming\\color-c\\src\\memory.h"
 #line 9 "D:\\work\\programming\\color-c\\src\\utf32string.h"
 
 
@@ -40791,7 +40792,7 @@ struct Utf32String
 	int length;
 	int max_length;
 	u32 *data;
-	Vec2f pos;
+
 };
 
 u32 &CharAt(Utf32String *string, u32 index);
@@ -40829,6 +40830,17 @@ struct String
 	char *data;
 };
 
+
+
+
+
+
+
+
+
+
+
+
 char &CharAt(String *string, u32 index);
 
 char *begin(String& string);
@@ -40855,7 +40867,11 @@ int Utf8ToUtf32(String string, int index, u32 *utf32_char);
 
 String LowerCase(String string, Arena *arena = &memory::per_frame_arena);
 
-#line 42 "D:\\work\\programming\\color-c\\src\\string.h"
+String AllocStringDataFromArena(int max_length, Arena *arena);
+
+String AsString(const String *s);
+
+#line 57 "D:\\work\\programming\\color-c\\src\\string.h"
 #line 11 "D:\\work\\programming\\color-c\\src\\text_render.h"
 
 struct Font
@@ -40945,6 +40961,18 @@ struct TextEntryLayout
 	Align align;
 };
 
+struct IntegerBoxLayout
+{
+	Vec2f size;
+	Color border_color;
+	TextLayout label_layout;
+	TextLayout text_layout;
+};
+
+struct IntegerBoxResponse
+{
+	int value_change;
+};
 
 
 struct ImguiContainer
@@ -40990,7 +41018,7 @@ ListPanelResponse ListPanel(ListPanelLayout layout, String *entry_names, size_t 
 void ResetImguiContainer(ImguiContainer *container);
 void SetActiveContainer(ImguiContainer *container);
 
-#line 80 "D:\\work\\programming\\color-c\\src\\imgui.h"
+#line 92 "D:\\work\\programming\\color-c\\src\\imgui.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\const.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\data_table.h"
 
@@ -41174,6 +41202,42 @@ namespace c
 	
 	const int max_field_text_length = 30;
 	const int max_field_label_length = 30;
+	int const editor_max_input_elements = 10;
+
+	TextLayout editor_integer_box_label_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_bottomleft
+	};
+
+	TextLayout editor_integer_box_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 32,
+		.align = c::align_center
+	};
+
+	IntegerBoxLayout editor_vigor_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::red,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
+
+	IntegerBoxLayout editor_focus_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::yellow,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
+
+	IntegerBoxLayout editor_armor_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::lt_blue,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
 
 	
 	
@@ -41257,14 +41321,16 @@ namespace c
 		.color = c::white,
 		.font_size = 16,
 		.align = c::align_center,
-		.draw_debug = false};
+		.draw_debug = false
+	};
 
 	const TextLayout trait_change_preview_text_layout = {
 		.font = &text_render::default_font,
 		.color = c::white,
 		.font_size = 16,
 		.align = c::align_leftcenter,
-		.draw_debug = false};
+		.draw_debug = false
+	};
 
 
 	const float trait_change_preview_h_offset = 5.f;
@@ -41352,7 +41418,7 @@ namespace c
 	const int max_effect_count = 10;
 };
 
-#line 339 "D:\\work\\programming\\color-c\\src\\const.h"
+#line 377 "D:\\work\\programming\\color-c\\src\\const.h"
 #line 6 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\global.h"
 
@@ -41368,6 +41434,8 @@ namespace c
 
 
 #line 1 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
+
+
 
 
 
@@ -41438,7 +41506,9 @@ u32 DigitToUtf32Char(u32 digit);
 
 bool TokenMatchesString(Token token, const char *string);
 
-#line 72 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
+String StringFromToken(Token token, Arena *arena);
+
+#line 76 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
 #line 7 "D:\\work\\programming\\color-c\\src\\unit.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\ability.h"
 
@@ -41598,11 +41668,12 @@ struct AbilityTier
 
 
 
+
 struct Ability
 {
 	bool init;
 
-	char name[c::max_ability_name_length+1];
+	String name;
 	AbilityTier tiers[c::max_ability_tier_count];
 };
 
@@ -41610,7 +41681,7 @@ bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
 bool LoadAbilityFile(const char *filename, DataTable *table);
 char *GenerateAbilityTierText(const AbilityTier *tier);
 
-#line 43 "D:\\work\\programming\\color-c\\src\\ability.h"
+#line 44 "D:\\work\\programming\\color-c\\src\\ability.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\unit.h"
 
 enum class Team
@@ -42003,8 +42074,9 @@ bool Released(u8 key);
 bool Repeated(u8 key);
 Vec2f MousePos();
 int MouseScroll();
+bool MouseInRect(Rect rect);
 
-#line 111 "D:\\work\\programming\\color-c\\src\\input.h"
+#line 112 "D:\\work\\programming\\color-c\\src\\input.h"
 #line 12 "D:\\work\\programming\\color-c\\src\\game.h"
 
 #line 1 "D:\\work\\programming\\color-c\\src\\sprite.h"
@@ -42217,27 +42289,104 @@ void ApplyBattleEvent(const BattleEvent *event);
 
 
 
+enum class EditorMode
+{
+	None,
+	Ability,
+	UnitSchematic,
+};
+
+enum class InputElementType
+{
+	None,
+	String,
+	Integer,
+};
+
+enum AbilityPropertyIndex : int
+{
+	search,
+	name,
+	tier0required_vigor,
+	tier0required_focus,
+	tier0required_armor,
+	tier1required_vigor,
+	tier1required_focus,
+	tier1required_armor,
+	tier2required_vigor,
+	tier2required_focus,
+	tier2required_armor,
+	COUNT
+};
+
+InputElementType ability_property_types[AbilityPropertyIndex::COUNT] = {
+	InputElementType::String,
+	InputElementType::String,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer
+};
+
+
+
+struct InputElement
+{
+	InputElementType type;
+
+	String label;
+	Vec2f pos;
+	String text;
+	void *value_ptr;
+};
+
+
 struct Editor
 {
 	bool init;
 	Arena arena;
 
-	ImguiContainer field_container;
-	ListPanelLayout left_panel_layout;
+	EditorMode mode;
 
-	
+	ListPanelLayout search_panel_layout = {
+		.rect = {
+			.pos = {0.f,100.f},
+			.size = {300.f,700.f}
+		}
+	};
+
+	float panel_scroll_acc;
+	float panel_scroll_vel;
+	float panel_scroll_pos;
+	float panel_scroll_friction;
+	float panel_scroll_velocity_minimum;
 
 	int active_index; 
 	int text_cursor_pos;
-	String field_labels[2];
-	String field_strings[2];
-	Vec2f field_positions[2];
+
 	
+	
+	
+
+	InputElement input_elements[10];
+
+	
+	
+
+	
+	
+	Ability temp_ability;
+	UnitSchematic temp_unit_schematic;
 };
 
 void StartEditor(Editor *editor);
 
-#line 28 "D:\\work\\programming\\color-c\\src\\editor.h"
+#line 105 "D:\\work\\programming\\color-c\\src\\editor.h"
 #line 16 "D:\\work\\programming\\color-c\\src\\game.h"
 
 enum class GameState
@@ -42295,6 +42444,407 @@ struct Game
 Platform *platform = nullptr;
 OpenGL *gl = nullptr;
 Game *game = nullptr;
+
+#line 1 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\bitmap.h"
+
+
+
+
+
+
+struct BgraPixel
+{
+	u8 b,g,r,a;
+};
+
+struct Bitmap
+{
+	u32 width, height;
+	BgraPixel *pixels;
+};
+
+Bitmap AllocBitmap(u32 width, u32 height);
+void DeallocBitmap(Bitmap *bitmap);
+void Blit(Bitmap src, Bitmap dst, Vec2f pos);
+
+Bitmap LoadArgbBitmapFromFile(const char *filename);
+Sprite LoadBitmapFileIntoSprite(const char *filename, Align align);
+#line 25 "D:\\work\\programming\\color-c\\src\\bitmap.h"
+#line 5 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+
+
+
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\freetype.h"
+
+
+
+
+
+
+Font
+LoadFontFromFile(const char *filename);
+
+#line 11 "D:\\work\\programming\\color-c\\src\\freetype.h"
+#line 13 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\image.h"
+
+
+
+void * LoadPngFromFile(const char *filename);
+
+#line 7 "D:\\work\\programming\\color-c\\src\\image.h"
+#line 17 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\lang.h"
+
+
+
+#line 5 "D:\\work\\programming\\color-c\\src\\lang.h"
+#line 20 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+#line 1 "D:\\work\\programming\\color-c\\src\\macros.h"
+
+
+
+
+
+#line 22 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 1 "D:\\work\\programming\\color-c\\src\\math.h"
+
+
+
+namespace m
+{
+	template <class Type>
+	Type Min(Type a, Type b);
+
+	template <class Type>
+	Type Max(Type a, Type b);
+
+	template <class Type>
+	Type Clamp(Type value, Type low, Type high);
+
+	template <class Type>
+	Type Abs(Type value);
+
+	template <class Type>
+	Type Pow(Type base, unsigned int power);
+
+	float Sqrt(float a);
+};
+
+#line 25 "D:\\work\\programming\\color-c\\src\\math.h"
+#line 23 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+#line 1 "D:\\work\\programming\\color-c\\src\\meta.h"
+
+
+
+void ParseSourceFileForIntrospection(const char *filename);
+
+#line 7 "D:\\work\\programming\\color-c\\src\\meta.h"
+#line 25 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 1 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
+
+
+
+String AsString(const Vec2f &o, int depth);
+
+#line 7 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
+#line 26 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 1 "D:\\work\\programming\\color-c\\src\\meta_text_parsing.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 27 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\random.h"
+
+
+
+
+
+struct LCG
+{
+	
+	u32 m; 	
+	u32 a;	
+	u32 c;	
+	u32 seed;
+};
+
+namespace random
+{
+	LCG default_lcg;
+};
+
+void InitLcgSetSeed(LCG *lcg, u32 seed);
+void InitLcgSystemSeed(LCG *lcg);
+void Seed();
+u32 RandomU32(u32 min, u32 max);
+
+#line 26 "D:\\work\\programming\\color-c\\src\\random.h"
+#line 32 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+
+
+
+
+
+
+
+
+#line 1 "D:\\work\\programming\\color-c\\src\\util.h"
+
+
+
+
+
+void CopyMemoryBlock(void *dst, void *src, int count);
+size_t StringLength(const char *str);
+bool CompareStrings(const char *a, const char *b);
+bool CompareStringsStrict(const char *a, const char *b);
+void CopyStringN_unsafe(char *dst, const char *src, size_t n);
+char *TempFormatString(const char *fmt, va_list args);
+
+template <typename Type>
+bool InRange(Type value, Type min, Type max);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 35 "D:\\work\\programming\\color-c\\src\\util.h"
+#line 43 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
+
+String MetaString(const Ability *s)
+{
+	TimedBlock (timed_block_entry47)(0, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 47);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Ability {\n");
+	AppendCString(&string, "  init: %d (bool)\n", s->init);
+	AppendCString(&string, "  name: [invalid metadata] (String)\n", s->name);
+	AppendCString(&string, "  tiers: [invalid metadata] (AbilityTier)\n", s->tiers);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Editor *s)
+{
+	TimedBlock (timed_block_entry65)(1, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 65);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Editor {\n");
+	AppendCString(&string, "  init: %d (bool)\n", s->init);
+	AppendCString(&string, "  arena: [invalid metadata] (Arena)\n", s->arena);
+	AppendCString(&string, "  mode: [invalid metadata] (EditorMode)\n", s->mode);
+	AppendCString(&string, "  search_panel_layout: [invalid metadata] (ListPanelLayout)\n", s->search_panel_layout);
+	AppendCString(&string, "  panel_scroll_acc: %f (float)\n", s->panel_scroll_acc);
+	AppendCString(&string, "  panel_scroll_vel: %f (float)\n", s->panel_scroll_vel);
+	AppendCString(&string, "  panel_scroll_pos: %f (float)\n", s->panel_scroll_pos);
+	AppendCString(&string, "  panel_scroll_friction: %f (float)\n", s->panel_scroll_friction);
+	AppendCString(&string, "  panel_scroll_velocity_minimum: %f (float)\n", s->panel_scroll_velocity_minimum);
+	AppendCString(&string, "  active_index: %d (int)\n", s->active_index);
+	AppendCString(&string, "  text_cursor_pos: %d (int)\n", s->text_cursor_pos);
+	AppendCString(&string, "  input_elements: [invalid metadata] (InputElement)\n", s->input_elements);
+	AppendCString(&string, "  temp_ability: [invalid metadata] (Ability)\n", s->temp_ability);
+	AppendCString(&string, "  temp_unit_schematic: [invalid metadata] (UnitSchematic)\n", s->temp_unit_schematic);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+
+String MetaString(const Arena *s)
+{
+	TimedBlock (timed_block_entry95)(2, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 95);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Arena {\n");
+	AppendCString(&string, "  start: %p (void *)\n", s->start);
+	AppendCString(&string, "  end: %p (void *)\n", s->end);
+	AppendCString(&string, "  current: %p (void *)\n", s->current);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const String *s)
+{
+	TimedBlock (timed_block_entry113)(3, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 113);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "String {\n");
+	AppendCString(&string, "  length: %d (int)\n", s->length);
+	AppendCString(&string, "  max_length: %d (int)\n", s->max_length);
+	AppendCString(&string, "  data: %p (char *)\n", s->data);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Utf32String *s)
+{
+	TimedBlock (timed_block_entry131)(4, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 131);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Utf32String {\n");
+	AppendCString(&string, "  length: %d (int)\n", s->length);
+	AppendCString(&string, "  max_length: %d (int)\n", s->max_length);
+	AppendCString(&string, "  data: %p (u32 *)\n", s->data);
+	AppendCString(&string, "}");
+
+	return string;
+}
+#line 21 "../src/game.cpp"
 
 #line 1 "D:\\work\\programming\\color-c\\src\\log.cpp"
 
@@ -66561,41 +67111,9 @@ void TickLog()
 void start_log() {
 	platform->WriteLineToFile("logs/log.txt", "-------------------");
 }
-#line 21 "../src/game.cpp"
+#line 23 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\util.cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\util.h"
 
-
-
-
-
-void CopyMemoryBlock(void *dst, void *src, int count);
-size_t StringLength(const char *str);
-bool CompareStrings(const char *a, const char *b);
-bool CompareStringsStrict(const char *a, const char *b);
-void CopyStringN_unsafe(char *dst, const char *src, size_t n);
-char *TempFormatString(const char *fmt, va_list args);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#line 32 "D:\\work\\programming\\color-c\\src\\util.h"
-#line 2 "D:\\work\\programming\\color-c\\src\\util.cpp"
 
 
 
@@ -66741,7 +67259,28 @@ IsUtf32ControlChar(u32 c)
 
 	return false;
 }
-#line 22 "../src/game.cpp"
+
+template <typename Type>
+bool
+InRange(Type value, Type min, Type max)
+{
+	return(value >= min && value <= max);
+}
+
+String AsString(const int *s)
+{
+	TimedBlock (timed_block_entry157)(5, "D:\\work\\programming\\color-c\\src\\util.cpp",  __FUNCTION__  , 157);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "%d", *s);
+
+	return string;
+}
+#line 24 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\opengl.cpp"
 
 
@@ -66831,34 +67370,9 @@ LogGlError()
 	GLenum error = gl->GetError();
 	log("Current GL Error Code: %u", error);
 }
-#line 23 "../src/game.cpp"
+#line 25 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\math.cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\math.h"
 
-
-
-namespace m
-{
-	template <class Type>
-	Type Min(Type a, Type b);
-
-	template <class Type>
-	Type Max(Type a, Type b);
-
-	template <class Type>
-	Type Clamp(Type value, Type low, Type high);
-
-	template <class Type>
-	Type Abs(Type value);
-
-	template <class Type>
-	Type Pow(Type base, unsigned int power);
-
-	float Sqrt(float a);
-};
-
-#line 25 "D:\\work\\programming\\color-c\\src\\math.h"
-#line 2 "D:\\work\\programming\\color-c\\src\\math.cpp"
 
 
 namespace m
@@ -66868,20 +67382,24 @@ namespace m
 		if(a <= b) return a;
 		else return b;
 	}
+
 	template <class Type>
 	Type Max(Type a, Type b) {
 		if(a >= b) return a;
 		else return b;
 	}
+
 	template <class Type>
 	Type Clamp(Type value, Type low, Type high) {
 		return Min(Max(value, low), high);
 	}
+
 	template <class Type>
 	Type Abs(Type value) {
 		if(value >= 0) return value;
 		else return -value;
 	}
+
 	template <class Type>
 	Type Pow(Type base, unsigned int power)
 	{
@@ -66892,39 +67410,24 @@ namespace m
 		}
 		return product;
 	}
+
+	template <class Type>
+	int Sign(Type value)
+	{
+		if(value < (Type)0) return -1;
+		else if(value > (Type)0) return +1;
+
+		return 0;
+	}
+
 	float Sqrt(float a)
 	{
 		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_set_ss(a)));
 	}
 };
-#line 24 "../src/game.cpp"
+#line 26 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\bitmap.cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\bitmap.h"
 
-
-
-
-
-
-struct BgraPixel
-{
-	u8 b,g,r,a;
-};
-
-struct Bitmap
-{
-	u32 width, height;
-	BgraPixel *pixels;
-};
-
-Bitmap AllocBitmap(u32 width, u32 height);
-void DeallocBitmap(Bitmap *bitmap);
-void Blit(Bitmap src, Bitmap dst, Vec2f pos);
-
-Bitmap LoadArgbBitmapFromFile(const char *filename);
-Sprite LoadBitmapFileIntoSprite(const char *filename, Align align);
-#line 25 "D:\\work\\programming\\color-c\\src\\bitmap.h"
-#line 2 "D:\\work\\programming\\color-c\\src\\bitmap.cpp"
 
 
 
@@ -67077,7 +67580,7 @@ LoadBitmapFileIntoSprite(const char *filename, Align align = c::align_topleft)
 	DeallocBitmap(&bitmap);
 	return sprite;
 }
-#line 25 "../src/game.cpp"
+#line 27 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\vec.cpp"
 
 
@@ -67389,7 +67892,7 @@ RectBottomRight(Rect rect)
 {
 	return rect.pos + rect.size;
 }
-#line 26 "../src/game.cpp"
+#line 28 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\text_render.cpp"
 
 
@@ -67463,7 +67966,7 @@ TextLayoutScale(TextLayout layout)
 void
 _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
 {
-	TimedBlock (timed_block_entry73)(0, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 73);
+	TimedBlock (timed_block_entry73)(6, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 73);
 
 	
 	float scale = (float)size/(float)font.base_size;
@@ -67491,7 +67994,7 @@ _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
 float
 LineSize(TextLayout layout)
 {
-	TimedBlock (timed_block_entry101)(1, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 101);
+	TimedBlock (timed_block_entry101)(7, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 101);
 
 	if(!layout.font->is_init) return 0.f;
 
@@ -67509,7 +68012,7 @@ LineSize(TextLayout layout)
 Vec2f
 SizeUtf8Line(TextLayout layout, const char *string)
 {
-	TimedBlock (timed_block_entry119)(2, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 119);
+	TimedBlock (timed_block_entry119)(8, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 119);
 
 	StringBuffer buffer = CreateStringBuffer(string);
 	u32 utf32_char;
@@ -67534,7 +68037,7 @@ SizeUtf8Line(TextLayout layout, const char *string)
 Vec2f
 DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 {
-	TimedBlock (timed_block_entry144)(3, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 144);
+	TimedBlock (timed_block_entry144)(9, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 144);
 
 	ActivateUvShader(layout.color);
 
@@ -67571,7 +68074,7 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 Vec2f
 DrawText(TextLayout layout, Vec2f origin, String string)
 {
-	TimedBlock (timed_block_entry181)(4, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 181);
+	TimedBlock (timed_block_entry181)(10, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 181);
 
 	ActivateUvShader(layout.color);
 
@@ -67607,7 +68110,7 @@ DrawText(TextLayout layout, Vec2f origin, String string)
 Vec2f
 DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 {
-	TimedBlock (timed_block_entry217)(5, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 217);
+	TimedBlock (timed_block_entry217)(11, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 217);
 
 	ActivateUvShader(layout.color);
 
@@ -67643,9 +68146,44 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 }
 
 Vec2f
+DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
+{
+	TimedBlock (timed_block_entry255)(12, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 255);
+
+	ActivateUvShader(layout.color);
+
+	Vec2f text_size = SizeText(layout, string);
+
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
+
+	for(int i=0; i<string.length; i++)
+	{
+		u32 utf32_char;
+		Utf8ToUtf32(string, i, &utf32_char);
+		if(utf32_char == '\n')
+		{
+			pen.x = origin.x;
+			pen.y += LineSize(layout);
+		}
+		else
+		{
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+		}
+	}
+
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+Vec2f
 SizeText(TextLayout layout, String string, int char_count)
 {
-	TimedBlock (timed_block_entry255)(6, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 255);
+	TimedBlock (timed_block_entry290)(13, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 290);
 
 	Vec2f pen = {0.f,0.f};
 	float scale = TextLayoutScale(layout);
@@ -67684,7 +68222,7 @@ SizeText(TextLayout layout, String string, int char_count)
 Vec2f
 SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
 {
-	TimedBlock (timed_block_entry294)(7, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 294);
+	TimedBlock (timed_block_entry329)(14, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 329);
 
 	Vec2f pen = {0.f,0.f};
 	float scale = TextLayoutScale(layout);
@@ -67719,7 +68257,7 @@ SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
 Vec2f
 DrawTextUtf32(TextLayout layout, Vec2f origin, Utf32String string)
 {
-	TimedBlock (timed_block_entry329)(8, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 329);
+	TimedBlock (timed_block_entry364)(15, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 364);
 
 	ActivateUvShader(layout.color);
 
@@ -67952,7 +68490,7 @@ ValidFont(Font *font)
 {
 	return(font && font->is_init);
 }
-#line 27 "../src/game.cpp"
+#line 29 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\freetype_wrapper.cpp"
 
 
@@ -67979,7 +68517,7 @@ LoadFontFaceFromFile(const char *filename, FT_Library lib)
 
 	return face;
 }
-#line 28 "../src/game.cpp"
+#line 30 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\text_parsing.cpp"
 
 
@@ -68504,7 +69042,20 @@ TokenMatchesString(Token token, const char *string)
 
 
 
-#line 29 "../src/game.cpp"
+
+String
+StringFromToken(Token token, Arena *arena)
+{
+	String string = AllocStringDataFromArena(token.length, arena);
+	string.length = token.length;
+	for(int i=0; i<token.length; i++)
+	{
+		CharAt(&string, i) = token.start[i];
+	}
+
+	return string;
+}
+#line 31 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\data_table.cpp"
 
 
@@ -68601,7 +69152,7 @@ Type *GetEntryByName(DataTable table, const char *entry_name)
 {
 	return (Type*)table[GetIndexByName<Type>(table, entry_name)];
 }
-#line 30 "../src/game.cpp"
+#line 32 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\imgui.cpp"
 
 
@@ -68791,7 +69342,7 @@ GetButtonHeight(ImguiContainer container)
 }
 
 ListPanelResponse
-ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
+ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float scroll_offset)
 {
 	ListPanelResponse response = {
 		.hovered_index = -1,
@@ -68809,9 +69360,19 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
 	Vec2f outer_padding = {20.f,2.f};
 	Vec2f inner_padding = {5.f,5.f};
 	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
+
+	
+	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
+	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
+	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
+	
+
+	
+
 	for(int i=0; i<entry_count; i++)
 	{
-		Rect entry_rect = {pen+outer_padding, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+		if(i < index_of_first_drawn_entry) continue;
+		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
 
 		if(PointInRect(entry_rect, MousePos()))
 		{ 
@@ -68836,7 +69397,29 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
 
 	return response;
 }
-#line 31 "../src/game.cpp"
+
+IntegerBoxResponse
+IntegerBox(IntegerBoxLayout layout, Vec2f pos, String label, String text)
+{
+	IntegerBoxResponse response = {};
+
+	Rect box_rect = {pos, layout.size};
+	DrawFilledRect(box_rect, c::dk_grey);
+	DrawUnfilledRect(box_rect, layout.border_color);
+	DrawText(layout.label_layout, RectTopLeft(box_rect), label);
+	DrawText(layout.text_layout, RectCenter(box_rect), text);
+
+	if(MouseInRect(box_rect))
+	{
+		int scroll = MouseScroll();
+
+		response.value_change = scroll;
+		if(Down(vk::shift)) response.value_change *= 10;
+	}
+
+	return response;
+}
+#line 33 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\draw.cpp"
 
 
@@ -68964,7 +69547,7 @@ DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
 
 	return response;
 }
-#line 32 "../src/game.cpp"
+#line 34 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\input.cpp"
 
 
@@ -68999,21 +69582,20 @@ MousePos()
 	return(input::global_input->mouse_pos);
 }
 
+bool
+MouseInRect(Rect rect)
+{
+	return(PointInRect(rect, MousePos()));
+}
+
 int
 MouseScroll()
 {
 	return(input::global_input->mouse_scroll);
 }
-#line 33 "../src/game.cpp"
+#line 35 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\image.cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\image.h"
 
-
-
-void * LoadPngFromFile(const char *filename);
-
-#line 7 "D:\\work\\programming\\color-c\\src\\image.h"
-#line 2 "D:\\work\\programming\\color-c\\src\\image.cpp"
 
 
 
@@ -69155,7 +69737,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 		FreeBuffer(&file);
 		return success;
 }
-#line 34 "../src/game.cpp"
+#line 36 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\types.cpp"
 u32
 ByteSwapU32(u32 in)
@@ -69169,7 +69751,7 @@ ByteSwapU32(u32 in)
 
 	return out;
 }
-#line 35 "../src/game.cpp"
+#line 37 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\sprite.cpp"
 
 
@@ -69214,7 +69796,7 @@ DrawSprite(Sprite sprite, Vec2f pos, Vec2f size={-1.f,-1.f})
 	gl->BufferData(0x8892, sizeof(verts), verts, 0x88E8);
 	gl->DrawArrays(0x0005, 0, 4);
 }
-#line 36 "../src/game.cpp"
+#line 38 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\align.cpp"
 
 
@@ -69259,7 +69841,7 @@ AlignRect(Rect rect, Align align)
 
 	return aligned_rect;
 }
-#line 37 "../src/game.cpp"
+#line 39 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\memory.cpp"
 
 
@@ -69277,7 +69859,7 @@ AllocateArena()
 void
 ClearArena(Arena *arena)
 {
-	TimedBlock (timed_block_entry17)(9, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 17);
+	TimedBlock (timed_block_entry17)(16, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 17);
 
 	
 		
@@ -69307,7 +69889,7 @@ ArenaBytesRemaining(Arena arena)
 char *
 ScratchString(int size)
 {
-	TimedBlock (timed_block_entry47)(10, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 47);
+	TimedBlock (timed_block_entry47)(17, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 47);
 
 	if(size > memory::arena_size)
 	{
@@ -69317,9 +69899,11 @@ ScratchString(int size)
 
 	if(ArenaBytesRemaining(memory::per_frame_arena) < size)
 	{
-		log("memory::per_frame_arena tried to allocate past its end. It's not large enough. \
-To avoid overflow, we're resetting the pointer back to the beginning, but this will\
-cause other scratch data to be overwritten before the frame ends.");
+
+
+
+
+#line 62 "D:\\work\\programming\\color-c\\src\\memory.cpp"
 
 		memory::per_frame_arena.current = memory::per_frame_arena.start;
 	}
@@ -69348,7 +69932,7 @@ AllocFromArena(Arena *arena, size_t byte_count, bool zero)
 			if(!(false)) {*((volatile int*)0) = 0;};
 		
 
-#line 89 "D:\\work\\programming\\color-c\\src\\memory.cpp"
+#line 91 "D:\\work\\programming\\color-c\\src\\memory.cpp"
 	}
 
 	void *p = arena->current;
@@ -69376,7 +69960,7 @@ AllocPerma(size_t byte_count)
 {
 	return AllocFromArena(&memory::permanent_arena, byte_count);
 }
-#line 38 "../src/game.cpp"
+#line 40 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\debug.cpp"
 
 
@@ -69422,39 +70006,13 @@ DrawTimedBlockData()
 		}
 	}
 }
-#line 39 "../src/game.cpp"
+#line 41 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\battle.cpp"
 
 
 
 
-#line 1 "D:\\work\\programming\\color-c\\src\\random.h"
 
-
-
-
-
-struct LCG
-{
-	
-	u32 m; 	
-	u32 a;	
-	u32 c;	
-	u32 seed;
-};
-
-namespace random
-{
-	LCG default_lcg;
-};
-
-void InitLcgSetSeed(LCG *lcg, u32 seed);
-void InitLcgSystemSeed(LCG *lcg);
-void Seed();
-u32 RandomU32(u32 min, u32 max);
-
-#line 26 "D:\\work\\programming\\color-c\\src\\random.h"
-#line 6 "D:\\work\\programming\\color-c\\src\\battle.cpp"
 
 Rect
 GetAbilityHudButtonRect(Battle battle, int ability_index)
@@ -69475,7 +70033,7 @@ GetAbilityHudButtonRect(Battle battle, int ability_index)
 TraitSet
 CalculateAdjustedDamage(TraitSet current, TraitSet damage)
 {
-	TimedBlock (timed_block_entry26)(11, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 26);
+	TimedBlock (timed_block_entry26)(18, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 26);
 
 	TraitSet adjusted = {};
 
@@ -69520,14 +70078,20 @@ ValidAbility(const Ability *ability)
 	return(ability && ability->init);
 }
 
+bool
+ValidUnitSchematic(const UnitSchematic *unit_schematic)
+{
+	return(unit_schematic && unit_schematic->init);
+}
+
 BattleEvent
 GenerateBattlePreviewEvent(Battle *battle, Intent intent)
 {
-	TimedBlock (timed_block_entry74)(12, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 74);
+	TimedBlock (timed_block_entry80)(19, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 80);
 
 	if(!battle || !ValidUnit(intent.caster) || !ValidAbility(intent.ability))
 	{
-		if(c::verbose_error_logging) log( __FUNCTION__ "() [ln:%u] received nullptr battle or invalid intent)", 78);
+		if(c::verbose_error_logging) log( __FUNCTION__ "() [ln:%u] received nullptr battle or invalid intent)", 84);
 		return BattleEvent{};
 	}
 
@@ -69540,7 +70104,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
 			if(!(false)) {*((volatile int*)0) = 0;};
 		
 
-#line 92 "D:\\work\\programming\\color-c\\src\\battle.cpp"
+#line 98 "D:\\work\\programming\\color-c\\src\\battle.cpp"
 	}
 
 	
@@ -70379,7 +70943,7 @@ UpdateBattle(Battle *battle)
 	
 	
 }
-#line 40 "../src/game.cpp"
+#line 42 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\unit.cpp"
 
 
@@ -70526,6 +71090,7 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 			}
 			else
 			{
+				++file.p;
 				continue;
 			}
 		}
@@ -70648,7 +71213,7 @@ GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets)
 TargetSet
 GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, TargetSet all_targets)
 {
-	TimedBlock (timed_block_entry268)(13, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 268);
+	TimedBlock (timed_block_entry269)(20, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 269);
 
 	if(!ValidUnit(caster) || !ValidUnit(selected_target)) return TargetSet{};
 
@@ -70767,7 +71332,7 @@ AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 Vec2f
 DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer)
 {
-	TimedBlock (timed_block_entry387)(14, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 387);
+	TimedBlock (timed_block_entry388)(21, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 388);
 
 	const Rect bar_rect = {pos, c::trait_bar_size};
 
@@ -71046,7 +71611,7 @@ DetermineAbilityTier(Unit *caster, Ability *ability)
 	
 	return -1;
 }
-#line 41 "../src/game.cpp"
+#line 43 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\passive_skill_tree.cpp"
 
 
@@ -71154,7 +71719,7 @@ DrawPassiveSkillTree(Vec2f origin, PassiveSkillTree tree)
 
 	
 	
-#line 42 "../src/game.cpp"
+#line 44 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\timer.cpp"
 
 
@@ -71178,7 +71743,7 @@ void Reset(Timer *timer)
 	timer->cur = 0.f;
 	timer->finished = false;
 }
-#line 43 "../src/game.cpp"
+#line 45 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\oscillating_timer.cpp"
 
 
@@ -71217,7 +71782,7 @@ void ResetHigh(OscillatingTimer *timer)
 	timer->cur = timer->max;
 	timer->decreasing = true;
 }
-#line 44 "../src/game.cpp"
+#line 46 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\random.cpp"
 
 
@@ -71283,7 +71848,7 @@ TestDistributionAndLog()
 
 	for(int i=0; i<range; i++) log("%u: %u", i, buckets[i]);
 }
-#line 45 "../src/game.cpp"
+#line 47 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\traitset.cpp"
 
 
@@ -71374,7 +71939,7 @@ ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set)
 		return false;
 	}
 }
-#line 46 "../src/game.cpp"
+#line 48 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\ability.cpp"
 
 
@@ -71495,7 +72060,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 	if(valid_ability_data)
 	{
 		*ability = temp_ability;
-		CopyString(ability->name, name_token.start, m::Min(sizeof(ability->name), name_token.length+1));
+		ability->name = StringFromToken(name_token, &memory::permanent_arena);
 
 		return true;
 	}
@@ -71551,7 +72116,7 @@ LoadAbilityFile(const char *filename, DataTable *table)
 char *
 GenerateAbilityTierText(const AbilityTier *tier)
 {
-	TimedBlock (timed_block_entry176)(15, "D:\\work\\programming\\color-c\\src\\ability.cpp",  __FUNCTION__  , 176);
+	TimedBlock (timed_block_entry176)(22, "D:\\work\\programming\\color-c\\src\\ability.cpp",  __FUNCTION__  , 176);
 
 	Buffer buffer = {};
 	buffer.data = ScratchString(c::max_effects_text_length+1);
@@ -71766,7 +72331,7 @@ GenerateAbilityTierText(const AbilityTier *tier)
 
 	return buffer.data;
 }
-#line 47 "../src/game.cpp"
+#line 49 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\target_class.cpp"
 
 
@@ -71791,58 +72356,80 @@ ParseNextAsTargetClass(Buffer *buffer, TargetClass *target_class)
 	if(!found_match) buffer->p = initial;
 	return(found_match);
 }
-#line 48 "../src/game.cpp"
+#line 50 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\editor.cpp"
 
 
 void StartEditor(Editor *editor)
 {
 	editor->arena = AllocateArena();
+	editor->mode = EditorMode::None;
 
-	editor->left_panel_layout = {
-		.rect = {
-			.pos = {0.f,100.f},
-			.size = {300.f,game->window_size.y-100}
-		}
-	};
-
-	
-	
-	
-	
-
-	
-
-	
-	const char *field_names[] = {"Search", "Name"};
-	editor->field_positions[0] = {10.f,10.f};
-	editor->field_positions[1] = {350.0f, 10.f};
-	int field_label_length = c::max_field_label_length;
-	for(int i=0; i<(sizeof(editor->field_labels)/sizeof(editor->field_labels[0])); i++)
+	const char *field_names[] = {"Search", "Name", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor"};
+	for(int i=0; i<(sizeof(field_names)/sizeof(field_names[0])); i++)
 	{
-		
-		
-		
-		
-		StringFromCString(field_names[i], &editor->arena);
-		
-		
-		
+		editor->input_elements[i] = {
+			.type = InputElementType::None,
+			.label = StringFromCString(field_names[i], &editor->arena),
+			.pos = {400.f, 10.f + i*100.f},
+		};
 	}
 
 	
+
+	
+	
+	
+	
+	
+	
 	
 
 	
-	int field_string_length = c::max_field_text_length;
-	for(int i=0; i<(sizeof(editor->field_strings)/sizeof(editor->field_strings[0])); i++)
-	{
-		char *data = (char*)AllocFromArena(&editor->arena, sizeof(char)*(field_string_length+1));
-		editor->field_strings[i] = {0, field_string_length, data};
-	}
+	
+	
 
 	editor->active_index = -1;
+
+	editor->panel_scroll_pos = 0.f;
+	editor->panel_scroll_vel = 0.f;
+	editor->panel_scroll_acc = 10.f;
+	editor->panel_scroll_friction = -0.2f;
+	editor->panel_scroll_velocity_minimum = 2.f;
+
 	editor->init = true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void
+GenerateInputElementString(InputElement *input_element, void *value_ptr)
+{
+	if(input_element->type == InputElementType::String)
+	{
+		input_element->text = AsString((String*)value_ptr);
+		input_element->value_ptr = value_ptr;
+	}
+	else if(input_element->type == InputElementType::Integer)
+	{
+		input_element->text = AsString((int*)value_ptr);
+		input_element->value_ptr = value_ptr;
+	}
 }
 
 void
@@ -71854,71 +72441,146 @@ UpdateAndDrawEditor(Editor *editor)
 		return;
 	}
 
-	editor->left_panel_layout.rect.pos.y += 40*MouseScroll();
-
 	
-	size_t ability_count = g::ability_table.entry_count;
-	size_t unit_schematic_count = g::unit_schematic_table.entry_count;
-	size_t filtered_entry_count = 0;
-	String *panel_entries = (String*)AllocTemp(sizeof(String) * (ability_count + unit_schematic_count));
-
 	
-	for(int i=0; i<ability_count; i++)
 	{
-		Ability *ability = (Ability*)g::ability_table[i];
-		String ability_name = StringFromCString(ability->name);
 
-		if(SubstringInString(LowerCase(editor->field_strings[0]), LowerCase(ability_name)))
-		{
-			panel_entries[filtered_entry_count++] = ability_name;
-		}
-	}
+		size_t ability_count = g::ability_table.entry_count;
+		size_t unit_schematic_count = g::unit_schematic_table.entry_count;
+		size_t filtered_entry_count = 0;
 
-	
-	for(int i=0; i<unit_schematic_count; i++)
-	{
-		UnitSchematic *unit_schematic = (UnitSchematic*)g::unit_schematic_table[i];
-		String unit_name = StringFromCString(unit_schematic->name);
-
-		if(SubstringInString(LowerCase(editor->field_strings[0]), LowerCase(unit_name)))
-		{
-			panel_entries[filtered_entry_count++] = unit_name;
-		}
-	}
-
-	
-
-	
-	auto panel_response = ListPanel(editor->left_panel_layout, panel_entries, filtered_entry_count);
-	if(panel_response.pressed_index >= 0)
-	{ 
-		Ability *ability = (Ability*)g::ability_table[panel_response.pressed_index];
-		if(ValidAbility(ability))
-		{
-			
-			editor->field_strings[1].length = 0;
-			CopyFromCString(&editor->field_strings[1], ability->name);
-			editor->active_index = -1;
-		}
-	}
-
-	
-	ResetImguiContainer(&editor->field_container);
-	SetActiveContainer(&editor->field_container);
-
-	for(int i=0; i<g::ability_table.entry_count; i++)
-	{
-		Ability *ability = (Ability*)g::ability_table[i];
+		String *panel_entries = (String*)AllocTemp(sizeof(String) * (ability_count + unit_schematic_count));
 		
+		int *panel_entry_ids = (int*)AllocTemp(sizeof(int) * (ability_count + unit_schematic_count));
+
+		
+		for(int i=0; i<ability_count; i++)
+		{
+			Ability *ability = (Ability*)g::ability_table[i];
+
+			if(SubstringInString(LowerCase(editor->input_elements[AbilityPropertyIndex::search].text), LowerCase(ability->name)))
+			{
+				panel_entries[filtered_entry_count] = ability->name;
+				panel_entry_ids[filtered_entry_count] = i;
+				++filtered_entry_count;
+			}
+		}
+
+		
+		for(int i=0; i<unit_schematic_count; i++)
+		{
+			UnitSchematic *unit_schematic = (UnitSchematic*)g::unit_schematic_table[i];
+			String unit_name = StringFromCString(unit_schematic->name);
+
+			if(SubstringInString(LowerCase(editor->input_elements[AbilityPropertyIndex::search].text), LowerCase(unit_name)))
+			{
+				panel_entries[filtered_entry_count] = unit_name;
+				panel_entry_ids[filtered_entry_count] = i;
+				++filtered_entry_count;
+			}
+		}
+
+		
+		{
+			if(PointInRect(editor->search_panel_layout.rect, MousePos()))
+			{
+				editor->panel_scroll_vel -= editor->panel_scroll_acc*MouseScroll();
+			}
+
+			float frictional_force = editor->panel_scroll_vel*editor->panel_scroll_friction;
+			if(m::Abs(frictional_force) <= m::Abs(editor->panel_scroll_vel))
+			{
+				editor->panel_scroll_vel += frictional_force;
+			}
+			else
+			{
+				
+				
+
+				editor->panel_scroll_vel = 0.f;
+			}
+			editor->panel_scroll_pos = m::Max(0.0f, editor->panel_scroll_pos+editor->panel_scroll_vel);
+			if(m::Abs(editor->panel_scroll_vel) < editor->panel_scroll_velocity_minimum) editor->panel_scroll_vel = 0.f;
+			if(editor->panel_scroll_pos <= 0.f) editor->panel_scroll_vel = 0.f;
+		}
+
+		
+		auto panel_response = ListPanel(editor->search_panel_layout, panel_entries, filtered_entry_count, editor->panel_scroll_pos);
+		if(panel_response.pressed_index >= 0)
+		{ 
+			int first_ability_index = 0;
+			int last_ability_index = ability_count - 1;
+			int first_unit_index = ability_count;
+			int last_unit_index = ability_count + unit_schematic_count - 1;
+
+			int index_into_datatable = panel_entry_ids[panel_response.pressed_index];
+
+			if(InRange(panel_response.pressed_index, first_ability_index, last_ability_index))
+			{ 
+				
+				Ability *ability = (Ability*)g::ability_table[index_into_datatable];
+				if(ValidAbility(ability))
+				{
+					
+					editor->temp_ability = *ability;
+					editor->mode = EditorMode::Ability;
+					for(int i=0; i<(sizeof(ability_property_types)/sizeof(ability_property_types[0])); i++)
+					{
+						editor->input_elements[i].type = ability_property_types[i];
+					}
+				}
+			}
+			else if(InRange(panel_response.pressed_index, first_unit_index, last_unit_index))
+			{
+				UnitSchematic *unit_schematic = (UnitSchematic*)g::unit_schematic_table[index_into_datatable];
+				if(ValidUnitSchematic(unit_schematic))
+				{
+					
+					editor->temp_unit_schematic = *unit_schematic;
+					editor->mode = EditorMode::UnitSchematic;
+				}
+			}
+		}
 	}
 
+	
+	{
+
+		if(editor->mode == EditorMode::Ability)
+		{
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::name], &editor->temp_ability.name);
+
+			
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[0].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[0].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[0].required_traits.armor);
+
+			
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[1].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[1].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[1].required_traits.armor);
+
+			
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[2].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
+		}
+	}
 
 	
+	
+	
+	
+	
+	
+
 	String *active_string = nullptr;
 	if(editor->active_index >= 0)
 	{
-		active_string = &editor->field_strings[editor->active_index];
+		active_string = &editor->input_elements[editor->active_index].text;
 	}
+
+	
 	u32 *p = input::global_input->utf32_translated_stream;
 
 	
@@ -71943,13 +72605,13 @@ UpdateAndDrawEditor(Editor *editor)
 				{ 
 					if(editor->active_index >= 0)
 					{ 
-						editor->active_index = (editor->active_index+1) % (sizeof(editor->field_strings)/sizeof(editor->field_strings[0]));
-						editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+						editor->active_index = (editor->active_index+1) % (sizeof(editor->input_elements)/sizeof(editor->input_elements[0]));
+						editor->text_cursor_pos = editor->input_elements[editor->active_index].text.length;
 					}
 					else
 					{ 
 						editor->active_index = 0;
-						editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+						editor->text_cursor_pos = editor->input_elements[editor->active_index].text.length;
 					}
 				}
 				else
@@ -71958,18 +72620,18 @@ UpdateAndDrawEditor(Editor *editor)
 					{
 						
 						
-						editor->active_index = (sizeof(editor->field_strings)/sizeof(editor->field_strings[0]))-1;
-						editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+						editor->active_index = (sizeof(editor->input_elements)/sizeof(editor->input_elements[0]))-1;
+						editor->text_cursor_pos = editor->input_elements[editor->active_index].text.length;
 					}
 					else if(editor->active_index > 0)
 					{
-						editor->active_index = (editor->active_index-1) % (sizeof(editor->field_strings)/sizeof(editor->field_strings[0]));
-						editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+						editor->active_index = (editor->active_index-1) % (sizeof(editor->input_elements)/sizeof(editor->input_elements[0]));
+						editor->text_cursor_pos = editor->input_elements[editor->active_index].text.length;
 					}
 					else
 					{ 
 						editor->active_index = 0;
-						editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+						editor->text_cursor_pos = editor->input_elements[editor->active_index].text.length;
 					}
 				}
 			}
@@ -71987,13 +72649,24 @@ UpdateAndDrawEditor(Editor *editor)
 			if(InsertChar(active_string, *p, editor->text_cursor_pos))
 			{
 				++editor->text_cursor_pos;
+				if(editor->active_index == 0)
+				{
+					editor->panel_scroll_pos = 0.f;
+				}
 			}
 		}
 
+		if(editor->active_index >= 0)
+		{
+			active_string = &editor->input_elements[editor->active_index].text;
+		}
 		++p;
 	}
 
+	
+	{
 
+	}
 
 	
 
@@ -72022,30 +72695,71 @@ UpdateAndDrawEditor(Editor *editor)
 	if(Down(vk::ctrl) && Pressed(vk::f))
 	{
 		editor->active_index = 0;
-		editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+		editor->text_cursor_pos = editor->input_elements[0].text.length;
 	}
 
-	for(int i=0; i<(sizeof(editor->field_strings)/sizeof(editor->field_strings[0])); i++)
+	DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability));
+
+	for(int i=0; i<(sizeof(editor->input_elements)/sizeof(editor->input_elements[0])); i++)
 	{
-		bool is_active = false;
-		if(i == editor->active_index) is_active = true;
-
-		
-		
-
-		auto response = TextEntry(c::def_text_entry_layout,
-								  editor->field_positions[i],
-								  editor->field_labels[i], editor->field_strings[i],
-								  is_active, editor->text_cursor_pos);
-
-		if(response.pressed)
+		switch(editor->input_elements[i].type)
 		{
-			editor->active_index = i;
-			editor->text_cursor_pos = editor->field_strings[editor->active_index].length;
+			case InputElementType::String: {
+				auto response = TextEntry(c::def_text_entry_layout,
+										  editor->input_elements[i].pos,
+										  editor->input_elements[i].label,
+										  editor->input_elements[i].text,
+										  (i == editor->active_index) ? true : false,
+										  editor->text_cursor_pos);
+			} break;
+			case InputElementType::Integer: {
+				auto response = IntegerBox(c::editor_vigor_integer_box_layout,
+										   editor->input_elements[i].pos,
+										   editor->input_elements[i].label,
+										   editor->input_elements[i].text);
+
+				if(response.value_change)
+				{
+					*(int*)editor->input_elements[i].value_ptr += response.value_change;
+				}
+			} break;
 		}
 	}
+
+
+	
+	
+	
+	
+
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
 }
-#line 49 "../src/game.cpp"
+#line 51 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\string.cpp"
 
 
@@ -72082,6 +72796,7 @@ StringFull(String string)
 bool
 AppendChar(String *string, char appended_char)
 {
+	if(!string) return false;
 	if(StringFull(*string)) return false;
 
 	string->data[string->length++] = appended_char;
@@ -72091,6 +72806,7 @@ AppendChar(String *string, char appended_char)
 bool
 InsertChar(String *string, char inserted_char, int pos)
 {
+	if(!string) return false;
 	if(StringFull(*string)) return false;
 	if(pos < 0 || pos > string->length)
 	{
@@ -72115,6 +72831,7 @@ InsertChar(String *string, char inserted_char, int pos)
 bool
 DeleteChar(String *string, int pos)
 {
+	if(!string) return false;
 	if(StringEmpty(*string)) return false;
 
 	if(pos >= 0)
@@ -72188,6 +72905,18 @@ AppendCString(String *string, const char *c_string, ...)
 }
 
 String
+AllocStringDataFromArena(int max_length, Arena *arena)
+{
+	String string = {
+		.length = 0,
+		.max_length = max_length,
+		.data = (char*)AllocFromArena(arena, sizeof(char)*max_length)
+	};
+
+	return string;
+}
+
+String
 StringFromCString(const char *c_string, Arena *arena)
 {
 	String string = {};
@@ -72205,7 +72934,7 @@ StringFromCString(const char *c_string, Arena *arena)
 bool
 SubstringInString(String substring, String string)
 {
-	TimedBlock (timed_block_entry159)(16, "D:\\work\\programming\\color-c\\src\\string.cpp",  __FUNCTION__  , 159);
+	TimedBlock (timed_block_entry174)(23, "D:\\work\\programming\\color-c\\src\\string.cpp",  __FUNCTION__  , 174);
 
 	if(substring.length == 0) return true;
 	if(string.length == 0 && substring.length == 0) return true;
@@ -72241,15 +72970,15 @@ SubstringInString(String substring, String string)
 	return false;
 }
 
-void
-CopyFromCString(String *string, const char *c_string)
-{
-	const char *p = c_string;
-	while(*p != '\0' && !StringFull(*string))
-	{
-		string->data[string->length++] = *p++;
-	}
-}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -72332,7 +73061,13 @@ LowerCase(String string, Arena *arena)
 
 	return lowered_string;
 }
-#line 50 "../src/game.cpp"
+
+String
+AsString(const String *s)
+{
+	return *s;
+}
+#line 52 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\utf32string.cpp"
 
 
@@ -72501,70 +73236,6 @@ SubstringInString(Utf32String substring, Utf32String string)
 
 	return false;
 }
-#line 51 "../src/game.cpp"
-
-#line 1 "D:\\work\\programming\\color-c\\src\\meta_print(manual).cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
-
-
-
-String AsString(const Vec2f &o, int depth);
-
-#line 7 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
-#line 2 "D:\\work\\programming\\color-c\\src\\meta_print(manual).cpp"
-
-
-
-
-String AsString(const Vec2f &o, int depth=1)
-{
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	String m = {};
-
-	AppendCString(&string, "Vec2f {\n");
-
-	
-	for(int i=0; i<depth; i++) AppendCString(&string, "  ");
-	AppendCString(&string, "x: %f (float)\n", o.x);
-
-	
-	for(int i=0; i<depth; i++) AppendCString(&string, "  ");
-	AppendCString(&string, "y: %f (float)\n", o.y);
-
-	for(int i=1; i<depth; i++) AppendCString(&string, "  ");
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-String AsString(const Utf32String &o, int depth=1)
-{
-	
-	
-	
-	
-	
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	String m = {};
-
-	AppendCString(&string, "Utf32String {\n");
-	AppendCString(&string, "  length: %d (int)\n", o.length);
-	AppendCString(&string, "  max_length: %d (int)\n", o.max_length);
-	AppendCString(&string, "  data: %p (u32 *)\n", o.data);
-	m = AsString(o.pos, depth+1);
-	AppendCString(&string, "  pos: %.*s\n", m.length, m.data);
-	AppendCString(&string, "}");
-
-	return string;
-}
 #line 53 "../src/game.cpp"
 
 extern "C" void
@@ -72708,21 +73379,25 @@ GameInit()
 
 	game->current_state = GameState::Editor;
 
-
 	
 	
+	
+	
+	
+	
+	
 
 
 
 
-#line 203 "../src/game.cpp"
+#line 207 "../src/game.cpp"
 }
 
 extern "C" void
 GameUpdateAndRender()
 {
 	
-	debug::timed_block_array_size = 17;
+	debug::timed_block_array_size = 24;
 
 	
 	
@@ -72748,7 +73423,7 @@ GameUpdateAndRender()
 		
 
 
-#line 236 "../src/game.cpp"
+#line 240 "../src/game.cpp"
 	}
 
 	ClearArena(&memory::per_frame_arena);
@@ -72810,6 +73485,8 @@ GameUpdateAndRender()
 	
 
 	
+
+	
 	if(Pressed(vk::escape))
 	{
 		LogToFile("logs/DebugTimings.txt", "-----------------------");
@@ -72842,4 +73519,4 @@ GameUpdateAndRender()
 	}
 }
 
-TimedBlockEntry TIMED_BLOCK_ARRAY[18-1];
+TimedBlockEntry TIMED_BLOCK_ARRAY[25-1];

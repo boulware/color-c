@@ -3,19 +3,19 @@
 #include "util.h"
 #include "text_parsing.h"
 
-Unit *TargetSet::operator[](int index)
+Unit *UnitSet::operator[](int index)
 {
 	if(index < 0 or index >= size) return nullptr;
 
 	return units[index];
 }
 
-Unit **begin(TargetSet &target_set)
+Unit **begin(UnitSet &target_set)
 {
 	return target_set.units;
 }
 
-Unit **end(TargetSet &target_set)
+Unit **end(UnitSet &target_set)
 {
 	return target_set.units + (target_set.size);
 }
@@ -75,7 +75,7 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 				Token ability_name_token;
 				if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))
 				{
-					temp_unit_schematic.ability_table_indices[i] = GetIndexByName<Ability>(ability_table, ability_name_token.start);
+					temp_unit_schematic.ability_table_indices[i] = GetIndexByName<Ability>(ability_table, StringFromToken(ability_name_token));
 
 					if(temp_unit_schematic.ability_table_indices[i] == -1)
 					{
@@ -100,7 +100,9 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 	if(valid_unit_data)
 	{
 		*unit_schematic = temp_unit_schematic;
-		CopyString(unit_schematic->name, name_token.start, m::Min(sizeof(unit_schematic->name), name_token.length+1));
+		unit_schematic->name = StringFromToken(name_token, &memory::permanent_arena);
+		// CopyString()
+		// CopyString(unit_schematic->name, name_token.start, m::Min(sizeof(unit_schematic->name), name_token.length+1));
 
 		return true;
 	}
@@ -143,6 +145,7 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 			}
 			else
 			{
+				++file.p;
 				continue;
 			}
 		}
@@ -168,7 +171,8 @@ CreateUnit(int schematic_index, Team team)
 	if(!schematic->init) return nullptr; // Invalid schematic
 
 	Unit *unit = (Unit*)CreateEntry(&g::unit_table);
-	CopyString(unit->name, schematic->name, sizeof(unit->name));
+	unit->name = CopyString(schematic->name, &memory::permanent_arena);
+	//CopyString(unit->name, schematic->name, sizeof(unit->name));
 	unit->team = team;
 	unit->max_traits = schematic->max_traits;
 	unit->cur_traits = schematic->max_traits;
@@ -186,10 +190,8 @@ CreateUnit(int schematic_index, Team team)
 }
 
 Unit *
-CreateUnitByName(const char *name, Team team)
+CreateUnitByName(String name, Team team)
 {
-	if(!name) return nullptr;
-
 	int index = GetIndexByName<UnitSchematic>(g::unit_schematic_table, name);
 	return CreateUnit(index, team);
 }
@@ -245,45 +247,65 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 	return false;
 }
 
-TargetSet
-GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets)
+UnitSet
+CombineUnitSets(const UnitSet *a, const UnitSet *b)
 {
-	if(!ValidUnit(caster)) return TargetSet{};
+	UnitSet combined = {};
+	for(int i=0; i<a->size; i++)
+	{
+		AddUnitToUnitSet(a->units[i], &combined);
+	}
 
-	TargetSet valid_targets = {};
+	for(int i=0; i<b->size; i++)
+	{
+		if(!UnitInUnitSet(b->units[i], *a))
+		{
+			AddUnitToUnitSet(b->units[i], &combined);
+		}
+	}
+
+	return combined;
+}
+
+UnitSet
+GenerateValidUnitSet(Unit *caster, Effect *effect, UnitSet all_targets)
+{
+	if(!ValidUnit(caster)) return UnitSet{};
+
+	UnitSet valid_targets = {};
 	for(Unit *target : all_targets)
 	{
 		if(CheckValidEffectTarget(caster, target, effect))
 		{
-			AddUnitToTargetSet(target, &valid_targets);
+			AddUnitToUnitSet(target, &valid_targets);
 		}
 	}
 
 	return valid_targets;
 }
 
-TargetSet
-GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, TargetSet all_targets)
+UnitSet
+GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, UnitSet all_targets)
 {
 	TIMED_BLOCK;
 
-	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return TargetSet{};
+	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return UnitSet{};
 
 	// Return empty target set if the explicit target is invalid.
 	if(!CheckValidEffectTarget(caster, selected_target, effect))
 	{
-		return TargetSet{};
+		return UnitSet{};
 	}
 
 	// Sanitize all_targets not to include invalid units (nullptr or not init)
-	TargetSet all_targets_clean = {};
+	UnitSet all_targets_clean = {};
 	for(Unit *unit : all_targets)
 	{
 		if(!ValidUnit(unit)) continue;
-		AddUnitToTargetSet(unit, &all_targets_clean);
+		AddUnitToUnitSet(unit, &all_targets_clean);
 	}
 
-	TargetSet inferred_target_set = {};
+	UnitSet inferred_target_set = {};
 	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::all_allies)
 	{
@@ -292,7 +314,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit->team == caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -303,7 +325,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit != caster and unit->team == caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -312,7 +334,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		// if(selected target is ally _AND_ selected target is not self)
 		if(selected_target->team == caster->team and selected_target != caster)
 		{
-			AddUnitToTargetSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::single_unit_not_self)
@@ -320,7 +342,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		// if(selected target is not self)
 		if(selected_target != caster)
 		{
-			AddUnitToTargetSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::all_enemies)
@@ -330,7 +352,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit->team != caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -346,14 +368,14 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		// At the time of writing this comment, this includes:
 		// 		self, single_ally, single_enemy, single_unit
 
-		AddUnitToTargetSet(selected_target, &inferred_target_set);
+		AddUnitToUnitSet(selected_target, &inferred_target_set);
 	}
 
 	return inferred_target_set;
 }
 
 bool
-UnitInTargetSet(Unit *unit, TargetSet target_set)
+UnitInUnitSet(Unit *unit, UnitSet target_set)
 {
 	if(!unit) return false;
 	if(!unit->init) return false;
@@ -367,7 +389,7 @@ UnitInTargetSet(Unit *unit, TargetSet target_set)
 }
 
 void
-AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
+AddUnitToUnitSet(Unit *unit, UnitSet *target_set)
 {
 	if(!ValidUnit(unit) or !target_set) return;
 
@@ -375,7 +397,7 @@ AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 	if(target_set->size >= c::max_target_count) return;
 
 	// Do nothing if [*unit] is already part of the set
-	if(UnitInTargetSet(unit, *target_set)) return;
+	if(UnitInUnitSet(unit, *target_set)) return;
 
 	// Add the unit to the set
 	target_set->units[target_set->size++] = unit;

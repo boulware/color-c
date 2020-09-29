@@ -12,6 +12,17 @@ struct String
 	char *data;
 };
 
+// Introspect
+// struct Foo
+// {
+// 	int _int;
+// 	int *_intp;
+// 	char _char;
+// 	char *_charp;
+// 	u32 _u32;
+// 	u32 *_u32p;
+// };
+
 char &CharAt(String *string, u32 index);
 
 char *begin(String& string);
@@ -37,5 +48,9 @@ String CopyString(String src, Arena *arena = &memory::per_frame_arena);
 int Utf8ToUtf32(String string, int index, u32 *utf32_char);
 
 String LowerCase(String string, Arena *arena = &memory::per_frame_arena);
+
+String AllocStringDataFromArena(int max_length, Arena *arena);
+
+String AsString(const String *s);
 
 #endif

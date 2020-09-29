@@ -33,6 +33,7 @@ StringFull(String string)
 bool
 AppendChar(String *string, char appended_char)
 {
+	if(!string) return false;
 	if(StringFull(*string)) return false;
 
 	string->data[string->length++] = appended_char;
@@ -42,6 +43,7 @@ AppendChar(String *string, char appended_char)
 bool
 InsertChar(String *string, char inserted_char, int pos)
 {
+	if(!string) return false;
 	if(StringFull(*string)) return false;
 	if(pos < 0 or pos > string->length)
 	{
@@ -66,6 +68,7 @@ InsertChar(String *string, char inserted_char, int pos)
 bool
 DeleteChar(String *string, int pos)
 {
+	if(!string) return false;
 	if(StringEmpty(*string)) return false;
 
 	if(pos >= 0)
@@ -139,6 +142,18 @@ AppendCString(String *string, const char *c_string, ...)
 }
 
 String
+AllocStringDataFromArena(int max_length, Arena *arena)
+{
+	String string = {
+		.length = 0,
+		.max_length = max_length,
+		.data = (char*)AllocFromArena(arena, sizeof(char)*max_length)
+	};
+
+	return string;
+}
+
+String
 StringFromCString(const char *c_string, Arena *arena)
 {
 	String string = {};
@@ -192,15 +207,15 @@ SubstringInString(String substring, String string)
 	return false;
 }
 
-void
-CopyFromCString(String *string, const char *c_string)
-{
-	const char *p = c_string;
-	while(*p != '\0' and !StringFull(*string))
-	{
-		string->data[string->length++] = *p++;
-	}
-}
+// void
+// CopyFromCString(String *string, const char *c_string)
+// {
+// 	const char *p = c_string;
+// 	while(*p != '\0' and !StringFull(*string))
+// 	{
+// 		string->data[string->length++] = *p++;
+// 	}
+// }
 
 // Interprets the [string], starting at [index], as a utf8 byte sequence and stores the
 // interpreted value as a utf-32 character in [utf32_char]
@@ -282,4 +297,27 @@ LowerCase(String string, Arena *arena)
 	}
 
 	return lowered_string;
+}
+
+String
+AsString(const String *s)
+{
+	return *s;
+}
+
+bool
+CompareStrings(String a, String b)
+{
+	if(a.length != b.length) return false;
+
+	bool matches = true;
+	for(int i=0; i<a.length; i++)
+	{
+		if(CharAt(&a, i) != CharAt(&b, i))
+		{
+			matches = false;
+		}
+	}
+
+	return matches;
 }

@@ -16,7 +16,7 @@ struct UnitSchematic
 {
 	bool init;
 
-	char name[c::max_unit_name_length+1];
+	String name;
 	TraitSet max_traits;
 	int ability_table_indices[c::moveset_max_size];
 };
@@ -25,7 +25,7 @@ struct Unit
 {
 	bool init;
 
-	char name[c::max_unit_name_length+1];
+	String name;
 	Team team;
 	TraitSet cur_traits;
 	TraitSet max_traits;
@@ -39,7 +39,7 @@ struct UnitSlot
 	Vec2f pos; // physical location on the screen
 };
 
-struct TargetSet
+struct UnitSet
 {
 	int size;
 	Unit *units[c::max_target_count];
@@ -47,8 +47,8 @@ struct TargetSet
 	Unit *operator[](int index);
 };
 
-Unit **begin(TargetSet &target_set);
-Unit **end(TargetSet &target_set);
+Unit **begin(UnitSet &target_set);
+Unit **end(UnitSet &target_set);
 
 bool ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set);
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
@@ -63,20 +63,20 @@ Vec2f DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Colo
 void DrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer);
 //void DrawAbilityInfoBox(Vec2f pos, Ability ability, Align align);
 
-void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
-TargetSet GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets);
+void AddUnitToUnitSet(Unit *unit, UnitSet *target_set);
+UnitSet GenerateValidUnitSet(Unit *caster, Effect *effect, UnitSet all_targets);
 //bool AbilityIsSelected();
 //bool IsSelectedAbility(Ability *ability);
 void SetSelectedAbility(Ability *ability);
 
-bool UnitInTargetSet(Unit *unit, TargetSet target_set);
-void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
+bool UnitInUnitSet(Unit *unit, UnitSet target_set);
+void AddUnitToUnitSet(Unit *unit, UnitSet *target_set);
 
 UnitSchematic *GetUnitSchematic(Unit unit);
 
 bool CheckValidAbilityTarget(Unit *source, Unit *target, Effect *effect);
 
-TargetSet GenerateInferredTargetSet(Unit *source, Unit *selected_target, Effect *effect, TargetSet all_targets);
+UnitSet GenerateInferredUnitSet(Unit *source, Unit *selected_target, Effect *effect, UnitSet all_targets);
 
 char *TraitSetString(TraitSet traits);
 int DetermineAbilityTier(Unit *caster, Ability *ability);

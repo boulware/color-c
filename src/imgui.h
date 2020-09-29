@@ -31,6 +31,18 @@ struct TextEntryLayout
 	Align align;
 };
 
+struct IntegerBoxLayout
+{
+	Vec2f size;
+	Color border_color;
+	TextLayout label_layout;
+	TextLayout text_layout;
+};
+
+struct IntegerBoxResponse
+{
+	int value_change;
+};
 
 
 struct ImguiContainer

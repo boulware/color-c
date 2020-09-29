@@ -54,9 +54,11 @@ ScratchString(int size)
 
 	if(ArenaBytesRemaining(memory::per_frame_arena) < size)
 	{
+#if 0
 		log("memory::per_frame_arena tried to allocate past its end. It's not large enough. \
 To avoid overflow, we're resetting the pointer back to the beginning, but this will\
 cause other scratch data to be overwritten before the frame ends.");
+#endif
 
 		memory::per_frame_arena.current = memory::per_frame_arena.start;
 	}

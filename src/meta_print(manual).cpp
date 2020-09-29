@@ -46,8 +46,8 @@ String AsString(const Utf32String &o, int depth=1)
 	AppendCString(&string, "  length: %d (int)\n", o.length);
 	AppendCString(&string, "  max_length: %d (int)\n", o.max_length);
 	AppendCString(&string, "  data: %p (u32 *)\n", o.data);
-	m = AsString(o.pos, depth+1);
-	AppendCString(&string, "  pos: %.*s\n", m.length, m.data);
+	//m = AsString(o.pos, depth+1);
+	//AppendCString(&string, "  pos: %.*s\n", m.length, m.data);
 	AppendCString(&string, "}");
 
 	return string;

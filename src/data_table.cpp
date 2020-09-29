@@ -51,23 +51,23 @@ int DataTableEntriesRemaining(DataTable table)
 }
 
 // Returns -1 if no entry's member matches the given string.
-int
-GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target)
-{
-	int index = -1;
+// int
+// GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target)
+// {
+// 	int index = -1;
 
-	for(int i=0; i<table.entry_count; i++)
-	{
-		char *member_string = (char*)(table.data + i*table.entry_size + member_offset);
-		if(CompareStrings(member_string, target))
-		{
-			index = i;
-			break;
-		}
-	}
+// 	for(int i=0; i<table.entry_count; i++)
+// 	{
+// 		char *member_string = (char*)(table.data + i*table.entry_size + member_offset);
+// 		if(CompareStrings(member_string, target))
+// 		{
+// 			index = i;
+// 			break;
+// 		}
+// 	}
 
-	return index;
-}
+// 	return index;
+// }
 
 // void *
 // GetEntryByIndex(DataTable table, int index)
@@ -82,10 +82,29 @@ GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *t
 // 	}
 // }
 
+// template <typename Type>
+// int GetIndexByName(DataTable table, const char *entry_name)
+// {
+// 	return GetEntryIndexByStringMember(table, MemberOffset(Type,name), entry_name);
+// }
+
 template <typename Type>
-int GetIndexByName(DataTable table, const char *entry_name)
+int
+GetIndexByName(DataTable table, String search_string)
 {
-	return GetEntryIndexByStringMember(table, MemberOffset(Type,name), entry_name);
+	int index = -1;
+
+	for(int i=0; i<table.entry_count; i++)
+	{
+		String member_string = ((Type*)(table.data + i*table.entry_size))->name;
+		if(CompareStrings(member_string, search_string))
+		{
+			index = i;
+			break;
+		}
+	}
+
+	return index;
 }
 
 template <typename Type>

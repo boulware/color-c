@@ -68,6 +68,12 @@ ValidAbility(const Ability *ability)
 	return(ability and ability->init);
 }
 
+bool
+ValidUnitSchematic(const UnitSchematic *unit_schematic)
+{
+	return(unit_schematic and unit_schematic->init);
+}
+
 BattleEvent
 GenerateBattlePreviewEvent(Battle *battle, Intent intent)
 {
@@ -279,8 +285,8 @@ DrawTargetingInfo(Battle *battle)
 	target_indication_layout.font_size = 16;
 	target_indication_layout.align = c::align_bottomcenter;
 
-	TargetSet target_set = {};
-	// if(battle->selected_ability and UnitInTargetSet(battle->hovered_unit, battle->selected_ability_valid_target_set))
+	UnitSet target_set = {};
+	// if(battle->selected_ability and UnitInUnitSet(battle->hovered_unit, battle->selected_ability_valid_target_set))
 	// {
 	// 	// 1) An ability is selected AND a valid target for that ability is hovered => draw inferred target set and outcome if that ability were to be used.
 	// 	target_set = battle->inferred_target_set;
@@ -317,7 +323,7 @@ DrawTargetingInfo(Battle *battle)
 		Unit *unit = battle->units[i];
 		if(unit == nullptr) continue;
 		if(!unit->init) continue;
-		if(!UnitInTargetSet(unit, target_set)) continue;
+		if(!UnitInUnitSet(unit, target_set)) continue;
 
 		Vec2f origin = battle->unit_slots[i];
 		DrawText(target_indication_layout,
@@ -326,10 +332,10 @@ DrawTargetingInfo(Battle *battle)
 	}
 }
 
-TargetSet
-AllBattleUnitsAsTargetSet(Battle *battle)
+UnitSet
+AllBattleUnitsAsUnitSet(Battle *battle)
 {
-	TargetSet target_set = {};
+	UnitSet target_set = {};
 	target_set.size = c::max_target_count;
 	for(int i=0; i<c::max_target_count; i++)
 	{
@@ -424,17 +430,17 @@ DrawUnitHudData(Battle *battle)
 
 // 		u32 chosen_ability_index; // The index of the ability chosen to cast for this enemy
 // 		u32 chosen_target_index; // The index (into battle->units[])
-// 		TargetSet all_targets = AllBattleUnitsAsTargetSet(battle);
+// 		UnitSet all_targets = AllBattleUnitsAsUnitSet(battle);
 
 // 		int valid_ability_count = 0; // Number of valid abilities
 // 		int valid_ability_indices[c::moveset_max_size] = {}; // Indices of abilities that are initialized.
-// 		TargetSet valid_target_sets[c::moveset_max_size] = {}; // Valid target sets corresponding to valid_ability_indices
+// 		UnitSet valid_target_sets[c::moveset_max_size] = {}; // Valid target sets corresponding to valid_ability_indices
 // 		for(int i=0; i<c::moveset_max_size; i++)
 // 		{
 // 			Ability *ability = &unit->abilities[i];
 // 			if(!ability->init) continue;
 
-// 			TargetSet valid_target_set = GenerateValidTargetSet(unit, ability, all_targets);
+// 			UnitSet valid_target_set = GenerateValidUnitSet(unit, ability, all_targets);
 // 			if(valid_target_set.size > 0)
 // 			{
 // 				valid_ability_indices[valid_ability_count] = i;
@@ -448,22 +454,22 @@ DrawUnitHudData(Battle *battle)
 
 // 		chosen_ability_index = valid_ability_indices[RandomU32(0, valid_ability_count-1)];
 // 		Ability *chosen_ability = &unit->abilities[chosen_ability_index];
-// 		TargetSet chosen_ability_valid_targets = valid_target_sets[chosen_ability_index];
+// 		UnitSet chosen_ability_valid_targets = valid_target_sets[chosen_ability_index];
 
 
 // 		chosen_target_index = RandomU32(0, chosen_ability_valid_targets.size-1);
 // 		Unit *chosen_target = chosen_ability_valid_targets.units[chosen_target_index];
 
-// 		TargetSet inferred_targets = GenerateInferredTargetSet(unit, chosen_target, chosen_ability, all_targets);
+// 		UnitSet inferred_targets = GenerateInferredUnitSet(unit, chosen_target, chosen_ability, all_targets);
 
 // 		battle->intents[i] = {unit, chosen_ability, inferred_targets};
 
-// 		//ApplyAbilityToTargetSet(unit, *chosen_ability, inferred_targets);
+// 		//ApplyAbilityToUnitSet(unit, *chosen_ability, inferred_targets);
 // 	}
 // }
 
 void
-InitiateBattle(Battle *battle)
+InitiateBattle(Battle *battle, UnitSet battle_units)
 {
 	// Fill out timers
 	battle->preview_damage_timer = {};
@@ -472,6 +478,8 @@ InitiateBattle(Battle *battle)
 
 	battle->end_button_clicked_timer = {};
 	battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
+
+	battle->units = battle_units;
 
 	// Set action points=1 for all units
 	for(Unit *unit : battle->units)
@@ -565,7 +573,7 @@ DrawEnemyIntents(Battle *battle)
 		ButtonResponse response =
 			DrawButton(c::enemy_intent_button_layout,
 					   {battle->unit_slots[i]+c::enemy_intent_offset, c::enemy_intent_button_size},
-					   "(%s)", intent.ability->name);
+					   intent.ability->name);
 
 		if(response.hovered)
 		{
@@ -712,13 +720,13 @@ UpdateBattle(Battle *battle)
 				// Draw the ability button differently depending on whether it's selected or not.
 				if(battle->selected_ability == ability)
 				{ // Button is selected
-					DrawButton(c::selected_ability_button_layout, ability_button_rect, "%s", ability->name);
+					DrawButton(c::selected_ability_button_layout, ability_button_rect, ability->name);
 				}
 				else
 				{ // Button is not selected -- it's either hovered or not hovered.
 					// I could process the button clicking here, but for now I'm deferring it to later,
 					// where I'll check all the LMB click conditions sort of all as a contained group.
-					DrawButton(c::unselected_ability_button_layout, ability_button_rect, "%s", ability->name);
+					DrawButton(c::unselected_ability_button_layout, ability_button_rect, ability->name);
 				}
 			}
 
@@ -754,12 +762,12 @@ UpdateBattle(Battle *battle)
 		}
 	}
 
-	TargetSet hovered_ability_valid_target_set = {};
-	TargetSet selected_ability_valid_target_set = {};
+	UnitSet hovered_ability_valid_target_set = {};
+	UnitSet selected_ability_valid_target_set = {};
 	{ // Update valid target sets for hovered_ability and selected_ability if they exist.
-		TargetSet all_units = AllBattleUnitsAsTargetSet(battle);
-//		selected_ability_valid_target_set = GenerateValidTargetSet(battle->selected_unit, battle->selected_ability, all_units);
-//		hovered_ability_valid_target_set = GenerateValidTargetSet(battle->selected_unit, hovered_ability, all_units);
+		UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
+//		selected_ability_valid_target_set = GenerateValidUnitSet(battle->selected_unit, battle->selected_ability, all_units);
+//		hovered_ability_valid_target_set = GenerateValidUnitSet(battle->selected_unit, hovered_ability, all_units);
 	}
 
 	Intent player_intent = {};
@@ -767,10 +775,10 @@ UpdateBattle(Battle *battle)
 		// (If there is no unit hovered or the hovered unit is an invalid target for the selected_ability,
 		// the intent target list will be empty)
 
-		TargetSet all_units = AllBattleUnitsAsTargetSet(battle);
+		UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
 		player_intent.caster = battle->selected_unit;
 		player_intent.ability = battle->selected_ability;
-		// player_intent.targets = GenerateInferredTargetSet(battle->selected_unit, hovered_unit,
+		// player_intent.targets = GenerateInferredUnitSet(battle->selected_unit, hovered_unit,
 		// 												  battle->selected_ability, all_units);
 	}
 
@@ -852,6 +860,19 @@ UpdateBattle(Battle *battle)
 
 	//Tick(&battle->preview_damage_timer);
 
+	// Draw units
+	{
+		for(int i=0; i<ArrayCount(battle->units); i++)
+		{
+			Unit *unit = battle->units[i];
+			if(!ValidUnit(unit)) continue;
+
+			Vec2f origin = battle->unit_slots[i];
+
+			DrawUnfilledRect(origin, c::unit_slot_size, c::green);
+
+		}
+	}
 
 
 
@@ -878,7 +899,7 @@ UpdateBattle(Battle *battle)
 
 	// if(!battle->is_player_turn)
 	// {
-	// 	TargetSet all_targets = AllBattleUnitsAsTargetSet(battle);
+	// 	UnitSet all_targets = AllBattleUnitsAsUnitSet(battle);
 
 	// 	for(int i=0; i<c::max_target_count; i++)
 	// 	{
@@ -888,7 +909,7 @@ UpdateBattle(Battle *battle)
 	// 		BattleEvent event = GenerateBattlePreviewEvent(battle, intent);
 	// 		ApplyBattleEvent(&event);
 
-	// //			ApplyAbilityToTargetSet(caster, *intent.ability, intent.targets);
+	// //			ApplyAbilityToUnitSet(caster, *intent.ability, intent.targets);
 	// 	}
 
 	// 	battle->is_player_turn = true;

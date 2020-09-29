@@ -186,7 +186,7 @@ GetButtonHeight(ImguiContainer container)
 }
 
 ListPanelResponse
-ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
+ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float scroll_offset)
 {
 	ListPanelResponse response = {
 		.hovered_index = -1,
@@ -204,9 +204,19 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
 	Vec2f outer_padding = {20.f,2.f};
 	Vec2f inner_padding = {5.f,5.f};
 	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
+
+	// Calculate which entries should be drawn based on scroll_offset
+	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
+	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
+	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
+	//pen.y += remainder;
+
+	// DrawText(c::def_text_layout, MousePos(), "%d", index_of_first_drawn_entry);
+
 	for(int i=0; i<entry_count; i++)
 	{
-		Rect entry_rect = {pen+outer_padding, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+		if(i < index_of_first_drawn_entry) continue;
+		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
 
 		if(PointInRect(entry_rect, MousePos()))
 		{ // Entry hovered
@@ -227,6 +237,28 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count)
 
 
 		pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
+	}
+
+	return response;
+}
+
+IntegerBoxResponse
+IntegerBox(IntegerBoxLayout layout, Vec2f pos, String label, String text)
+{
+	IntegerBoxResponse response = {};
+
+	Rect box_rect = {pos, layout.size};
+	DrawFilledRect(box_rect, c::dk_grey);
+	DrawUnfilledRect(box_rect, layout.border_color);
+	DrawText(layout.label_layout, RectTopLeft(box_rect), label);
+	DrawText(layout.text_layout, RectCenter(box_rect), text);
+
+	if(MouseInRect(box_rect))
+	{
+		int scroll = MouseScroll();
+
+		response.value_change = scroll;
+		if(Down(vk::shift)) response.value_change *= 10;
 	}
 
 	return response;

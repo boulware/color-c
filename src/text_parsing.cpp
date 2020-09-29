@@ -521,3 +521,16 @@ TokenMatchesString(Token token, const char *string)
 
 // 	}
 // }
+
+String
+StringFromToken(Token token, Arena *arena)
+{
+	String string = AllocStringDataFromArena(token.length, arena);
+	string.length = token.length;
+	for(int i=0; i<token.length; i++)
+	{
+		CharAt(&string, i) = token.start[i];
+	}
+
+	return string;
+}

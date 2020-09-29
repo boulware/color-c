@@ -10,6 +10,9 @@ bool CompareStringsStrict(const char *a, const char *b);
 void CopyStringN_unsafe(char *dst, const char *src, size_t n);
 char *TempFormatString(const char *fmt, va_list args);
 
+template <typename Type>
+bool InRange(Type value, Type min, Type max);
+
 
 
 

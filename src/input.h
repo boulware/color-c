@@ -106,5 +106,6 @@ bool Released(u8 key);
 bool Repeated(u8 key);
 Vec2f MousePos();
 int MouseScroll();
+bool MouseInRect(Rect rect);
 
 #endif

@@ -2,6 +2,8 @@
 #define TEXT_PARSING_H
 
 #include "types.h"
+#include "memory.h"
+#include "string.h"
 
 const u8 utf8_mask_1byte = 0b0;
 const u8 utf8_mask_2byte = 0b110;
@@ -67,5 +69,7 @@ bool NextAsUtf32Char(StringBuffer *buffer, u32 *utf32_char);
 u32 DigitToUtf32Char(u32 digit);
 
 bool TokenMatchesString(Token token, const char *string);
+
+String StringFromToken(Token token, Arena *arena = &memory::per_frame_arena);
 
 #endif

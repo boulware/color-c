@@ -144,3 +144,24 @@ IsUtf32ControlChar(u32 c)
 
 	return false;
 }
+
+template <typename Type>
+bool
+InRange(Type value, Type min, Type max)
+{
+	return(value >= min and value <= max);
+}
+
+String AsString(const int *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "%d", *s);
+
+	return string;
+}

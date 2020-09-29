@@ -3,9 +3,12 @@
 
 #include "text_parsing.h"
 
+Introspect
 struct TraitSet
 {
-	s32 vigor, focus, armor;
+	s32 vigor;
+	s32 focus;
+	s32 armor;
 
 	s32 &operator[](size_t index);
 };

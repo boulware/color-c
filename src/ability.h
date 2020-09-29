@@ -6,6 +6,7 @@
 #include "text_parsing.h"
 #include "effect.h"
 
+Introspect
 struct AbilityTier
 {
 	bool init;
@@ -27,11 +28,12 @@ struct AbilityTier
 // 	TargetClass target_class;	// what kinds of units this ability can target (allies, single unit, teams, self, etc.)
 // };
 
+Introspect
 struct Ability
 {
 	bool init;
 
-	char name[c::max_ability_name_length+1];
+	String name;
 	AbilityTier tiers[c::max_ability_tier_count];
 };
 

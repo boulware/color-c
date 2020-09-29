@@ -250,6 +250,41 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 }
 
 Vec2f
+DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
+{
+	TIMED_BLOCK;
+
+	ActivateUvShader(layout.color);
+
+	Vec2f text_size = SizeText(layout, string);
+
+	origin = AlignRect({origin, text_size}, layout.align).pos;
+	Vec2f pen = origin;
+
+	for(int i=0; i<string.length; i++)
+	{
+		u32 utf32_char;
+		Utf8ToUtf32(string, i, &utf32_char);
+		if(utf32_char == '\n')
+		{
+			pen.x = origin.x;
+			pen.y += LineSize(layout);
+		}
+		else
+		{
+			_RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+		}
+	}
+
+	if(layout.draw_debug)
+	{
+		DrawUnfilledRect({origin, text_size}, layout.color);
+	}
+
+	return text_size;
+}
+
+Vec2f
 SizeText(TextLayout layout, String string, int char_count)
 {
 	TIMED_BLOCK;

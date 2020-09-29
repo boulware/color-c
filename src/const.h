@@ -157,6 +157,42 @@ namespace c
 	// Editor
 	const int max_field_text_length = 30;
 	const int max_field_label_length = 30;
+	int const editor_max_input_elements = 10;
+
+	TextLayout editor_integer_box_label_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_bottomleft
+	};
+
+	TextLayout editor_integer_box_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 32,
+		.align = c::align_center
+	};
+
+	IntegerBoxLayout editor_vigor_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::red,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
+
+	IntegerBoxLayout editor_focus_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::yellow,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
+
+	IntegerBoxLayout editor_armor_integer_box_layout = {
+		.size = {50.f,50.f},
+		.border_color = c::lt_blue,
+		.label_layout = c::editor_integer_box_label_layout,
+		.text_layout = c::editor_integer_box_text_layout
+	};
 
 	// const ButtonLayout editor_list_button_layout = {
 	// 	.label_layout = {
@@ -240,14 +276,16 @@ namespace c
 		.color = c::white,
 		.font_size = 16,
 		.align = c::align_center,
-		.draw_debug = false};
+		.draw_debug = false
+	};
 
 	const TextLayout trait_change_preview_text_layout = {
 		.font = &text_render::default_font,
 		.color = c::white,
 		.font_size = 16,
 		.align = c::align_leftcenter,
-		.draw_debug = false};
+		.draw_debug = false
+	};
 
 
 	const float trait_change_preview_h_offset = 5.f;

@@ -39,7 +39,9 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 		else if(TokenMatchesString(token, "tier"))
 		{
 			valid_ability_data = ParseNextAsS32(buffer, &cur_tier);
+			temp_ability.tiers[cur_tier].init = true;
 			cur_effect_index = 0;
+
 			if(cur_tier < 0 or cur_tier >= c::max_ability_tier_count)
 			{
 				valid_ability_data = false;
@@ -117,7 +119,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 	if(valid_ability_data)
 	{
 		*ability = temp_ability;
-		CopyString(ability->name, name_token.start, m::Min(sizeof(ability->name), name_token.length+1));
+		ability->name = StringFromToken(name_token, &memory::permanent_arena);
 
 		return true;
 	}
