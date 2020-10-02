@@ -4,527 +4,544 @@
 		"selected_items":
 		[
 			[
-				"end_but",
-				"end_button_disabled_layout"
-			],
-			[
-				"end",
-				"end_turn_button_size"
-			],
-			[
-				"end_turn",
-				"end_turn_button_offset"
-			],
-			[
-				"select",
-				"selected_unit"
-			],
-			[
-				"selected",
-				"selected_unit"
-			],
-			[
-				"selecte",
-				"selected_ability"
-			],
-			[
-				"hover",
-				"hovered_unit"
-			],
-			[
-				"selec",
-				"selected_unit"
-			],
-			[
-				"hovered_",
-				"hovered_ability"
-			],
-			[
-				"overhea",
-				"overheal_layout"
+				"Gener",
+				"GenerateBattlePreviewEvent"
 			],
 			[
 				"preview",
 				"preview_damage_timer"
 			],
 			[
-				"sle",
-				"selected_ability"
+				"Deterin",
+				"DetermineAbilityTier"
 			],
 			[
-				"hovere",
-				"hovered_ability"
+				"ability",
+				"ability_id"
 			],
 			[
-				"error",
-				"error_flash_counter"
+				"Valid",
+				"ValidUnit"
 			],
 			[
-				"error_",
-				"error_flash_increasing"
+				"Get",
+				"GetUnitByID"
 			],
 			[
-				"errorfl",
-				"error_flash_counter"
-			],
-			[
-				"solid_",
-				"solid_pip_count"
-			],
-			[
-				"overheal",
-				"overheal_string"
-			],
-			[
-				"solid",
-				"solid_pip_count"
-			],
-			[
-				"flash_",
-				"flash_color_width"
-			],
-			[
-				"flash_colr",
-				"flash_color_width"
-			],
-			[
-				"current",
-				"current_overheal"
-			],
-			[
-				"ovehea",
-				"overheal_text_pos"
-			],
-			[
-				"Draw",
-				"DrawText"
-			],
-			[
-				"over",
-				"overheal_layout"
-			],
-			[
-				"change_to",
-				"change_to_target"
-			],
-			[
-				"chnge",
-				"change_to_self"
-			],
-			[
-				"Targe",
-				"TargetClass"
-			],
-			[
-				"selete",
-				"selected_ability"
-			],
-			[
-				"unit_",
-				"unit_name_layout"
-			],
-			[
-				"valid_",
-				"valid_targets"
+				"GetSc",
+				"GetUnitSchematicFromId"
 			],
 			[
 				"unit_sch",
-				"unit_schematic_table"
+				"unit_schematic_id"
 			],
 			[
-				"Passive",
-				"PassiveNode"
+				"DrawEnemyI",
+				"DrawEnemyIntentThoughtBubble"
 			],
 			[
-				"passivenode",
-				"passive_node_table"
+				"null",
+				"null_ability_id"
 			],
 			[
-				"passive",
-				"passive_skill_table"
+				"Vlaid",
+				"ValidUnit"
 			],
 			[
-				"hud",
-				"hud_offset_from_bottom"
+				"hoveredunit",
+				"hovered_unit_id"
 			],
 			[
-				"windw",
-				"window_size"
+				"sel",
+				"selected_target"
 			],
 			[
-				"UnitSc",
-				"UnitSchematicTable"
+				"selcete",
+				"selected_target_id"
 			],
 			[
-				"max_",
-				"max_target_count"
+				"selected",
+				"selected_target"
 			],
 			[
-				"vali_",
-				"hovered_ability_valid_target_set"
-			],
-			[
-				"hoverd",
-				"hovered_unit"
-			],
-			[
-				"slec",
-				"selected_unit"
-			],
-			[
-				"hovered",
-				"hovered_ability_valid_target_set"
-			],
-			[
-				"selected_ab",
+				"seleted",
 				"selected_ability"
 			],
 			[
-				"selected_ability",
-				"selected_ability_valid_target_set"
+				"select",
+				"selected_ability"
 			],
 			[
-				"selected_unit",
-				"selected_unit_index"
+				"abili",
+				"abilities"
 			],
 			[
-				"ability_table",
-				"ability_table_indices"
+				"selecte",
+				"selected_unit"
 			],
 			[
-				"temp_",
-				"temp_unit_schematic"
+				"selec",
+				"selected_unit-"
 			],
 			[
-				"valid_t",
-				"valid_targets"
+				"adju",
+				"adjusted_gift_amount"
 			],
 			[
-				"Target",
-				"TargetSet"
+				"events",
+				"events_initial_size"
 			],
 			[
-				"max",
-				"max_average_cycles"
+				"Token",
+				"TokenMatchesString"
 			],
 			[
-				"avg",
-				"avg_cycles"
+				"Conf",
+				"ConfirmNextToken"
 			],
 			[
-				"function",
-				"function_cycles_layout"
+				"Toke",
+				"TokenType_"
 			],
 			[
-				"TextLay",
-				"TextLayoutScale"
+				"TokenT",
+				"TokenType_"
 			],
 			[
-				"blend",
-				"blended_color"
+				"base_",
+				"base_type_token"
 			],
 			[
-				"timed",
-				"timed_block_array_size"
+				"baset",
+				"base_type_token"
 			],
 			[
-				"char_vert",
-				"char_verts_size"
+				"Close",
+				"CloseAngleBracket"
 			],
 			[
-				"buffer",
-				"buffer_size"
+				"Confirm",
+				"ConfirmTokenType_"
 			],
 			[
-				"window",
-				"window_width"
+				"is_",
+				"is_pointer"
 			],
 			[
-				"texture",
-				"texture_size"
+				"CloseSq",
+				"CloseSquareBracket"
 			],
 			[
-				"bitmap",
-				"bitmap_top"
+				"OpenSq",
+				"OpenSquigglyBracket"
 			],
 			[
-				"RenderUtf",
-				"_RenderUtf32Char"
+				"Toek",
+				"TokenType_"
 			],
 			[
-				"SizeUtf",
-				"SizeUtf8LineFast"
+				"Open",
+				"OpenSquigglyBracket"
 			],
 			[
-				"Size",
-				"SizeUtf8Line"
+				"TokenTy",
+				"CheckNextTokenType_"
 			],
 			[
-				"print",
-				"printable_ascii_end"
+				"open",
+				"open_bracket_token"
 			],
 			[
-				"FT_LOAD",
-				"FT_LOAD_DEFAULT"
+				"Ope",
+				"OpenSquareBracket"
 			],
 			[
-				"def_",
-				"def_text_layout"
+				"Confir",
+				"ConfirmTokenType_"
 			],
 			[
-				"cycles",
-				"cycles_per_hit"
+				"base_ty",
+				"base_type_token"
 			],
 			[
-				"draw",
-				"draw_debug_text"
+				"previewtrat",
+				"preview_trait_changes"
 			],
 			[
-				"TIMED",
-				"TIMED_BLOCK_ARRAY"
+				"index",
+				"index_into_battle_units"
 			],
 			[
-				"TimedBl",
-				"TimedBlockEntry"
+				"selectd",
+				"selected_ability"
 			],
 			[
-				"traitset",
-				"traitset_string"
+				"Generate",
+				"GenerateBattlePreviewEvent"
 			],
 			[
-				"cange_to",
-				"change_to_target"
+				"UnitSch",
+				"UnitSchematic"
 			],
 			[
-				"changeto",
-				"change_to_target"
+				"unitschta",
+				"unit_schematic_table"
 			],
 			[
-				"target",
-				"target_required"
+				"entry_",
+				"entry_count"
 			],
 			[
-				"max_trait",
-				"max_traitset_string_size"
+				"ListP",
+				"ListPanelLayout"
 			],
 			[
-				"windowed_windo",
-				"windowed_window_height"
+				"unit_sche",
+				"unit_schematic_table"
 			],
 			[
-				"windowed",
-				"windowed_window_width"
+				"Table",
+				"TableIndex"
 			],
 			[
-				"windowed_",
-				"windowed_window_height"
+				"DataTab",
+				"DataTableEntry"
 			],
 			[
-				"TraitSet",
-				"TraitSetString"
+				"DataT",
+				"DataTableEntry"
 			],
 			[
-				"prepend",
-				"prepend_space"
+				"Strn",
+				"StringFromCString"
 			],
 			[
-				"prepe",
-				"prepend_space"
-			],
-			[
-				"required",
-				"self_required"
+				"entr",
+				"entry_size"
 			],
 			[
 				"unit_slot",
 				"unit_slot_size"
 			],
 			[
-				"unit_name",
-				"unit_name_layout"
+				"require",
+				"required_traits"
 			],
 			[
-				"GetU",
-				"GetSchematicFromUnit"
+				"def_text",
+				"def_text_layout"
 			],
 			[
-				"previewt",
-				"preview_traits"
+				"value_",
+				"value_ptr"
 			],
 			[
-				"trait_",
-				"trait_bar_size"
+				"input",
+				"input_elements"
 			],
 			[
-				"unitname",
-				"unit_name_size"
+				"Ge",
+				"GenerateInputElementString"
 			],
 			[
-				"armor",
-				"armor_percent"
+				"Input",
+				"InputElement"
 			],
 			[
-				"schemat",
-				"schematic_index"
+				"Element",
+				"InputElementType"
 			],
 			[
-				"vigor",
-				"vigor_ratio"
+				"Abli",
+				"AbilityPropertyIndex"
 			],
 			[
-				"trait",
-				"trait_bar_size"
+				"cursor",
+				"text_cursor_pos"
 			],
 			[
-				"pre",
-				"preview_damage"
+				"Integer",
+				"IntegerBox"
 			],
 			[
-				"padded_",
-				"padded_rect"
+				"temp",
+				"temp_ability"
 			],
 			[
-				"change_t",
-				"change_to_target"
+				"Ability",
+				"AbilityPropertyIndex"
 			],
 			[
-				"_",
-				"_inferred_target_set"
+				"Abil",
+				"AbilityPropertyIndex"
 			],
 			[
-				"buttoncol",
-				"button_color"
+				"inputele",
+				"input_elements"
 			],
 			[
-				"infere",
-				"inferred_target_set"
+				"As",
+				"InputElementTextAsString"
 			],
 			[
-				"inferred",
-				"inferred_target_set"
+				"Inpute",
+				"InputElementTextAsString"
 			],
 			[
-				"valid",
-				"valid_targets"
+				"InputEle",
+				"InputElementType"
 			],
 			[
-				"target_class",
-				"target_class_token"
+				"Inputel",
+				"InputElementType"
 			],
 			[
-				"bytes",
-				"bytes_per_row"
+				"actve",
+				"active_index"
 			],
 			[
-				"bit",
-				"bits_per_pixel"
+				"Abi",
+				"AbilityPropertyIndex"
 			],
 			[
-				"data",
-				"data_offset"
+				"field_",
+				"field_positions"
 			],
 			[
-				"expec",
-				"expected_byte_count"
+				"Edit",
+				"EditorMode"
 			],
 			[
-				"filter",
-				"filter_method"
+				"editor",
+				"editor_integer_box_layout"
 			],
 			[
-				"offset",
-				"offset_chunk_data"
+				"test_",
+				"test_string"
 			],
 			[
-				"Byte",
-				"ByteSwapU32"
+				"align_bottom",
+				"align_bottomleft"
 			],
 			[
-				"interlace",
-				"interlace_method"
+				"Intege",
+				"IntegerBoxResponse"
 			],
 			[
-				"compress",
-				"compression_method"
+				"Integ",
+				"IntegerBoxResponse"
 			],
 			[
-				"ihdr_",
-				"ihdr_data"
-			],
-			[
-				"IHDR",
-				"IHDR_SwapBytes"
-			],
-			[
-				"chunk",
-				"chunk_data"
-			],
-			[
-				"Render",
-				"RenderUtf8LineColor"
+				"pos",
+				"panel_scroll_pos"
 			],
 			[
 				"active",
-				"active_box_rect"
+				"active_index"
 			],
 			[
-				"padded",
-				"padded_rect"
+				"unit",
+				"unit_schematic"
 			],
 			[
-				"Acti",
-				"ActivateColorShader"
+				"abilit",
+				"ability_count"
 			],
 			[
-				"selcete",
-				"selected_unit_name"
+				"first",
+				"first_ability_index"
 			],
 			[
-				"Unit",
-				"UnitSchematic"
+				"panel_entr",
+				"panel_entry_ids"
 			],
 			[
-				"pixels",
-				"pixel_size"
+				"panelscr",
+				"panel_scroll_vel"
 			],
 			[
-				"mous",
-				"mouse_pos"
+				"panel_",
+				"panel_scroll_vel"
 			],
 			[
-				"mouse_",
-				"mouse_pos_i"
+				"panel",
+				"panel_scroll_vel"
 			],
 			[
-				"mous_",
-				"mouse_pos_i"
+				"Drw",
+				"DrawTextMultiline"
 			],
 			[
-				"color_",
-				"color_shader"
+				"Fmt",
+				"Fmt_first"
 			],
 			[
-				"padding",
-				"padding_multiplier"
+				"basety",
+				"base_type_format_specifier"
 			],
 			[
-				"label",
-				"label_size"
+				"data",
+				"file_data"
 			],
 			[
-				"rendered",
-				"rendered_size"
+				"filename",
+				"filename_with_folder"
+			],
+			[
+				"base_type",
+				"base_type_format_specifier"
+			],
+			[
+				"base_t",
+				"base_type_format_specifier"
+			],
+			[
+				"OPTIM",
+				"OPTIMIZING_FUNCTION"
+			],
+			[
+				"utf32",
+				"utf32_char"
+			],
+			[
+				"Utf32",
+				"Utf32StringFromCString"
+			],
+			[
+				"Utf",
+				"Utf32String"
+			],
+			[
+				"field",
+				"field_positions"
+			],
+			[
+				"defa",
+				"def_text_entry_layout"
+			],
+			[
+				"TextEntr",
+				"TextEntryLayout"
+			],
+			[
+				"lab",
+				"search_label"
+			],
+			[
+				"String",
+				"StringLength"
+			],
+			[
+				"def_Text",
+				"def_text_entry_layout"
+			],
+			[
+				"pressed",
+				"pressed_index"
+			],
+			[
+				"hovered",
+				"hovered_index"
+			],
+			[
+				"entry",
+				"entry_rect"
+			],
+			[
+				"LIstP",
+				"ListPanelLayout"
+			],
+			[
+				"Game",
+				"GameState"
+			],
+			[
+				"meb",
+				"member_name"
+			],
+			[
+				"member",
+				"member_name"
+			],
+			[
+				"max_",
+				"max_chars_to_append"
+			],
+			[
+				"file",
+				"print_meta_cpp_file"
+			],
+			[
+				"membe",
+				"member_count"
+			],
+			[
+				"meta",
+				"meta_data"
+			],
+			[
+				"stru",
+				"struct_meta_data"
+			],
+			[
+				"Bf",
+				"BufferBytesRemaining"
+			],
+			[
+				"idne",
+				"identifier_token"
+			],
+			[
+				"identif",
+				"identifier_token"
+			],
+			[
+				"iden",
+				"identifier_token"
+			],
+			[
+				"type",
+				"type_token"
+			],
+			[
+				"struct",
+				"struct_name_token"
+			],
+			[
+				"text",
+				"text_entry_layout"
+			],
+			[
+				"TextE",
+				"TextEntryResponse"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/battle.h",
+			"file": "src/traitset.h",
 			"settings":
 			{
-				"buffer_size": 1215,
+				"buffer_size": 771,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "_/todo.txt",
+			"settings":
+			{
+				"buffer_size": 1626,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/effect.h",
+			"settings":
+			{
+				"buffer_size": 619,
 				"line_ending": "Windows"
 			}
 		},
@@ -532,43 +549,34 @@
 			"file": "src/battle.cpp",
 			"settings":
 			{
-				"buffer_size": 16191,
+				"buffer_size": 47050,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/timer.h",
+			"file": "src/battle.h",
 			"settings":
 			{
-				"buffer_size": 155,
+				"buffer_size": 1723,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/const.h",
+			"file": "src/unit.cpp",
 			"settings":
 			{
-				"buffer_size": 5419,
+				"buffer_size": 21053,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/random.h",
+			"file": "src/unit.h",
 			"settings":
 			{
-				"buffer_size": 272,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/random.cpp",
-			"settings":
-			{
-				"buffer_size": 320,
+				"buffer_size": 2222,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -586,15 +594,19 @@
 		"selected_items":
 		[
 			[
-				"Incre",
-				"Increment Selection"
-			],
-			[
 				"inc",
 				"Increment Selection"
 			],
 			[
+				"lower ",
+				"Convert Case: Lower Case"
+			],
+			[
 				"incre",
+				"Increment Selection"
+			],
+			[
+				"Incre",
 				"Increment Selection"
 			],
 			[
@@ -686,7 +698,7 @@
 	},
 	"console":
 	{
-		"height": 157.0,
+		"height": 238.0,
 		"history":
 		[
 		]
@@ -702,138 +714,139 @@
 	},
 	"expanded_folders":
 	[
-		"/D/work/programming/color-c"
+		"/D/work/programming/color-c",
+		"/D/work/programming/color-c/src"
 	],
 	"file_history":
 	[
-		"/D/work/programming/color-c/_/todo.txt",
+		"/D/work/programming/color-c/src/todo_session.txt",
+		"/D/work/programming/color-c/src/unit.h",
 		"/D/work/programming/color-c/src/battle.cpp",
-		"/D/work/programming/color-c/src/oscillating_timer.cpp",
 		"/D/work/programming/color-c/src/battle.h",
+		"/D/work/programming/color-c/src/ability.h",
+		"/D/work/programming/color-c/src/unit.cpp",
+		"/D/work/programming/color-c/src/game.cpp",
+		"/D/work/programming/color-c/src/table.cpp",
+		"/D/work/programming/color-c/src/table.h",
+		"/D/work/programming/color-c/src/traitset.cpp",
+		"/D/work/programming/color-c/data/ability.dat",
+		"/D/work/programming/color-c/data/breed.dat",
+		"/D/work/programming/color-c/src/util.cpp",
+		"/D/work/programming/color-c/src/macros.h",
+		"/D/work/programming/color-c/src/debug.h",
+		"/D/work/programming/color-c/src/editor.h",
+		"/D/work/programming/color-c/src/log.cpp",
+		"/D/work/programming/color-c/src/win32_platform.cpp",
+		"/D/work/programming/color-c/src/editor.cpp",
+		"/D/work/programming/color-c/src/global.h",
+		"/D/work/programming/color-c/src/array.cpp",
 		"/D/work/programming/color-c/src/const.h",
+		"/D/work/programming/color-c/src/string.cpp",
+		"/D/work/programming/color-c/src/ability.cpp",
+		"/D/work/programming/color-c/src/memory.cpp",
+		"/D/work/programming/color-c/src/array.h",
+		"/D/work/programming/color-c/build/b.bat",
+		"/D/work/programming/color-c/src/meta_print.cpp",
+		"/D/work/programming/color-c/src/meta_print.h",
+		"/D/work/programming/color-c/src/effect.h",
+		"/D/work/programming/color-c/src/target_class.h",
+		"/D/work/programming/color-c/src/traitset.h",
+		"/D/work/programming/color-c/_/todo.txt",
+		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
+		"/D/work/programming/color-c/src/imgui.cpp",
+		"/D/work/programming/color-c/src/memory.h",
+		"/D/work/programming/color-c/src/util.h",
+		"/D/work/programming/color-c/src/meta_text_parsing.cpp",
+		"/D/work/programming/color-c/src/meta_text_parsing.h",
+		"/D/work/programming/color-c/src/meta.cpp",
+		"/D/work/programming/color-c/src/string.h",
+		"/D/work/programming/color-c/src/scratch.cpp",
+		"/D/work/programming/color-c/src/math.cpp",
+		"/D/work/programming/color-c/src/text_render.cpp",
+		"/D/work/programming/color-c/logs/log.txt",
+		"/D/work/programming/color-c/build/game.i",
+		"/D/work/programming/color-c/src/imgui.h",
+		"/D/work/programming/color-c/src/input.h",
+		"/D/work/programming/color-c/src/game.h",
+		"/D/work/programming/color-c/src/passive_skill_tree.cpp",
+		"/D/work/programming/color-c/src/data_table.h",
+		"/D/work/programming/color-c/src/data_table.cpp",
 		"/D/work/programming/color-c/src/draw.h",
 		"/D/work/programming/color-c/src/draw.cpp",
+		"/D/work/programming/color-c/src/text_parsing.h",
+		"/D/work/programming/color-c/data/unit_schematic.dat",
+		"/D/work/programming/color-c/src/text_parsing.cpp",
+		"/D/work/programming/color-c/src/input.cpp",
+		"/D/work/programming/color-c/build/meta.i",
+		"/D/work/programming/color-c/src/utf32string.h",
+		"/D/work/programming/color-c/src/meta_platform.cpp",
+		"/D/work/programming/color-c/src/meta_print(manual).cpp",
+		"/D/work/programming/color-c/src/meta_print(manual).h",
+		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/WinBase.h",
+		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/fileapi.h",
+		"/D/work/programming/color-c/build/win32_platform.i",
+		"/D/work/programming/color-c/src/debug.cpp",
+		"/D/work/programming/color-c/logs/DebugTimings.txt",
+		"/D/work/programming/color-c/src/text_render.h",
+		"/D/work/programming/color-c/src/utf32string.cpp",
+		"/D/work/programming/color-c/src/vec.cpp",
+		"/D/work/programming/color-c/src/meta.h",
+		"/D/work/programming/color-c/src/win32_platform.h",
+		"/D/work/programming/color-c/src/platform.h",
+		"/D/work/programming/playground/main.cpp",
+		"/D/work/programming/color-c/src/bitmap.cpp",
+		"/D/work/programming/color-c/src/strings.h",
+		"/D/work/programming/color-c/src/food.h",
+		"/D/work/programming/color-c/src/strings.cpp",
+		"/C/Users/Harm/Documents/My Games/TIS-100/76561198027512610/save/00150.0.txt",
+		"/D/work/programming/color-c/src/freetype_wrapper.h",
+		"/D/work/programming/color-c/src/freetype.h",
+		"/D/work/programming/color-c/src/csv.h",
+		"/D/work/programming/color-c/src/target_class.cpp",
+		"/D/work/programming/color-c/src/uv_fragment.glsl",
+		"/D/work/programming/color-c/src/color_vertex.glsl",
+		"/D/work/programming/color-c/src/effect.cpp",
+		"/D/work/programming/color-c/src/color_fragment.glsl",
+		"/D/work/programming/color-c/src/uv_vertex.glsl",
+		"/D/work/programming/fps/src/shaders/default_3d.vs.glsl",
+		"/D/work/programming/color-c/data/tier_ability.dat",
+		"/D/work/programming/color-c/src/random.h",
+		"/D/work/programming/color-c/src/random.cpp",
+		"/D/work/programming/color-c/src/timer.h",
+		"/D/work/programming/color-c/src/oscillating_timer.cpp",
 		"/D/work/programming/color-c/src/oscillating_timer.h",
 		"/D/work/programming/color-c/src/timer.cpp",
-		"/D/work/programming/color-c/src/imgui.h",
-		"/D/work/programming/color-c/src/game.cpp",
-		"/D/work/programming/color-c/src/game.h",
-		"/D/work/programming/color-c/src/unit.cpp",
-		"/D/work/programming/color-c/src/unit.h",
-		"/D/work/programming/color-c/src/input.h",
-		"/D/work/programming/color-c/src/win32_platform.cpp",
-		"/D/work/programming/color-c/data/unit_schematic.dat",
-		"/D/work/programming/color-c/src/text_render.h",
-		"/D/work/programming/color-c/src/text_render.cpp",
-		"/D/work/programming/color-c/src/imgui.cpp",
-		"/D/work/programming/color-c/src/util.h",
-		"/D/work/programming/color-c/src/util.cpp",
-		"/D/work/programming/color-c/src/vec.cpp",
-		"/D/work/programming/color-c/src/memory.cpp",
-		"/D/work/programming/color-c/src/memory.h",
-		"/D/work/programming/color-c/build/game.i",
-		"/D/work/programming/color-c/src/passive_skill_tree.cpp",
-		"/D/work/programming/color-c/src/global.h",
-		"/D/work/programming/color-c/src/debug.cpp",
-		"/D/work/programming/color-c/data/ability.dat",
-		"/D/work/programming/color-c/logs/log.txt",
-		"/D/work/programming/color-c/src/log.cpp",
-		"/D/work/programming/color-c/src/color_fragment.glsl",
-		"/D/work/programming/color-c/src/uv_fragment.glsl",
-		"/D/work/programming/color-c/build/b.bat",
 		"/D/work/programming/color-c/build/freetype/CMakeLists.txt",
 		"/D/work/programming/color-c/src/color.h",
 		"/D/work/programming/color-c/build/freetype/docs/reference/ft2-header_file_macros.html",
 		"/D/work/programming/color-c/_/design.txt",
 		"/D/work/programming/color-c/build/freetype/src/gzip/infutil.c",
 		"/D/work/programming/color-c/src/sprite.cpp",
-		"/D/work/programming/color-c/src/bitmap.cpp",
 		"/D/work/programming/color-c/src/opengl.h",
-		"/D/work/programming/color-c/src/platform.h",
 		"/D/work/programming/color-c/src/bitmap.h",
-		"/D/work/programming/color-c/src/uv_vertex.glsl",
 		"/C/Users/Harm/Downloads/main.c",
-		"/D/work/programming/fps/src/shaders/default_3d.vs.glsl",
 		"/D/work/programming/fps/src/game.cpp",
 		"/D/work/programming/fps/src/opengl.cpp",
 		"/D/work/programming/color-c/src/passive_skill_tree.h",
-		"/D/work/programming/color-c/src/data_table.cpp",
 		"/D/work/programming/color-c/src/align.cpp",
-		"/D/work/programming/color-c/src/data_table.h",
-		"/D/work/programming/color-c/src/text_parsing.h",
-		"/D/work/programming/color-c/src/input.cpp",
 		"/D/work/programming/color-c/src/game.i",
-		"/D/work/programming/color-c/src/text_parsing.cpp",
-		"/D/work/programming/color-c/src/debug.h",
 		"/D/work/programming/fps/src/win32_platform_layer.cpp",
 		"/D/work/programming/color-c/src/fragment.glsl",
 		"/D/work/programming/color-c/src/log.txt",
-		"/D/work/programming/color-c/logs/DebugTimings.txt",
 		"/D/work/programming/fps/src/platform.h",
-		"/D/work/programming/color-c/src/macros.h",
-		"/D/work/programming/color-c/src/freetype.h",
 		"/D/work/programming/color-c/src/align.h",
 		"/D/work/programming/color-c/src/image.cpp",
 		"/D/work/programming/color-c/color-c.sublime-project",
-		"/D/work/programming/color-c/src/win32_platform.h",
 		"/D/work/programming/color-c/src/vec.h",
 		"/D/work/programming/color-c/src/freetype_wrapper.cpp",
-		"/D/work/programming/color-c/src/freetype_wrapper.h",
 		"/C/Users/Harm/Desktop/current_remedybg/remedybg_0_3_0_6/README.txt",
 		"/D/work/programming/color-c/src/font.h",
 		"/D/work/programming/color-c/src/font.cpp",
 		"/D/work/programming/color-c/data/unit.dat",
-		"/D/work/programming/color-c/src/math.cpp",
 		"/D/work/programming/color-c/src/sprite.h",
 		"/D/work/programming/color-c/src/texture.cpp",
 		"/D/work/programming/color-c/src/texture.h",
-		"/D/work/programming/color-c/build/freetype/out/build/x64-Debug/CMakeFiles/3.16.19112601-MSVC_2/CMakeRCCompiler.cmake",
-		"/D/work/programming/color-c/src/opengl.cpp",
-		"/D/work/programming/color-c/src/types.h",
-		"/D/work/programming/color-c/src/types.cpp",
-		"/D/work/programming/fps/src/util.h",
-		"/D/work/programming/color-c/src/image.h",
-		"/C/Users/Harm/Downloads/zlib1211/zlib-1.2.11/deflate.h",
-		"/C/Users/Harm/Downloads/zlib1211/zlib-1.2.11/deflate.c",
-		"/C/Users/Harm/Downloads/zlib1211/zlib-1.2.11/zlib.h",
-		"/C/Users/Harm/Downloads/lpng1637/pngread.c",
-		"/D/work/programming/color-c/src/color_vertex.glsl",
-		"/D/work/programming/fps/src/draw.h",
-		"/D/work/programming/color-c/src/math.h",
-		"/D/work/programming/fps/src/input.h",
-		"/D/work/programming/fps/src/input.cpp",
-		"/D/work/programming/fps/fps.sublime-project",
-		"/D/work/programming/color-c/src/fragment_uv.glsl",
-		"/D/work/programming/color-c/src/vertex_uv.glsl",
-		"/D/work/programming/fps/src/vertex.h",
-		"/D/work/programming/color-c/src/strings.cpp",
-		"/D/work/programming/color-c/src/strings.h",
-		"/D/work/programming/_archive/trait-game(python)/.dato/units.dato",
-		"/D/work/programming/_archive/timer/log.txt",
-		"/D/work/programming/_archive/trait-game(python)/.dato/enemies.dato",
-		"/D/work/programming/_archive/card_rpg/main.cpp",
-		"/D/work/programming/_archive/timer/main.py",
-		"/D/work/programming/color-c/src/csv.h",
-		"/D/work/programming/color-c/data/abilities.dat",
-		"/D/work/programming/color-c/abilities.dat",
-		"/D/work/programming/playground/main.cpp",
-		"/D/work/programming/_archive/trait-game(python)/.dato/actions.dato",
-		"/D/work/programming/color-c/src/csv.cpp",
-		"/D/work/programming/lang/src/log.txt",
-		"/D/work/programming/lang/src/text_render.h",
-		"/D/work/programming/lang/src/freetype_wrapper.cpp",
-		"/D/work/programming/lang/src/freetype_wrapper.h",
-		"/D/work/programming/lang/src/text_render.cpp",
-		"/D/work/programming/lang/src/platform.h",
-		"/D/work/programming/lang/src/win32_platform.cpp",
-		"/D/work/programming/lang/src/strings.cpp",
-		"/D/work/programming/lang/src/strings.h",
-		"/D/work/programming/lang/build/b.bat",
-		"/D/work/programming/lang/data/test_string.txt",
-		"/D/work/programming/lang/src/game.h",
-		"/D/work/programming/lang/src/game.cpp",
-		"/D/work/programming/lang/data/fruits.csv",
-		"/D/work/programming/color-c/todo.txt"
+		"/D/work/programming/color-c/build/freetype/out/build/x64-Debug/CMakeFiles/3.16.19112601-MSVC_2/CMakeRCCompiler.cmake"
 	],
 	"find":
 	{
@@ -841,7 +854,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 118.0,
+		"height": 164.0,
 		"where_history":
 		[
 			"D:\\work\\programming\\color-c\\src, -*.i",
@@ -862,137 +875,137 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
-			"EasyDrawText",
-			"Tick(",
-			"900",
-			"1600",
-			"window_size",
-			"window",
-			"window_width",
-			"1600",
-			"left_padding",
-			"battle->selected_unit",
-			"cur_action_points ",
-			"action",
-			"CreateUnit",
-			"LoadUnit",
-			"action",
-			"cur_action_points",
-			"selected_ability = ",
-			"selected_ability =",
-			"selected_ability_valid_target_set",
-			"battle->selected_ability",
-			"RectTopRight",
-			"DrawText",
-			"max_text_render",
-			"DrawText(Text",
-			"va_list",
-			"max_text_render_length",
-			"ScratchString",
-			"hovered",
-			"GetAbilityHudButtonRect",
-			"DrawTraitSetWithPreview",
-			"InitializeBat",
-			"Initialize",
-			"g::def_text_layout",
-			"ability_button",
-			"def_text_layout",
-			"layout.font.",
-			"struct Color",
-			"struct TextLayout",
-			"error",
-			"show_",
-			"show_turn_preview",
-			"DrawLine",
-			"applied",
-			"ability.change_to_target",
-			"previewed_traits",
-			"log(",
-			"freetype",
-			"max",
-			"min",
-			"speed",
-			"show_turn_preview",
-			"AbilityInfo",
-			"EasyDraw",
-			"Color",
-			"struct TextLayout",
-			"DrawTraitSetWithPreview",
-			"DrawTraitBarWithPreview",
-			"def_text_layout",
-			"DrawTraitBarWithPreview",
-			"struct TraitSet",
-			"struct Ability",
-			"hovered_unit",
-			"DrawUnits",
+			"BattleEvent",
+			"ValidTarget",
+			"intents",
+			"enemy intents",
+			"battle->intents",
+			"battle->preview_events",
+			"struct Id",
+			"return",
+			"struct Intent",
+			"GenerateInf",
+			"inferred_target_set",
+			"GenerateBattlePreviewEvent",
+			"AddUnit",
+			"TargetSet",
+			"CheckValidTarget",
+			"CheckValid",
+			"Valid",
+			"intent",
+			"Valid",
+			"GenerateValid",
 			"DrawTargetingInfo",
-			"battle.",
-			"DrawTargetingInfo",
-			"targetinginfo",
-			"target",
-			"selected_ability",
-			"TexParameteri",
+			"*",
+			"Breed *",
+			"Unit *",
+			"*",
+			"Test",
+			"\"Test\"",
+			"mFormatString",
+			"TIMED_BLOCK",
+			"TempFormatString",
+			"GetGenerationalIndexFromIndex",
+			"struct UnitSet",
+			"AddUnitToUnitSet",
+			"AddUnitTo",
+			"GenerateInferred",
+			"AddUnitToUnitSet",
+			"struct Id",
+			"ByID",
+			"struct UnitSet",
+			"ability_table_indices",
+			"struct Breed",
+			"schematic",
+			"unit_schematic",
+			"UnitSchematic",
+			"GetUnitFromId",
+			"DrawEnemyIntents",
+			"show_preview",
+			"ApplyBattleEvent",
+			"CheckValidTarget",
+			"class TargetClass",
+			"TargetClass",
+			"struct TargetClass",
+			"null_ability_id",
+			"battle->",
+			"struct UnitSet",
 			"Generate",
-			"struct Font",
-			"position",
-			"pos",
-			"multiply",
-			"draw",
-			"view",
-			"orientation",
-			"view_l",
-			"LoadArgbBitmapFromFile",
-			"GenerateInferredTargetSet",
-			"all_targets",
-			"battle->hovered_ability_valid_target_set",
-			"global_input",
-			"def_button_layou",
-			"AlignRect",
-			"200",
-			"GetEntryByName",
+			"struct UnitSet",
+			"begin",
+			"struct UnitSet",
+			"UnitSet",
+			"struct TraitSet",
+			"Id<Unit> target_id : intent.targets)\n                {\n                    Unit *target = GetUnitFromId(target_id);\n                    if(!target) continue;\n                    Unit *target_unit = UnitAtIndex(intent.targets, i);",
+			"struct Event",
+			"TableIndex",
+			"ById",
+			"index",
+			"id",
+			"GetAbilityByGen",
+			"ByGenerationalIndex",
+			"struct UnitSet",
+			".\n",
+			"mFormat",
+			"struct UnitSet",
+			"struct BattleEvent",
+			"caster_index",
+			"Table",
+			"TableIndex",
+			"template",
+			"table.h",
+			"TableIndex",
+			"SeekMatchingBracket",
+			"struct Intent",
+			"targets",
+			"NextToken",
+			"[]",
+			"InterpretTokenAsMetaType",
+			"const Ability *s",
+			"Comma",
+			"Confirm",
+			"Semicolon",
+			"malloc",
+			"SkipWhitespaceAndComments",
+			"Effe",
+			"struct Effe",
+			"Introspect",
+			"MemberOffset",
+			"struct UnitSet",
+			"GenerateBattlePreviewEvent",
+			"UnitInUnitSet",
+			"136",
+			"struct UnitSet",
+			"UnitSet",
+			"GenerateBattlePreviewEvent",
+			"DetermineAbilityTier",
+			"DrawTraitSetWithPreview",
+			"GenerateBattlePreviewEvent",
+			"Intent",
+			"previewed_intent",
+			"frame",
+			"ListPanel",
+			"struct ListPanel",
+			"file",
+			" utElement",
+			"utElement",
+			"Ability",
+			"GetEntryByIndex",
+			"AllocateArena",
+			"#include \"data_table.h\"",
+			"-1",
+			"DataTable",
+			"IsValidIndex",
+			"Alloc",
+			"DrawButton",
 			"CopyString",
-			"struct Token",
-			"ParseNextAsUnit",
-			"CopyString",
-			"UpdateBattle",
-			"data_table",
-			"LoadUnitSchematicFile",
-			"LoadUnit",
-			"LoadUnitFile",
-			"GetEntryIndexByStringMember",
-			"game->",
-			"CreateUnit",
-			"target->",
-			"TargetSet",
-			"max_battle",
-			"TargetSet",
-			"struct TargetSet",
-			"GenerateValidTargetSet",
-			"struct Battle",
-			"struct TargetSet",
-			"TargetSet",
-			"SetSelectedAbility",
-			"ExitGame",
-			"CopyString",
-			"struct Buffer",
-			"operator[]",
-			"->ability_table",
-			".ability_table",
-			"ability_table",
-			"AbilityIsSelected",
-			"ByIndex",
-			"font.size",
-			"Pressed",
-			"performance_frequency",
-			"interval",
-			"swap",
-			"struct Arena",
-			"StringLength",
-			"struct Buffer",
-			"CopyMemoryBlock"
+			"CreateUnitByName",
+			"StringFromToken",
+			"Token",
+			"TokenAsString"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1000,6 +1013,46 @@
 		"regex": false,
 		"replace_history":
 		[
+			"UnitSet",
+			"FromId",
+			"ability_ids",
+			"breed",
+			"Breed",
+			"",
+			"Id",
+			"FromId",
+			"id",
+			"AllocArena",
+			"",
+			"Table",
+			"UnitSet",
+			"(int)AbilityPropertyIndex",
+			"].text.length",
+			"editor->input_elements",
+			"search_panel_layout",
+			"TokenType_",
+			"*p",
+			"active_string->",
+			"active_string",
+			"#include \"utf32string.h\"",
+			"char",
+			"",
+			"//log",
+			"Utf32String",
+			"Utf32FixedString",
+			"arena->",
+			"arena",
+			"caster",
+			"DamageIgnoreArmor",
+			"ability->",
+			"requires",
+			"TokenMatchesString(token,",
+			"-",
+			"EffectParams_",
+			">",
+			"valid",
+			"lcg->",
+			"battle->",
 			"layout.font->",
 			"damage",
 			"timer->max",
@@ -1090,140 +1143,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/battle.h",
+					"file": "src/traitset.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1215,
+						"buffer_size": 771,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								120,
-								120
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/battle.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 16191,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								76,
-								76
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 3,
-			"sheets":
-			[
-				{
-					"buffer": 2,
-					"file": "src/timer.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 155,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								155,
-								155
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/const.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5419,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4636,
-								4636
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1291.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/random.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 272,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								53,
-								53
+								593,
+								593
 							]
 						],
 						"settings":
@@ -1238,31 +1170,183 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/random.cpp",
+					"buffer": 1,
+					"file": "_/todo.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 320,
+						"buffer_size": 1626,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								317,
-								317
+								1626,
+								1626
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/effect.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 619,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "src/battle.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 47050,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								45749,
+								45749
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10928.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/battle.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1723,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1679,
+								1679
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 498.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/unit.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21053,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20351,
+								20351
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 9494.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/unit.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2222,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1903,
+								1903
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 585.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1296,7 +1380,7 @@
 		"cols":
 		[
 			0.0,
-			0.5,
+			0.425,
 			1.0
 		],
 		"rows":
@@ -1308,7 +1392,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 317.0
+		"height": 210.0
 	},
 	"output.find_results":
 	{
@@ -1332,512 +1416,512 @@
 				"_\\todo.txt"
 			],
 			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"game",
-				"src\\game.cpp"
-			],
-			[
-				"imgui",
-				"src\\imgui.h"
-			],
-			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
-				"osic",
-				"src\\oscillating_timer.h"
-			],
-			[
-				"unitdat",
-				"data\\unit_schematic.dat"
-			],
-			[
-				"imguih",
-				"src\\imgui.h"
-			],
-			[
-				"win",
-				"src\\win32_platform.cpp"
-			],
-			[
-				"inputh",
-				"src\\input.h"
-			],
-			[
-				"unit",
+				"unith",
 				"src\\unit.h"
-			],
-			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
-				"img",
-				"src\\imgui.cpp"
-			],
-			[
-				"game.",
-				"build\\game.i"
-			],
-			[
-				"textren",
-				"src\\text_render.cpp"
-			],
-			[
-				"memory",
-				"src\\memory.h"
-			],
-			[
-				"util",
-				"src\\util.cpp"
-			],
-			[
-				"debug",
-				"src\\debug.cpp"
-			],
-			[
-				"glo",
-				"src\\global.h"
-			],
-			[
-				"text",
-				"src\\text_render.h"
-			],
-			[
-				"go",
-				"src\\global.h"
-			],
-			[
-				"unitsch",
-				"data\\unit_schematic.dat"
-			],
-			[
-				"abili",
-				"data\\ability.dat"
-			],
-			[
-				"onst",
-				"src\\const.h"
-			],
-			[
-				"color",
-				"src\\color_fragment.glsl"
-			],
-			[
-				"uv_",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"log",
-				"src\\log.cpp"
-			],
-			[
-				"win32",
-				"src\\win32_platform.cpp"
-			],
-			[
-				"bbat",
-				"build\\b.bat"
-			],
-			[
-				"battle",
-				"src\\battle.cpp"
-			],
-			[
-				"color_f",
-				"src\\color_fragment.glsl"
-			],
-			[
-				"golba",
-				"src\\global.h"
-			],
-			[
-				"ability",
-				"data\\ability.dat"
-			],
-			[
-				"renderte",
-				"build\\freetype\\docs\\reference\\ft2-header_file_macros.html"
-			],
-			[
-				"nuit",
-				"build\\freetype\\src\\gzip\\infutil.c"
-			],
-			[
-				"unit_sch",
-				"data\\unit_schematic.dat"
-			],
-			[
-				"opengl",
-				"src\\opengl.h"
-			],
-			[
-				"bitmap",
-				"src\\bitmap.h"
-			],
-			[
-				"platf",
-				"src\\platform.h"
-			],
-			[
-				"bitm",
-				"src\\bitmap.cpp"
-			],
-			[
-				"Sprite",
-				"src\\sprite.cpp"
-			],
-			[
-				"frag",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"buidlb",
-				"build\\b.bat"
-			],
-			[
-				"unitd",
-				"data\\unit_schematic.dat"
 			],
 			[
 				"battleh",
 				"src\\battle.h"
 			],
 			[
-				"ba",
-				"src\\battle.cpp"
+				"traitset",
+				"src\\traitset.h"
+			],
+			[
+				"ability",
+				"data\\ability.dat"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"abilityh",
+				"src\\ability.h"
+			],
+			[
+				"effecth",
+				"src\\effect.h"
+			],
+			[
+				"todoses",
+				"src\\todo_session.txt"
 			],
 			[
 				"unitc",
 				"src\\unit.cpp"
 			],
 			[
-				"globa",
-				"src\\global.h"
-			],
-			[
-				"datata",
-				"src\\data_table.h"
-			],
-			[
-				"global",
-				"src\\global.h"
-			],
-			[
-				"unitpc",
-				"src\\unit.cpp"
-			],
-			[
-				"abli",
+				"abilty",
 				"data\\ability.dat"
 			],
 			[
-				"unith",
+				"tableh",
+				"src\\table.h"
+			],
+			[
+				"dat",
+				"data\\breed.dat"
+			],
+			[
+				"utilc",
+				"src\\util.cpp"
+			],
+			[
+				"win32",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"log",
+				"src\\log.cpp"
+			],
+			[
+				"editroh",
+				"src\\editor.h"
+			],
+			[
+				"table",
+				"src\\table.cpp"
+			],
+			[
+				"tablec",
+				"src\\table.cpp"
+			],
+			[
+				"bb",
+				"build\\b.bat"
+			],
+			[
+				"arrayh",
+				"src\\array.h"
+			],
+			[
+				"memory",
+				"src\\memory.cpp"
+			],
+			[
+				"arrayc",
+				"src\\array.cpp"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"editor",
+				"src\\editor.cpp"
+			],
+			[
+				"abi",
+				"src\\ability.cpp"
+			],
+			[
+				"gl",
+				"src\\global.h"
+			],
+			[
+				"effect",
+				"src\\effect.h"
+			],
+			[
+				"battec",
+				"src\\battle.cpp"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"battelh",
+				"src\\battle.h"
+			],
+			[
+				"array",
+				"src\\array.h"
+			],
+			[
+				"unit",
 				"src\\unit.h"
 			],
 			[
-				"units",
-				"data\\unit_schematic.dat"
+				"battle",
+				"src\\battle.h"
 			],
 			[
-				"onsth",
-				"src\\const.h"
+				"macro",
+				"src\\macros.h"
 			],
 			[
-				"game.i",
-				"build\\game.i"
+				"batt",
+				"src\\battle.cpp"
 			],
 			[
-				"data",
-				"src\\data_table.h"
+				"editorh",
+				"src\\editor.h"
 			],
 			[
-				"input",
-				"src\\input.h"
+				"debugh",
+				"src\\debug.h"
 			],
 			[
-				"gameh",
-				"src\\game.h"
+				"abili",
+				"src\\ability.h"
 			],
 			[
-				"platfor",
-				"src\\platform.h"
+				"metatext",
+				"src\\meta_text_parsing.h"
 			],
 			[
-				"openglh",
-				"src\\opengl.h"
+				"eff",
+				"src\\effect.h"
 			],
 			[
-				"text_Re",
-				"src\\text_render.h"
+				"effec",
+				"src\\effect.h"
 			],
 			[
-				"cnost",
-				"src\\const.h"
+				"metaprinth",
+				"src\\meta_print.h"
 			],
 			[
-				"sprite",
-				"src\\sprite.cpp"
+				"metacp",
+				"src\\meta.cpp"
 			],
 			[
-				"logtx",
-				"src\\log.txt"
+				"metapr",
+				"src\\meta_print.cpp"
 			],
 			[
-				"logt",
-				"src\\log.txt"
+				"stringh",
+				"src\\string.h"
 			],
 			[
-				"",
+				"meta.cp",
+				"src\\meta.cpp"
+			],
+			[
+				"tab",
+				"src\\table.h"
+			],
+			[
+				"textre",
 				"src\\text_render.cpp"
-			],
-			[
-				"debugtiming",
-				"logs\\DebugTimings.txt"
-			],
-			[
-				"b",
-				"build\\b.bat"
-			],
-			[
-				"textrender",
-				"src\\text_render.cpp"
-			],
-			[
-				"b.",
-				"build\\b.bat"
-			],
-			[
-				"freet",
-				"src\\freetype.h"
-			],
-			[
-				"memoryh",
-				"src\\memory.h"
-			],
-			[
-				"plat",
-				"src\\platform.h"
-			],
-			[
-				"align",
-				"src\\align.h"
-			],
-			[
-				"vech",
-				"src\\vec.h"
-			],
-			[
-				"unitcp",
-				"src\\unit.cpp"
-			],
-			[
-				"freetypewra",
-				"src\\freetype_wrapper.cpp"
-			],
-			[
-				"imgu",
-				"src\\imgui.cpp"
-			],
-			[
-				"bitmaph",
-				"src\\bitmap.h"
-			],
-			[
-				"bitmapcp",
-				"src\\bitmap.cpp"
-			],
-			[
-				"freetype_wr",
-				"src\\freetype_wrapper.cpp"
-			],
-			[
-				"font",
-				"src\\font.cpp"
-			],
-			[
-				"drawh",
-				"src\\draw.h"
 			],
 			[
 				"math",
 				"src\\math.cpp"
 			],
 			[
-				"vec",
-				"src\\vec.cpp"
+				"meta",
+				"src\\meta_print.cpp"
 			],
 			[
-				"49",
-				"build\\freetype\\out\\build\\x64-Debug\\CMakeFiles\\3.16.19112601-MSVC_2\\CMakeRCCompiler.cmake"
+				"memry",
+				"src\\memory.cpp"
 			],
 			[
-				"type",
-				"src\\types.h"
-			],
-			[
-				"types",
-				"src\\types.h"
-			],
-			[
-				"lo",
-				"src\\log.txt"
-			],
-			[
-				"uv_vert",
-				"src\\uv_vertex.glsl"
-			],
-			[
-				"uv_frag",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"open",
-				"src\\opengl.cpp"
-			],
-			[
-				"drawc",
-				"src\\draw.cpp"
-			],
-			[
-				"render",
-				"src\\text_render.cpp"
-			],
-			[
-				"b.b",
-				"build\\b.bat"
-			],
-			[
-				"color_",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"im",
-				"src\\imgui.cpp"
-			],
-			[
-				"openg",
-				"src\\opengl.h"
-			],
-			[
-				"uv_ver",
-				"src\\uv_vertex.glsl"
-			],
-			[
-				"verte",
-				"src\\vertex.glsl"
-			],
-			[
-				"vertex",
-				"src\\vertex.glsl"
-			],
-			[
-				"vert",
-				"src\\vertex.glsl"
-			],
-			[
-				"openl",
-				"src\\opengl.cpp"
-			],
-			[
-				"game.h",
-				"src\\game.h"
-			],
-			[
-				"string",
-				"src\\strings.cpp"
+				"cons",
+				"src\\const.h"
 			],
 			[
 				"abil",
 				"data\\ability.dat"
 			],
 			[
-				"typ",
-				"src\\types.h"
+				"battlec",
+				"src\\battle.cpp"
+			],
+			[
+				"gamei",
+				"build\\game.i"
+			],
+			[
+				"imgui",
+				"src\\imgui.cpp"
+			],
+			[
+				"edit",
+				"src\\editor.cpp"
+			],
+			[
+				"c",
+				"src\\const.h"
+			],
+			[
+				"inputh",
+				"src\\input.h"
+			],
+			[
+				"metac",
+				"src\\meta.cpp"
+			],
+			[
+				"glob",
+				"src\\global.h"
+			],
+			[
+				"onst",
+				"src\\const.h"
+			],
+			[
+				"abilityc",
+				"src\\ability.cpp"
+			],
+			[
+				"globlh",
+				"src\\global.h"
+			],
+			[
+				"datta",
+				"src\\data_table.cpp"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"memorh",
+				"src\\memory.h"
+			],
+			[
+				"unitsc",
+				"data\\unit_schematic.dat"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"game",
+				"src\\game.cpp"
+			],
+			[
+				"editr",
+				"src\\editor.cpp"
+			],
+			[
+				"Util",
+				"src\\util.cpp"
+			],
+			[
+				"memoryh",
+				"src\\memory.h"
+			],
+			[
+				"textpar",
+				"src\\text_parsing.h"
+			],
+			[
+				"util",
+				"src\\util.cpp"
+			],
+			[
+				"memor",
+				"src\\memory.h"
+			],
+			[
+				"memr",
+				"src\\memory.cpp"
+			],
+			[
+				"str",
+				"src\\string.cpp"
+			],
+			[
+				"editorc",
+				"src\\editor.cpp"
+			],
+			[
+				"input",
+				"src\\input.h"
+			],
+			[
+				"img",
+				"src\\imgui.cpp"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"aiblity",
+				"src\\ability.h"
+			],
+			[
+				"abilit",
+				"data\\ability.dat"
+			],
+			[
+				"uti",
+				"src\\util.cpp"
+			],
+			[
+				"mathc",
+				"src\\math.cpp"
+			],
+			[
+				"b",
+				"build\\b.bat"
+			],
+			[
+				"strin",
+				"src\\string.h"
+			],
+			[
+				"eta",
+				"src\\meta_text_parsing.h"
+			],
+			[
+				"memo",
+				"src\\memory.cpp"
+			],
+			[
+				"logt",
+				"logs\\log.txt"
+			],
+			[
+				"texted",
+				"src\\text_render.cpp"
+			],
+			[
+				"etai",
+				"build\\meta.i"
+			],
+			[
+				"metai",
+				"build\\meta.i"
+			],
+			[
+				"utf",
+				"src\\utf32string.h"
+			],
+			[
+				"metapri",
+				"src\\meta_print.cpp"
+			],
+			[
+				"wni",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"glo",
+				"src\\global.h"
+			],
+			[
+				"mem",
+				"src\\memory.cpp"
 			],
 			[
 				"textp",
 				"src\\text_parsing.h"
 			],
 			[
+				"text",
+				"src\\text_render.cpp"
+			],
+			[
+				"stringc",
+				"src\\string.cpp"
+			],
+			[
+				"utf32",
+				"src\\utf32string.cpp"
+			],
+			[
+				"",
+				"src\\draw.cpp"
+			],
+			[
+				"vec",
+				"src\\vec.cpp"
+			],
+			[
+				"data",
+				"src\\data_table.cpp"
+			],
+			[
+				"win",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"meta_",
+				"src\\meta_print.cpp"
+			],
+			[
+				"text_",
+				"src\\text_render.cpp"
+			],
+			[
+				"mac",
+				"src\\macros.h"
+			],
+			[
+				"eta_pr",
+				"src\\meta_print(manual).cpp"
+			],
+			[
+				"prin",
+				"src\\meta_print.h"
+			],
+			[
+				"metate",
+				"src\\meta_text_parsing.cpp"
+			],
+			[
+				"macr",
+				"src\\macros.h"
+			],
+			[
+				"stirng",
+				"src\\string.cpp"
+			],
+			[
 				"textpars",
-				"src\\text_parsing.h"
+				"src\\text_parsing.cpp"
 			],
 			[
-				"abi",
-				"data\\abilities.dat"
-			],
-			[
-				"bitma",
-				"src\\bitmap.cpp"
-			],
-			[
-				"platform",
-				"src\\platform.h"
-			],
-			[
-				"cvs",
-				"src\\csv.h"
-			],
-			[
-				"csv",
-				"src\\csv.cpp"
-			],
-			[
-				"food",
-				"src\\food.h"
-			],
-			[
-				"stringsh",
+				"strings",
 				"src\\strings.h"
 			],
 			[
-				"platof",
-				"src\\platform.h"
+				"freety",
+				"src\\freetype_wrapper.h"
 			],
 			[
-				"game.c",
-				"src\\game.cpp"
+				"battl",
+				"src\\battle.h"
 			],
 			[
-				"strin",
-				"src\\strings.cpp"
+				"abilityda",
+				"data\\ability.dat"
 			],
 			[
-				"pant",
-				"data\\Der Panther.txt"
+				"targetc",
+				"src\\target_class.h"
 			],
 			[
-				"b.bat",
-				"build\\b.bat"
+				"Target",
+				"src\\target_class.h"
 			],
 			[
-				"openglc",
-				"src\\opengl.cpp"
+				"taritset",
+				"src\\traitset.cpp"
 			],
 			[
-				"platfo",
-				"src\\platform.h"
+				"tierab",
+				"data\\tier_ability.dat"
 			],
 			[
-				"log.t",
-				"src\\log.txt"
+				"bat",
+				"src\\battle.cpp"
 			],
 			[
-				"opengl.h",
-				"src\\opengl.h"
+				"trat",
+				"src\\traitset.h"
 			],
 			[
-				"log.",
-				"src\\log.txt"
-			],
-			[
-				"log.txt",
-				"src\\log.txt"
+				"bility",
+				"src\\ability.h"
 			]
 		],
 		"width": 0.0
@@ -1860,7 +1944,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},
@@ -1872,5 +1956,6 @@
 	"status_bar_visible": true,
 	"template_settings":
 	{
+		"max_columns": 1
 	}
 }

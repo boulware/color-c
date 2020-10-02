@@ -49,10 +49,15 @@ enum class TokenType_
 	CStyleCommentStart,
 	CppStyleCommentStart,
 	CppStyleCommentEnd,
-	OpenBracket,
-	CloseBracket,
+	OpenSquigglyBracket,
+	CloseSquigglyBracket,
+	OpenSquareBracket,
+	CloseSquareBracket,
+	OpenAngleBracket,
+	CloseAngleBracket,
 	SemiColon,
 	Asterisk,
+	Comma,
 	Identifier
 };
 

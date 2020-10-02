@@ -77,7 +77,7 @@ DrawPassiveSkillTree(Vec2f origin, PassiveSkillTree tree)
 		//
 
 	// // Passive skill tree node table
-	// g::passive_node_table = AllocDataTable(sizeof(PassiveNode), c::passive_node_table_partition_size);
+	// g::passive_node_table = AllocTable(sizeof(PassiveNode), c::passive_node_table_partition_size);
 	// {
 	// 	//			E
 	// 	//         / \

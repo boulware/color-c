@@ -3,36 +3,38 @@
 #include "util.h"
 #include "text_parsing.h"
 
-Unit *UnitSet::operator[](int index)
-{
-	if(index < 0 or index >= size) return nullptr;
+// Unit *UnitAtIndex(UnitSet set, int index)
+// {
+// 	if(index < 0 or index >= set.size) return nullptr;
 
-	return units[index];
+// 	return set.units[index];
+// }
+
+Id<Unit> *
+begin(UnitSet &target_set)
+{
+	return (target_set.ids);
 }
 
-Unit **begin(UnitSet &target_set)
+Id<Unit> *
+end(UnitSet &target_set)
 {
-	return target_set.units;
-}
-
-Unit **end(UnitSet &target_set)
-{
-	return target_set.units + (target_set.size);
+	return (target_set.ids + target_set.size);
 }
 
 
 
 bool
-ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable ability_table)
+ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 {
-	if(!buffer or !unit_schematic) return false;
+	if(!buffer or !breed) return false;
 
 	bool valid_unit_data = true;
 	char *initial = buffer->p;
-	UnitSchematic temp_unit_schematic = {};
+	Breed temp_breed = {};
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		temp_unit_schematic.ability_table_indices[i] = -1; // -1 is considered an empty ability slot
+		temp_breed.ability_ids[i] = c::null_ability_id;
 	}
 
 	bool header_valid = ConfirmNextToken(buffer, "unit");
@@ -65,7 +67,7 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 		}
 		else if(TokenMatchesString(token, "traits"))
 		{
-			valid_unit_data = ParseNextAsTraitSet(buffer, &temp_unit_schematic.max_traits);
+			valid_unit_data = ParseNextAsTraitSet(buffer, &temp_breed.max_traits);
 		}
 		else if(TokenMatchesString(token, "moveset"))
 		{
@@ -75,9 +77,9 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 				Token ability_name_token;
 				if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))
 				{
-					temp_unit_schematic.ability_table_indices[i] = GetIndexByName<Ability>(ability_table, StringFromToken(ability_name_token));
+					temp_breed.ability_ids[i] = GetIndexByName(ability_table, StringFromToken(ability_name_token));
 
-					if(temp_unit_schematic.ability_table_indices[i] == -1)
+					if(temp_breed.ability_ids[i] == c::null_ability_id)
 					{
 						// Found an ability name string for moveset, but it's not an ability
 						// that exists in the ability table.
@@ -99,10 +101,10 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 
 	if(valid_unit_data)
 	{
-		*unit_schematic = temp_unit_schematic;
-		unit_schematic->name = StringFromToken(name_token, &memory::permanent_arena);
+		*breed = temp_breed;
+		breed->name = StringFromToken(name_token, &memory::permanent_arena);
 		// CopyString()
-		// CopyString(unit_schematic->name, name_token.start, m::Min(sizeof(unit_schematic->name), name_token.length+1));
+		// CopyString(breed->name, name_token.start, m::Min(sizeof(breed->name), name_token.length+1));
 
 		return true;
 	}
@@ -118,9 +120,9 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 }
 
 bool
-LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, DataTable ability_table)
+LoadBreedFile(const char *filename, Table<Breed> *breed_table, Table<Ability> ability_table)
 {
-	if(!filename or !unit_schematic_table) return false;
+	if(!filename or !breed_table) return false;
 
 	Buffer file;
 	bool load_success = platform->LoadFileIntoSizedBufferAndNullTerminate(filename, &file);
@@ -133,27 +135,27 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 		bool found_unit = SeekNextLineThatBeginsWith(&file, "unit");
 		if(!found_unit) break;
 
-		if(DataTableEntriesRemaining(*unit_schematic_table) >= 1)
+		Breed temp_breed = {};
+		if(ParseNextAsBreedData(&file, &temp_breed, ability_table))
 		{
-			UnitSchematic temp_unit_schematic = {};
-			if(ParseNextAsUnitSchematicData(&file, &temp_unit_schematic, ability_table))
-			{
-				UnitSchematic *unit_schematic = (UnitSchematic*)CreateEntry(unit_schematic_table);
-				*unit_schematic = temp_unit_schematic;
-				unit_schematic->init = true;
-				unit_count_loaded += 1;
-			}
-			else
-			{
-				++file.p;
-				continue;
-			}
+			auto breed_id = CreateEntry(breed_table);
+			Breed *breed = GetBreedFromId(breed_id);
+			if(breed == nullptr) break;
+
+			*breed = temp_breed;
+			breed->init = true;
+			++unit_count_loaded;
+		}
+		else
+		{
+			++file.p;
+			continue;
 		}
 	}
 
 	if(c::verbose_success_logging)
 	{
-		log("Loaded %zu unit schematics from file: %s", unit_count_loaded, filename);
+		log("Loaded %zu unit breeds from file: %s", unit_count_loaded, filename);
 	}
 	FreeBuffer(&file);
 	return true;
@@ -161,50 +163,140 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 
 // On success, returns pointer to newly created unit, which is placed in g::unit_table.
 // Returns nullptr if unit creation fails for any reason.
-Unit *
-CreateUnit(int schematic_index, Team team)
+Id<Unit>
+CreateUnit(Id<Breed> breed_id, Team team)
 {
-	DataTable ability_table = g::ability_table;
+	Breed *breed = GetBreedFromId(breed_id);
+	if(!ValidBreed(breed)) return c::null_unit_id;
 
-	UnitSchematic *schematic = (UnitSchematic*)g::unit_schematic_table[schematic_index];
-	if(schematic == nullptr) return nullptr;
-	if(!schematic->init) return nullptr; // Invalid schematic
+	auto unit_id = CreateEntry(&g::unit_table);
+	Unit *unit = GetUnitFromId(unit_id);
+	if(!unit) return c::null_unit_id;
 
-	Unit *unit = (Unit*)CreateEntry(&g::unit_table);
-	unit->name = CopyString(schematic->name, &memory::permanent_arena);
-	//CopyString(unit->name, schematic->name, sizeof(unit->name));
+	unit->name = CopyString(breed->name, &memory::permanent_arena);
 	unit->team = team;
-	unit->max_traits = schematic->max_traits;
-	unit->cur_traits = schematic->max_traits;
+	unit->max_traits = breed->max_traits;
+	unit->cur_traits = breed->max_traits;
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		Ability *ability = (Ability*)g::ability_table[schematic->ability_table_indices[i]];
-		if(ability == nullptr) continue;
-		unit->abilities[i] = *ability;
+		// @note: do we need to actually check that this ability is valid?
+		//        i.e., can a unit have a reference to an invalid ability? Maybe.
+		// Ability *ability = GetAbilityFromId(breed->ability_ids[i]);
+		// if(ability == nullptr) continue;
+
+		unit->ability_ids[i] = breed->ability_ids[i];
 	}
 	unit->cur_action_points = 0;
 	unit->max_action_points = 1;
 
 	unit->init = true;
-	return unit;
+	return unit_id;
 }
 
-Unit *
+Id<Unit>
 CreateUnitByName(String name, Team team)
 {
-	int index = GetIndexByName<UnitSchematic>(g::unit_schematic_table, name);
-	return CreateUnit(index, team);
+	Id breed_id = GetIndexByName(g::breed_table, name);
+	return CreateUnit(breed_id, team);
+}
+
+// bool
+// _CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
+// {
+// 	if(!ValidUnit(caster) or !ValidUnit(target)) return false;
+
+// 	TargetClass tc = effect->target_class;
+// 	if(tc == TargetClass::self)
+// 	{
+// 		return(caster == target);
+// 	}
+// 	else if(tc == TargetClass::single_ally)
+// 	{
+// 		return(caster->team == target->team);
+// 	}
+// 	else if(tc == TargetClass::single_ally_not_self)
+// 	{
+// 		return(caster->team == target->team and caster != target);
+// 	}
+// 	else if(tc == TargetClass::all_allies)
+// 	{
+// 		return(caster->team == target->team);
+// 	}
+// 	else if(tc == TargetClass::all_allies_not_self)
+// 	{
+// 		return(caster->team == target->team and caster != target);
+// 	}
+// 	else if(tc == TargetClass::single_enemy)
+// 	{
+// 		return(caster->team != target->team);
+// 	}
+// 	else if(tc == TargetClass::all_enemies)
+// 	{
+// 		return(caster->team != target->team);
+// 	}
+// 	else if(tc == TargetClass::single_unit)
+// 	{
+// 		return true;
+// 	}
+// 	else if(tc == TargetClass::single_unit_not_self)
+// 	{
+// 		return(caster != target);
+// 	}
+// 	else if(tc == TargetClass::all_units)
+// 	{
+// 		return true;
+// 	}
+
+// 	log("Invalid TargetClass encountered (%d)", int(tc));
+// 	return false;
+// }
+
+void AddUnitToUnitSet(Id<Unit> unit_id, UnitSet *unit_set)
+{
+	if(unit_set->size >= ArrayCount(unit_set->ids)) return; // Set is already full.
+
+	bool unit_already_in_set = false;
+	for(auto unit_in_set_id : *unit_set)
+	{
+		if(unit_id == unit_in_set_id) unit_already_in_set = true;
+	}
+
+	if(!unit_already_in_set)
+	{
+		unit_set->ids[unit_set->size++] = unit_id;
+	}
+}
+
+UnitSet
+CombineUnitSets(const UnitSet *a, const UnitSet *b)
+{
+	UnitSet combined = {};
+	for(int i=0; i<a->size; i++)
+	{
+		AddUnitToUnitSet(a->ids[i], &combined);
+	}
+
+	for(int i=0; i<b->size; i++)
+	{
+		if(!UnitInUnitSet(b->ids[i], *a))
+		{
+			AddUnitToUnitSet(b->ids[i], &combined);
+		}
+	}
+
+	return combined;
 }
 
 bool
-CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
+CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)
 {
+	Unit *caster = GetUnitFromId(caster_id);
+	Unit *target = GetUnitFromId(target_id);
 	if(!ValidUnit(caster) or !ValidUnit(target)) return false;
 
-	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::self)
 	{
-		return(caster == target);
+		return(caster_id == target_id);
 	}
 	else if(tc == TargetClass::single_ally)
 	{
@@ -212,7 +304,7 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 	}
 	else if(tc == TargetClass::single_ally_not_self)
 	{
-		return(caster->team == target->team and caster != target);
+		return(caster->team == target->team and caster_id != target_id);
 	}
 	else if(tc == TargetClass::all_allies)
 	{
@@ -220,7 +312,7 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 	}
 	else if(tc == TargetClass::all_allies_not_self)
 	{
-		return(caster->team == target->team and caster != target);
+		return(caster->team == target->team and caster_id != target_id);
 	}
 	else if(tc == TargetClass::single_enemy)
 	{
@@ -236,7 +328,7 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 	}
 	else if(tc == TargetClass::single_unit_not_self)
 	{
-		return(caster != target);
+		return(caster_id != target_id);
 	}
 	else if(tc == TargetClass::all_units)
 	{
@@ -248,84 +340,56 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 }
 
 UnitSet
-CombineUnitSets(const UnitSet *a, const UnitSet *b)
-{
-	UnitSet combined = {};
-	for(int i=0; i<a->size; i++)
-	{
-		AddUnitToUnitSet(a->units[i], &combined);
-	}
-
-	for(int i=0; i<b->size; i++)
-	{
-		if(!UnitInUnitSet(b->units[i], *a))
-		{
-			AddUnitToUnitSet(b->units[i], &combined);
-		}
-	}
-
-	return combined;
-}
-
-UnitSet
-GenerateValidUnitSet(Unit *caster, Effect *effect, UnitSet all_targets)
-{
-	if(!ValidUnit(caster)) return UnitSet{};
-
-	UnitSet valid_targets = {};
-	for(Unit *target : all_targets)
-	{
-		if(CheckValidEffectTarget(caster, target, effect))
-		{
-			AddUnitToUnitSet(target, &valid_targets);
-		}
-	}
-
-	return valid_targets;
-}
-
-UnitSet
-GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, UnitSet all_targets)
+GenerateInferredUnitSet(Id<Unit> caster_id, Id<Unit> selected_target_id, TargetClass tc, UnitSet all_targets)
 {
 	TIMED_BLOCK;
 
+	Unit *caster = GetUnitFromId(caster_id);
+	Unit *selected_target = GetUnitFromId(selected_target_id);
 	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return UnitSet{};
 
-	// Return empty target set if the explicit target is invalid.
-	if(!CheckValidEffectTarget(caster, selected_target, effect))
+	// Return empty target set if the selected target is invalid not a valid target for the given target_class
+	if(!CheckValidTarget(caster_id, selected_target_id, tc))
 	{
 		return UnitSet{};
 	}
 
 	// Sanitize all_targets not to include invalid units (nullptr or not init)
 	UnitSet all_targets_clean = {};
-	for(Unit *unit : all_targets)
+	for(auto unit_id : all_targets)
 	{
+		Unit *unit = GetUnitFromId(unit_id);
 		if(!ValidUnit(unit)) continue;
-		AddUnitToUnitSet(unit, &all_targets_clean);
+
+		AddUnitToUnitSet(unit_id, &all_targets_clean);
 	}
 
 	UnitSet inferred_target_set = {};
-	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::all_allies)
 	{
 		// All targets that are on the same team as the caster
-		for(Unit *unit : all_targets_clean)
+		for(auto target_id : all_targets_clean)
 		{
-			if(unit->team == caster->team)
+			Unit *target = GetUnitFromId(target_id);
+			if(!ValidUnit(target)) continue;
+
+			if(target->team == caster->team)
 			{
-				AddUnitToUnitSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(target_id, &inferred_target_set);
 			}
 		}
 	}
 	else if(tc == TargetClass::all_allies_not_self)
 	{
 		// All targets that are on the same team as the caster, excluding the caster.
-		for(Unit *unit : all_targets_clean)
+		for(auto target_id : all_targets_clean)
 		{
-			if(unit != caster and unit->team == caster->team)
+			Unit *target = GetUnitFromId(target_id);
+			if(!ValidUnit(target)) continue;
+
+			if(target_id != caster_id and target->team == caster->team)
 			{
-				AddUnitToUnitSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(target_id, &inferred_target_set);
 			}
 		}
 	}
@@ -334,7 +398,7 @@ GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, Uni
 		// if(selected target is ally _AND_ selected target is not self)
 		if(selected_target->team == caster->team and selected_target != caster)
 		{
-			AddUnitToUnitSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target_id, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::single_unit_not_self)
@@ -342,17 +406,20 @@ GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, Uni
 		// if(selected target is not self)
 		if(selected_target != caster)
 		{
-			AddUnitToUnitSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target_id, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::all_enemies)
 	{
 		// All targets that are not on the same team as the caster.
-		for(Unit *unit : all_targets_clean)
+		for(auto target_id : all_targets_clean)
 		{
-			if(unit->team != caster->team)
+			Unit *target = GetUnitFromId(target_id);
+			if(!ValidUnit(target)) continue;
+
+			if(target->team != caster->team)
 			{
-				AddUnitToUnitSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(target_id, &inferred_target_set);
 			}
 		}
 	}
@@ -368,39 +435,47 @@ GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, Uni
 		// At the time of writing this comment, this includes:
 		// 		self, single_ally, single_enemy, single_unit
 
-		AddUnitToUnitSet(selected_target, &inferred_target_set);
+		AddUnitToUnitSet(selected_target_id, &inferred_target_set);
 	}
 
 	return inferred_target_set;
 }
 
 bool
-UnitInUnitSet(Unit *unit, UnitSet target_set)
+UnitInUnitSet(Id<Unit> unit_id, UnitSet target_set, int *index)
 {
-	if(!unit) return false;
-	if(!unit->init) return false;
+	Unit *unit = GetUnitFromId(unit_id);
+	if(!ValidUnit(unit)) return false;
 
-	for(Unit *unit_in_set : target_set)
+	for(int i=0; i<target_set.size; i++)
 	{
-		if(unit == unit_in_set) return true;
+		if(unit_id == target_set.ids[i])
+		{
+			if(index) *index = i;
+			return true;
+		}
 	}
 
+	if(index) *index = -1;
 	return false;
 }
 
+// @note: AOWTC this doesn't check that the unit_id is valid.
+//        I figured this wouldn't be a problem, since it's not
+//        necessarilly a bug for a unit id corresponding to an
+//        invalid unit to be inside a unit set -- it's up to the
+//        methods interpreting the unit set to check for that.
 void
-AddUnitToUnitSet(Unit *unit, UnitSet *target_set)
+AddUnitIdToUnitSet(Id<Unit> unit_id, UnitSet *target_set)
 {
-	if(!ValidUnit(unit) or !target_set) return;
-
 	// Do nothing if target set is already at max size
-	if(target_set->size >= c::max_target_count) return;
+	if(target_set->size >= ArrayCount(target_set->ids)) return;
 
 	// Do nothing if [*unit] is already part of the set
-	if(UnitInUnitSet(unit, *target_set)) return;
+	if(UnitInUnitSet(unit_id, *target_set)) return;
 
 	// Add the unit to the set
-	target_set->units[target_set->size++] = unit;
+	target_set->ids[target_set->size++] = unit_id;
 }
 
 Vec2f
@@ -674,14 +749,32 @@ TraitSetString(TraitSet traits)
 }
 
 int
-DetermineAbilityTier(Unit *caster, Ability *ability)
+DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)
 {
+	Unit *caster = GetUnitFromId(caster_id);
+	Ability *ability = GetAbilityFromId(ability_id);
+	if(!ValidUnit(caster) or !ValidAbility(ability)) return -1;
+
 	for(int i=c::max_ability_tier_count-1; i>=0; --i)
 	{
+		if(!ability->tiers[i].init) continue;
+
 		if(caster->cur_traits >= ability->tiers[i].required_traits) return i;
 	}
 
 	// The caster doesn't have the required traits to use the ability at all.
 	// We return a negative value to indicate this case.
 	return -1;
+}
+
+Breed *
+GetBreedFromId(Id<Breed> id)
+{
+	return GetEntryFromId(g::breed_table, id);
+}
+
+Unit *
+GetUnitFromId(Id<Unit> id)
+{
+	return GetEntryFromId(g::unit_table, id);
 }

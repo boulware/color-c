@@ -141,6 +141,19 @@ AppendCString(String *string, const char *c_string, ...)
 	return entire_string_appended;
 }
 
+bool
+AppendString(String *dst, String src)
+{
+	if(StringFull(*dst)) return false;
+
+	for(int i=0; i<src.length; i++)
+	{
+		if(!AppendChar(dst, CharAt(&src, i))) return false;
+	}
+
+	return true;
+}
+
 String
 AllocStringDataFromArena(int max_length, Arena *arena)
 {

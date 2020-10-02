@@ -15,6 +15,13 @@ struct ListPanelResponse
 	int pressed_index;
 };
 
+struct ListPanel_
+{
+	ListPanelLayout layout;
+	int cur_entry_count;
+	float scroll_offset;
+};
+
 struct ButtonLayout
 {
 	TextLayout label_layout;
@@ -87,5 +94,8 @@ ListPanelResponse ListPanel(ListPanelLayout layout, String *entry_names, size_t 
 
 void ResetImguiContainer(ImguiContainer *container);
 void SetActiveContainer(ImguiContainer *container);
+
+
+void DrawListPanel_(ListPanel_ panel);
 
 #endif

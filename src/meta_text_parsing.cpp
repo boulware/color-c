@@ -538,6 +538,8 @@ DigitToUtf32Char(u32 digit)
 bool
 TokenMatchesString(Token token, const char *string)
 {
+	if(token.length < strlen(string)) return false;
+
 	for(int i=0; i<token.length; i++)
 	{
 		if(token.start[i] != string[i]) return false;

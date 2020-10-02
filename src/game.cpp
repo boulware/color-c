@@ -17,7 +17,7 @@ Platform *platform = nullptr;
 OpenGL *gl = nullptr;
 Game *game = nullptr;
 
-#include "meta_print.cpp"
+//#include "meta_print.cpp"
 
 #include "log.cpp"
 #include "util.cpp"
@@ -28,7 +28,7 @@ Game *game = nullptr;
 #include "text_render.cpp"
 #include "freetype_wrapper.cpp"
 #include "text_parsing.cpp"
-#include "data_table.cpp"
+#include "table.cpp"
 #include "imgui.cpp"
 #include "draw.cpp"
 #include "input.cpp"
@@ -50,6 +50,7 @@ Game *game = nullptr;
 #include "editor.cpp"
 #include "string.cpp"
 #include "utf32string.cpp"
+#include "array.cpp"
 
 extern "C" void
 GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
@@ -62,8 +63,8 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 extern "C" void
 GameInit()
 {
-	memory::per_frame_arena = AllocateArena();
-	memory::permanent_arena = AllocateArena();
+	memory::per_frame_arena = AllocArena();
+	memory::permanent_arena = AllocArena();
 
 	InitLcgSystemSeed(&random::default_lcg);
 
@@ -115,29 +116,29 @@ GameInit()
 	gl->Enable(GL_BLEND);
 
 	// Ability table
-	g::ability_table = AllocDataTable(sizeof(Ability), c::ability_table_partition_size);
+	g::ability_table = AllocTable<Ability>(100);
 	LoadAbilityFile("data/ability.dat", &g::ability_table);
-	auto ability_table_copy = g::ability_table;
+	auto ability_table_copy = &g::ability_table;
 
-	// Unit schematic table
-	g::unit_schematic_table = AllocDataTable(sizeof(UnitSchematic), c::unit_schematic_table_partition_size);
-	LoadUnitSchematicFile("data/unit_schematic.dat", &g::unit_schematic_table, g::ability_table);
-	auto schematic_table_copy = g::unit_schematic_table;
+	// Unit breed table
+	g::breed_table = AllocTable<Breed>(100);
+	LoadBreedFile("data/breed.dat", &g::breed_table, g::ability_table);
+	auto breed_table_copy = &g::breed_table;
 
 	// Unit table
-	g::unit_table = AllocDataTable(sizeof(Unit), c::unit_table_partition_size);
-	auto unit_table_copy = g::unit_table;
+	g::unit_table = AllocTable<Unit>(100);
+	auto unit_table_copy = &g::unit_table;
 
 	// Passive skill table
-	g::passive_skill_table = AllocDataTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
-	{
-		PassiveSkill passives[] = {{"Equilibrium"}, {"Potency"}, {"Constitution"}, {"Bravery"}, {"Stoicism"}};
+	// g::passive_skill_table = AllocTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
+	// {
+	// 	PassiveSkill passives[] = {{"Equilibrium"}, {"Potency"}, {"Constitution"}, {"Bravery"}, {"Stoicism"}};
 
-		for(PassiveSkill passive : passives)
-		{
-			*(PassiveSkill*)CreateEntry(&g::passive_skill_table) = passive;
-		}
-	}
+	// 	for(PassiveSkill passive : passives)
+	// 	{
+	// 		*(PassiveSkill*)CreateEntry(&g::passive_skill_table) = passive;
+	// 	}
+	// }
 
 	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
 	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
@@ -264,18 +265,19 @@ GameUpdateAndRender()
 	// Right click cancels selected ability if one is selected.
 	// If no ability is selected, cancels selected unit if one is selected.
 	// If neither a unit nor ability is selected, do nothing
-	if(Pressed(vk::rmb))
-	{
-		if(game->current_battle.selected_ability != nullptr)
-		{
-			game->current_battle.selected_ability = nullptr;
-//			game->current_battle.selected_ability_valid_target_set = {};
-		}
-		else if(game->current_battle.selected_unit != nullptr)
-		{
-			game->current_battle.selected_unit = nullptr;
-		}
-	}
+	// @todo: this should be transferred to the UpdateBattle() method probably.
+// 	if(Pressed(vk::rmb))
+// 	{
+// 		if(game->current_battle.selected_ability != nullptr)
+// 		{
+// 			game->current_battle.selected_ability = nullptr;
+// //			game->current_battle.selected_ability_valid_target_set = {};
+// 		}
+// 		else if(game->current_battle.selected_unit != nullptr)
+// 		{
+// 			game->current_battle.selected_unit = nullptr;
+// 		}
+// 	}
 
 	// Reset pen position to container origin for all gui containers
 	ResetImguiContainer(&game->debug_container);

@@ -185,17 +185,74 @@ GetButtonHeight(ImguiContainer container)
 	return LineSize(container.button_layout.label_layout) + 2*imgui::button_padding.y;
 }
 
-ListPanelResponse
-ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float scroll_offset)
-{
-	ListPanelResponse response = {
-		.hovered_index = -1,
-		.pressed_index = -1
-	};
+// ListPanelResponse
+// ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float scroll_offset)
+// {
+// 	ListPanelResponse response = {
+// 		.hovered_index = -1,
+// 		.pressed_index = -1
+// 	};
 
-	DrawFilledRect(layout.rect, Color{0.05f,0.05f,0.05f,1.f});
-	DrawUnfilledRect(layout.rect, c::lt_grey);
-	//DrawLine(RectTopRight(layout.rect), RectBottomRight(layout.rect), c::lt_grey);
+// 	DrawFilledRect(layout.rect, Color{0.05f,0.05f,0.05f,1.f});
+// 	DrawUnfilledRect(layout.rect, c::lt_grey);
+// 	//DrawLine(RectTopRight(layout.rect), RectBottomRight(layout.rect), c::lt_grey);
+
+// 	TextLayout text_layout = c::def_text_layout;
+// 	text_layout.font_size = 16;
+// 	text_layout.draw_debug = false;
+
+// 	Vec2f outer_padding = {20.f,2.f};
+// 	Vec2f inner_padding = {5.f,5.f};
+// 	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
+
+// 	// Calculate which entries should be drawn based on scroll_offset
+// 	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
+// 	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
+// 	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
+// 	//pen.y += remainder;
+
+// 	// DrawText(c::def_text_layout, MousePos(), "%d", index_of_first_drawn_entry);
+
+// 	for(int i=0; i<entry_count; i++)
+// 	{
+// 		if(i < index_of_first_drawn_entry) continue;
+// 		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+
+// 		if(PointInRect(entry_rect, MousePos()))
+// 		{ // Entry hovered
+// 			DrawFilledRect(entry_rect, c::grey);
+// 			DrawUnfilledRect(entry_rect, c::green);
+// 			response.hovered_index = i;
+// 			if(Pressed(vk::LMB)) response.pressed_index = i;
+// 		}
+// 		else
+// 		{ // Entry NOT hovered
+// 			DrawFilledRect(entry_rect, c::dk_grey);
+// 			DrawUnfilledRect(entry_rect, c::grey);
+// 		}
+
+// 		// @note: spooky! We should write a real implementation of DrawText that takes a String.
+// 		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_names[i]);
+// 		//SetDrawDepth(120.0f);
+
+
+// 		pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
+// 	}
+
+// 	return response;
+// }
+
+void
+DrawListPanel(ListPanel_ panel)
+{
+	DrawFilledRect(panel.layout.rect, Color{0.05f,0.05f,0.05f,1.f});
+	DrawUnfilledRect(panel.layout.rect, c::lt_grey);
+}
+
+ButtonResponse
+ListPanelEntry(ListPanel_ *panel, const String entry_name)
+{
+	ButtonResponse response = {};
 
 	TextLayout text_layout = c::def_text_layout;
 	text_layout.font_size = 16;
@@ -203,27 +260,31 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float
 
 	Vec2f outer_padding = {20.f,2.f};
 	Vec2f inner_padding = {5.f,5.f};
-	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
+	Vec2f pen = panel->layout.rect.pos + Vec2f{0.f,20.f};
 
 	// Calculate which entries should be drawn based on scroll_offset
 	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
-	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
-	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
+	int index_of_first_drawn_entry = (int)(panel->scroll_offset / v_distance_between_entries);
+	float remainder = v_distance_between_entries*((panel->scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
 	//pen.y += remainder;
 
 	// DrawText(c::def_text_layout, MousePos(), "%d", index_of_first_drawn_entry);
 
-	for(int i=0; i<entry_count; i++)
+	// for(int i=0; i<entry_count; i++)
+	// {
+	int i = panel->cur_entry_count;
+	pen.y += i*(LineSize(text_layout) + 2.f*(outer_padding+inner_padding).y);
+	if(i >= index_of_first_drawn_entry)
 	{
-		if(i < index_of_first_drawn_entry) continue;
-		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+
+		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
 
 		if(PointInRect(entry_rect, MousePos()))
 		{ // Entry hovered
 			DrawFilledRect(entry_rect, c::grey);
 			DrawUnfilledRect(entry_rect, c::green);
-			response.hovered_index = i;
-			if(Pressed(vk::LMB)) response.pressed_index = i;
+			response.hovered = true;
+			if(Pressed(vk::LMB)) response.pressed = true;
 		}
 		else
 		{ // Entry NOT hovered
@@ -232,12 +293,14 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float
 		}
 
 		// @note: spooky! We should write a real implementation of DrawText that takes a String.
-		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_names[i]);
+		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name);
 		//SetDrawDepth(120.0f);
 
 
 		pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
 	}
+
+	++panel->cur_entry_count;
 
 	return response;
 }

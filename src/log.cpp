@@ -2,8 +2,10 @@
 #include <stdarg.h>
 #include <string>
 
+#include "macros.h"
 #include "game.h"
 #include "platform.h"
+#include "util.h"
 
 #define MAX_LOG_LENGTH 1000
 #define MAX_LOG_COUNT 10
@@ -73,6 +75,27 @@ void log(char *str, ...) {
 
 	platform->WriteLineToFile("logs/log.txt", formatted_str);
 	_push_to_log_strings(formatted_str);
+}
+
+void VerboseError(const char *str, ...)
+{
+	if(!c::verbose_error_logging) return;
+
+	va_list args;
+	va_start(args, str);
+
+	char formatted_str[MAX_LOG_LENGTH];
+	int formatted_length = vsprintf(formatted_str, str, args);
+	if(formatted_length > MAX_LOG_LENGTH) {
+		// We exceeded the length of the formatted_str buffer, so we can only write a partial log
+		formatted_str[MAX_LOG_LENGTH-1] = '\0'; // vsprintf wouldn't have null-appended if the buffer was too small.
+		_push_to_log_strings(formatted_str);
+		log("%s", formatted_str);
+		log("ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.", formatted_length);
+		return;
+	}
+
+	log(formatted_str);
 }
 
 void TickLog()

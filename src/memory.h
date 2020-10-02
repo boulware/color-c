@@ -16,7 +16,7 @@ namespace memory
 	Arena permanent_arena;
 };
 
-Arena AllocateArena();
+Arena AllocArena();
 void ClearArena(Arena *arena);
 size_t ArenaBytesRemaining(Arena arena);
 char *ScratchString(int size);

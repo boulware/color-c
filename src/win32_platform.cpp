@@ -16,6 +16,7 @@
 
 #include "util.h"
 #include "input.h"
+#include "debug.h"
 
 Platform *platform = nullptr;
 OpenGL *gl = nullptr;

@@ -5,7 +5,11 @@
 #include "vec.h"
 #include "text_render.h"
 #include "imgui.h"
-#include "data_table.h"
+#include "table.h"
+
+struct Ability;
+struct Breed;
+struct Unit;
 
 namespace c
 {
@@ -45,7 +49,7 @@ namespace c
 	const float frametime_s = 1.f/60.f;
 
 	const bool verbose_success_logging = false;
-	const bool verbose_error_logging = true;
+	const bool verbose_error_logging = false;
 
 	int const c0_control_first = 0x0;
 	int const c0_control_last = 0x1F;
@@ -62,7 +66,7 @@ namespace c
 	const int printable_ascii_count = printable_ascii_end-printable_ascii_start;
 
 	const int ability_table_partition_size = 20; // partition size in number of entities (not bytes)
-	const int unit_schematic_table_partition_size = 20;
+	const int breed_table_partition_size = 20;
 	const int unit_table_partition_size = 20;
 	const int passive_skill_table_partition_size = 20;
 	const int passive_node_table_partition_size = 20;
@@ -77,6 +81,11 @@ namespace c
 	const int max_ability_name_length = 20;
 	const int max_passive_skill_name_length = 20;
 	const int max_effects_text_length = 1024;
+
+	// Tables
+	Id<Ability> null_ability_id = {0,0};
+	Id<Breed> null_breed_id = {0,0};
+	Id<Unit> null_unit_id = {0,0};
 
 	// Debug
 	const float error_flash_speed = 0.017f;
@@ -225,6 +234,13 @@ namespace c
 		.align = c::align_topcenter,
 		.draw_debug = false
 	};
+
+    TextLayout unit_frame_name_layout = {
+    	.font = &text_render::default_font,
+    	.color = c::white,
+    	.font_size = 32,
+    	.align = c::align_topcenter
+    };
 
 	// Unit info HUD
 	const float hud_offset_from_bottom = 250.f;

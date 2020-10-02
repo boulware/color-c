@@ -82,11 +82,12 @@ _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
 	Vec2f char_pos = {pen->x + scale*font.bitmap_left[utf32_char],
 					  pen->y - scale*font.bitmap_top[utf32_char] + scale*font.ascender};
 
+	// Round to nearest integer pixel since we're not doing sub-pixel rendering.
 	GLfloat char_verts[] = {
-		char_pos.x, char_pos.y, 0.f, 0.f,
-		char_pos.x+char_size.x, char_pos.y, 1.f, 0.f,
-		char_pos.x, char_pos.y+char_size.y, 0.f, 1.f,
-		char_pos.x+char_size.x, char_pos.y+char_size.y, 1.f, 1.f
+		m::Round(char_pos.x),             m::Round(char_pos.y), 0.f, 0.f,
+		m::Round(char_pos.x+char_size.x), m::Round(char_pos.y), 1.f, 0.f,
+		m::Round(char_pos.x),             m::Round(char_pos.y+char_size.y), 0.f, 1.f,
+		m::Round(char_pos.x+char_size.x), m::Round(char_pos.y+char_size.y), 1.f, 1.f
 	};
 
 	pen->x += scale*font.advance_x[utf32_char];

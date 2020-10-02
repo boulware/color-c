@@ -37,8 +37,10 @@ struct Ability
 	AbilityTier tiers[c::max_ability_tier_count];
 };
 
+Ability *GetAbilityFromId(Id<Ability> id);
+
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
-bool LoadAbilityFile(const char *filename, DataTable *table);
+bool LoadAbilityFile(const char *filename, Table<Ability> *table);
 char *GenerateAbilityTierText(const AbilityTier *tier);
 
 #endif

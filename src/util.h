@@ -13,22 +13,4 @@ char *TempFormatString(const char *fmt, va_list args);
 template <typename Type>
 bool InRange(Type value, Type min, Type max);
 
-
-
-
-// Creates a temporary string and formats it according to printf-style formatting rules.
-// Use ONLY in a function with variadic arguments (e.g., void foo(int a, int b, ...);)
-//
-// Usage example:
-//
-// void foo(char *string, ...) {
-// 		char *formatted_string;
-// 		mFormatString(formatted_string, string);
-// }
-#define mFormatString(dst, fmt) \
-	va_list args; \
-	va_start(args, fmt); \
-	dst = TempFormatString(fmt, args); \
-	va_end(args);
-
 #endif

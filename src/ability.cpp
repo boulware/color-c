@@ -135,7 +135,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 }
 
 bool
-LoadAbilityFile(const char *filename, DataTable *table)
+LoadAbilityFile(const char *filename, Table<Ability> *table)
 {
 	if(!filename or !table) return false;
 
@@ -150,20 +150,20 @@ LoadAbilityFile(const char *filename, DataTable *table)
 		bool found_ability = SeekNextLineThatBeginsWith(&file, "ability");
 		if(!found_ability) break;
 
-		if(DataTableEntriesRemaining(*table) >= 1)
+		Ability temp_ability = {};
+		if(ParseNextAsAbilityData(&file, &temp_ability))
 		{
-			Ability temp_ability = {};
-			if(ParseNextAsAbilityData(&file, &temp_ability))
-			{
-				Ability *ability = (Ability*)CreateEntry(table);
-				*ability = temp_ability;
-				ability->init = true;
-				++ability_count_loaded;
-			}
-			else
-			{
-				continue;
-			}
+			auto ability_id = CreateEntry(table);
+			Ability *ability = GetAbilityFromId(ability_id);
+			if(ability == nullptr) break;
+
+			*ability = temp_ability;
+			ability->init = true;
+			++ability_count_loaded;
+		}
+		else
+		{
+			continue;
 		}
 	}
 
@@ -389,4 +389,10 @@ GenerateAbilityTierText(const AbilityTier *tier)
 	*buffer.p = '\0';
 
 	return buffer.data;
+}
+
+Ability *
+GetAbilityFromId(Id<Ability> id)
+{
+	return GetEntryFromId(g::ability_table, id);
 }

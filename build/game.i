@@ -40775,7 +40775,7 @@ namespace memory
 	Arena permanent_arena;
 };
 
-Arena AllocateArena();
+Arena AllocArena();
 void ClearArena(Arena *arena);
 size_t ArenaBytesRemaining(Arena arena);
 char *ScratchString(int size);
@@ -40945,6 +40945,13 @@ struct ListPanelResponse
 	int pressed_index;
 };
 
+struct ListPanel_
+{
+	ListPanelLayout layout;
+	int cur_entry_count;
+	float scroll_offset;
+};
+
 struct ButtonLayout
 {
 	TextLayout label_layout;
@@ -41018,39 +41025,65 @@ ListPanelResponse ListPanel(ListPanelLayout layout, String *entry_names, size_t 
 void ResetImguiContainer(ImguiContainer *container);
 void SetActiveContainer(ImguiContainer *container);
 
-#line 92 "D:\\work\\programming\\color-c\\src\\imgui.h"
+
+void DrawListPanel_(ListPanel_ panel);
+
+#line 102 "D:\\work\\programming\\color-c\\src\\imgui.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\const.h"
-#line 1 "D:\\work\\programming\\color-c\\src\\data_table.h"
+#line 1 "D:\\work\\programming\\color-c\\src\\table.h"
 
 
 
 
 
-struct DataTable
+template <typename Type>
+struct TableIndex
 {
-	u8 *data;			
-	int entry_size; 	
-	int entry_count; 	
-	int entry_max;		
-
-	void *operator[](int index);
+    int id;
+    int generation;
 };
 
-DataTable AllocDataTable(int entry_size, int entry_max);
-bool IsValidIndex(DataTable table, int index);
-void *CreateEntry(DataTable *table);
-int DataTableEntriesRemaining(DataTable table);
-int GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target);
-void *GetEntryByIndex(DataTable table, int index);
+template <typename Type>
+bool operator==(TableIndex<Type> a, TableIndex<Type> b);
 
 template <typename Type>
-int GetIndexByName(DataTable table, const char *entry_name);
+struct TableEntry
+{
+    Type data;
+    bool active;
+    int generation; 
+};
 
 template <typename Type>
-Type *GetEntryByName(DataTable table, const char *entry_name);
+struct Table
+{
+	TableEntry<Type> *entries;  
+    size_t entry_count;
+    size_t max_entry_count;
+};
 
-#line 30 "D:\\work\\programming\\color-c\\src\\data_table.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#line 50 "D:\\work\\programming\\color-c\\src\\table.h"
 #line 9 "D:\\work\\programming\\color-c\\src\\const.h"
+
+struct Ability;
+struct UnitSchematic;
 
 namespace c
 {
@@ -41122,6 +41155,10 @@ namespace c
 	const int max_ability_name_length = 20;
 	const int max_passive_skill_name_length = 20;
 	const int max_effects_text_length = 1024;
+
+	
+	TableIndex<Ability> null_ability_index = {-1,-1};
+	TableIndex<UnitSchematic> null_unit_schematic_index = {-1,-1};
 
 	
 	const float error_flash_speed = 0.017f;
@@ -41418,7 +41455,7 @@ namespace c
 	const int max_effect_count = 10;
 };
 
-#line 377 "D:\\work\\programming\\color-c\\src\\const.h"
+#line 384 "D:\\work\\programming\\color-c\\src\\const.h"
 #line 6 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\global.h"
 
@@ -41506,7 +41543,7 @@ u32 DigitToUtf32Char(u32 digit);
 
 bool TokenMatchesString(Token token, const char *string);
 
-String StringFromToken(Token token, Arena *arena);
+String StringFromToken(Token token, Arena *arena = &memory::per_frame_arena);
 
 #line 76 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
 #line 7 "D:\\work\\programming\\color-c\\src\\unit.h"
@@ -41520,9 +41557,12 @@ String StringFromToken(Token token, Arena *arena);
 
 
 
+
 struct TraitSet
 {
-	s32 vigor, focus, armor;
+	s32 vigor;
+	s32 focus;
+	s32 armor;
 
 	s32 &operator[](size_t index);
 };
@@ -41541,7 +41581,7 @@ s32 *end(TraitSet &trait_set);
 
 bool ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set);
 
-#line 28 "D:\\work\\programming\\color-c\\src\\traitset.h"
+#line 31 "D:\\work\\programming\\color-c\\src\\traitset.h"
 #line 5 "D:\\work\\programming\\color-c\\src\\ability.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\target_class.h"
 
@@ -41647,6 +41687,7 @@ struct EffectParams_Steal
 #line 53 "D:\\work\\programming\\color-c\\src\\effect.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\ability.h"
 
+
 struct AbilityTier
 {
 	bool init;
@@ -41677,11 +41718,13 @@ struct Ability
 	AbilityTier tiers[c::max_ability_tier_count];
 };
 
+Ability *GetAbilityByGenerationalIndex(TableIndex<Ability> index);
+
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
-bool LoadAbilityFile(const char *filename, DataTable *table);
+bool LoadAbilityFile(const char *filename, Table<Ability> *table);
 char *GenerateAbilityTierText(const AbilityTier *tier);
 
-#line 44 "D:\\work\\programming\\color-c\\src\\ability.h"
+#line 47 "D:\\work\\programming\\color-c\\src\\ability.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\unit.h"
 
 enum class Team
@@ -41694,16 +41737,16 @@ struct UnitSchematic
 {
 	bool init;
 
-	char name[c::max_unit_name_length+1];
+	String name;
 	TraitSet max_traits;
-	int ability_table_indices[c::moveset_max_size];
+	TableIndex<Ability> ability_table_indices[c::moveset_max_size];
 };
 
 struct Unit
 {
 	bool init;
 
-	char name[c::max_unit_name_length+1];
+	String name;
 	Team team;
 	TraitSet cur_traits;
 	TraitSet max_traits;
@@ -41717,7 +41760,7 @@ struct UnitSlot
 	Vec2f pos; 
 };
 
-struct TargetSet
+struct UnitSet
 {
 	int size;
 	Unit *units[c::max_target_count];
@@ -41725,14 +41768,13 @@ struct TargetSet
 	Unit *operator[](int index);
 };
 
-Unit **begin(TargetSet &target_set);
-Unit **end(TargetSet &target_set);
+Unit **begin(UnitSet &target_set);
+Unit **end(UnitSet &target_set);
 
 bool ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set);
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
 
-bool LoadAbilityFile(const char *filename, DataTable *table);
-bool LoadUnitSchematicFile(const char *filename, DataTable *table, DataTable ability_table);
+bool LoadUnitSchematicFile(const char *filename, Table<UnitSchematic> *table, Table<Ability> ability_table);
 
 Unit *CreateUnit(int schematic_index, Team team);
 void DrawUnitHudData(Unit unit);
@@ -41741,31 +41783,34 @@ Vec2f DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Colo
 void DrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer);
 
 
-void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
-TargetSet GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets);
+void AddUnitToUnitSet(Unit *unit, UnitSet *target_set);
+UnitSet GenerateValidUnitSet(Unit *caster, Effect *effect, UnitSet all_targets);
 
 
 void SetSelectedAbility(Ability *ability);
 
-bool UnitInTargetSet(Unit *unit, TargetSet target_set);
-void AddUnitToTargetSet(Unit *unit, TargetSet *target_set);
+bool UnitInUnitSet(Unit *unit, UnitSet target_set);
+void AddUnitToUnitSet(Unit *unit, UnitSet *target_set);
 
 UnitSchematic *GetUnitSchematic(Unit unit);
 
 bool CheckValidAbilityTarget(Unit *source, Unit *target, Effect *effect);
 
-TargetSet GenerateInferredTargetSet(Unit *source, Unit *selected_target, Effect *effect, TargetSet all_targets);
+UnitSet GenerateInferredUnitSet(Unit *source, Unit *selected_target, Effect *effect, UnitSet all_targets);
 
 char *TraitSetString(TraitSet traits);
 int DetermineAbilityTier(Unit *caster, Ability *ability);
 
-#line 85 "D:\\work\\programming\\color-c\\src\\unit.h"
+#line 84 "D:\\work\\programming\\color-c\\src\\unit.h"
 #line 8 "D:\\work\\programming\\color-c\\src\\global.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\passive_skill_tree.h"
 
 
 
 #line 1 "D:\\work\\programming\\color-c\\src\\global.h"
+
+
+
 
 
 
@@ -41828,19 +41873,22 @@ namespace g
 {
 	Font default_font;
 
-	DataTable ability_table;
-	DataTable unit_schematic_table;
-	DataTable unit_table;
-	DataTable passive_skill_table;
-	DataTable passive_node_table;
+
+
+	Table<Ability> ability_table;
+	Table<UnitSchematic> unit_schematic_table;
+	Table<Unit> unit_table;
+	
+	
 
 	PassiveSkillTree passive_tree;
 
 	bool error_flash_increasing = true;
 	float error_flash_counter = 0.f;
+
 };
 
-#line 27 "D:\\work\\programming\\color-c\\src\\global.h"
+#line 30 "D:\\work\\programming\\color-c\\src\\global.h"
 #line 7 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\debug.h"
 
@@ -42118,11 +42166,12 @@ void DrawFilledRect(Vec2f pos, Vec2f size, Color color);
 
 void DrawLine(Vec2f start, Vec2f end, Color color);
 
-ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *label, ...);
+ButtonResponse DrawButton(ButtonLayout layout, Rect rect, String label);
+ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *c_string);
 
 void SetDrawDepth(float depth);
 
-#line 23 "D:\\work\\programming\\color-c\\src\\draw.h"
+#line 24 "D:\\work\\programming\\color-c\\src\\draw.h"
 #line 5 "D:\\work\\programming\\color-c\\src\\battle.h"
 #line 1 "D:\\work\\programming\\color-c\\src\\game.h"
 
@@ -42228,7 +42277,7 @@ struct Intent
 {
 	Unit *caster;
 	Ability *ability;
-	TargetSet targets;
+	UnitSet targets;
 };
 
 struct Battle
@@ -42245,7 +42294,7 @@ struct Battle
 	Timer end_button_clicked_timer;
 	bool ending_player_turn;
 
-	Unit *units[c::max_target_count]; 
+	UnitSet units; 
 	Vec2f unit_slots[c::max_target_count]; 
 	Intent intents[c::max_target_count]; 
 
@@ -42269,7 +42318,7 @@ struct BattleEvent
 
 void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
-TargetSet AllBattleUnitsAsTargetSet(const Battle *battle);
+UnitSet AllBattleUnitsAsUnitSet(const Battle *battle);
 void DrawUnitHudData(Battle *battle);
 void UpdateBattle(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
@@ -42303,7 +42352,7 @@ enum class InputElementType
 	Integer,
 };
 
-enum AbilityPropertyIndex : int
+enum class AbilityPropertyIndex : int
 {
 	search,
 	name,
@@ -42319,7 +42368,7 @@ enum AbilityPropertyIndex : int
 	COUNT
 };
 
-InputElementType ability_property_types[AbilityPropertyIndex::COUNT] = {
+InputElementType ability_property_types[] = {
 	InputElementType::String,
 	InputElementType::String,
 	InputElementType::Integer,
@@ -42330,10 +42379,27 @@ InputElementType ability_property_types[AbilityPropertyIndex::COUNT] = {
 	InputElementType::Integer,
 	InputElementType::Integer,
 	InputElementType::Integer,
-	InputElementType::Integer
+	InputElementType::Integer,
+}; static_assert((sizeof(ability_property_types)/sizeof(ability_property_types[0])) == (int)AbilityPropertyIndex::COUNT);
+
+Vec2f ability_field_positions[] = {
+	{10.f,10.f},
+	{400.f,10.f},
+	{400.f,100.f},
+	{460.f,100.f},
+	{520.f,100.f},
+	{400.f,200.f},
+	{460.f,200.f},
+	{520.f,200.f},
+	{400.f,300.f},
+	{460.f,300.f},
+	{520.f,300.f},
+}; static_assert((sizeof(ability_field_positions)/sizeof(ability_field_positions[0])) == (int)AbilityPropertyIndex::COUNT);
+
+enum class UnitSchematicPropertyIndex : int
+{
+	COUNT
 };
-
-
 
 struct InputElement
 {
@@ -42373,7 +42439,9 @@ struct Editor
 	
 	
 
-	InputElement input_elements[10];
+	InputElement input_elements[11];
+	static_assert((sizeof(input_elements)/sizeof(input_elements[0])) >= (int)AbilityPropertyIndex::COUNT);
+	static_assert((sizeof(input_elements)/sizeof(input_elements[0])) >= (int)UnitSchematicPropertyIndex::COUNT);
 
 	
 	
@@ -42386,7 +42454,7 @@ struct Editor
 
 void StartEditor(Editor *editor);
 
-#line 105 "D:\\work\\programming\\color-c\\src\\editor.h"
+#line 124 "D:\\work\\programming\\color-c\\src\\editor.h"
 #line 16 "D:\\work\\programming\\color-c\\src\\game.h"
 
 enum class GameState
@@ -42421,7 +42489,7 @@ struct Game
 
 	FT_Library ft_lib;
 
-	Unit *player_party[c::max_party_size];
+	UnitSet player_party;
 	Battle current_battle;
 
 	Editor editor_state;
@@ -42481,7 +42549,6 @@ Sprite LoadBitmapFileIntoSprite(const char *filename, Align align);
 
 
 
-
 #line 1 "D:\\work\\programming\\color-c\\src\\freetype.h"
 
 
@@ -42493,7 +42560,7 @@ Font
 LoadFontFromFile(const char *filename);
 
 #line 11 "D:\\work\\programming\\color-c\\src\\freetype.h"
-#line 13 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 12 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 
 
@@ -42504,7 +42571,7 @@ LoadFontFromFile(const char *filename);
 void * LoadPngFromFile(const char *filename);
 
 #line 7 "D:\\work\\programming\\color-c\\src\\image.h"
-#line 17 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 16 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 
 #line 1 "D:\\work\\programming\\color-c\\src\\lang.h"
@@ -42512,7 +42579,7 @@ void * LoadPngFromFile(const char *filename);
 
 
 #line 5 "D:\\work\\programming\\color-c\\src\\lang.h"
-#line 20 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 19 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 #line 1 "D:\\work\\programming\\color-c\\src\\macros.h"
 
@@ -42520,7 +42587,7 @@ void * LoadPngFromFile(const char *filename);
 
 
 
-#line 22 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 21 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\math.h"
 
 
@@ -42546,7 +42613,7 @@ namespace m
 };
 
 #line 25 "D:\\work\\programming\\color-c\\src\\math.h"
-#line 23 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 22 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 #line 1 "D:\\work\\programming\\color-c\\src\\meta.h"
 
@@ -42555,7 +42622,7 @@ namespace m
 void ParseSourceFileForIntrospection(const char *filename);
 
 #line 7 "D:\\work\\programming\\color-c\\src\\meta.h"
-#line 25 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 24 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
 
 
@@ -42563,7 +42630,7 @@ void ParseSourceFileForIntrospection(const char *filename);
 String AsString(const Vec2f &o, int depth);
 
 #line 7 "D:\\work\\programming\\color-c\\src\\meta_print(manual).h"
-#line 26 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 25 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\meta_text_parsing.h"
 
 
@@ -42663,7 +42730,7 @@ String AsString(const Vec2f &o, int depth);
 
 
 
-#line 27 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 26 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 
 
@@ -42694,7 +42761,8 @@ void Seed();
 u32 RandomU32(u32 min, u32 max);
 
 #line 26 "D:\\work\\programming\\color-c\\src\\random.h"
-#line 32 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+#line 31 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
+
 
 
 
@@ -42743,9 +42811,27 @@ bool InRange(Type value, Type min, Type max);
 #line 43 "D:\\work\\programming\\color-c\\src\\meta_print.cpp"
 
 
-String MetaString(const Ability *s)
+String MetaString(const AbilityTier *s)
 {
 	TimedBlock (timed_block_entry47)(0, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 47);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AbilityTier {\n");
+	AppendCString(&string, "  init: %d (bool)\n", s->init);
+	AppendCString(&string, "  required_traits: [invalid metadata] (TraitSet)\n", s->required_traits);
+	AppendCString(&string, "  effects: [invalid metadata] (Effect)\n", s->effects);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Ability *s)
+{
+	TimedBlock (timed_block_entry65)(1, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 65);
 
 	String string = {};
 	string.length = 0;
@@ -42763,7 +42849,7 @@ String MetaString(const Ability *s)
 
 String MetaString(const Editor *s)
 {
-	TimedBlock (timed_block_entry65)(1, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 65);
+	TimedBlock (timed_block_entry83)(2, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 83);
 
 	String string = {};
 	string.length = 0;
@@ -42793,7 +42879,7 @@ String MetaString(const Editor *s)
 
 String MetaString(const Arena *s)
 {
-	TimedBlock (timed_block_entry95)(2, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 95);
+	TimedBlock (timed_block_entry113)(3, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 113);
 
 	String string = {};
 	string.length = 0;
@@ -42811,7 +42897,7 @@ String MetaString(const Arena *s)
 
 String MetaString(const String *s)
 {
-	TimedBlock (timed_block_entry113)(3, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 113);
+	TimedBlock (timed_block_entry131)(4, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 131);
 
 	String string = {};
 	string.length = 0;
@@ -42827,9 +42913,27 @@ String MetaString(const String *s)
 	return string;
 }
 
+String MetaString(const TraitSet *s)
+{
+	TimedBlock (timed_block_entry149)(5, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 149);
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TraitSet {\n");
+	AppendCString(&string, "  vigor: %d (s32)\n", s->vigor);
+	AppendCString(&string, "  focus: %d (s32)\n", s->focus);
+	AppendCString(&string, "  armor: %d (s32)\n", s->armor);
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 String MetaString(const Utf32String *s)
 {
-	TimedBlock (timed_block_entry131)(4, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 131);
+	TimedBlock (timed_block_entry167)(6, "D:\\work\\programming\\color-c\\src\\meta_print.cpp",  __FUNCTION__  , 167);
 
 	String string = {};
 	string.length = 0;
@@ -67269,7 +67373,7 @@ InRange(Type value, Type min, Type max)
 
 String AsString(const int *s)
 {
-	TimedBlock (timed_block_entry157)(5, "D:\\work\\programming\\color-c\\src\\util.cpp",  __FUNCTION__  , 157);
+	TimedBlock (timed_block_entry157)(7, "D:\\work\\programming\\color-c\\src\\util.cpp",  __FUNCTION__  , 157);
 
 	String string = {};
 	string.length = 0;
@@ -67966,7 +68070,7 @@ TextLayoutScale(TextLayout layout)
 void
 _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
 {
-	TimedBlock (timed_block_entry73)(6, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 73);
+	TimedBlock (timed_block_entry73)(8, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 73);
 
 	
 	float scale = (float)size/(float)font.base_size;
@@ -67994,7 +68098,7 @@ _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font)
 float
 LineSize(TextLayout layout)
 {
-	TimedBlock (timed_block_entry101)(7, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 101);
+	TimedBlock (timed_block_entry101)(9, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 101);
 
 	if(!layout.font->is_init) return 0.f;
 
@@ -68012,7 +68116,7 @@ LineSize(TextLayout layout)
 Vec2f
 SizeUtf8Line(TextLayout layout, const char *string)
 {
-	TimedBlock (timed_block_entry119)(8, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 119);
+	TimedBlock (timed_block_entry119)(10, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 119);
 
 	StringBuffer buffer = CreateStringBuffer(string);
 	u32 utf32_char;
@@ -68037,7 +68141,7 @@ SizeUtf8Line(TextLayout layout, const char *string)
 Vec2f
 DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 {
-	TimedBlock (timed_block_entry144)(9, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 144);
+	TimedBlock (timed_block_entry144)(11, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 144);
 
 	ActivateUvShader(layout.color);
 
@@ -68074,7 +68178,7 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 Vec2f
 DrawText(TextLayout layout, Vec2f origin, String string)
 {
-	TimedBlock (timed_block_entry181)(10, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 181);
+	TimedBlock (timed_block_entry181)(12, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 181);
 
 	ActivateUvShader(layout.color);
 
@@ -68110,7 +68214,7 @@ DrawText(TextLayout layout, Vec2f origin, String string)
 Vec2f
 DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 {
-	TimedBlock (timed_block_entry217)(11, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 217);
+	TimedBlock (timed_block_entry217)(13, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 217);
 
 	ActivateUvShader(layout.color);
 
@@ -68148,7 +68252,7 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 Vec2f
 DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
 {
-	TimedBlock (timed_block_entry255)(12, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 255);
+	TimedBlock (timed_block_entry255)(14, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 255);
 
 	ActivateUvShader(layout.color);
 
@@ -68183,7 +68287,7 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
 Vec2f
 SizeText(TextLayout layout, String string, int char_count)
 {
-	TimedBlock (timed_block_entry290)(13, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 290);
+	TimedBlock (timed_block_entry290)(15, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 290);
 
 	Vec2f pen = {0.f,0.f};
 	float scale = TextLayoutScale(layout);
@@ -68222,7 +68326,7 @@ SizeText(TextLayout layout, String string, int char_count)
 Vec2f
 SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
 {
-	TimedBlock (timed_block_entry329)(14, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 329);
+	TimedBlock (timed_block_entry329)(16, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 329);
 
 	Vec2f pen = {0.f,0.f};
 	float scale = TextLayoutScale(layout);
@@ -68257,7 +68361,7 @@ SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
 Vec2f
 DrawTextUtf32(TextLayout layout, Vec2f origin, Utf32String string)
 {
-	TimedBlock (timed_block_entry364)(15, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 364);
+	TimedBlock (timed_block_entry364)(17, "D:\\work\\programming\\color-c\\src\\text_render.cpp",  __FUNCTION__  , 364);
 
 	ActivateUvShader(layout.color);
 
@@ -69056,101 +69160,118 @@ StringFromToken(Token token, Arena *arena)
 	return string;
 }
 #line 31 "../src/game.cpp"
-#line 1 "D:\\work\\programming\\color-c\\src\\data_table.cpp"
+#line 1 "D:\\work\\programming\\color-c\\src\\table.cpp"
 
 
-void *
-DataTable::operator[](int index)
+template<typename Type>
+bool operator==(TableIndex<Type> a, TableIndex<Type> b)
 {
-	if(IsValidIndex(*this, index))
-	{
-		return (data + entry_size*index);
-	}
-	else
-	{
-		return nullptr;
-	}
+	return(a.id == b.id && a.generation == b.generation);
 }
 
-DataTable
-AllocDataTable(int entry_size, int entry_max)
+template<typename Type>
+Table<Type>
+AllocTable(size_t max_entry_count)
 {
-	DataTable table;
-	table.data = (u8*)calloc(entry_size*entry_max, 1);
-	table.entry_size = entry_size;
+	Table<Type> table = {};
+	table.entries = (TableEntry<Type>*)platform->AllocateMemory(entry_count*sizeof(TableEntry<Type>));
 	table.entry_count = 0;
-	table.entry_max = entry_max;
+	table.max_entry_count = max_entry_count;
 
 	return table;
 }
 
-bool IsValidIndex(DataTable table, int index)
+template<typename Type>
+Type *
+CreateEntry(Table<Type> *table)
 {
-	return(index >= 0 && index < table.entry_count);
-}
-
-
-
-void *
-CreateEntry(DataTable *table)
-{
-	if(table->entry_count+1 > table->entry_max)
+	if(table->entry_count >= table->max_entry_count)
 	{
+		log("[%s] Table couldn't create a requested entry because it was full.", typeid(Type).name);
 		return nullptr;
 	}
 
-	void *new_entry = (void *)(table->data + table->entry_size*table->entry_count);
-	table->entry_count += 1;
-	return new_entry;
+	TableEntry<Type> &entry = table->entries[++table->entry_count];
+	if(!(entry.active == false)) {*((volatile int*)0) = 0;};
+
+	entry.active = true;
+	entry.generation += 1;
+	return &entry.data;
 }
 
-int DataTableEntriesRemaining(DataTable table)
+template <typename Type>
+Type *
+GetEntryByIndex(Table<Type> table, int index)
 {
-	return(table.entry_max - table.entry_count);
+	if(index < 0 || index >= table.entry_count) return nullptr;
+	if(table.entries[index].active == false) return nullptr;
+
+	return &table.entries[index].data;
 }
 
-
-int
-GetEntryIndexByStringMember(DataTable table, size_t member_offset, const char *target)
+template <typename Type>
+TableIndex<Type>
+GetIndexByName(Table<Type> table, String search_string)
 {
-	int index = -1;
+	TableIndex<Type> table_index = NullIndex<Type>();
 
 	for(int i=0; i<table.entry_count; i++)
 	{
-		char *member_string = (char*)(table.data + i*table.entry_size + member_offset);
-		if(CompareStrings(member_string, target))
+		auto entry = &table.entries[i];
+
+		
+		
+		String member_name = (Type*)(entry->data)->name;
+
+		if(CompareStrings(member_string, search_string))
 		{
-			index = i;
+			table_index.id = i;
+			table_index.generation = entry->generation;
 			break;
 		}
 	}
 
-	return index;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-template <typename Type>
-int GetIndexByName(DataTable table, const char *entry_name)
-{
-	return GetEntryIndexByStringMember(table, ((size_t)&(((Type*)0)->name)), entry_name);
+	return table_index;
 }
 
 template <typename Type>
-Type *GetEntryByName(DataTable table, const char *entry_name)
+Type *
+GetEntryByName(Table<Type> table, String name)
 {
-	return (Type*)table[GetIndexByName<Type>(table, entry_name)];
+	int index = GetIndexByName(table, name);
+	if(index == -1) return nullptr;
+
+	return
+}
+
+template <typename Type>
+TableIndex<Type>
+NullIndex()
+{
+	return TableIndex<Type>{-1,-1};
+}
+
+template <typename Type>
+Type *
+GetEntryByGenerationalIndex(Table<Type> table, TableIndex<Type> index)
+{
+	if(index.id < 0 || index.id >= table.entry_count) return nullptr;
+	if(index.generation != table.entries[index.id].generation) return nullptr;
+
+	return &table.entries[index.id].data;
+}
+
+template <typename Type>
+TableIndex<Type>
+GetGenerationalIndexFromIndex(Table<Type> table, int index)
+{
+	if(index < 0 || index >= table.entry_count) return NullIndex<Type>();
+
+	TableIndex<Type> table_index;
+	table_index.id = index;
+	table_index.generation = table.entries[index].generation;
+
+	return table_index;
 }
 #line 32 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\imgui.cpp"
@@ -69341,17 +69462,74 @@ GetButtonHeight(ImguiContainer container)
 	return LineSize(container.button_layout.label_layout) + 2*imgui::button_padding.y;
 }
 
-ListPanelResponse
-ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float scroll_offset)
-{
-	ListPanelResponse response = {
-		.hovered_index = -1,
-		.pressed_index = -1
-	};
 
-	DrawFilledRect(layout.rect, Color{0.05f,0.05f,0.05f,1.f});
-	DrawUnfilledRect(layout.rect, c::lt_grey);
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void
+DrawListPanel(ListPanel_ panel)
+{
+	DrawFilledRect(panel.layout.rect, Color{0.05f,0.05f,0.05f,1.f});
+	DrawUnfilledRect(panel.layout.rect, c::lt_grey);
+}
+
+ButtonResponse
+ListPanelEntry(ListPanel_ *panel, const String entry_name)
+{
+	ButtonResponse response = {};
 
 	TextLayout text_layout = c::def_text_layout;
 	text_layout.font_size = 16;
@@ -69359,27 +69537,30 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float
 
 	Vec2f outer_padding = {20.f,2.f};
 	Vec2f inner_padding = {5.f,5.f};
-	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
+	Vec2f pen = panel->layout.rect.pos + Vec2f{0.f,20.f};
 
 	
 	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
-	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
-	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
+	int index_of_first_drawn_entry = (int)(panel->scroll_offset / v_distance_between_entries);
+	float remainder = v_distance_between_entries*((panel->scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
 	
 
 	
 
-	for(int i=0; i<entry_count; i++)
+	
+	
+	int i = panel->cur_entry_count;
+	if(i >= index_of_first_drawn_entry)
 	{
-		if(i < index_of_first_drawn_entry) continue;
-		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+
+		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
 
 		if(PointInRect(entry_rect, MousePos()))
 		{ 
 			DrawFilledRect(entry_rect, c::grey);
 			DrawUnfilledRect(entry_rect, c::green);
-			response.hovered_index = i;
-			if(Pressed(vk::LMB)) response.pressed_index = i;
+			response.hovered = true;
+			if(Pressed(vk::LMB)) response.pressed = true;
 		}
 		else
 		{ 
@@ -69388,12 +69569,14 @@ ListPanel(ListPanelLayout layout, String *entry_names, size_t entry_count, float
 		}
 
 		
-		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_names[i]);
+		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name);
 		
 
 
 		pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
 	}
+
+	++panel->cur_entry_count;
 
 	return response;
 }
@@ -69517,12 +69700,9 @@ DrawHealthbar()
 }
 
 ButtonResponse
-DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
+DrawButton(ButtonLayout layout, Rect rect, String label)
 {
 	ButtonResponse response = {};
-
-	char *formatted_label;
-	va_list args; ((void)(__vcrt_assert_va_start_is_not_reference<decltype(label)>(), ((void)(__va_start(&args, label))))); formatted_label = TempFormatString(label, args); ((void)(args = (va_list)0));;
 
 	Rect aligned_button_rect = AlignRect(rect, layout.align);
 	response.rect = aligned_button_rect;
@@ -69533,7 +69713,7 @@ DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
 		DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
 		TextLayout hovered_layout = layout.label_layout;
 		hovered_layout.color = layout.label_hover_color;
-		DrawText(hovered_layout, RectCenter(aligned_button_rect), formatted_label);
+		DrawText(hovered_layout, RectCenter(aligned_button_rect), label);
 
 		response.hovered = true;
 		if(Pressed(vk::LMB)) response.pressed = true;
@@ -69542,10 +69722,16 @@ DrawButton(ButtonLayout layout, Rect rect, const char *label, ...)
 	{
 		
 		DrawUnfilledRect(aligned_button_rect, layout.button_color);
-		DrawText(layout.label_layout, RectCenter(aligned_button_rect), formatted_label);
+		DrawText(layout.label_layout, RectCenter(aligned_button_rect), label);
 	}
 
 	return response;
+}
+
+ButtonResponse
+DrawButton(ButtonLayout layout, Rect rect, const char *c_string)
+{
+	return DrawButton(layout, rect, StringFromCString(c_string));
 }
 #line 34 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\input.cpp"
@@ -69846,7 +70032,7 @@ AlignRect(Rect rect, Align align)
 
 
 Arena
-AllocateArena()
+AllocArena()
 {
 	Arena arena;
 	arena.start = platform->AllocateMemory(memory::arena_size);
@@ -69859,7 +70045,7 @@ AllocateArena()
 void
 ClearArena(Arena *arena)
 {
-	TimedBlock (timed_block_entry17)(16, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 17);
+	TimedBlock (timed_block_entry17)(18, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 17);
 
 	
 		
@@ -69889,7 +70075,7 @@ ArenaBytesRemaining(Arena arena)
 char *
 ScratchString(int size)
 {
-	TimedBlock (timed_block_entry47)(17, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 47);
+	TimedBlock (timed_block_entry47)(19, "D:\\work\\programming\\color-c\\src\\memory.cpp",  __FUNCTION__  , 47);
 
 	if(size > memory::arena_size)
 	{
@@ -70017,14 +70203,14 @@ DrawTimedBlockData()
 Rect
 GetAbilityHudButtonRect(Battle battle, int ability_index)
 {
-	if(ability_index < 0 || ability_index > c::moveset_max_size)
-	{
-		log("(" __FUNCTION__ ") received invalid ability_index");
-		return Rect{};
-	}
+    if(ability_index < 0 || ability_index > c::moveset_max_size)
+    {
+        log("(" __FUNCTION__ ") received invalid ability_index");
+        return Rect{};
+    }
 
-	return Rect{battle.hud.pos + c::hud_ability_buttons_offset + Vec2f{0.f, ability_index*(c::hud_ability_button_size.y+c::hud_ability_button_padding)},
-				c::hud_ability_button_size};
+    return Rect{battle.hud.pos + c::hud_ability_buttons_offset + Vec2f{0.f, ability_index*(c::hud_ability_button_size.y+c::hud_ability_button_padding)},
+                c::hud_ability_button_size};
 }
 
 
@@ -70033,397 +70219,397 @@ GetAbilityHudButtonRect(Battle battle, int ability_index)
 TraitSet
 CalculateAdjustedDamage(TraitSet current, TraitSet damage)
 {
-	TimedBlock (timed_block_entry26)(18, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 26);
+    TimedBlock (timed_block_entry26)(20, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 26);
 
-	TraitSet adjusted = {};
+    TraitSet adjusted = {};
 
-	
-	
-	
-	if(damage.vigor <= 1)
-	{
-		adjusted.vigor = -damage.vigor;
-	}
-	else
-	{
-		adjusted.vigor = -m::Max(1, damage.vigor - current.armor);
-	}
+    
+    
+    
+    if(damage.vigor <= 1)
+    {
+        adjusted.vigor = -damage.vigor;
+    }
+    else
+    {
+        adjusted.vigor = -m::Max(1, damage.vigor - current.armor);
+    }
 
-	
-	adjusted.focus = -damage.focus;
+    
+    adjusted.focus = -damage.focus;
 
-	
-	adjusted.armor = -damage.armor;
+    
+    adjusted.armor = -damage.armor;
 
-	
-	for(int i=0; i<c::trait_count; i++)
-	{
-		if(adjusted[i] >= 0) continue; 
+    
+    for(int i=0; i<c::trait_count; i++)
+    {
+        if(adjusted[i] >= 0) continue; 
 
-		adjusted[i] = -m::Min(-adjusted[i], current[i]);
-	}
+        adjusted[i] = -m::Min(-adjusted[i], current[i]);
+    }
 
-	return adjusted;
+    return adjusted;
 }
 
 bool
 ValidUnit(const Unit *unit)
 {
-	return(unit && unit->init);
+    return(unit && unit->init);
 }
 
 bool
 ValidAbility(const Ability *ability)
 {
-	return(ability && ability->init);
+    return(ability && ability->init);
 }
 
 bool
 ValidUnitSchematic(const UnitSchematic *unit_schematic)
 {
-	return(unit_schematic && unit_schematic->init);
+    return(unit_schematic && unit_schematic->init);
 }
 
 BattleEvent
 GenerateBattlePreviewEvent(Battle *battle, Intent intent)
 {
-	TimedBlock (timed_block_entry80)(19, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 80);
+    TimedBlock (timed_block_entry80)(21, "D:\\work\\programming\\color-c\\src\\battle.cpp",  __FUNCTION__  , 80);
 
-	if(!battle || !ValidUnit(intent.caster) || !ValidAbility(intent.ability))
-	{
-		if(c::verbose_error_logging) log( __FUNCTION__ "() [ln:%u] received nullptr battle or invalid intent)", 84);
-		return BattleEvent{};
-	}
+    if(!battle || !ValidUnit(intent.caster) || !ValidAbility(intent.ability))
+    {
+        if(c::verbose_error_logging) log( __FUNCTION__ "() [ln:%u] received nullptr battle or invalid intent)", 84);
+        return BattleEvent{};
+    }
 
-	
-	if(intent.targets.size > c::max_target_count)
-	{
-		if(c::verbose_error_logging) log(__FUNCTION__"() received an intent whose target set had an invalid size (%d)", intent.targets.size);
+    
+    if(intent.targets.size > c::max_target_count)
+    {
+        if(c::verbose_error_logging) log(__FUNCTION__"() received an intent whose target set had an invalid size (%d)", intent.targets.size);
 
-		
-			if(!(false)) {*((volatile int*)0) = 0;};
-		
+        
+            if(!(false)) {*((volatile int*)0) = 0;};
+        
 
 #line 98 "D:\\work\\programming\\color-c\\src\\battle.cpp"
-	}
+    }
 
-	
-	int caster_index = -1;
-	for(int i=0; i<(sizeof(battle->units)/sizeof(battle->units[0])); i++)
-	{
-		if(intent.caster == battle->units[i])
-		{
-			caster_index = i;
-			break;
-		}
-	}
-	if(caster_index == -1) return BattleEvent{}; 
+    
+    int caster_index = -1;
+    for(int i=0; i<(sizeof(battle->units)/sizeof(battle->units[0])); i++)
+    {
+        if(intent.caster == battle->units[i])
+        {
+            caster_index = i;
+            break;
+        }
+    }
+    if(caster_index == -1) return BattleEvent{}; 
 
-	
-	int tier = DetermineAbilityTier(intent.caster, intent.ability);
-	if(tier < 0) return BattleEvent{}; 
-	const AbilityTier *cur_ability_tier = &intent.ability->tiers[tier];
+    
+    int tier = DetermineAbilityTier(intent.caster, intent.ability);
+    if(tier < 0) return BattleEvent{}; 
+    const AbilityTier *cur_ability_tier = &intent.ability->tiers[tier];
 
-	BattleEvent event = {};
-	event.battle = battle;
+    BattleEvent event = {};
+    event.battle = battle;
 
-	
-	for(int i=0; i<(sizeof(cur_ability_tier->effects)/sizeof(cur_ability_tier->effects[0])); i++)
-	{
-		Effect effect = cur_ability_tier->effects[i];
+    
+    for(int i=0; i<(sizeof(cur_ability_tier->effects)/sizeof(cur_ability_tier->effects[0])); i++)
+    {
+        Effect effect = cur_ability_tier->effects[i];
 
-		if(effect.type == EffectType::NoEffect)
-		{
-			continue;
-		}
-		else if(effect.type == EffectType::Damage)
-		{
-			EffectParams_Damage *effect_params = (EffectParams_Damage*)effect.params;
+        if(effect.type == EffectType::NoEffect)
+        {
+            continue;
+        }
+        else if(effect.type == EffectType::Damage)
+        {
+            EffectParams_Damage *effect_params = (EffectParams_Damage*)effect.params;
 
-			
-			for(int i=0; i<intent.targets.size; i++)
-			{
-				Unit *target_unit = intent.targets[i];
-				event.trait_changes[i] += CalculateAdjustedDamage(target_unit->cur_traits, effect_params->amount);
-			}
-		}
-		else if(effect.type == EffectType::DamageIgnoreArmor)
-		{
-			EffectParams_DamageIgnoreArmor *effect_params = (EffectParams_DamageIgnoreArmor*)effect.params;
+            
+            for(int i=0; i<intent.targets.size; i++)
+            {
+                Unit *target_unit = intent.targets[i];
+                event.trait_changes[i] += CalculateAdjustedDamage(target_unit->cur_traits, effect_params->amount);
+            }
+        }
+        else if(effect.type == EffectType::DamageIgnoreArmor)
+        {
+            EffectParams_DamageIgnoreArmor *effect_params = (EffectParams_DamageIgnoreArmor*)effect.params;
 
-			
-			for(int i=0; i<intent.targets.size; i++)
-			{
-				Unit *target_unit = intent.targets[i];
+            
+            for(int i=0; i<intent.targets.size; i++)
+            {
+                Unit *target_unit = intent.targets[i];
 
-				TraitSet cur_traits_with_no_armor = target_unit->cur_traits;
-				cur_traits_with_no_armor.armor = 0;
-				event.trait_changes[i] += CalculateAdjustedDamage(cur_traits_with_no_armor, effect_params->amount);
-			}
-		}
-		else if(effect.type == EffectType::DamageIgnoreArmor)
-		{
-			EffectParams_Restore *effect_params = (EffectParams_Restore*)effect.params;
+                TraitSet cur_traits_with_no_armor = target_unit->cur_traits;
+                cur_traits_with_no_armor.armor = 0;
+                event.trait_changes[i] += CalculateAdjustedDamage(cur_traits_with_no_armor, effect_params->amount);
+            }
+        }
+        else if(effect.type == EffectType::DamageIgnoreArmor)
+        {
+            EffectParams_Restore *effect_params = (EffectParams_Restore*)effect.params;
 
-			
-			for(int i=0; i<intent.targets.size; i++)
-			{
-				Unit *target_unit = intent.targets[i];
-				event.trait_changes[i] += effect_params->amount;
-			}
-		}
-		else if(effect.type == EffectType::Gift)
-		{
-			EffectParams_Gift *effect_params = (EffectParams_Gift*)effect.params;
-			TraitSet base_gift_amount = effect_params->amount;
+            
+            for(int i=0; i<intent.targets.size; i++)
+            {
+                Unit *target_unit = intent.targets[i];
+                event.trait_changes[i] += effect_params->amount;
+            }
+        }
+        else if(effect.type == EffectType::Gift)
+        {
+            EffectParams_Gift *effect_params = (EffectParams_Gift*)effect.params;
+            TraitSet base_gift_amount = effect_params->amount;
 
-			
-			for(int i=0; i<intent.targets.size; i++)
-			{
-				Unit *target_unit = intent.targets[i];
-				
-				
-				TraitSet adjusted_gift_amount = {};
-				for(int i=0; i<c::trait_count; i++)
-				{
-					adjusted_gift_amount[i] = m::Min(intent.caster->cur_traits[i], base_gift_amount[i]);
-				}
+            
+            for(int i=0; i<intent.targets.size; i++)
+            {
+                Unit *target_unit = intent.targets[i];
+                
+                
+                TraitSet adjusted_gift_amount = {};
+                for(int i=0; i<c::trait_count; i++)
+                {
+                    adjusted_gift_amount[i] = m::Min(intent.caster->cur_traits[i], base_gift_amount[i]);
+                }
 
-				event.trait_changes[caster_index] -= adjusted_gift_amount;
-				event.trait_changes[i] += adjusted_gift_amount;
-			}
-		}
-		else if(effect.type == EffectType::Steal)
-		{
-			EffectParams_Steal *effect_params = (EffectParams_Steal*)effect.params;
-			TraitSet base_steal_amount = effect_params->amount;
+                event.trait_changes[caster_index] -= adjusted_gift_amount;
+                event.trait_changes[i] += adjusted_gift_amount;
+            }
+        }
+        else if(effect.type == EffectType::Steal)
+        {
+            EffectParams_Steal *effect_params = (EffectParams_Steal*)effect.params;
+            TraitSet base_steal_amount = effect_params->amount;
 
-			
-			for(int i=0; i<intent.targets.size; i++)
-			{
-				Unit *target_unit = intent.targets[i];
-				
-				
-				TraitSet adjusted_steal_amount = {};
-				for(int i=0; i<c::trait_count; i++)
-				{
-					adjusted_steal_amount[i] = m::Min(target_unit->cur_traits[i], base_steal_amount[i]);
-				}
+            
+            for(int i=0; i<intent.targets.size; i++)
+            {
+                Unit *target_unit = intent.targets[i];
+                
+                
+                TraitSet adjusted_steal_amount = {};
+                for(int i=0; i<c::trait_count; i++)
+                {
+                    adjusted_steal_amount[i] = m::Min(target_unit->cur_traits[i], base_steal_amount[i]);
+                }
 
-				event.trait_changes[caster_index] += adjusted_steal_amount;
-				event.trait_changes[i] -= adjusted_steal_amount;
-			}
-		}
-	}
+                event.trait_changes[caster_index] += adjusted_steal_amount;
+                event.trait_changes[i] -= adjusted_steal_amount;
+            }
+        }
+    }
 
-	return event;
+    return event;
 }
 
 void
 ApplyBattleEvent(const BattleEvent *event)
 {
-	for(int i=0; i<(sizeof(event->battle->units)/sizeof(event->battle->units[0])); i++)
-	{
-		if(!ValidUnit(event->battle->units[i])) continue;
+    for(int i=0; i<(sizeof(event->battle->units)/sizeof(event->battle->units[0])); i++)
+    {
+        if(!ValidUnit(event->battle->units[i])) continue;
 
-		event->battle->units[i]->cur_traits += event->trait_changes[i];
-	}
+        event->battle->units[i]->cur_traits += event->trait_changes[i];
+    }
 }
 
 void
 DrawUnits(Battle *battle)
 {
-	BattleEvent preview_event = {};
-	if(battle->show_action_preview)
-	{
-		
-		GenerateBattlePreviewEvent(battle, battle->previewed_intent);
-	}
+    BattleEvent preview_event = {};
+    if(battle->show_action_preview)
+    {
+        
+        GenerateBattlePreviewEvent(battle, battle->previewed_intent);
+    }
 
-	for(int i=0; i<c::max_target_count; i++)
-	{
-		Unit *unit = battle->units[i];
-		if(unit == nullptr) continue;
-		if(!unit->init) continue;
+    for(int i=0; i<c::max_target_count; i++)
+    {
+        Unit *unit = battle->units[i];
+        if(unit == nullptr) continue;
+        if(!unit->init) continue;
 
-		
-		Color outline_color = c::black;
-		
-		
-		
-		
-		
-		
-		
-		
+        
+        Color outline_color = c::black;
+        
+        
+        
+        
+        
+        
+        
+        
 
-		Vec2f origin = battle->unit_slots[i];
+        Vec2f origin = battle->unit_slots[i];
 
-		
-		DrawUnfilledRect(origin, c::unit_slot_size, outline_color);
+        
+        DrawUnfilledRect(origin, c::unit_slot_size, outline_color);
 
-		
-		TextLayout unit_name_layout = c::def_text_layout;
-		unit_name_layout.font_size = 32;
-		unit_name_layout.align = c::align_topcenter;
-		Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name);
+        
+        TextLayout unit_name_layout = c::def_text_layout;
+        unit_name_layout.font_size = 32;
+        unit_name_layout.align = c::align_topcenter;
+        Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name);
 
-		
+        
 
-		
-		DrawTraitSetWithPreview(origin + Vec2f{0.f, name_size.y},
-								unit->cur_traits,
-								unit->max_traits,
-								unit->cur_traits+preview_event.trait_changes[i],
-								battle->preview_damage_timer.cur);
+        
+        DrawTraitSetWithPreview(origin + Vec2f{0.f, name_size.y},
+                                unit->cur_traits,
+                                unit->max_traits,
+                                unit->cur_traits+preview_event.trait_changes[i],
+                                battle->preview_damage_timer.cur);
 
-		DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
-				 "AP: %d", unit->cur_action_points);
-	}
+        DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
+                 "AP: %d", unit->cur_action_points);
+    }
 }
 
 void
 DrawTargetingInfo(Battle *battle)
 {
-	
-	
-	
-	
-	
+    
+    
+    
+    
+    
 
-	TextLayout target_indication_layout = c::def_text_layout;
-	target_indication_layout.font_size = 16;
-	target_indication_layout.align = c::align_bottomcenter;
+    TextLayout target_indication_layout = c::def_text_layout;
+    target_indication_layout.font_size = 16;
+    target_indication_layout.align = c::align_bottomcenter;
 
-	TargetSet target_set = {};
-	
-	
-	
-	
-	
+    UnitSet target_set = {};
+    
+    
+    
+    
+    
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-	
-	for(int i=0; i<c::max_target_count; i++)
-	{
-		Unit *unit = battle->units[i];
-		if(unit == nullptr) continue;
-		if(!unit->init) continue;
-		if(!UnitInTargetSet(unit, target_set)) continue;
+    
+    for(int i=0; i<c::max_target_count; i++)
+    {
+        Unit *unit = battle->units[i];
+        if(unit == nullptr) continue;
+        if(!unit->init) continue;
+        if(!UnitInUnitSet(unit, target_set)) continue;
 
-		Vec2f origin = battle->unit_slots[i];
-		DrawText(target_indication_layout,
-				 origin + Vec2f{0.5f*c::unit_slot_size.x, 0.f},
-				 "TARGET");
-	}
+        Vec2f origin = battle->unit_slots[i];
+        DrawText(target_indication_layout,
+                 origin + Vec2f{0.5f*c::unit_slot_size.x, 0.f},
+                 "TARGET");
+    }
 }
 
-TargetSet
-AllBattleUnitsAsTargetSet(Battle *battle)
+UnitSet
+AllBattleUnitsAsUnitSet(Battle *battle)
 {
-	TargetSet target_set = {};
-	target_set.size = c::max_target_count;
-	for(int i=0; i<c::max_target_count; i++)
-	{
-		target_set.units[i] = battle->units[i];
-	}
+    UnitSet target_set = {};
+    target_set.size = c::max_target_count;
+    for(int i=0; i<c::max_target_count; i++)
+    {
+        target_set.units[i] = battle->units[i];
+    }
 
-	return target_set;
+    return target_set;
 }
 
 void
 DrawUnitHudData(Battle *battle)
 {
-	Unit *unit = battle->selected_unit;
+    Unit *unit = battle->selected_unit;
 
-	if(unit == nullptr) return; 
-	if(!unit->init) return;		
+    if(unit == nullptr) return; 
+    if(!unit->init) return;     
 
-	
-	float bottom_offset = 225.f;
-	Vec2f pen = battle->hud.pos;
-	DrawFilledRect(battle->hud, c::dk_grey);
-	DrawLine(pen, pen+Vec2f{battle->hud.size.x, 0.f}, c::white);
+    
+    float bottom_offset = 225.f;
+    Vec2f pen = battle->hud.pos;
+    DrawFilledRect(battle->hud, c::dk_grey);
+    DrawLine(pen, pen+Vec2f{battle->hud.size.x, 0.f}, c::white);
 
-	
-	float left_padding = 20.f;
-	float top_padding = 10.f;
-	pen.x += left_padding;
-	pen.y += top_padding;
+    
+    float left_padding = 20.f;
+    float top_padding = 10.f;
+    pen.x += left_padding;
+    pen.y += top_padding;
 
-	TextLayout name_layout = c::def_text_layout;
-	name_layout.font_size = 32;
-	pen.y += DrawText(name_layout, pen, unit->name).y;
+    TextLayout name_layout = c::def_text_layout;
+    name_layout.font_size = 32;
+    pen.y += DrawText(name_layout, pen, unit->name).y;
 
-	
-	TextLayout trait_layout = c::def_text_layout;
-	trait_layout.font_size = 32;
-	float name_trait_padding = 20.f;
-	pen.y += name_trait_padding;
-	pen.y += DrawText(trait_layout, pen, "Vigor: %d/%d",
-							unit->cur_traits.vigor, unit->max_traits.vigor).y;
-	pen.y += DrawText(trait_layout, pen, "Focus: %d/%d",
-							unit->cur_traits.focus, unit->max_traits.focus).y;
-	pen.y += DrawText(trait_layout, pen, "Armor: %d/%d",
-							unit->cur_traits.armor, unit->max_traits.armor).y;
+    
+    TextLayout trait_layout = c::def_text_layout;
+    trait_layout.font_size = 32;
+    float name_trait_padding = 20.f;
+    pen.y += name_trait_padding;
+    pen.y += DrawText(trait_layout, pen, "Vigor: %d/%d",
+                            unit->cur_traits.vigor, unit->max_traits.vigor).y;
+    pen.y += DrawText(trait_layout, pen, "Focus: %d/%d",
+                            unit->cur_traits.focus, unit->max_traits.focus).y;
+    pen.y += DrawText(trait_layout, pen, "Armor: %d/%d",
+                            unit->cur_traits.armor, unit->max_traits.armor).y;
 
-	
-	ImguiContainer container = c::def_ui_container;
-	container.pos = battle->hud.pos + c::hud_ability_buttons_offset;
-	SetActiveContainer(&container);
+    
+    ImguiContainer container = c::def_ui_container;
+    container.pos = battle->hud.pos + c::hud_ability_buttons_offset;
+    SetActiveContainer(&container);
 
-	for(int i=0; i<c::moveset_max_size; i++)
-	{
-		Ability *ability = &unit->abilities[i];
-		if(!ability || !ability->init) continue;
+    for(int i=0; i<c::moveset_max_size; i++)
+    {
+        Ability *ability = &unit->abilities[i];
+        if(!ability || !ability->init) continue;
 
-		Rect button_rect = GetAbilityHudButtonRect(*battle, i);
+        Rect button_rect = GetAbilityHudButtonRect(*battle, i);
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
 }
 
 
@@ -70479,469 +70665,484 @@ DrawUnitHudData(Battle *battle)
 
 
 void
-InitiateBattle(Battle *battle)
+InitiateBattle(Battle *battle, UnitSet battle_units)
 {
-	
-	battle->preview_damage_timer = {};
-	battle->preview_damage_timer.max = 1.f;
-	battle->preview_damage_timer.speed = 0.02f;
+    
+    battle->preview_damage_timer = {};
+    battle->preview_damage_timer.max = 1.f;
+    battle->preview_damage_timer.speed = 0.02f;
 
-	battle->end_button_clicked_timer = {};
-	battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
+    battle->end_button_clicked_timer = {};
+    battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
 
-	
-	for(Unit *unit : battle->units)
-	{
-		if(!unit || !unit->init) continue;
-		unit->cur_action_points = unit->max_action_points;
-	}
+    battle->units = battle_units;
+
+    
+    for(Unit *unit : battle->units)
+    {
+        if(!unit || !unit->init) continue;
+        unit->cur_action_points = unit->max_action_points;
+    }
 
 
 
-	
-	battle->is_player_turn = true;
+    
+    battle->is_player_turn = true;
 }
 
 void
 UpdateHoveredUnit(Battle *battle)
 {
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 void
 UpdateHoveredAbility(Battle *battle)
 {
-	
+    
 
-	
-	
-	
-	
+    
+    
+    
+    
 
-	
-	
-	
-	
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    
 }
 
 void
 DrawAbilityInfoBox(Vec2f pos, const Ability *ability, Align align = c::align_topleft)
 {
-	if(!ValidAbility(ability)) return;
+    if(!ValidAbility(ability)) return;
 
-	Rect infobox_aligned_rect = AlignRect({pos, c::ability_info_box_size}, align);
-	Vec2f pen = infobox_aligned_rect.pos;
-	DrawFilledRect(infobox_aligned_rect, c::ability_info_bg_color);
-	DrawUnfilledRect(infobox_aligned_rect, c::white);
+    Rect infobox_aligned_rect = AlignRect({pos, c::ability_info_box_size}, align);
+    Vec2f pen = infobox_aligned_rect.pos;
+    DrawFilledRect(infobox_aligned_rect, c::ability_info_bg_color);
+    DrawUnfilledRect(infobox_aligned_rect, c::white);
 
-	TextLayout layout = c::def_text_layout;
-	layout.align = c::align_topleft;
-	Vec2f name_text_size = DrawText(layout, RectTopLeft(infobox_aligned_rect), ability->name);
-	
+    TextLayout layout = c::def_text_layout;
+    layout.align = c::align_topleft;
+    Vec2f name_text_size = DrawText(layout, RectTopLeft(infobox_aligned_rect), ability->name);
+    
 
 
-	
-	
-	
-	
+    
+    
+    
+    
 
-	pen.y += name_text_size.y;
-	DrawLine(pen, pen + Vec2f{c::ability_info_box_size.x, 0.f});
+    pen.y += name_text_size.y;
+    DrawLine(pen, pen + Vec2f{c::ability_info_box_size.x, 0.f});
 
-	for(int i=0; i<(sizeof(ability->tiers)/sizeof(ability->tiers[0])); i++)
-	{
-		pen.y += DrawText(c::small_text_layout, pen,
-						  "%d: %s",
-						  i, GenerateAbilityTierText(&ability->tiers[i])).y;
-	}
+    for(int i=0; i<(sizeof(ability->tiers)/sizeof(ability->tiers[0])); i++)
+    {
+        pen.y += DrawText(c::small_text_layout, pen,
+                          "%d: %s",
+                          i, GenerateAbilityTierText(&ability->tiers[i])).y;
+    }
 }
 
 void
 DrawEnemyIntents(Battle *battle)
 {
-	for(int i=0; i<c::max_target_count; i++)
-	{
-		Unit *unit = battle->units[i];
-		if(!unit || !unit->init || unit->team != Team::enemies) continue;
+    for(int i=0; i<c::max_target_count; i++)
+    {
+        Unit *unit = battle->units[i];
+        if(!unit || !unit->init || unit->team != Team::enemies) continue;
 
-		Intent intent = battle->intents[i];
-		if(!intent.caster || !intent.caster->init || !intent.ability || !intent.ability->init) continue;
+        Intent intent = battle->intents[i];
+        if(!intent.caster || !intent.caster->init || !intent.ability || !intent.ability->init) continue;
 
-		ButtonResponse response =
-			DrawButton(c::enemy_intent_button_layout,
-					   {battle->unit_slots[i]+c::enemy_intent_offset, c::enemy_intent_button_size},
-					   "(%s)", intent.ability->name);
+        ButtonResponse response =
+            DrawButton(c::enemy_intent_button_layout,
+                       {battle->unit_slots[i]+c::enemy_intent_offset, c::enemy_intent_button_size},
+                       intent.ability->name);
 
-		if(response.hovered)
-		{
-			battle->show_action_preview = true;
-			battle->previewed_intent = intent;
+        if(response.hovered)
+        {
+            battle->show_action_preview = true;
+            battle->previewed_intent = intent;
 
-			
-		}
-	}
+            
+        }
+    }
 }
 
 void
 UpdateBattle(Battle *battle)
 {
-	{ 
-		
-		if(Pressed(vk::num1))
-		{
-			battle->selected_unit = battle->units[0];
-			battle->selected_ability = nullptr;
-		}
-		if(Pressed(vk::num2))
-		{
-			battle->selected_unit = battle->units[1];
-			battle->selected_ability = nullptr;
-		}
-		if(Pressed(vk::num3))
-		{
-			battle->selected_unit = battle->units[2];
-			battle->selected_ability = nullptr;
-		}
-		if(Pressed(vk::num4))
-		{
-			battle->selected_unit = battle->units[3];
-			battle->selected_ability = nullptr;
-		}
+    { 
+        
+        if(Pressed(vk::num1))
+        {
+            battle->selected_unit = battle->units[0];
+            battle->selected_ability = nullptr;
+        }
+        if(Pressed(vk::num2))
+        {
+            battle->selected_unit = battle->units[1];
+            battle->selected_ability = nullptr;
+        }
+        if(Pressed(vk::num3))
+        {
+            battle->selected_unit = battle->units[2];
+            battle->selected_ability = nullptr;
+        }
+        if(Pressed(vk::num4))
+        {
+            battle->selected_unit = battle->units[3];
+            battle->selected_ability = nullptr;
+        }
 
-		
-		if(Pressed(vk::tab))
-		{
-			
-			int selected_unit_index = -1;
-			for(int i=0; i<c::max_target_count; i++)
-			{
-				Unit *unit = battle->units[i];
-				if(!unit || !unit->init) continue;
+        
+        if(Pressed(vk::tab))
+        {
+            
+            int selected_unit_index = -1;
+            for(int i=0; i<c::max_target_count; i++)
+            {
+                Unit *unit = battle->units[i];
+                if(!unit || !unit->init) continue;
 
-				if(unit == battle->selected_unit) selected_unit_index = i;
-			}
+                if(unit == battle->selected_unit) selected_unit_index = i;
+            }
 
-			if(selected_unit_index == -1)
-			{
-				
-				battle->selected_unit = battle->units[0];
-			}
-			else
-			{
-				
-				battle->selected_unit = battle->units[(selected_unit_index+1) % c::max_party_size];
-				battle->selected_ability;
-			}
-		}
+            if(selected_unit_index == -1)
+            {
+                
+                battle->selected_unit = battle->units[0];
+            }
+            else
+            {
+                
+                battle->selected_unit = battle->units[(selected_unit_index+1) % c::max_party_size];
+                battle->selected_ability;
+            }
+        }
 
-		
-		if(ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0)
-		{
-			if(Pressed(vk::q))
-			{
-				Ability *ability = &battle->selected_unit->abilities[0];
-				if(ability->init)
-				{
-					battle->selected_ability = ability;
-				}
-			}
-			if(Pressed(vk::w))
-			{
-				Ability *ability = &battle->selected_unit->abilities[1];
-				if(ability->init)
-				{
-					battle->selected_ability = ability;
-				}
-			}
-			if(Pressed(vk::e))
-			{
-				Ability *ability = &battle->selected_unit->abilities[2];
-				if(ability->init)
-				{
-					battle->selected_ability = ability;
-				}
-			}
-			if(Pressed(vk::r))
-			{
-				Ability *ability = &battle->selected_unit->abilities[3];
-				if(ability->init)
-				{
-					battle->selected_ability = ability;
-				}
-			}
-		}
-	}
+        
+        if(ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0)
+        {
+            if(Pressed(vk::q))
+            {
+                Ability *ability = &battle->selected_unit->abilities[0];
+                if(ability->init)
+                {
+                    battle->selected_ability = ability;
+                }
+            }
+            if(Pressed(vk::w))
+            {
+                Ability *ability = &battle->selected_unit->abilities[1];
+                if(ability->init)
+                {
+                    battle->selected_ability = ability;
+                }
+            }
+            if(Pressed(vk::e))
+            {
+                Ability *ability = &battle->selected_unit->abilities[2];
+                if(ability->init)
+                {
+                    battle->selected_ability = ability;
+                }
+            }
+            if(Pressed(vk::r))
+            {
+                Ability *ability = &battle->selected_unit->abilities[3];
+                if(ability->init)
+                {
+                    battle->selected_ability = ability;
+                }
+            }
+        }
+    }
 
-	Ability *hovered_ability = nullptr;
-	{ 
-		if(ValidUnit(battle->selected_unit))
-		{ 
+    Ability *hovered_ability = nullptr;
+    { 
+        if(ValidUnit(battle->selected_unit))
+        { 
 
-			Vec2f pen = battle->hud.pos;
-			SetDrawDepth(c::hud_draw_depth);
+            Vec2f pen = battle->hud.pos;
+            SetDrawDepth(c::hud_draw_depth);
 
-			
-			DrawFilledRect(battle->hud, c::dk_grey);
-			DrawLine(pen, pen+Vec2f{battle->hud.size.x, 0.f}, c::white);
+            
+            DrawFilledRect(battle->hud, c::dk_grey);
+            DrawLine(pen, pen+Vec2f{battle->hud.size.x, 0.f}, c::white);
 
-			
-			pen += c::hud_unit_name_offset;
-			pen.y += DrawText(c::def_text_layout, pen, battle->selected_unit->name).y;
+            
+            pen += c::hud_unit_name_offset;
+            pen.y += DrawText(c::def_text_layout, pen, battle->selected_unit->name).y;
 
-			
-			pen.y += DrawText(c::def_text_layout, pen, "Vigor: %d/%d",
-									battle->selected_unit->cur_traits.vigor, battle->selected_unit->max_traits.vigor).y;
-			pen.y += DrawText(c::def_text_layout, pen, "Focus: %d/%d",
-									battle->selected_unit->cur_traits.focus, battle->selected_unit->max_traits.focus).y;
-			pen.y += DrawText(c::def_text_layout, pen, "Armor: %d/%d",
-									battle->selected_unit->cur_traits.armor, battle->selected_unit->max_traits.armor).y;
-
-
-
-			
-			for(int i=0; i<(sizeof(battle->selected_unit->abilities)/sizeof(battle->selected_unit->abilities[0])); i++)
-			{ 
-
-				
-				Ability *ability = &battle->selected_unit->abilities[i];
-				if(!ValidAbility(ability)) continue;
-
-				Rect ability_button_rect = GetAbilityHudButtonRect(*battle, i);
-
-				
-				if(PointInRect(ability_button_rect, MousePos()))
-				{
-					hovered_ability = ability;
-				}
-
-				
-				if(battle->selected_ability == ability)
-				{ 
-					DrawButton(c::selected_ability_button_layout, ability_button_rect, "%s", ability->name);
-				}
-				else
-				{ 
-					
-					
-					DrawButton(c::unselected_ability_button_layout, ability_button_rect, "%s", ability->name);
-				}
-			}
-
-			
-			
-			
-			
-			
-			if(hovered_ability)
-			{
-				DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset, hovered_ability, c::align_topleft);
-			}
-			else if(battle->selected_ability)
-			{
-				DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset, battle->selected_ability, c::align_topleft);
-			}
-		}
-	}
-
-	Unit *hovered_unit = nullptr;
-	{ 
-		for(int i=0; i<c::max_target_count; i++)
-		{
-			if(PointInRect(Rect{battle->unit_slots[i], c::unit_slot_size}, MousePos()))
-			{
-				if(ValidUnit(battle->units[i]))
-				{
-					hovered_unit = battle->units[i];
-				}
-
-				break;
-			}
-		}
-	}
-
-	TargetSet hovered_ability_valid_target_set = {};
-	TargetSet selected_ability_valid_target_set = {};
-	{ 
-		TargetSet all_units = AllBattleUnitsAsTargetSet(battle);
-
-
-	}
-
-	Intent player_intent = {};
-	{ 
-		
-		
-
-		TargetSet all_units = AllBattleUnitsAsTargetSet(battle);
-		player_intent.caster = battle->selected_unit;
-		player_intent.ability = battle->selected_ability;
-		
-		
-	}
-
-	{ 
-		if(battle->is_player_turn)
-		{
-			if(battle->ending_player_turn)
-			{ 
-				DrawButton(c::end_button_clicked_layout, c::end_turn_button_rect, "End Turn");
-			}
-			else
-			{
-				
-				ButtonResponse response = DrawButton(c::end_button_normal_layout, c::end_turn_button_rect, "End Turn");
-				if(response.pressed)
-				{
-					
-					battle->ending_player_turn = true;
-					Reset(&battle->end_button_clicked_timer);
-				}
-			}
-		}
-		else
-		{ 
-			DrawButton(c::end_button_disabled_layout, c::end_turn_button_rect, "End Turn");
-		}
-	}
-
-	{ 
-		if(Pressed(vk::LMB))
-		{
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-
-			if(ValidAbility(hovered_ability) && ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0)
-			{
-				battle->selected_ability = hovered_ability;
-			}
-			else if(ValidUnit(hovered_unit) && !battle->selected_ability)
-			{ 
-				
-				
-				
-				battle->selected_unit = hovered_unit;
-			}
-			else if(ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0 && player_intent.targets.size > 0)
-			{ 
-
-				
-				BattleEvent event = GenerateBattlePreviewEvent(battle, player_intent);
-				ApplyBattleEvent(&event);
-
-				
-				
-				battle->selected_unit->cur_action_points -= 1;
-				battle->selected_ability = {};
-				selected_ability_valid_target_set = {};
-				player_intent = {};
-			}
-		}
-	}
-
-	
-	{
-		battle->show_action_preview = false;
-	}
-
-	
+            
+            pen.y += DrawText(c::def_text_layout, pen, "Vigor: %d/%d",
+                                    battle->selected_unit->cur_traits.vigor, battle->selected_unit->max_traits.vigor).y;
+            pen.y += DrawText(c::def_text_layout, pen, "Focus: %d/%d",
+                                    battle->selected_unit->cur_traits.focus, battle->selected_unit->max_traits.focus).y;
+            pen.y += DrawText(c::def_text_layout, pen, "Armor: %d/%d",
+                                    battle->selected_unit->cur_traits.armor, battle->selected_unit->max_traits.armor).y;
 
 
 
+            
+            for(int i=0; i<(sizeof(battle->selected_unit->abilities)/sizeof(battle->selected_unit->abilities[0])); i++)
+            { 
 
-	
-	
-	
-	
-	
-	
-	
+                
+                Ability *ability = &battle->selected_unit->abilities[i];
+                if(!ValidAbility(ability)) continue;
 
-	
-	
-	
-	
-	
-	
-	
-	
+                Rect ability_button_rect = GetAbilityHudButtonRect(*battle, i);
 
-	
+                
+                if(PointInRect(ability_button_rect, MousePos()))
+                {
+                    hovered_ability = ability;
+                }
+
+                
+                if(battle->selected_ability == ability)
+                { 
+                    DrawButton(c::selected_ability_button_layout, ability_button_rect, ability->name);
+                }
+                else
+                { 
+                    
+                    
+                    DrawButton(c::unselected_ability_button_layout, ability_button_rect, ability->name);
+                }
+            }
+
+            
+            
+            
+            
+            
+            if(hovered_ability)
+            {
+                DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset, hovered_ability, c::align_topleft);
+            }
+            else if(battle->selected_ability)
+            {
+                DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset, battle->selected_ability, c::align_topleft);
+            }
+        }
+    }
+
+    Unit *hovered_unit = nullptr;
+    { 
+        for(int i=0; i<c::max_target_count; i++)
+        {
+            if(PointInRect(Rect{battle->unit_slots[i], c::unit_slot_size}, MousePos()))
+            {
+                if(ValidUnit(battle->units[i]))
+                {
+                    hovered_unit = battle->units[i];
+                }
+
+                break;
+            }
+        }
+    }
+
+    UnitSet hovered_ability_valid_target_set = {};
+    UnitSet selected_ability_valid_target_set = {};
+    { 
+        UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
+
+
+    }
+
+    Intent player_intent = {};
+    { 
+        
+        
+
+        UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
+        player_intent.caster = battle->selected_unit;
+        player_intent.ability = battle->selected_ability;
+        
+        
+    }
+
+    { 
+        if(battle->is_player_turn)
+        {
+            if(battle->ending_player_turn)
+            { 
+                DrawButton(c::end_button_clicked_layout, c::end_turn_button_rect, "End Turn");
+            }
+            else
+            {
+                
+                ButtonResponse response = DrawButton(c::end_button_normal_layout, c::end_turn_button_rect, "End Turn");
+                if(response.pressed)
+                {
+                    
+                    battle->ending_player_turn = true;
+                    Reset(&battle->end_button_clicked_timer);
+                }
+            }
+        }
+        else
+        { 
+            DrawButton(c::end_button_disabled_layout, c::end_turn_button_rect, "End Turn");
+        }
+    }
+
+    { 
+        if(Pressed(vk::LMB))
+        {
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+            if(ValidAbility(hovered_ability) && ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0)
+            {
+                battle->selected_ability = hovered_ability;
+            }
+            else if(ValidUnit(hovered_unit) && !battle->selected_ability)
+            { 
+                
+                
+                
+                battle->selected_unit = hovered_unit;
+            }
+            else if(ValidUnit(battle->selected_unit) && battle->selected_unit->cur_action_points > 0 && player_intent.targets.size > 0)
+            { 
+
+                
+                BattleEvent event = GenerateBattlePreviewEvent(battle, player_intent);
+                ApplyBattleEvent(&event);
+
+                
+                
+                battle->selected_unit->cur_action_points -= 1;
+                battle->selected_ability = {};
+                selected_ability_valid_target_set = {};
+                player_intent = {};
+            }
+        }
+    }
+
+    
+    {
+        battle->show_action_preview = false;
+    }
+
+    
+
+    
+    {
+        for(int i=0; i<(sizeof(battle->units)/sizeof(battle->units[0])); i++)
+        {
+            Unit *unit = battle->units[i];
+            if(!ValidUnit(unit)) continue;
+
+            Vec2f origin = battle->unit_slots[i];
+
+            DrawUnfilledRect(origin, c::unit_slot_size, c::green);
+
+        }
+    }
 
 
 
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    
 
-	
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    
+    
 
-	
-	
+    
 
-	
-	
 
-	
-	
-	
-	
-	
-	
 
-	
-	
+    
+    
+    
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+    
+    
+    
+    
 
-	
-	
+    
+    
 
-	
-	
-	
-	
-	
-	
+    
+    
 
-	
+    
+    
+    
+    
+    
+    
 
-	
-	
-	
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+    
+    
 }
 #line 42 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\unit.cpp"
@@ -70950,19 +71151,19 @@ UpdateBattle(Battle *battle)
 
 
 
-Unit *TargetSet::operator[](int index)
+Unit *UnitSet::operator[](int index)
 {
 	if(index < 0 || index >= size) return nullptr;
 
 	return units[index];
 }
 
-Unit **begin(TargetSet &target_set)
+Unit **begin(UnitSet &target_set)
 {
 	return target_set.units;
 }
 
-Unit **end(TargetSet &target_set)
+Unit **end(UnitSet &target_set)
 {
 	return target_set.units + (target_set.size);
 }
@@ -70970,7 +71171,7 @@ Unit **end(TargetSet &target_set)
 
 
 bool
-ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, DataTable ability_table)
+ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Table<Ability> ability_table)
 {
 	if(!buffer || !unit_schematic) return false;
 
@@ -70979,7 +71180,7 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 	UnitSchematic temp_unit_schematic = {};
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		temp_unit_schematic.ability_table_indices[i] = -1; 
+		temp_unit_schematic.ability_table_indices[i] = c::null_ability_index;
 	}
 
 	bool header_valid = ConfirmNextToken(buffer, "unit");
@@ -71022,9 +71223,9 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 				Token ability_name_token;
 				if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))
 				{
-					temp_unit_schematic.ability_table_indices[i] = GetIndexByName<Ability>(ability_table, ability_name_token.start);
+					temp_unit_schematic.ability_table_indices[i] = GetIndexByName(ability_table, StringFromToken(ability_name_token));
 
-					if(temp_unit_schematic.ability_table_indices[i] == -1)
+					if(temp_unit_schematic.ability_table_indices[i] == c::null_ability_index)
 					{
 						
 						
@@ -71047,7 +71248,9 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 	if(valid_unit_data)
 	{
 		*unit_schematic = temp_unit_schematic;
-		CopyString(unit_schematic->name, name_token.start, m::Min(sizeof(unit_schematic->name), name_token.length+1));
+		unit_schematic->name = StringFromToken(name_token, &memory::permanent_arena);
+		
+		
 
 		return true;
 	}
@@ -71063,7 +71266,7 @@ ParseNextAsUnitSchematicData(Buffer *buffer, UnitSchematic *unit_schematic, Data
 }
 
 bool
-LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, DataTable ability_table)
+LoadUnitSchematicFile(const char *filename, Table<UnitSchematic> *unit_schematic_table, Table<Ability> ability_table)
 {
 	if(!filename || !unit_schematic_table) return false;
 
@@ -71078,21 +71281,20 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 		bool found_unit = SeekNextLineThatBeginsWith(&file, "unit");
 		if(!found_unit) break;
 
-		if(DataTableEntriesRemaining(*unit_schematic_table) >= 1)
+		UnitSchematic temp_unit_schematic = {};
+		if(ParseNextAsUnitSchematicData(&file, &temp_unit_schematic, ability_table))
 		{
-			UnitSchematic temp_unit_schematic = {};
-			if(ParseNextAsUnitSchematicData(&file, &temp_unit_schematic, ability_table))
-			{
-				UnitSchematic *unit_schematic = (UnitSchematic*)CreateEntry(unit_schematic_table);
-				*unit_schematic = temp_unit_schematic;
-				unit_schematic->init = true;
-				unit_count_loaded += 1;
-			}
-			else
-			{
-				++file.p;
-				continue;
-			}
+			UnitSchematic *unit_schematic = (UnitSchematic*)CreateEntry(unit_schematic_table);
+			if(unit_schematic == nullptr) break;
+
+			*unit_schematic = temp_unit_schematic;
+			unit_schematic->init = true;
+			++unit_count_loaded;
+		}
+		else
+		{
+			++file.p;
+			continue;
 		}
 	}
 
@@ -71104,26 +71306,34 @@ LoadUnitSchematicFile(const char *filename, DataTable *unit_schematic_table, Dat
 	return true;
 }
 
+UnitSchematic *
+GetSchematicByGenerationalIndex(TableIndex<UnitSchematic> index)
+{
+	return GetEntryByGenerationalIndex(g::unit_schematic_table, index);
+}
+
 
 
 Unit *
-CreateUnit(int schematic_index, Team team)
+CreateUnit(TableIndex<UnitSchematic> schematic_index, Team team)
 {
-	DataTable ability_table = g::ability_table;
+	
 
-	UnitSchematic *schematic = (UnitSchematic*)g::unit_schematic_table[schematic_index];
+	UnitSchematic *schematic = GetSchematicByGenerationalIndex(schematic_index);
 	if(schematic == nullptr) return nullptr;
 	if(!schematic->init) return nullptr; 
 
 	Unit *unit = (Unit*)CreateEntry(&g::unit_table);
-	CopyString(unit->name, schematic->name, sizeof(unit->name));
+	unit->name = CopyString(schematic->name, &memory::permanent_arena);
+	
 	unit->team = team;
 	unit->max_traits = schematic->max_traits;
 	unit->cur_traits = schematic->max_traits;
 	for(int i=0; i<c::moveset_max_size; i++)
 	{
-		Ability *ability = (Ability*)g::ability_table[schematic->ability_table_indices[i]];
+		Ability *ability = GetAbilityByGenerationalIndex(schematic->ability_table_indices[i]);
 		if(ability == nullptr) continue;
+
 		unit->abilities[i] = *ability;
 	}
 	unit->cur_action_points = 0;
@@ -71134,11 +71344,9 @@ CreateUnit(int schematic_index, Team team)
 }
 
 Unit *
-CreateUnitByName(const char *name, Team team)
+CreateUnitByName(String name, Team team)
 {
-	if(!name) return nullptr;
-
-	int index = GetIndexByName<UnitSchematic>(g::unit_schematic_table, name);
+	TableIndex index = GetIndexByName(g::unit_schematic_table, name);
 	return CreateUnit(index, team);
 }
 
@@ -71193,45 +71401,65 @@ CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 	return false;
 }
 
-TargetSet
-GenerateValidTargetSet(Unit *caster, Effect *effect, TargetSet all_targets)
+UnitSet
+CombineUnitSets(const UnitSet *a, const UnitSet *b)
 {
-	if(!ValidUnit(caster)) return TargetSet{};
+	UnitSet combined = {};
+	for(int i=0; i<a->size; i++)
+	{
+		AddUnitToUnitSet(a->units[i], &combined);
+	}
 
-	TargetSet valid_targets = {};
+	for(int i=0; i<b->size; i++)
+	{
+		if(!UnitInUnitSet(b->units[i], *a))
+		{
+			AddUnitToUnitSet(b->units[i], &combined);
+		}
+	}
+
+	return combined;
+}
+
+UnitSet
+GenerateValidUnitSet(Unit *caster, Effect *effect, UnitSet all_targets)
+{
+	if(!ValidUnit(caster)) return UnitSet{};
+
+	UnitSet valid_targets = {};
 	for(Unit *target : all_targets)
 	{
 		if(CheckValidEffectTarget(caster, target, effect))
 		{
-			AddUnitToTargetSet(target, &valid_targets);
+			AddUnitToUnitSet(target, &valid_targets);
 		}
 	}
 
 	return valid_targets;
 }
 
-TargetSet
-GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, TargetSet all_targets)
+UnitSet
+GenerateInferredUnitSet(Unit *caster, Unit *selected_target, Effect *effect, UnitSet all_targets)
 {
-	TimedBlock (timed_block_entry269)(20, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 269);
+	TimedBlock (timed_block_entry296)(22, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 296);
 
-	if(!ValidUnit(caster) || !ValidUnit(selected_target)) return TargetSet{};
+	if(!ValidUnit(caster) || !ValidUnit(selected_target)) return UnitSet{};
 
 	
 	if(!CheckValidEffectTarget(caster, selected_target, effect))
 	{
-		return TargetSet{};
+		return UnitSet{};
 	}
 
 	
-	TargetSet all_targets_clean = {};
+	UnitSet all_targets_clean = {};
 	for(Unit *unit : all_targets)
 	{
 		if(!ValidUnit(unit)) continue;
-		AddUnitToTargetSet(unit, &all_targets_clean);
+		AddUnitToUnitSet(unit, &all_targets_clean);
 	}
 
-	TargetSet inferred_target_set = {};
+	UnitSet inferred_target_set = {};
 	TargetClass tc = effect->target_class;
 	if(tc == TargetClass::all_allies)
 	{
@@ -71240,7 +71468,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit->team == caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -71251,7 +71479,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit != caster && unit->team == caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -71260,7 +71488,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		
 		if(selected_target->team == caster->team && selected_target != caster)
 		{
-			AddUnitToTargetSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::single_unit_not_self)
@@ -71268,7 +71496,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		
 		if(selected_target != caster)
 		{
-			AddUnitToTargetSet(selected_target, &inferred_target_set);
+			AddUnitToUnitSet(selected_target, &inferred_target_set);
 		}
 	}
 	else if(tc == TargetClass::all_enemies)
@@ -71278,7 +71506,7 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		{
 			if(unit->team != caster->team)
 			{
-				AddUnitToTargetSet(unit, &inferred_target_set);
+				AddUnitToUnitSet(unit, &inferred_target_set);
 			}
 		}
 	}
@@ -71294,14 +71522,14 @@ GenerateInferredTargetSet(Unit *caster, Unit *selected_target, Effect *effect, T
 		
 		
 
-		AddUnitToTargetSet(selected_target, &inferred_target_set);
+		AddUnitToUnitSet(selected_target, &inferred_target_set);
 	}
 
 	return inferred_target_set;
 }
 
 bool
-UnitInTargetSet(Unit *unit, TargetSet target_set)
+UnitInUnitSet(Unit *unit, UnitSet target_set)
 {
 	if(!unit) return false;
 	if(!unit->init) return false;
@@ -71315,7 +71543,7 @@ UnitInTargetSet(Unit *unit, TargetSet target_set)
 }
 
 void
-AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
+AddUnitToUnitSet(Unit *unit, UnitSet *target_set)
 {
 	if(!ValidUnit(unit) || !target_set) return;
 
@@ -71323,7 +71551,7 @@ AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 	if(target_set->size >= c::max_target_count) return;
 
 	
-	if(UnitInTargetSet(unit, *target_set)) return;
+	if(UnitInUnitSet(unit, *target_set)) return;
 
 	
 	target_set->units[target_set->size++] = unit;
@@ -71332,7 +71560,7 @@ AddUnitToTargetSet(Unit *unit, TargetSet *target_set)
 Vec2f
 DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer)
 {
-	TimedBlock (timed_block_entry388)(21, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 388);
+	TimedBlock (timed_block_entry415)(23, "D:\\work\\programming\\color-c\\src\\unit.cpp",  __FUNCTION__  , 415);
 
 	const Rect bar_rect = {pos, c::trait_bar_size};
 
@@ -71982,7 +72210,9 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 		else if(TokenMatchesString(token, "tier"))
 		{
 			valid_ability_data = ParseNextAsS32(buffer, &cur_tier);
+			temp_ability.tiers[cur_tier].init = true;
 			cur_effect_index = 0;
+
 			if(cur_tier < 0 || cur_tier >= c::max_ability_tier_count)
 			{
 				valid_ability_data = false;
@@ -72076,7 +72306,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 }
 
 bool
-LoadAbilityFile(const char *filename, DataTable *table)
+LoadAbilityFile(const char *filename, Table<Ability> *table)
 {
 	if(!filename || !table) return false;
 
@@ -72091,20 +72321,19 @@ LoadAbilityFile(const char *filename, DataTable *table)
 		bool found_ability = SeekNextLineThatBeginsWith(&file, "ability");
 		if(!found_ability) break;
 
-		if(DataTableEntriesRemaining(*table) >= 1)
+		Ability temp_ability = {};
+		if(ParseNextAsAbilityData(&file, &temp_ability))
 		{
-			Ability temp_ability = {};
-			if(ParseNextAsAbilityData(&file, &temp_ability))
-			{
-				Ability *ability = (Ability*)CreateEntry(table);
-				*ability = temp_ability;
-				ability->init = true;
-				++ability_count_loaded;
-			}
-			else
-			{
-				continue;
-			}
+			Ability *ability = CreateEntry(table);
+			if(ability == nullptr) break;
+
+			*ability = temp_ability;
+			ability->init = true;
+			++ability_count_loaded;
+		}
+		else
+		{
+			continue;
 		}
 	}
 
@@ -72116,7 +72345,7 @@ LoadAbilityFile(const char *filename, DataTable *table)
 char *
 GenerateAbilityTierText(const AbilityTier *tier)
 {
-	TimedBlock (timed_block_entry176)(22, "D:\\work\\programming\\color-c\\src\\ability.cpp",  __FUNCTION__  , 176);
+	TimedBlock (timed_block_entry177)(24, "D:\\work\\programming\\color-c\\src\\ability.cpp",  __FUNCTION__  , 177);
 
 	Buffer buffer = {};
 	buffer.data = ScratchString(c::max_effects_text_length+1);
@@ -72331,6 +72560,12 @@ GenerateAbilityTierText(const AbilityTier *tier)
 
 	return buffer.data;
 }
+
+Ability *
+GetAbilityByGenerationalIndex(TableIndex<Ability> index)
+{
+	return GetEntryByGenerationalIndex(g::ability_table, index);
+}
 #line 49 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\target_class.cpp"
 
@@ -72360,9 +72595,11 @@ ParseNextAsTargetClass(Buffer *buffer, TargetClass *target_class)
 #line 1 "D:\\work\\programming\\color-c\\src\\editor.cpp"
 
 
+
+
 void StartEditor(Editor *editor)
 {
-	editor->arena = AllocateArena();
+	editor->arena = AllocArena();
 	editor->mode = EditorMode::None;
 
 	const char *field_names[] = {"Search", "Name", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor"};
@@ -72371,7 +72608,7 @@ void StartEditor(Editor *editor)
 		editor->input_elements[i] = {
 			.type = InputElementType::None,
 			.label = StringFromCString(field_names[i], &editor->arena),
-			.pos = {400.f, 10.f + i*100.f},
+			.pos = ability_field_positions[i]
 		};
 	}
 
@@ -72442,105 +72679,129 @@ UpdateAndDrawEditor(Editor *editor)
 	}
 
 	
+	{
+		if(PointInRect(editor->search_panel_layout.rect, MousePos()))
+		{
+			editor->panel_scroll_vel -= editor->panel_scroll_acc*MouseScroll();
+		}
+
+		float frictional_force = editor->panel_scroll_vel*editor->panel_scroll_friction;
+		if(m::Abs(frictional_force) <= m::Abs(editor->panel_scroll_vel))
+		{
+			editor->panel_scroll_vel += frictional_force;
+		}
+		else
+		{
+			
+			
+
+			editor->panel_scroll_vel = 0.f;
+		}
+		editor->panel_scroll_pos = m::Max(0.0f, editor->panel_scroll_pos+editor->panel_scroll_vel);
+		if(m::Abs(editor->panel_scroll_vel) < editor->panel_scroll_velocity_minimum) editor->panel_scroll_vel = 0.f;
+		if(editor->panel_scroll_pos <= 0.f) editor->panel_scroll_vel = 0.f;
+	}
+
+	
 	
 	{
-
-		size_t ability_count = g::ability_table.entry_count;
-		size_t unit_schematic_count = g::unit_schematic_table.entry_count;
-		size_t filtered_entry_count = 0;
-
-		String *panel_entries = (String*)AllocTemp(sizeof(String) * (ability_count + unit_schematic_count));
-		
-		int *panel_entry_ids = (int*)AllocTemp(sizeof(int) * (ability_count + unit_schematic_count));
+		ListPanel_ search_panel = {
+			.layout = editor->search_panel_layout,
+			.cur_entry_count = 0,
+			.scroll_offset = editor->panel_scroll_pos
+		};
 
 		
-		for(int i=0; i<ability_count; i++)
+
+		for(int i=0; i<g::ability_table.entry_count; i++)
 		{
-			Ability *ability = (Ability*)g::ability_table[i];
+			Ability *ability = GetEntryByIndex(g::ability_table, i);
+			if(ability == nullptr) continue;
 
-			if(SubstringInString(LowerCase(editor->input_elements[AbilityPropertyIndex::search].text), LowerCase(ability->name)))
-			{
-				panel_entries[filtered_entry_count] = ability->name;
-				panel_entry_ids[filtered_entry_count] = i;
-				++filtered_entry_count;
-			}
+			ListPanelEntry(&search_panel, ability->name);
 		}
 
 		
-		for(int i=0; i<unit_schematic_count; i++)
-		{
-			UnitSchematic *unit_schematic = (UnitSchematic*)g::unit_schematic_table[i];
-			String unit_name = StringFromCString(unit_schematic->name);
-
-			if(SubstringInString(LowerCase(editor->input_elements[AbilityPropertyIndex::search].text), LowerCase(unit_name)))
-			{
-				panel_entries[filtered_entry_count] = unit_name;
-				panel_entry_ids[filtered_entry_count] = i;
-				++filtered_entry_count;
-			}
-		}
+		
+		
 
 		
-		{
-			if(PointInRect(editor->search_panel_layout.rect, MousePos()))
-			{
-				editor->panel_scroll_vel -= editor->panel_scroll_acc*MouseScroll();
-			}
+		
 
-			float frictional_force = editor->panel_scroll_vel*editor->panel_scroll_friction;
-			if(m::Abs(frictional_force) <= m::Abs(editor->panel_scroll_vel))
-			{
-				editor->panel_scroll_vel += frictional_force;
-			}
-			else
-			{
-				
-				
 
-				editor->panel_scroll_vel = 0.f;
-			}
-			editor->panel_scroll_pos = m::Max(0.0f, editor->panel_scroll_pos+editor->panel_scroll_vel);
-			if(m::Abs(editor->panel_scroll_vel) < editor->panel_scroll_velocity_minimum) editor->panel_scroll_vel = 0.f;
-			if(editor->panel_scroll_pos <= 0.f) editor->panel_scroll_vel = 0.f;
-		}
 
 		
-		auto panel_response = ListPanel(editor->search_panel_layout, panel_entries, filtered_entry_count, editor->panel_scroll_pos);
-		if(panel_response.pressed_index >= 0)
-		{ 
-			int first_ability_index = 0;
-			int last_ability_index = ability_count - 1;
-			int first_unit_index = ability_count;
-			int last_unit_index = ability_count + unit_schematic_count - 1;
+		
+		
+		
+		
+		
 
-			int index_into_datatable = panel_entry_ids[panel_response.pressed_index];
+		
+		
+		
+		
+		
 
-			if(InRange(panel_response.pressed_index, first_ability_index, last_ability_index))
-			{ 
-				
-				Ability *ability = (Ability*)g::ability_table[index_into_datatable];
-				if(ValidAbility(ability))
-				{
-					
-					editor->temp_ability = *ability;
-					editor->mode = EditorMode::Ability;
-					for(int i=0; i<(sizeof(ability_property_types)/sizeof(ability_property_types[0])); i++)
-					{
-						editor->input_elements[i].type = ability_property_types[i];
-					}
-				}
-			}
-			else if(InRange(panel_response.pressed_index, first_unit_index, last_unit_index))
-			{
-				UnitSchematic *unit_schematic = (UnitSchematic*)g::unit_schematic_table[index_into_datatable];
-				if(ValidUnitSchematic(unit_schematic))
-				{
-					
-					editor->temp_unit_schematic = *unit_schematic;
-					editor->mode = EditorMode::UnitSchematic;
-				}
-			}
-		}
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	
@@ -72548,24 +72809,27 @@ UpdateAndDrawEditor(Editor *editor)
 
 		if(editor->mode == EditorMode::Ability)
 		{
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::name], &editor->temp_ability.name);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::name], &editor->temp_ability.name);
 
 			
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[0].required_traits.vigor);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[0].required_traits.focus);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[0].required_traits.armor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[0].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[0].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[0].required_traits.armor);
 
 			
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[1].required_traits.vigor);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[1].required_traits.focus);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[1].required_traits.armor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_vigor], &editor->temp_ability.tiers[1].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_focus], &editor->temp_ability.tiers[1].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_armor], &editor->temp_ability.tiers[1].required_traits.armor);
 
 			
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[2].required_traits.vigor);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
-			GenerateInputElementString(&editor->input_elements[AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_vigor], &editor->temp_ability.tiers[2].required_traits.vigor);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
+			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
+
+			DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability.tiers[0]));
 		}
 	}
+
 
 	
 	
@@ -72697,8 +72961,6 @@ UpdateAndDrawEditor(Editor *editor)
 		editor->active_index = 0;
 		editor->text_cursor_pos = editor->input_elements[0].text.length;
 	}
-
-	DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability));
 
 	for(int i=0; i<(sizeof(editor->input_elements)/sizeof(editor->input_elements[0])); i++)
 	{
@@ -72934,7 +73196,7 @@ StringFromCString(const char *c_string, Arena *arena)
 bool
 SubstringInString(String substring, String string)
 {
-	TimedBlock (timed_block_entry174)(23, "D:\\work\\programming\\color-c\\src\\string.cpp",  __FUNCTION__  , 174);
+	TimedBlock (timed_block_entry174)(25, "D:\\work\\programming\\color-c\\src\\string.cpp",  __FUNCTION__  , 174);
 
 	if(substring.length == 0) return true;
 	if(string.length == 0 && substring.length == 0) return true;
@@ -73066,6 +73328,23 @@ String
 AsString(const String *s)
 {
 	return *s;
+}
+
+bool
+CompareStrings(String a, String b)
+{
+	if(a.length != b.length) return false;
+
+	bool matches = true;
+	for(int i=0; i<a.length; i++)
+	{
+		if(CharAt(&a, i) != CharAt(&b, i))
+		{
+			matches = false;
+		}
+	}
+
+	return matches;
 }
 #line 52 "../src/game.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\utf32string.cpp"
@@ -73249,8 +73528,8 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 extern "C" void
 GameInit()
 {
-	memory::per_frame_arena = AllocateArena();
-	memory::permanent_arena = AllocateArena();
+	memory::per_frame_arena = AllocArena();
+	memory::permanent_arena = AllocArena();
 
 	InitLcgSystemSeed(&random::default_lcg);
 
@@ -73302,34 +73581,34 @@ GameInit()
 	gl->Enable(0x0BE2);
 
 	
-	g::ability_table = AllocDataTable(sizeof(Ability), c::ability_table_partition_size);
+	g::ability_table = AllocTable<Ability>(100);
 	LoadAbilityFile("data/ability.dat", &g::ability_table);
 	auto ability_table_copy = g::ability_table;
 
 	
-	g::unit_schematic_table = AllocDataTable(sizeof(UnitSchematic), c::unit_schematic_table_partition_size);
+	g::unit_schematic_table = AllocTable<UnitSchematic>(100);
 	LoadUnitSchematicFile("data/unit_schematic.dat", &g::unit_schematic_table, g::ability_table);
 	auto schematic_table_copy = g::unit_schematic_table;
 
 	
-	g::unit_table = AllocDataTable(sizeof(Unit), c::unit_table_partition_size);
+	g::unit_table = AllocTable<Unit>(100);
 	auto unit_table_copy = g::unit_table;
 
 	
-	g::passive_skill_table = AllocDataTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
-	{
-		PassiveSkill passives[] = {{"Equilibrium"}, {"Potency"}, {"Constitution"}, {"Bravery"}, {"Stoicism"}};
+	
+	
+	
 
-		for(PassiveSkill passive : passives)
-		{
-			*(PassiveSkill*)CreateEntry(&g::passive_skill_table) = passive;
-		}
-	}
+	
+	
+	
+	
+	
 
-	game->player_party[0] = CreateUnitByName("Rogue", Team::allies);
-	game->player_party[1] = CreateUnitByName("Warrior", Team::allies);
-	game->player_party[2] = CreateUnitByName("Archer", Team::allies);
-	game->player_party[3] = CreateUnitByName("Cleric", Team::allies);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
 
 	game->current_battle = {};
 	game->current_battle.hud = {{0.f, game->window_size.y-c::hud_offset_from_bottom}, {game->window_size.x, c::hud_offset_from_bottom}};
@@ -73349,11 +73628,11 @@ GameInit()
 	}
 
 	
-	for(int i=0; i<c::max_party_size; i++)
-	{
-		game->current_battle.units[i] = game->player_party[i];
-	}
-	game->current_battle.units[c::max_party_size+0] = CreateUnitByName("Dragon", Team::enemies);
+	
+	
+	
+	
+	
 	
 	
 	
@@ -73367,7 +73646,10 @@ GameInit()
 	game->target_cursor = LoadBitmapFileIntoSprite("resource/target.bmp", c::align_center);
 	game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
-	InitiateBattle(&game->current_battle);
+	UnitSet battle_units = game->player_party;
+	AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+
+	InitiateBattle(&game->current_battle, battle_units);
 	StartEditor(&game->editor_state);
 
 	
@@ -73377,7 +73659,7 @@ GameInit()
 	game->draw_debug_text = false;
 	game->test_float = 0.f;
 
-	game->current_state = GameState::Editor;
+	game->current_state = GameState::Battle;
 
 	
 	
@@ -73390,14 +73672,14 @@ GameInit()
 
 
 
-#line 207 "../src/game.cpp"
+#line 210 "../src/game.cpp"
 }
 
 extern "C" void
 GameUpdateAndRender()
 {
 	
-	debug::timed_block_array_size = 24;
+	debug::timed_block_array_size = 26;
 
 	
 	
@@ -73423,7 +73705,7 @@ GameUpdateAndRender()
 		
 
 
-#line 240 "../src/game.cpp"
+#line 243 "../src/game.cpp"
 	}
 
 	ClearArena(&memory::per_frame_arena);
@@ -73519,4 +73801,4 @@ GameUpdateAndRender()
 	}
 }
 
-TimedBlockEntry TIMED_BLOCK_ARRAY[25-1];
+TimedBlockEntry TIMED_BLOCK_ARRAY[27-1];

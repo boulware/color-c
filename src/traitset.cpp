@@ -1,5 +1,26 @@
 #include "traitset.h"
 
+TraitSet operator-(TraitSet a)
+{
+	return TraitSet{
+		.vigor = -a.vigor,
+		.focus = -a.focus,
+		.armor = -a.armor
+	};
+}
+
+bool operator==(TraitSet a, TraitSet b)
+{
+	return(a.vigor == b.vigor and
+		   a.focus == b.focus and
+		   a.armor == b.armor);
+}
+
+bool operator!=(TraitSet a, TraitSet b)
+{
+	return(!(a==b));
+}
+
 s32 &TraitSet::operator[](size_t index)
 {
 	return *((s32*)this + index); // 0-vigor, 1-focus, 2-armor

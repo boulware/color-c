@@ -1,10 +1,12 @@
+#include "meta_print.h"
+
 #include "ability.h"
 #include "align.h"
+#include "array.h"
 #include "battle.h"
 #include "bitmap.h"
 #include "color.h"
 #include "const.h"
-#include "data_table.h"
 #include "debug.h"
 #include "draw.h"
 #include "editor.h"
@@ -22,8 +24,6 @@
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
-#include "meta_print(manual).h"
-#include "meta_text_parsing.h"
 #include "opengl.h"
 #include "oscillating_timer.h"
 #include "passive_skill_tree.h"
@@ -31,6 +31,7 @@
 #include "random.h"
 #include "sprite.h"
 #include "string.h"
+#include "table.h"
 #include "target_class.h"
 #include "text_parsing.h"
 #include "text_render.h"
@@ -42,6 +43,10 @@
 #include "util.h"
 #include "vec.h"
 
+// ---------------FILE START---------------
+// ability.h
+// ------------------------------------------
+
 String MetaString(const AbilityTier *s)
 {
 	TIMED_BLOCK;
@@ -52,9 +57,17 @@ String MetaString(const AbilityTier *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "AbilityTier {\n");
+
 	AppendCString(&string, "  init: %d (bool)\n", s->init);
-	AppendCString(&string, "  required_traits: [invalid metadata] (TraitSet)\n", s->required_traits);
-	AppendCString(&string, "  effects: [invalid metadata] (Effect)\n", s->effects);
+
+	AppendCString(&string, "  required_traits: ");
+	AppendString(&string, MetaString(&s->required_traits));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "  effects: ");
+	AppendString(&string, MetaString(&s->effects));
+	AppendCString(&string, "(Effect)\n");
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -70,9 +83,368 @@ String MetaString(const Ability *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Ability {\n");
+
 	AppendCString(&string, "  init: %d (bool)\n", s->init);
-	AppendCString(&string, "  name: [invalid metadata] (String)\n", s->name);
-	AppendCString(&string, "  tiers: [invalid metadata] (AbilityTier)\n", s->tiers);
+
+	AppendCString(&string, "  name: ");
+	AppendString(&string, MetaString(&s->name));
+	AppendCString(&string, "(String)\n");
+
+	AppendCString(&string, "  tiers: ");
+	AppendString(&string, MetaString(&s->tiers));
+	AppendCString(&string, "(AbilityTier)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// align.h
+// ------------------------------------------
+
+String MetaString(const Align *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Align {\n");
+
+	AppendCString(&string, "  x: ");
+	AppendString(&string, MetaString(&s->x));
+	AppendCString(&string, "(AlignX)\n");
+
+	AppendCString(&string, "  y: ");
+	AppendString(&string, MetaString(&s->y));
+	AppendCString(&string, "(AlignY)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// array.h
+// ------------------------------------------
+
+String MetaString(const Ability *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Ability {\n");
+
+	AppendCString(&string, "  nit: ");
+	AppendString(&string, MetaString(&s->nit));
+	AppendCString(&string, "()\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// battle.h
+// ------------------------------------------
+
+String MetaString(const Intent *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Intent {\n");
+
+	AppendCString(&string, "  caster_id: ");
+	AppendString(&string, MetaString(&s->caster_id));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "  ability_id: ");
+	AppendString(&string, MetaString(&s->ability_id));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "  targets: ");
+	AppendString(&string, MetaString(&s->targets));
+	AppendCString(&string, "(UnitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const BattleEvent *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BattleEvent {\n");
+
+	AppendCString(&string, "  unit_id: ");
+	AppendString(&string, MetaString(&s->unit_id));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "  trait_changes: ");
+	AppendString(&string, MetaString(&s->trait_changes));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Battle *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Battle {\n");
+
+	AppendCString(&string, "  hud: ");
+	AppendString(&string, MetaString(&s->hud));
+	AppendCString(&string, "(Rect)\n");
+
+	AppendCString(&string, "  selected_unit_id: ");
+	AppendString(&string, MetaString(&s->selected_unit_id));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "  selected_ability_id: ");
+	AppendString(&string, MetaString(&s->selected_ability_id));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "  is_player_turn: %d (bool)\n", s->is_player_turn);
+
+	AppendCString(&string, "  preview_damage_timer: ");
+	AppendString(&string, MetaString(&s->preview_damage_timer));
+	AppendCString(&string, "(OscillatingTimer)\n");
+
+	AppendCString(&string, "  end_button_clicked_timer: ");
+	AppendString(&string, MetaString(&s->end_button_clicked_timer));
+	AppendCString(&string, "(Timer)\n");
+
+	AppendCString(&string, "  ending_player_turn: %d (bool)\n", s->ending_player_turn);
+
+	AppendCString(&string, "  units: ");
+	AppendString(&string, MetaString(&s->units));
+	AppendCString(&string, "(UnitSet)\n");
+
+	AppendCString(&string, "  unit_slots: ");
+	AppendString(&string, MetaString(&s->unit_slots));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  intents: ");
+	AppendString(&string, MetaString(&s->intents));
+	AppendCString(&string, "(Intent)\n");
+
+	AppendCString(&string, "  show_preview: %d (bool)\n", s->show_preview);
+
+	AppendCString(&string, "  preview_intent: ");
+	AppendString(&string, MetaString(&s->preview_intent));
+	AppendCString(&string, "(Intent)\n");
+
+	AppendCString(&string, "  preview_events: ");
+	AppendString(&string, MetaString(&s->preview_events));
+	AppendCString(&string, "(Array<BattleEvent>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// bitmap.h
+// ------------------------------------------
+
+String MetaString(const BgraPixel *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BgraPixel {\n");
+
+	AppendCString(&string, "  b: %u (u8)\n", s->b);
+
+	AppendCString(&string, "  g: %u (u8)\n", s->g);
+
+	AppendCString(&string, "  r: %u (u8)\n", s->r);
+
+	AppendCString(&string, "  a: %u (u8)\n", s->a);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Bitmap *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Bitmap {\n");
+
+	AppendCString(&string, "  width: %u (u32)\n", s->width);
+
+	AppendCString(&string, "  height: %u (u32)\n", s->height);
+
+	AppendCString(&string, "  pixels: ");
+	AppendString(&string, MetaString(&s->pixels));
+	AppendCString(&string, "(BgraPixel)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// color.h
+// ------------------------------------------
+
+String MetaString(const Color *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Color {\n");
+
+	AppendCString(&string, "  r: %f (float)\n", s->r);
+
+	AppendCString(&string, "  g: %f (float)\n", s->g);
+
+	AppendCString(&string, "  b: %f (float)\n", s->b);
+
+	AppendCString(&string, "  a: %f (float)\n", s->a);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// const.h
+// ------------------------------------------
+
+
+
+
+// ---------------FILE START---------------
+// debug.h
+// ------------------------------------------
+
+String MetaString(const TimedBlockEntry *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TimedBlockEntry {\n");
+
+	AppendCString(&string, "  filename: %p (char *)\n", s->filename);
+
+	AppendCString(&string, "  function_name: %p (char *)\n", s->function_name);
+
+	AppendCString(&string, "  line_number: %d (int)\n", s->line_number);
+
+	AppendCString(&string, "  hit_count: %u (u64)\n", s->hit_count);
+
+	AppendCString(&string, "  total_cycle_count: %u (u64)\n", s->total_cycle_count);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const TimedBlock *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TimedBlock {\n");
+
+	AppendCString(&string, "  entry: ");
+	AppendString(&string, MetaString(&s->entry));
+	AppendCString(&string, "(TimedBlockEntry)\n");
+
+	AppendCString(&string, "  start_count: %u (u64)\n", s->start_count);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// draw.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// editor.h
+// ------------------------------------------
+
+String MetaString(const InputElement *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "InputElement {\n");
+
+	AppendCString(&string, "  type: ");
+	AppendString(&string, MetaString(&s->type));
+	AppendCString(&string, "(InputElementType)\n");
+
+	AppendCString(&string, "  label: ");
+	AppendString(&string, MetaString(&s->label));
+	AppendCString(&string, "(String)\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  text: ");
+	AppendString(&string, MetaString(&s->text));
+	AppendCString(&string, "(String)\n");
+
+	AppendCString(&string, "  value_ptr: %p (void *)\n", s->value_ptr);
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -88,25 +460,665 @@ String MetaString(const Editor *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Editor {\n");
+
 	AppendCString(&string, "  init: %d (bool)\n", s->init);
-	AppendCString(&string, "  arena: [invalid metadata] (Arena)\n", s->arena);
-	AppendCString(&string, "  mode: [invalid metadata] (EditorMode)\n", s->mode);
-	AppendCString(&string, "  search_panel_layout: [invalid metadata] (ListPanelLayout)\n", s->search_panel_layout);
+
+	AppendCString(&string, "  arena: ");
+	AppendString(&string, MetaString(&s->arena));
+	AppendCString(&string, "(Arena)\n");
+
+	AppendCString(&string, "  mode: ");
+	AppendString(&string, MetaString(&s->mode));
+	AppendCString(&string, "(EditorMode)\n");
+
+	AppendCString(&string, "  search_panel_layout: ");
+	AppendString(&string, MetaString(&s->search_panel_layout));
+	AppendCString(&string, "(ListPanelLayout)\n");
+
 	AppendCString(&string, "  panel_scroll_acc: %f (float)\n", s->panel_scroll_acc);
+
 	AppendCString(&string, "  panel_scroll_vel: %f (float)\n", s->panel_scroll_vel);
+
 	AppendCString(&string, "  panel_scroll_pos: %f (float)\n", s->panel_scroll_pos);
+
 	AppendCString(&string, "  panel_scroll_friction: %f (float)\n", s->panel_scroll_friction);
+
 	AppendCString(&string, "  panel_scroll_velocity_minimum: %f (float)\n", s->panel_scroll_velocity_minimum);
+
 	AppendCString(&string, "  active_index: %d (int)\n", s->active_index);
+
 	AppendCString(&string, "  text_cursor_pos: %d (int)\n", s->text_cursor_pos);
-	AppendCString(&string, "  input_elements: [invalid metadata] (InputElement)\n", s->input_elements);
-	AppendCString(&string, "  temp_ability: [invalid metadata] (Ability)\n", s->temp_ability);
-	AppendCString(&string, "  temp_unit_schematic: [invalid metadata] (UnitSchematic)\n", s->temp_unit_schematic);
+
+	AppendCString(&string, "  input_elements: ");
+	AppendString(&string, MetaString(&s->input_elements));
+	AppendCString(&string, "(InputElement)\n");
+
+	AppendCString(&string, "  temp_ability: ");
+	AppendString(&string, MetaString(&s->temp_ability));
+	AppendCString(&string, "(Ability)\n");
+
+	AppendCString(&string, "  temp_ability_id: ");
+	AppendString(&string, MetaString(&s->temp_ability_id));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "  temp_breed: ");
+	AppendString(&string, MetaString(&s->temp_breed));
+	AppendCString(&string, "(Breed)\n");
+
+	AppendCString(&string, "  temp_breed_id: ");
+	AppendString(&string, MetaString(&s->temp_breed_id));
+	AppendCString(&string, "(Id<Breed>)\n");
+
 	AppendCString(&string, "}");
 
 	return string;
 }
 
+// ---------------FILE START---------------
+// effect.h
+// ------------------------------------------
+
+String MetaString(const Effect *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Effect {\n");
+
+	AppendCString(&string, "  type: ");
+	AppendString(&string, MetaString(&s->type));
+	AppendCString(&string, "(EffectType)\n");
+
+	AppendCString(&string, "  target_class: ");
+	AppendString(&string, MetaString(&s->target_class));
+	AppendCString(&string, "(TargetClass)\n");
+
+	AppendCString(&string, "  params: %p (void *)\n", s->params);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const EffectParams_Damage *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectParams_Damage {\n");
+
+	AppendCString(&string, "  amount: ");
+	AppendString(&string, MetaString(&s->amount));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const EffectParams_DamageIgnoreArmor *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectParams_DamageIgnoreArmor {\n");
+
+	AppendCString(&string, "  amount: ");
+	AppendString(&string, MetaString(&s->amount));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const EffectParams_Restore *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectParams_Restore {\n");
+
+	AppendCString(&string, "  amount: ");
+	AppendString(&string, MetaString(&s->amount));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const EffectParams_Gift *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectParams_Gift {\n");
+
+	AppendCString(&string, "  amount: ");
+	AppendString(&string, MetaString(&s->amount));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const EffectParams_Steal *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectParams_Steal {\n");
+
+	AppendCString(&string, "  amount: ");
+	AppendString(&string, MetaString(&s->amount));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// freetype.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// freetype_wrapper.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// game.h
+// ------------------------------------------
+
+String MetaString(const Game *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Game {\n");
+
+	AppendCString(&string, "  exit_requested: %d (bool)\n", s->exit_requested);
+
+	AppendCString(&string, "  current_state: ");
+	AppendString(&string, MetaString(&s->current_state));
+	AppendCString(&string, "(GameState)\n");
+
+	AppendCString(&string, "  log_state: ");
+	AppendString(&string, MetaString(&s->log_state));
+	AppendCString(&string, "(LogState)\n");
+
+	AppendCString(&string, "  frame_time_ms: %f (float)\n", s->frame_time_ms);
+
+	AppendCString(&string, "  draw_debug_text: %d (bool)\n", s->draw_debug_text);
+
+	AppendCString(&string, "  debug_container: ");
+	AppendString(&string, MetaString(&s->debug_container));
+	AppendCString(&string, "(ImguiContainer)\n");
+
+	AppendCString(&string, "  input: ");
+	AppendString(&string, MetaString(&s->input));
+	AppendCString(&string, "(InputState)\n");
+
+	AppendCString(&string, "  color_shader: ");
+	AppendString(&string, MetaString(&s->color_shader));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  uv_shader: ");
+	AppendString(&string, MetaString(&s->uv_shader));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  color_vao: ");
+	AppendString(&string, MetaString(&s->color_vao));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  color_vbo: ");
+	AppendString(&string, MetaString(&s->color_vbo));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  uv_vao: ");
+	AppendString(&string, MetaString(&s->uv_vao));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  uv_vbo: ");
+	AppendString(&string, MetaString(&s->uv_vbo));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  window_size: ");
+	AppendString(&string, MetaString(&s->window_size));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  temp_texture: ");
+	AppendString(&string, MetaString(&s->temp_texture));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  string_bmp_size: ");
+	AppendString(&string, MetaString(&s->string_bmp_size));
+	AppendCString(&string, "(Vec2i)\n");
+
+	AppendCString(&string, "  ft_lib: ");
+	AppendString(&string, MetaString(&s->ft_lib));
+	AppendCString(&string, "(FT_Library)\n");
+
+	AppendCString(&string, "  player_party: ");
+	AppendString(&string, MetaString(&s->player_party));
+	AppendCString(&string, "(UnitSet)\n");
+
+	AppendCString(&string, "  current_battle: ");
+	AppendString(&string, MetaString(&s->current_battle));
+	AppendCString(&string, "(Battle)\n");
+
+	AppendCString(&string, "  editor_state: ");
+	AppendString(&string, MetaString(&s->editor_state));
+	AppendCString(&string, "(Editor)\n");
+
+	AppendCString(&string, "  pointer_cursor: ");
+	AppendString(&string, MetaString(&s->pointer_cursor));
+	AppendCString(&string, "(Sprite)\n");
+
+	AppendCString(&string, "  target_cursor: ");
+	AppendString(&string, MetaString(&s->target_cursor));
+	AppendCString(&string, "(Sprite)\n");
+
+	AppendCString(&string, "  red_target_cursor: ");
+	AppendString(&string, MetaString(&s->red_target_cursor));
+	AppendCString(&string, "(Sprite)\n");
+
+	AppendCString(&string, "  test_float: %f (float)\n", s->test_float);
+
+	AppendCString(&string, "  test_int: %d (int)\n", s->test_int);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// global.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// image.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// imgui.h
+// ------------------------------------------
+
+String MetaString(const ListPanelLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ListPanelLayout {\n");
+
+	AppendCString(&string, "  rect: ");
+	AppendString(&string, MetaString(&s->rect));
+	AppendCString(&string, "(Rect)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ListPanelResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ListPanelResponse {\n");
+
+	AppendCString(&string, "  hovered_index: %d (int)\n", s->hovered_index);
+
+	AppendCString(&string, "  pressed_index: %d (int)\n", s->pressed_index);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ListPanel_ *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ListPanel_ {\n");
+
+	AppendCString(&string, "  layout: ");
+	AppendString(&string, MetaString(&s->layout));
+	AppendCString(&string, "(ListPanelLayout)\n");
+
+	AppendCString(&string, "  cur_entry_count: %d (int)\n", s->cur_entry_count);
+
+	AppendCString(&string, "  scroll_offset: %f (float)\n", s->scroll_offset);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ButtonLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ButtonLayout {\n");
+
+	AppendCString(&string, "  label_layout: ");
+	AppendString(&string, MetaString(&s->label_layout));
+	AppendCString(&string, "(TextLayout)\n");
+
+	AppendCString(&string, "  button_color: ");
+	AppendString(&string, MetaString(&s->button_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  button_hover_color: ");
+	AppendString(&string, MetaString(&s->button_hover_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  label_hover_color: ");
+	AppendString(&string, MetaString(&s->label_hover_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  align: ");
+	AppendString(&string, MetaString(&s->align));
+	AppendCString(&string, "(Align)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const TextEntryLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TextEntryLayout {\n");
+
+	AppendCString(&string, "  size: ");
+	AppendString(&string, MetaString(&s->size));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  label_layout: ");
+	AppendString(&string, MetaString(&s->label_layout));
+	AppendCString(&string, "(TextLayout)\n");
+
+	AppendCString(&string, "  text_layout: ");
+	AppendString(&string, MetaString(&s->text_layout));
+	AppendCString(&string, "(TextLayout)\n");
+
+	AppendCString(&string, "  align: ");
+	AppendString(&string, MetaString(&s->align));
+	AppendCString(&string, "(Align)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const IntegerBoxLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "IntegerBoxLayout {\n");
+
+	AppendCString(&string, "  size: ");
+	AppendString(&string, MetaString(&s->size));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  border_color: ");
+	AppendString(&string, MetaString(&s->border_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  label_layout: ");
+	AppendString(&string, MetaString(&s->label_layout));
+	AppendCString(&string, "(TextLayout)\n");
+
+	AppendCString(&string, "  text_layout: ");
+	AppendString(&string, MetaString(&s->text_layout));
+	AppendCString(&string, "(TextLayout)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const IntegerBoxResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "IntegerBoxResponse {\n");
+
+	AppendCString(&string, "  value_change: %d (int)\n", s->value_change);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ImguiContainer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ImguiContainer {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  max_size: ");
+	AppendString(&string, MetaString(&s->max_size));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  pen: ");
+	AppendString(&string, MetaString(&s->pen));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  button_layout: ");
+	AppendString(&string, MetaString(&s->button_layout));
+	AppendCString(&string, "(ButtonLayout)\n");
+
+	AppendCString(&string, "  text_entry_layout: ");
+	AppendString(&string, MetaString(&s->text_entry_layout));
+	AppendCString(&string, "(TextEntryLayout)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ButtonResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ButtonResponse {\n");
+
+	AppendCString(&string, "  pressed: %d (bool)\n", s->pressed);
+
+	AppendCString(&string, "  hovered: %d (bool)\n", s->hovered);
+
+	AppendCString(&string, "  rect: ");
+	AppendString(&string, MetaString(&s->rect));
+	AppendCString(&string, "(Rect)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const TextEntryResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TextEntryResponse {\n");
+
+	AppendCString(&string, "  pressed: %d (bool)\n", s->pressed);
+
+	AppendCString(&string, "  hovered: %d (bool)\n", s->hovered);
+
+	AppendCString(&string, "  clicked_cursor_pos: %d (int)\n", s->clicked_cursor_pos);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// input.h
+// ------------------------------------------
+
+String MetaString(const InputState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "InputState {\n");
+
+	AppendCString(&string, "  pressed_keys: %u (u8[])\n", s->pressed_keys);
+
+	AppendCString(&string, "  released_keys: %u (u8[])\n", s->released_keys);
+
+	AppendCString(&string, "  repeated_keys: %u (u8[])\n", s->repeated_keys);
+
+	AppendCString(&string, "  down_keys: %u (u8[])\n", s->down_keys);
+
+	AppendCString(&string, "  mouse_pos: ");
+	AppendString(&string, MetaString(&s->mouse_pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  mouse_scroll: %d (int)\n", s->mouse_scroll);
+
+	AppendCString(&string, "  utf32_translated_stream: %p (u32 *)\n", s->utf32_translated_stream);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// lang.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// log.h
+// ------------------------------------------
+
+String MetaString(const LogState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "LogState {\n");
+
+	AppendCString(&string, "  log_start_index: %u (u8)\n", s->log_start_index);
+
+	AppendCString(&string, "  log_cur_index: %u (u8)\n", s->log_cur_index);
+
+	AppendCString(&string, "  log_length: %u (u8)\n", s->log_length);
+
+	AppendCString(&string, "  log_strings: %c (char[])\n", s->log_strings);
+
+	AppendCString(&string, "  show_log: %d (bool)\n", s->show_log);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// macros.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// math.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// memory.h
+// ------------------------------------------
 
 String MetaString(const Arena *s)
 {
@@ -118,13 +1130,335 @@ String MetaString(const Arena *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Arena {\n");
+
 	AppendCString(&string, "  start: %p (void *)\n", s->start);
+
 	AppendCString(&string, "  end: %p (void *)\n", s->end);
+
 	AppendCString(&string, "  current: %p (void *)\n", s->current);
+
 	AppendCString(&string, "}");
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// meta.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// meta_print(manual).h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// meta_print.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// meta_text_parsing.h
+// ------------------------------------------
+
+String MetaString(const Buffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Buffer {\n");
+
+	AppendCString(&string, "  data: %p (char *)\n", s->data);
+
+	AppendCString(&string, "  p: %p (char *)\n", s->p);
+
+	AppendCString(&string, "  byte_count: ");
+	AppendString(&string, MetaString(&s->byte_count));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const StringBuffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "StringBuffer {\n");
+
+	AppendCString(&string, "  char: ");
+	AppendString(&string, MetaString(&s->char));
+	AppendCString(&string, "(const)\n");
+
+	AppendCString(&string, "  char: ");
+	AppendString(&string, MetaString(&s->char));
+	AppendCString(&string, "(const)\n");
+
+	AppendCString(&string, "  byte_count: ");
+	AppendString(&string, MetaString(&s->byte_count));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Token *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Token {\n");
+
+	AppendCString(&string, "  type: ");
+	AppendString(&string, MetaString(&s->type));
+	AppendCString(&string, "(TokenType_)\n");
+
+	AppendCString(&string, "  start: %p (char *)\n", s->start);
+
+	AppendCString(&string, "  length: ");
+	AppendString(&string, MetaString(&s->length));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// opengl.h
+// ------------------------------------------
+
+String MetaString(const OpenGL *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "OpenGL {\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// oscillating_timer.h
+// ------------------------------------------
+
+String MetaString(const OscillatingTimer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "OscillatingTimer {\n");
+
+	AppendCString(&string, "  cur: %f (float)\n", s->cur);
+
+	AppendCString(&string, "  min: %f (float)\n", s->min);
+
+	AppendCString(&string, "  max: %f (float)\n", s->max);
+
+	AppendCString(&string, "  speed: %f (float)\n", s->speed);
+
+	AppendCString(&string, "  decreasing: %d (bool)\n", s->decreasing);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// passive_skill_tree.h
+// ------------------------------------------
+
+String MetaString(const PassiveSkill *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "PassiveSkill {\n");
+
+	AppendCString(&string, "  name: %c (char[])\n", s->name);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const PassiveNode *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "PassiveNode {\n");
+
+	AppendCString(&string, "  passive_skill: ");
+	AppendString(&string, MetaString(&s->passive_skill));
+	AppendCString(&string, "(PassiveSkill)\n");
+
+	AppendCString(&string, "  children: ");
+	AppendString(&string, MetaString(&s->children));
+	AppendCString(&string, "(PassiveNode)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const PassiveSkillTree *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "PassiveSkillTree {\n");
+
+	AppendCString(&string, "  root: ");
+	AppendString(&string, MetaString(&s->root));
+	AppendCString(&string, "(PassiveNode)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// platform.h
+// ------------------------------------------
+
+String MetaString(const Platform *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Platform {\n");
+
+	AppendCString(&string, "  define: ");
+	AppendString(&string, MetaString(&s->define));
+	AppendCString(&string, "(#)\n");
+
+	AppendCString(&string, "  undef: ");
+	AppendString(&string, MetaString(&s->undef));
+	AppendCString(&string, "(#)\n");
+
+	AppendCString(&string, "  endifC: ");
+	AppendString(&string, MetaString(&s->endifC));
+	AppendCString(&string, "(#)\n");
+
+	AppendCString(&string, "  Program: ");
+	AppendString(&string, MetaString(&s->Program));
+	AppendCString(&string, "(\)\n");
+
+	AppendCString(&string, "  x86: ");
+	AppendString(&string, MetaString(&s->x86));
+	AppendCString(&string, "(()\n");
+
+	AppendCString(&string, "  Windows: ");
+	AppendString(&string, MetaString(&s->Windows));
+	AppendCString(&string, "(\)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// random.h
+// ------------------------------------------
+
+String MetaString(const LCG *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "LCG {\n");
+
+	AppendCString(&string, "  m: %u (u32)\n", s->m);
+
+	AppendCString(&string, "  a: %u (u32)\n", s->a);
+
+	AppendCString(&string, "  c: %u (u32)\n", s->c);
+
+	AppendCString(&string, "  seed: %u (u32)\n", s->seed);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// sprite.h
+// ------------------------------------------
+
+String MetaString(const Sprite *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Sprite {\n");
+
+	AppendCString(&string, "  texture: ");
+	AppendString(&string, MetaString(&s->texture));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  size: ");
+	AppendString(&string, MetaString(&s->size));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  origin: ");
+	AppendString(&string, MetaString(&s->origin));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// string.h
+// ------------------------------------------
 
 String MetaString(const String *s)
 {
@@ -136,13 +1470,236 @@ String MetaString(const String *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "String {\n");
+
 	AppendCString(&string, "  length: %d (int)\n", s->length);
+
 	AppendCString(&string, "  max_length: %d (int)\n", s->max_length);
+
 	AppendCString(&string, "  data: %p (char *)\n", s->data);
+
 	AppendCString(&string, "}");
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// table.h
+// ------------------------------------------
+
+template<typename Type>
+String MetaString(const TableEntry *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TableEntry {\n");
+
+	AppendCString(&string, "  data: ");
+	AppendString(&string, MetaString(&s->data));
+	AppendCString(&string, "(Type)\n");
+
+	AppendCString(&string, "  active: %d (bool)\n", s->active);
+
+	AppendCString(&string, "  id: ");
+	AppendString(&string, MetaString(&s->id));
+	AppendCString(&string, "(Id<Type>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// target_class.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// text_parsing.h
+// ------------------------------------------
+
+String MetaString(const Buffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Buffer {\n");
+
+	AppendCString(&string, "  data: %p (char *)\n", s->data);
+
+	AppendCString(&string, "  p: %p (char *)\n", s->p);
+
+	AppendCString(&string, "  byte_count: ");
+	AppendString(&string, MetaString(&s->byte_count));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const StringBuffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "StringBuffer {\n");
+
+	AppendCString(&string, "  char: ");
+	AppendString(&string, MetaString(&s->char));
+	AppendCString(&string, "(const)\n");
+
+	AppendCString(&string, "  char: ");
+	AppendString(&string, MetaString(&s->char));
+	AppendCString(&string, "(const)\n");
+
+	AppendCString(&string, "  byte_count: ");
+	AppendString(&string, MetaString(&s->byte_count));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Token *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Token {\n");
+
+	AppendCString(&string, "  start: %p (char *)\n", s->start);
+
+	AppendCString(&string, "  length: ");
+	AppendString(&string, MetaString(&s->length));
+	AppendCString(&string, "(size_t)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// text_render.h
+// ------------------------------------------
+
+String MetaString(const Font *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Font {\n");
+
+	AppendCString(&string, "  is_init: %d (bool)\n", s->is_init);
+
+	AppendCString(&string, "  base_size: %d (int)\n", s->base_size);
+
+	AppendCString(&string, "  ascender: %d (int)\n", s->ascender);
+
+	AppendCString(&string, "  height: %d (int)\n", s->height);
+
+	AppendCString(&string, "  advance_x: %p (int *)\n", s->advance_x);
+
+	AppendCString(&string, "  bitmap_left: %p (int *)\n", s->bitmap_left);
+
+	AppendCString(&string, "  bitmap_top: %p (int *)\n", s->bitmap_top);
+
+	AppendCString(&string, "  gl_texture: ");
+	AppendString(&string, MetaString(&s->gl_texture));
+	AppendCString(&string, "(GLuint)\n");
+
+	AppendCString(&string, "  texture_size: ");
+	AppendString(&string, MetaString(&s->texture_size));
+	AppendCString(&string, "(Vec2i)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const TextLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TextLayout {\n");
+
+	AppendCString(&string, "  font: ");
+	AppendString(&string, MetaString(&s->font));
+	AppendCString(&string, "(Font)\n");
+
+	AppendCString(&string, "  color: ");
+	AppendString(&string, MetaString(&s->color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  font_size: %d (int)\n", s->font_size);
+
+	AppendCString(&string, "  align: ");
+	AppendString(&string, MetaString(&s->align));
+	AppendCString(&string, "(Align)\n");
+
+	AppendCString(&string, "  draw_debug: %d (bool)\n", s->draw_debug);
+
+	AppendCString(&string, "  max_width: %f (float)\n", s->max_width);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// timer.h
+// ------------------------------------------
+
+String MetaString(const Timer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Timer {\n");
+
+	AppendCString(&string, "  cur: %f (float)\n", s->cur);
+
+	AppendCString(&string, "  length_s: %f (float)\n", s->length_s);
+
+	AppendCString(&string, "  finished: %d (bool)\n", s->finished);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// traitset.h
+// ------------------------------------------
 
 String MetaString(const TraitSet *s)
 {
@@ -154,13 +1711,143 @@ String MetaString(const TraitSet *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "TraitSet {\n");
+
 	AppendCString(&string, "  vigor: %d (s32)\n", s->vigor);
+
 	AppendCString(&string, "  focus: %d (s32)\n", s->focus);
+
 	AppendCString(&string, "  armor: %d (s32)\n", s->armor);
+
 	AppendCString(&string, "}");
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// types.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// unit.h
+// ------------------------------------------
+
+String MetaString(const Breed *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Breed {\n");
+
+	AppendCString(&string, "  init: %d (bool)\n", s->init);
+
+	AppendCString(&string, "  name: ");
+	AppendString(&string, MetaString(&s->name));
+	AppendCString(&string, "(String)\n");
+
+	AppendCString(&string, "  max_traits: ");
+	AppendString(&string, MetaString(&s->max_traits));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "  ability_ids: ");
+	AppendString(&string, MetaString(&s->ability_ids));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Unit *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Unit {\n");
+
+	AppendCString(&string, "  init: %d (bool)\n", s->init);
+
+	AppendCString(&string, "  name: ");
+	AppendString(&string, MetaString(&s->name));
+	AppendCString(&string, "(String)\n");
+
+	AppendCString(&string, "  team: ");
+	AppendString(&string, MetaString(&s->team));
+	AppendCString(&string, "(Team)\n");
+
+	AppendCString(&string, "  cur_traits: ");
+	AppendString(&string, MetaString(&s->cur_traits));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "  max_traits: ");
+	AppendString(&string, MetaString(&s->max_traits));
+	AppendCString(&string, "(TraitSet)\n");
+
+	AppendCString(&string, "  cur_action_points: %d (int)\n", s->cur_action_points);
+
+	AppendCString(&string, "  max_action_points: %d (int)\n", s->max_action_points);
+
+	AppendCString(&string, "  ability_ids: ");
+	AppendString(&string, MetaString(&s->ability_ids));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const UnitSlot *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "UnitSlot {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const UnitSet *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "UnitSet {\n");
+
+	AppendCString(&string, "  size: %d (int)\n", s->size);
+
+	AppendCString(&string, "  ids: ");
+	AppendString(&string, MetaString(&s->ids));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// utf32string.h
+// ------------------------------------------
 
 String MetaString(const Utf32String *s)
 {
@@ -172,9 +1859,213 @@ String MetaString(const Utf32String *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Utf32String {\n");
+
 	AppendCString(&string, "  length: %d (int)\n", s->length);
+
 	AppendCString(&string, "  max_length: %d (int)\n", s->max_length);
+
 	AppendCString(&string, "  data: %p (u32 *)\n", s->data);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// util.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// vec.h
+// ------------------------------------------
+
+String MetaString(const Vec2i *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Vec2i {\n");
+
+	AppendCString(&string, "  x: %d (int)\n", s->x);
+
+	AppendCString(&string, "  y: %d (int)\n", s->y);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Vec2f *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Vec2f {\n");
+
+	AppendCString(&string, "  x: %f (float)\n", s->x);
+
+	AppendCString(&string, "  y: %f (float)\n", s->y);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Vec3f *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Vec3f {\n");
+
+	AppendCString(&string, "  x: %f (float)\n", s->x);
+
+	AppendCString(&string, "  y: %f (float)\n", s->y);
+
+	AppendCString(&string, "  z: %f (float)\n", s->z);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Vec4f *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Vec4f {\n");
+
+	AppendCString(&string, "  x: %f (float)\n", s->x);
+
+	AppendCString(&string, "  y: %f (float)\n", s->y);
+
+	AppendCString(&string, "  z: %f (float)\n", s->z);
+
+	AppendCString(&string, "  w: %f (float)\n", s->w);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Mat3f *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Mat3f {\n");
+
+	AppendCString(&string, "  xx: %f (float)\n", s->xx);
+
+	AppendCString(&string, "  xy: %f (float)\n", s->xy);
+
+	AppendCString(&string, "  xz: %f (float)\n", s->xz);
+
+	AppendCString(&string, "  yx: %f (float)\n", s->yx);
+
+	AppendCString(&string, "  yy: %f (float)\n", s->yy);
+
+	AppendCString(&string, "  yz: %f (float)\n", s->yz);
+
+	AppendCString(&string, "  zx: %f (float)\n", s->zx);
+
+	AppendCString(&string, "  zy: %f (float)\n", s->zy);
+
+	AppendCString(&string, "  zz: %f (float)\n", s->zz);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Mat4f *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Mat4f {\n");
+
+	AppendCString(&string, "  xx: %f (float)\n", s->xx);
+
+	AppendCString(&string, "  xy: %f (float)\n", s->xy);
+
+	AppendCString(&string, "  xz: %f (float)\n", s->xz);
+
+	AppendCString(&string, "  xw: %f (float)\n", s->xw);
+
+	AppendCString(&string, "  yx: %f (float)\n", s->yx);
+
+	AppendCString(&string, "  yy: %f (float)\n", s->yy);
+
+	AppendCString(&string, "  yz: %f (float)\n", s->yz);
+
+	AppendCString(&string, "  yw: %f (float)\n", s->yw);
+
+	AppendCString(&string, "  zx: %f (float)\n", s->zx);
+
+	AppendCString(&string, "  zy: %f (float)\n", s->zy);
+
+	AppendCString(&string, "  zz: %f (float)\n", s->zz);
+
+	AppendCString(&string, "  zw: %f (float)\n", s->zw);
+
+	AppendCString(&string, "  wx: %f (float)\n", s->wx);
+
+	AppendCString(&string, "  wy: %f (float)\n", s->wy);
+
+	AppendCString(&string, "  wz: %f (float)\n", s->wz);
+
+	AppendCString(&string, "  ww: %f (float)\n", s->ww);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Rect *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Rect {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  size: ");
+	AppendString(&string, MetaString(&s->size));
+	AppendCString(&string, "(Vec2f)\n");
+
 	AppendCString(&string, "}");
 
 	return string;

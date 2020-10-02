@@ -53,4 +53,6 @@ String AllocStringDataFromArena(int max_length, Arena *arena);
 
 String AsString(const String *s);
 
+bool AppendString(String *dst, String src);
+
 #endif

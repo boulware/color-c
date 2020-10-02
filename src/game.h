@@ -7,7 +7,7 @@
 #include "utf32string.h"
 #include "freetype_wrapper.h"
 #include "unit.h"
-#include "data_table.h"
+
 #include "input.h"
 #include "imgui.h"
 #include "sprite.h"

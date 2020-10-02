@@ -13,6 +13,10 @@ struct TraitSet
 	s32 &operator[](size_t index);
 };
 
+// Unary -
+TraitSet operator-(TraitSet a);
+bool operator==(TraitSet a, TraitSet b);
+bool operator!=(TraitSet a, TraitSet b);
 TraitSet operator+(TraitSet a, TraitSet b);
 TraitSet operator+=(TraitSet &a, TraitSet b);
 TraitSet operator-(TraitSet a, TraitSet b);

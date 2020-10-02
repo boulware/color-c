@@ -12,6 +12,7 @@
 
 
 
+
 #line 1 "D:\\work\\programming\\color-c\\src\\meta.h"
 
 
@@ -19,7 +20,7 @@
 void ParseSourceFileForIntrospection(const char *filename);
 
 #line 7 "D:\\work\\programming\\color-c\\src\\meta.h"
-#line 15 "../src/meta.cpp"
+#line 16 "../src/meta.cpp"
 
 #line 1 "D:\\work\\programming\\color-c\\src\\math.h"
 
@@ -46,7 +47,7 @@ namespace m
 };
 
 #line 25 "D:\\work\\programming\\color-c\\src\\math.h"
-#line 17 "../src/meta.cpp"
+#line 18 "../src/meta.cpp"
 
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.18362.0\\um\\windows.h"
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.18362.0\\shared\\winapifamily.h"
@@ -301810,7 +301811,7 @@ BOOL __stdcall ImmDisableLegacyIME(void);
 
 #line 272 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.18362.0\\um\\windows.h"
 
-#line 19 "../src/meta.cpp"
+#line 20 "../src/meta.cpp"
 
 #line 1 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.18362.0\\ucrt\\stdio.h"
 
@@ -306512,7 +306513,7 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 
 } __pragma(pack(pop))
 #line 2473 "C:\\Program Files (x86)\\Windows Kits\\10\\include\\10.0.18362.0\\ucrt\\stdio.h"
-#line 21 "../src/meta.cpp"
+#line 22 "../src/meta.cpp"
 
 
 
@@ -306522,7 +306523,7 @@ __declspec(deprecated("This function or variable may be unsafe. Consider using "
 
 
 
-#line 25 "../src/meta.cpp"
+#line 26 "../src/meta.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\meta_text_parsing.h"
 
 
@@ -306778,7 +306779,7 @@ u32 DigitToUtf32Char(u32 digit);
 bool TokenMatchesString(Token token, const char *string);
 
 #line 99 "D:\\work\\programming\\color-c\\src\\meta_text_parsing.h"
-#line 26 "../src/meta.cpp"
+#line 27 "../src/meta.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\meta_text_parsing.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\text_parsing.h"
 
@@ -307439,7 +307440,7 @@ bool SkipToNextLine(Buffer *buffer)
 	if(initial != buffer->p) return true;
 	else return false;
 }
-#line 27 "../src/meta.cpp"
+#line 28 "../src/meta.cpp"
 #line 1 "D:\\work\\programming\\color-c\\src\\math.cpp"
 
 #line 1 "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\VC\\Tools\\MSVC\\14.25.28610\\include\\immintrin.h"
@@ -317076,7 +317077,7 @@ namespace m
 		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_set_ss(a)));
 	}
 };
-#line 28 "../src/meta.cpp"
+#line 29 "../src/meta.cpp"
 
 
 
@@ -317272,8 +317273,22 @@ enum class MetaType
 	_bool_pointer,
 	_int,
 	_int_pointer,
+	_s8,
+	_s8_pointer,
+	_s16,
+	_s16_pointer,
+	_s32,
+	_s32_pointer,
+	_s64,
+	_s64_pointer,
+	_u8,
+	_u8_pointer,
+	_u16,
+	_u16_pointer,
 	_u32,
 	_u32_pointer,
+	_u64,
+	_u64_pointer,
 	_char,
 	_char_pointer,
 	_void,
@@ -317304,10 +317319,17 @@ InterpretTokenAsMetaType(Token token, bool is_pointer)
 
 	if(TokenMatchesString(token, "int")) {if(!is_pointer) {meta_type=MetaType::_int;} else {meta_type=MetaType::_int_pointer;}}
 	if(TokenMatchesString(token, "char")) {if(!is_pointer) {meta_type=MetaType::_char;} else {meta_type=MetaType::_char_pointer;}}
-	if(TokenMatchesString(token, "u32")) {if(!is_pointer) {meta_type=MetaType::_u32;} else {meta_type=MetaType::_u32_pointer;}}
 	if(TokenMatchesString(token, "bool")) {if(!is_pointer) {meta_type=MetaType::_bool;} else {meta_type=MetaType::_bool_pointer;}}
 	if(TokenMatchesString(token, "void")) {if(!is_pointer) {meta_type=MetaType::_void;} else {meta_type=MetaType::_void_pointer;}}
 	if(TokenMatchesString(token, "float")) {if(!is_pointer) {meta_type=MetaType::_float;} else {meta_type=MetaType::_float_pointer;}}
+	if(TokenMatchesString(token, "s8")) {if(!is_pointer) {meta_type=MetaType::_s8;} else {meta_type=MetaType::_s8_pointer;}}
+	if(TokenMatchesString(token, "s16")) {if(!is_pointer) {meta_type=MetaType::_s16;} else {meta_type=MetaType::_s16_pointer;}}
+	if(TokenMatchesString(token, "s32")) {if(!is_pointer) {meta_type=MetaType::_s32;} else {meta_type=MetaType::_s32_pointer;}}
+	if(TokenMatchesString(token, "s64")) {if(!is_pointer) {meta_type=MetaType::_s64;} else {meta_type=MetaType::_s64_pointer;}}
+	if(TokenMatchesString(token, "u8")) {if(!is_pointer) {meta_type=MetaType::_u8;} else {meta_type=MetaType::_u8_pointer;}}
+	if(TokenMatchesString(token, "u16")) {if(!is_pointer) {meta_type=MetaType::_u16;} else {meta_type=MetaType::_u16_pointer;}}
+	if(TokenMatchesString(token, "u32")) {if(!is_pointer) {meta_type=MetaType::_u32;} else {meta_type=MetaType::_u32_pointer;}}
+	if(TokenMatchesString(token, "u64")) {if(!is_pointer) {meta_type=MetaType::_u64;} else {meta_type=MetaType::_u64_pointer;}}
 
 	return meta_type;
 }
@@ -317455,10 +317477,17 @@ int main()
 
 							if(base_meta_type == MetaType::_int) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_int_pointer) {base_type_format_specifier = 'p';}
 							else if(base_meta_type == MetaType::_char) {base_type_format_specifier = "c"[0];}else if(base_meta_type == MetaType::_char_pointer) {base_type_format_specifier = 'p';}
-							else if(base_meta_type == MetaType::_u32) {base_type_format_specifier = "u"[0];}else if(base_meta_type == MetaType::_u32_pointer) {base_type_format_specifier = 'p';}
 							else if(base_meta_type == MetaType::_bool) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_bool_pointer) {base_type_format_specifier = 'p';}
 							else if(base_meta_type == MetaType::_void) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_void_pointer) {base_type_format_specifier = 'p';}
 							else if(base_meta_type == MetaType::_float) {base_type_format_specifier = "f"[0];}else if(base_meta_type == MetaType::_float_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_s8) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_s8_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_s16) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_s16_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_s32) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_s32_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_s64) {base_type_format_specifier = "d"[0];}else if(base_meta_type == MetaType::_s64_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_u8) {base_type_format_specifier = "u"[0];}else if(base_meta_type == MetaType::_u8_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_u16) {base_type_format_specifier = "u"[0];}else if(base_meta_type == MetaType::_u16_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_u32) {base_type_format_specifier = "u"[0];}else if(base_meta_type == MetaType::_u32_pointer) {base_type_format_specifier = 'p';}
+							else if(base_meta_type == MetaType::_u64) {base_type_format_specifier = "u"[0];}else if(base_meta_type == MetaType::_u64_pointer) {base_type_format_specifier = 'p';}
 							else
 							{
 								
@@ -317496,14 +317525,14 @@ int main()
 						if(!ConfirmTokenType_(&file, TokenType_::SemiColon))
 						{
 							
-							printf("Invalid token encountered after struct member definition. (type %.*s, struct %.*s, file %s):\n",
-								(int)base_type_token.length, base_type_token.start,
-								(int)struct_name_token.length, struct_name_token.start,
-								file_data.cFileName);
-							printf("---------------------\n");
-							printf("%.*s\n", m::Min((int)100, (int)BufferBytesRemaining(file)), file.p);
-							printf("---------------------\n\n\n");
-							#line 455 "../src/meta.cpp"
+
+
+
+
+
+
+
+#line 484 "../src/meta.cpp"
 
 							SeekAfterChar(&file, ';');
 							continue;
@@ -317518,6 +317547,7 @@ int main()
 			}
 		}
 
+		FreeBuffer(&file);
 		FindNextFileA(handle, &file_data);
 	}
 

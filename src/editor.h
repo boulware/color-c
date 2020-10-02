@@ -8,7 +8,7 @@ enum class EditorMode
 {
 	None,
 	Ability,
-	UnitSchematic,
+	Breed,
 };
 
 enum class InputElementType
@@ -62,7 +62,7 @@ Vec2f ability_field_positions[] = {
 	{520.f,300.f},
 }; static_assert(ArrayCount(ability_field_positions) == (int)AbilityPropertyIndex::COUNT);
 
-enum class UnitSchematicPropertyIndex : int
+enum class BreedPropertyIndex : int
 {
 	COUNT
 };
@@ -107,7 +107,7 @@ struct Editor
 
 	InputElement input_elements[11];
 	static_assert(ArrayCount(input_elements) >= (int)AbilityPropertyIndex::COUNT);
-	static_assert(ArrayCount(input_elements) >= (int)UnitSchematicPropertyIndex::COUNT);
+	static_assert(ArrayCount(input_elements) >= (int)BreedPropertyIndex::COUNT);
 
 	// String field_labels[10];
 	// Vec2f field_positions[10];
@@ -115,7 +115,10 @@ struct Editor
 	// Temp instances created while editing so we're not editing datatable entries directly,
 	// so we can allow things like reverting changes, saving as copy,
 	Ability temp_ability;
-	UnitSchematic temp_unit_schematic;
+	Id<Ability> temp_ability_id;
+
+	Breed temp_breed;
+	Id<Breed> temp_breed_id;
 };
 
 void StartEditor(Editor *editor);

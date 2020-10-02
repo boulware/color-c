@@ -5,22 +5,29 @@
 #include "game.h"
 #include "timer.h"
 #include "oscillating_timer.h"
+#include "array.h"
 
 struct Intent
 {
-	Unit *caster;
-	Ability *ability;
+	Id<Unit> caster_id;
+	Id<Ability> ability_id;
 	UnitSet targets;
+};
+
+// Data associated with a battle-wide change in state
+// (e.g., after an ability would be used, this holds data for trait changes for all units, death, status effects, etc.)
+struct BattleEvent
+{
+	Id<Unit> unit_id;
+	TraitSet trait_changes;
 };
 
 struct Battle
 {
 	Rect hud;
 
-	//Unit *hovered_unit;
-	Unit *selected_unit;
-	//Ability *hovered_ability;
-	Ability *selected_ability; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
+	Id<Unit> selected_unit_id;
+	Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
 
 	bool is_player_turn;
 	OscillatingTimer preview_damage_timer;
@@ -35,31 +42,21 @@ struct Battle
 	// UnitSet selected_ability_valid_target_set;
 	// UnitSet inferred_target_set;
 
-	bool show_action_preview;
-	Intent previewed_intent;
-};
-
-// Data associated with a battle-wide change in state
-// (e.g., after an ability would be used, this holds data for trait changes for all units, death, status effects, etc.)
-struct BattleEvent
-{
-	// trait_changes[] is concurrent to a particular battle's units[] array, so trait_changes[i]
-	// corresponds to the trait change applied to units[i] if the preview were to be executed.
-	Battle *battle;
-	TraitSet trait_changes[c::max_target_count];
+	bool show_preview;
+	Intent preview_intent;
+	Array<BattleEvent> preview_events;
 };
 
 void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
-UnitSet AllBattleUnitsAsUnitSet(const Battle *battle);
 void DrawUnitHudData(Battle *battle);
 void UpdateBattle(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
-void DrawAbilityInfoBox(Vec2f pos, const Ability *ability, Align align);
+void DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int tier, Align align = c::align_topleft);
 
 void UpdateHoveredUnit(Battle *battle);
 void UpdateHoveredAbility(Battle *battle);
 
-void ApplyBattleEvent(const BattleEvent *event);
+void ApplyBattleEvent(BattleEvent event);
 
 #endif

@@ -1,7 +1,7 @@
 #include "memory.h"
 
 Arena
-AllocateArena()
+AllocArena()
 {
 	Arena arena;
 	arena.start = platform->AllocateMemory(memory::arena_size);
@@ -14,7 +14,7 @@ AllocateArena()
 void
 ClearArena(Arena *arena)
 {
-	TIMED_BLOCK;
+//	TIMED_BLOCK;
 
 	#if DEBUG_BUILD
 		// Zero the arena if we're on debug build. This should make bugs where "cleared" temp

@@ -2,11 +2,19 @@
 //							TODO										//
 /*
 
-* Struct members that are arrays are not supported.
-* Nested member (struc tmembers that are structs themselves)
+* Skipping macros that use '\' to extend past multiple lines
 
+* Nested member (struct members that are structs themselves)
+* Templated structs
+* Constructor/Destructor declarations inside struct.
+* function pointer members
+* members that are aggregate-initialized (with {})
 
+PARTIAL
+* Templated members (templated members are implemented, but templating the MetaString() function isn't, so it's only partially complete)
 
+FINISHED, but maybe not robust:
+* Struct members that are arrays
 
 
 */////////////////////////////////////////////////////////////////////////
@@ -73,7 +81,8 @@ FindHeaderFilesAndOutputIncludes(const char *dir, FILE *out)
 	while(GetLastError() != ERROR_NO_MORE_FILES)
 	{
 		// Skip win32_ files to avoid #include <windows.h> megapollution
-		if(strncmp("win32_", file_data.cFileName, 6) != 0)
+		if(    strncmp("win32_", file_data.cFileName, 6) != 0
+		   and strncmp("meta_", file_data.cFileName, 5) != 0)
 		{
 			fprintf(out, "#include \"%s\"\n", file_data.cFileName);
 		}
@@ -85,13 +94,7 @@ FindHeaderFilesAndOutputIncludes(const char *dir, FILE *out)
 	FindClose(handle);
 }
 
-void
-ParseAsStruct(char *buffer)
-{
-	char *p = buffer;
 
-
-}
 
 void
 SkipWhitespaceAndComments(Buffer *buffer)
@@ -108,6 +111,14 @@ SkipWhitespaceAndComments(Buffer *buffer)
 		else if(p[0] == '/' and p[1] == '/')
 		{
 			while(*p != '\n' and *p != '\0')
+			{
+				++p;
+			}
+			continue;
+		}
+		else if(p[0] == '/' and p[1] == '*')
+		{
+			while(p != '\0' or !(p[0] == '*' and p[1] == '/'))
 			{
 				++p;
 			}
@@ -133,13 +144,37 @@ NextToken(Buffer *buffer)
 	}
 	else if(*p == '{')
 	{
-		token.type = TokenType_::OpenBracket;
+		token.type = TokenType_::OpenSquigglyBracket;
 		token.start = p;
 		token.length = 1;
 	}
 	else if(*p == '}')
 	{
-		token.type = TokenType_::CloseBracket;
+		token.type = TokenType_::CloseSquigglyBracket;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == '[')
+	{
+		token.type = TokenType_::OpenSquareBracket;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == ']')
+	{
+		token.type = TokenType_::CloseSquareBracket;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == '<')
+	{
+		token.type = TokenType_::OpenAngleBracket;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == '>')
+	{
+		token.type = TokenType_::CloseAngleBracket;
 		token.start = p;
 		token.length = 1;
 	}
@@ -152,6 +187,12 @@ NextToken(Buffer *buffer)
 	else if(*p == '*')
 	{
 		token.type = TokenType_::Asterisk;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == ',')
+	{
+		token.type = TokenType_::Comma;
 		token.start = p;
 		token.length = 1;
 	}
@@ -176,6 +217,105 @@ NextToken(Buffer *buffer)
 
 	p += token.length;
 	return token;
+}
+
+bool
+SeekMatchingBracket(Buffer *buffer)
+{
+	char *initial = buffer->p;
+	char *&p = buffer->p; // alias
+
+	Token open_bracket_token = NextToken(buffer);
+	bool success = false;
+	char *end_bracket_pos = nullptr;
+	if(open_bracket_token.type == TokenType_::OpenSquigglyBracket)
+	{
+		// '{'
+		int nested_bracket_count = 0;
+		while(BufferBytesRemaining(*buffer) > 0)
+		{
+			Token token = NextToken(buffer);
+			if(token.type == TokenType_::OpenSquigglyBracket)
+			{
+				++nested_bracket_count;
+			}
+			else if(token.type == TokenType_::CloseSquigglyBracket)
+			{
+				if(nested_bracket_count == 0)
+				{
+					success = true;
+					end_bracket_pos = token.start;
+					break;
+				}
+				else
+				{
+					--nested_bracket_count;
+				}
+			}
+		}
+	}
+	else if(open_bracket_token.type == TokenType_::OpenSquareBracket)
+	{
+		// '{'
+		int nested_bracket_count = 0;
+		while(BufferBytesRemaining(*buffer) > 0)
+		{
+			Token token = NextToken(buffer);
+			if(token.type == TokenType_::OpenSquareBracket)
+			{
+				++nested_bracket_count;
+			}
+			else if(token.type == TokenType_::CloseSquareBracket)
+			{
+				if(nested_bracket_count == 0)
+				{
+					success = true;
+					end_bracket_pos = token.start;
+					break;
+				}
+				else
+				{
+					--nested_bracket_count;
+				}
+			}
+		}
+	}
+	else if(open_bracket_token.type == TokenType_::OpenAngleBracket)
+	{
+		// '{'
+		int nested_bracket_count = 0;
+		while(BufferBytesRemaining(*buffer) > 0)
+		{
+			Token token = NextToken(buffer);
+			if(token.type == TokenType_::OpenAngleBracket)
+			{
+				++nested_bracket_count;
+			}
+			else if(token.type == TokenType_::CloseAngleBracket)
+			{
+				if(nested_bracket_count == 0)
+				{
+					success = true;
+					end_bracket_pos = token.start;
+					break;
+				}
+				else
+				{
+					--nested_bracket_count;
+				}
+			}
+		}
+	}
+
+	// Set final buffer position to end of bracket
+	if(end_bracket_pos) buffer->p = end_bracket_pos;
+
+	if(!success)
+	{
+		// Reset buffer position if no matching bracket found.
+		buffer->p = initial;
+	}
+	return success;
 }
 
 bool
@@ -292,7 +432,17 @@ int main()
 		printf("Failed to open meta_print.cpp file");
 		return 0;
 	}
+	fprintf(out_file, "#include \"meta_print.h\"\n\n");
 	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", out_file);
+
+	FILE *header_file = fopen(root_dir "src/meta_print.h", "w");
+	if(!header_file)
+	{
+		printf("Failed to open meta_print.h file");
+		return 0;
+	}
+	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", header_file);
+	fprintf(header_file, "\n");
 
 	WIN32_FIND_DATA file_data;
 	HANDLE handle = FindFirstFileA(root_dir "src/*.h", &file_data);
@@ -315,6 +465,9 @@ int main()
 
 		Buffer file = LoadFileIntoMemoryAndNullTerminate(filename_with_folder);
 
+		fprintf(out_file, "\n// ---------------FILE START---------------\n");
+		fprintf(out_file, "// %s\n", file_data.cFileName);
+		fprintf(out_file, "// ------------------------------------------\n");
 		// fprintf(out_file, "#include <string.h>\n");
 		// fprintf(out_file, "#include \"utf32string.h\"\n");
 		//fprintf(out_file, "\n");
@@ -341,7 +494,27 @@ int main()
 			}
 			else if(token.type == TokenType_::Identifier)
 			{
-				if(TokenMatchesString(token, "Introspect"))
+				bool struct_is_templated = false;
+				if(TokenMatchesString(token, "template"))
+				{
+					bool valid = true;
+					valid = valid && ConfirmTokenType_(&file, TokenType_::OpenAngleBracket);
+					SeekChar(&file, '<');
+					SeekMatchingBracket(&file);
+					valid = valid && ConfirmTokenType_(&file, TokenType_::CloseAngleBracket);
+
+					Token thing_being_templated = NextToken(&file);
+					if(TokenMatchesString(thing_being_templated, "struct"))
+					{
+						// This template corresponds to a templated struct, so we want
+						// to template the MetaString function to match it.
+						file.p = thing_being_templated.start;
+						token = NextToken(&file);
+						struct_is_templated = true;
+					}
+				}
+
+				if(TokenMatchesString(token, "struct"))
 				{ // Try to parse from here as a struct.
 					fprintf(out_file, "\n");
 					StructMetaData meta_data = {};
@@ -349,15 +522,32 @@ int main()
 					bool valid = true;
 
 					// struct identifier
-					valid = valid && ConfirmIdentifier(&file, "struct");
+					//valid = valid && ConfirmIdentifier(&file, "struct");
 
 					// struct name
 					Token struct_name_token = NextToken(&file);
-					if(struct_name_token.type != TokenType_::Identifier) break;
-					meta_data.name = (char*)malloc(struct_name_token.length+1);
-					memcpy(meta_data.name, struct_name_token.start, struct_name_token.length);
-					meta_data.name[struct_name_token.length] = '\0';
+					if(struct_name_token.type != TokenType_::Identifier)
+					{
+						// I don't think this should ever happen in valid C syntax, so if it does, let's warn about it.
+						printf("Encountered non-identifier after struct keyword: %.*s",
+							   (int)struct_name_token.length, struct_name_token.start);
+						break;
+					}
+					if(CheckNextTokenType_(&file, TokenType_::SemiColon)) continue; // Skip struct declarations
+					// meta_data.name = (char*)malloc(struct_name_token.length+1);
+					// memcpy(meta_data.name, struct_name_token.start, struct_name_token.length);
+					// meta_data.name[struct_name_token.length] = '\0';
 
+					if(struct_is_templated)
+					{
+						fprintf(header_file, "template<typename Type>\n");
+						fprintf(out_file, "template<typename Type>\n");
+					}
+
+					// Output declaration to H file
+					fprintf(header_file, "String MetaString(const %.*s *s);\n\n", int(struct_name_token.length), struct_name_token.start);
+
+					// Output beginning of definition to CPP file.
 					fprintf(out_file, "String MetaString(const %.*s *s)\n", int(struct_name_token.length), struct_name_token.start);
 					fprintf(out_file, "{\n");
 
@@ -369,104 +559,146 @@ int main()
 					fprintf(out_file, "\tstring.max_length = 1024;\n");
 					fprintf(out_file, "\tstring.data = ScratchString(string.max_length);\n");
 					fprintf(out_file, "\n");
-					fprintf(out_file, "\tAppendCString(&string, \"%.*s {\\n\");\n",
+					fprintf(out_file, "\tAppendCString(&string, \"%.*s {\\n\");\n\n",
 							(int)struct_name_token.length, struct_name_token.start);
 
 					// PrintToken(struct_name_token);
 					// printf("\n");
 
 					// struct opening bracket
-					valid = valid && ConfirmTokenType_(&file, TokenType_::OpenBracket);
+					valid = valid && ConfirmTokenType_(&file, TokenType_::OpenSquigglyBracket);
 
 					// struct members
 					while(BufferBytesRemaining(file) > 0)
 					{
-						if(meta_data.member_count >= ArrayCount(meta_data.members))
-						{
-							printf("Encountered more than allowed max members in struct: %s", meta_data.name);
-							break;
-						}
+						// if(meta_data.member_count >= ArrayCount(meta_data.members))
+						// {
+						// 	printf("Encountered more than allowed max members in struct: %s", meta_data.name);
+						// 	break;
+						// }
 
 						Token base_type_token = NextToken(&file);
-						if(base_type_token.type == TokenType_::CloseBracket) break;
 
-						bool is_pointer;
-						char no_pointer[] = "";
-						char yes_pointer[] = " *";
-						char *pointer_character_string = nullptr;
-						if(CheckNextTokenType_(&file, TokenType_::Asterisk))
-						{ // Pointer
-							ConfirmTokenType_(&file, TokenType_::Asterisk);
-							pointer_character_string = yes_pointer;
-							is_pointer = true;
-						}
-						else
+						// @note: this will break for explicit nested struct members (anonymous struct)
+						if(base_type_token.type == TokenType_::CloseSquigglyBracket) break;
+
+						// Loop over comma-separated members here.
+						bool in_comma_separated_list = true;
+						while(in_comma_separated_list)
 						{
-							pointer_character_string = no_pointer;
-							is_pointer = false;
+							bool is_pointer;
+							char no_pointer[] = "";
+							char yes_pointer[] = " *";
+							char *pointer_character_string = nullptr;
+							if(CheckNextTokenType_(&file, TokenType_::Asterisk))
+							{ // Pointer
+								ConfirmTokenType_(&file, TokenType_::Asterisk);
+								pointer_character_string = yes_pointer;
+								is_pointer = true;
+							}
+							else
+							{
+								pointer_character_string = no_pointer;
+								is_pointer = false;
+							}
+
+							// Check if the member is templated.
+							if(CheckNextTokenType_(&file, TokenType_::OpenAngleBracket))
+							{
+								SeekMatchingBracket(&file);
+								if(ConfirmTokenType_(&file, TokenType_::CloseAngleBracket))
+								{
+									// Extend base_type_token to include the templated part.
+									base_type_token.length = file.p - base_type_token.start;
+								}
+								else
+								{
+									printf("SeekMatchingBracket() failed. (meta.cpp ln: %d)", __LINE__);
+								}
+							}
+
+							if(CheckNextTokenType_(&file, TokenType_::Identifier))
+							{ // Member name (no current support for multi-identifier declarations, like const, volatile, etc.)
+								Token member_name = NextToken(&file);
+
+								char yes_array[] = "[]";
+								if(CheckNextTokenType_(&file, TokenType_::OpenSquareBracket))
+								{ // Array member
+									pointer_character_string = yes_array;
+								}
+
+
+
+								MetaType base_meta_type = MetaType::unknown;
+								base_meta_type = InterpretTokenAsMetaType(base_type_token, is_pointer);
+
+								char base_type_format_specifier = 'd';
+
+								bool known_meta_type = true;
+
+								Fmt_first(int, d)
+								Fmt(char, c)
+								Fmt(bool, d)
+								Fmt(void, d)
+								Fmt(float, f)
+								Fmt(s8, d)
+								Fmt(s16, d)
+								Fmt(s32, d)
+								Fmt(s64, d)
+								Fmt(u8, u)
+								Fmt(u16, u)
+								Fmt(u32, u)
+								Fmt(u64, u)
+								else
+								{
+									// We found an unknown base meta type, so printf the error...
+									// printf("Undefined base meta type (%.*s) found in struct \"%.*s\" (file: %s)\n",
+									// 	   (int)base_type_token.length, base_type_token.start,
+									// 	   (int)struct_name_token.length, struct_name_token.start,
+									// 	   file_data.cFileName);
+
+									known_meta_type = false;
+								}
+
+								if(known_meta_type)
+								{
+									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%%c (%.*s%s)\\n\", s->%.*s);\n\n",
+											(int)member_name.length, member_name.start,
+											base_type_format_specifier,
+											(int)base_type_token.length, base_type_token.start,
+											pointer_character_string,
+											(int)member_name.length, member_name.start);
+								}
+								else
+								{
+									// Append the member as a string from a recursive MetaString() call.
+									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: \");\n",
+										    (int)member_name.length, member_name.start);
+									fprintf(out_file, "\tAppendString(&string, MetaString(&s->%.*s));\n",
+											(int)member_name.length, member_name.start);
+									fprintf(out_file, "\tAppendCString(&string, \"(%.*s)\\n\");\n\n",
+											(int)base_type_token.length, base_type_token.start);
+								}
+							}
+
+							if(CheckNextTokenType_(&file, TokenType_::Comma))
+							{
+								ConfirmTokenType_(&file, TokenType_::Comma);
+							}
+							else
+							{
+								in_comma_separated_list = false;
+							}
 						}
 
-						if(CheckNextTokenType_(&file, TokenType_::Identifier))
-						{ // Member name (no current support for multi-identifier declarations, like const, volatile, etc.)
-							Token member_name = NextToken(&file);
-
-							StructMember *member = &meta_data.members[meta_data.member_count];
-							member->name = (char*)malloc(member_name.length+1);
-							memcpy(member->name, member_name.start, member_name.length);
-							member->name[member_name.length] = '\0';
-
-							MetaType base_meta_type = MetaType::unknown;
-							base_meta_type = InterpretTokenAsMetaType(base_type_token, is_pointer);
-
-							char base_type_format_specifier = 'd';
-
-							bool known_meta_type = true;
-
-							Fmt_first(int, d)
-							Fmt(char, c)
-							Fmt(bool, d)
-							Fmt(void, d)
-							Fmt(float, f)
-							Fmt(s8, d)
-							Fmt(s16, d)
-							Fmt(s32, d)
-							Fmt(s64, d)
-							Fmt(u8, u)
-							Fmt(u16, u)
-							Fmt(u32, u)
-							Fmt(u64, u)
-							else
+						if(CheckNextTokenType_(&file, TokenType_::OpenSquareBracket))
+						{ // Array member
+							SeekMatchingBracket(&file);
+							if(!CheckNextTokenType_(&file, TokenType_::CloseSquareBracket))
 							{
-								// We found an unknown base meta type, so printf the error...
-								// printf("Undefined base meta type (%.*s) found in struct \"%.*s\" (file: %s)\n",
-								// 	   (int)base_type_token.length, base_type_token.start,
-								// 	   (int)struct_name_token.length, struct_name_token.start,
-								// 	   file_data.cFileName);
-
-								known_meta_type = false;
+								printf("SeekMatchingBracket() failed to find matching square bracket.");
 							}
-
-							if(known_meta_type)
-							{
-								fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%%c (%.*s%s)\\n\", s->%.*s);\n",
-										(int)member_name.length, member_name.start,
-										base_type_format_specifier,
-										(int)base_type_token.length, base_type_token.start,
-										pointer_character_string,
-										(int)member_name.length, member_name.start);
-							}
-							else
-							{
-								// output a modified version of AppendCString() that will make it
-								// clear in a string representation that the type was not parsed fully by the
-								// metaprogram.
-								fprintf(out_file, "\tAppendCString(&string, \"  %.*s: [invalid metadata] (%.*s%s)\\n\", s->%.*s);\n",
-									(int)member_name.length, member_name.start,
-									(int)base_type_token.length, base_type_token.start,
-									pointer_character_string,
-									(int)member_name.length, member_name.start);
-							}
-
+							else ConfirmTokenType_(&file, TokenType_::CloseSquareBracket);
 						}
 
 						if(!ConfirmTokenType_(&file, TokenType_::SemiColon))
@@ -494,11 +726,13 @@ int main()
 			}
 		}
 
+		FreeBuffer(&file);
 		FindNextFileA(handle, &file_data);
 	}
 
 	FindClose(handle);
 	fclose(out_file);
+	fclose(header_file);
 		// if(token.type == TokenType_::Identifier)
 		// {
 

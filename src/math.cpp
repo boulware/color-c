@@ -26,6 +26,11 @@ namespace m
 		else return -value;
 	}
 
+	float Round(float value)
+	{
+		return((float)(int)(value + 0.5f));
+	}
+
 	template <class Type>
 	Type Pow(Type base, unsigned int power)
 	{

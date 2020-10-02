@@ -1,2 +1,25 @@
 1) Fully implement turns (*AP restrictions, end turn button, enemies use abilities on their turn and then pass turn back)
 2) Enemy intent icons (hovering over shows the action preview) (have a full enemy turn intent icon above all the single intent icons which shows the overall result of all enemy actions?)
+
+3) Allow abilities to use multiple target sets
+e.g.: in the ability data files, use a '^' to indicate that the effect on this line
+      will refer to the same target that the previous effect did.
+      This seems like a clean syntax that allows multiple target sets in the
+      same ability *AND* still lets us apply multiple effects to the same target
+      without too much syntax overhead.
+
+...
+ability "Strike"
+tier 0
+requires (0,0,0)
+effect Damage single_unit (1,0,0)
+effect Heal ^ (0,1,0)
+effect Freeze ^
+effect Heal all_allies (0,5,0)
+...
+
+3a) Similar: For more complex effect chains where, for example -- you Restore 1 focus and then steal 2 focus from the same target -- we don't currently support that properly at the moment because the steal amount is calculated before the restore is applied, so it will be inaccurate in some cases. There's a related question of whether we want to track whether battle events/triggers happen simulatenously or one after another, which may affect how triggers play out in some circumstances.
+
+4) Effects could be single-inheritance instead of using a void* to effect parameters? Not sure which road I want to go down here. AOWTC it's a void*, but it's just a little spooky. Even a union is an option, but it might be even worse than a void*.
+
+5) Units dying in battles.
