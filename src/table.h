@@ -9,14 +9,16 @@
 //        on table allocation. So... we probably don't need the NullIndex<>={-1,-1} business.
 //	      AOWTC: we have a default constructor that just sets id=0, generation=0. I don't foresee
 //        any issues with this, but keep it in mind.
-template <typename Type>
+
+MetaBreakHere
+template<typename Type>
 struct Id
 {
     int index;
     int generation;
 };
 
-template <typename Type>
+template<typename Type>
 struct TableEntry
 {
     Type data;
@@ -25,7 +27,7 @@ struct TableEntry
     //int generation; // generation=0 implies entry has never been used (or the 32-bit counter has looped)
 };
 
-template <typename Type>
+template<typename Type>
 struct Table
 {
 	TableEntry<Type> *entries;  // Pointer to first entry inside .arena

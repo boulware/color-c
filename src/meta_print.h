@@ -19,6 +19,7 @@
 #include "lang.h"
 #include "log.h"
 #include "macros.h"
+#include "main_menu.h"
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
@@ -45,9 +46,14 @@ String MetaString(const AbilityTier *s);
 
 String MetaString(const Ability *s);
 
+String MetaString(const AlignX *s);
+
+String MetaString(const AlignY *s);
+
 String MetaString(const Align *s);
 
-String MetaString(const Ability *s);
+template<typename Type>
+String MetaString(const Array<Type> *s);
 
 String MetaString(const Intent *s);
 
@@ -65,9 +71,19 @@ String MetaString(const TimedBlockEntry *s);
 
 String MetaString(const TimedBlock *s);
 
+String MetaString(const EditorMode *s);
+
+String MetaString(const InputElementType *s);
+
+String MetaString(const AbilityPropertyIndex *s);
+
+String MetaString(const BreedPropertyIndex *s);
+
 String MetaString(const InputElement *s);
 
 String MetaString(const Editor *s);
+
+String MetaString(const EffectType *s);
 
 String MetaString(const Effect *s);
 
@@ -80,6 +96,8 @@ String MetaString(const EffectParams_Restore *s);
 String MetaString(const EffectParams_Gift *s);
 
 String MetaString(const EffectParams_Steal *s);
+
+String MetaString(const GameState *s);
 
 String MetaString(const Game *s);
 
@@ -107,15 +125,9 @@ String MetaString(const InputState *s);
 
 String MetaString(const LogState *s);
 
+String MetaString(const MainMenu *s);
+
 String MetaString(const Arena *s);
-
-String MetaString(const Buffer *s);
-
-String MetaString(const StringBuffer *s);
-
-String MetaString(const Token *s);
-
-String MetaString(const OpenGL *s);
 
 String MetaString(const OscillatingTimer *s);
 
@@ -125,8 +137,6 @@ String MetaString(const PassiveNode *s);
 
 String MetaString(const PassiveSkillTree *s);
 
-String MetaString(const Platform *s);
-
 String MetaString(const LCG *s);
 
 String MetaString(const Sprite *s);
@@ -134,7 +144,15 @@ String MetaString(const Sprite *s);
 String MetaString(const String *s);
 
 template<typename Type>
-String MetaString(const TableEntry *s);
+String MetaString(const Id<Type> *s);
+
+template<typename Type>
+String MetaString(const TableEntry<Type> *s);
+
+template<typename Type>
+String MetaString(const Table<Type> *s);
+
+String MetaString(const TargetClass *s);
 
 String MetaString(const Buffer *s);
 
@@ -149,6 +167,8 @@ String MetaString(const TextLayout *s);
 String MetaString(const Timer *s);
 
 String MetaString(const TraitSet *s);
+
+String MetaString(const Team *s);
 
 String MetaString(const Breed *s);
 

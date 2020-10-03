@@ -1,4 +1,4 @@
-#include "array."
+#include "array.h"
 
 template<typename Type>
 void
@@ -10,6 +10,19 @@ operator+=(Array<Type> &array, Type entry)
 	}
 
 	array.data[array.count++] = entry;
+}
+
+template<typename Type>
+Type &
+ElementAt(Array<Type> *array, int index)
+{
+	if(index < 0 or index >= array->count)
+	{
+		//VerboseLog(__FUNCTION__"() got invalid index for Array<%s>", mStringify(Type));
+		Assert(false);
+	}
+
+	return array->data[index];
 }
 
 template<typename Type>
@@ -27,6 +40,29 @@ ResizeArray(Array<Type> *array, int new_max_count)
 	}
 
 	array->max_count = new_max_count;
+}
+
+template<typename Type>
+void
+AppendArrayToArray(Array<Type> *root_array, Array<Type> appended_array)
+{
+	int total_element_count = root_array->count + appended_array.count;
+	if(total_element_count > root_array->max_count)
+	{
+		ResizeArray(root_array, total_element_count);
+	}
+
+	for(int i=0; i<appended_array.count; i++)
+	{
+		*root_array += ElementAt(&appended_array, i);
+	}
+}
+
+template<typename Type>
+void
+ClearArray(Array<Type> *array)
+{
+	array->count = 0;
 }
 
 template<typename Type>

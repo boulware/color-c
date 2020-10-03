@@ -1,6 +1,6 @@
 #include "table.h"
 
-#include <typeinfo>
+//#include <typeinfo>
 
 template<typename Type>
 TableEntry<Type>*
@@ -56,7 +56,8 @@ CreateEntry(Table<Type> *table)
 {
 	if(table->entry_count >= table->max_entry_count)
 	{
-		log("[%s] Table couldn't create a requested entry because it was full.", typeid(Type).name());
+		// @unsure: does the mStringify macro happen before or after templatization?
+		log("[%s] Table couldn't create a requested entry because it was full.", mStringify(Type));
 		return Id<Type>{.index = 0, .generation = 0};
 	}
 

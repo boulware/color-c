@@ -9,12 +9,16 @@
 * Constructor/Destructor declarations inside struct.
 * function pointer members
 * members that are aggregate-initialized (with {})
+* show all members of an array instead of just the address of it
+* parse enum classes so that their MetaString prints the actual enum name (not the integer).
 
 PARTIAL
 * Templated members (templated members are implemented, but templating the MetaString() function isn't, so it's only partially complete)
 
 FINISHED, but maybe not robust:
 * Struct members that are arrays
+* implement NextTokenMatchesString(), and similarly for token sequences:
+           e.g., NextTokensMatchStrings(&file, "enum", "class");
 
 
 */////////////////////////////////////////////////////////////////////////
@@ -35,12 +39,12 @@ FINISHED, but maybe not robust:
 #include "math.cpp"
 
 #define Fmt_first(type, fmt)\
-if(base_meta_type == MetaType::_##type) {base_type_format_specifier = #fmt[0];}\
-else if(base_meta_type == MetaType::_##type##_pointer) {base_type_format_specifier = 'p';}
+if(base_meta_type == MetaType::_##type) {base_type_format_specifier = #fmt;}\
+else if(base_meta_type == MetaType::_##type##_pointer) {base_type_format_specifier = "p";}
 
 #define Fmt(type, fmt)\
-else if(base_meta_type == MetaType::_##type) {base_type_format_specifier = #fmt[0];}\
-else if(base_meta_type == MetaType::_##type##_pointer) {base_type_format_specifier = 'p';}
+else if(base_meta_type == MetaType::_##type) {base_type_format_specifier = #fmt;}\
+else if(base_meta_type == MetaType::_##type##_pointer) {base_type_format_specifier = "p";}
 
 Buffer
 LoadFileIntoMemoryAndNullTerminate(const char *filename)
@@ -178,6 +182,18 @@ NextToken(Buffer *buffer)
 		token.start = p;
 		token.length = 1;
 	}
+	else if(*p == '(')
+	{
+		token.type = TokenType_::OpenParen;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == ')')
+	{
+		token.type = TokenType_::CloseParen;
+		token.start = p;
+		token.length = 1;
+	}
 	else if(*p == ';')
 	{
 		token.type = TokenType_::SemiColon;
@@ -193,6 +209,24 @@ NextToken(Buffer *buffer)
 	else if(*p == ',')
 	{
 		token.type = TokenType_::Comma;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == '~')
+	{
+		token.type = TokenType_::Tilde;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == '=')
+	{
+		token.type = TokenType_::Equals;
+		token.start = p;
+		token.length = 1;
+	}
+	else if(*p == ':')
+	{
+		token.type = TokenType_::Colon;
 		token.start = p;
 		token.length = 1;
 	}
@@ -217,6 +251,36 @@ NextToken(Buffer *buffer)
 
 	p += token.length;
 	return token;
+}
+
+bool
+NextTokenMatchesString(Buffer *buffer, const char *string)
+{
+	char *initial = buffer->p;
+	Token token = NextToken(buffer);
+	buffer->p = initial;
+
+	return(TokenMatchesString(token, string));
+}
+
+bool
+NextTokensMatchStrings(Buffer *buffer, const char *s0, const char *s1)
+{
+	char *initial = buffer->p;
+	Token t0 = NextToken(buffer);
+	Token t1 = NextToken(buffer);
+	buffer->p = initial;
+
+	return(TokenMatchesString(t0, s0) and TokenMatchesString(t1, s1));
+}
+
+void
+SkipTokens(Buffer *buffer, int count)
+{
+	for(int i=0; i<count; i++)
+	{
+		NextToken(buffer);
+	}
 }
 
 bool
@@ -256,7 +320,7 @@ SeekMatchingBracket(Buffer *buffer)
 	}
 	else if(open_bracket_token.type == TokenType_::OpenSquareBracket)
 	{
-		// '{'
+		// '['
 		int nested_bracket_count = 0;
 		while(BufferBytesRemaining(*buffer) > 0)
 		{
@@ -282,7 +346,7 @@ SeekMatchingBracket(Buffer *buffer)
 	}
 	else if(open_bracket_token.type == TokenType_::OpenAngleBracket)
 	{
-		// '{'
+		// '<'
 		int nested_bracket_count = 0;
 		while(BufferBytesRemaining(*buffer) > 0)
 		{
@@ -306,8 +370,34 @@ SeekMatchingBracket(Buffer *buffer)
 			}
 		}
 	}
+	else if(open_bracket_token.type == TokenType_::OpenParen)
+	{
+		// '('
+		int nested_bracket_count = 0;
+		while(BufferBytesRemaining(*buffer) > 0)
+		{
+			Token token = NextToken(buffer);
+			if(token.type == TokenType_::OpenParen)
+			{
+				++nested_bracket_count;
+			}
+			else if(token.type == TokenType_::CloseParen)
+			{
+				if(nested_bracket_count == 0)
+				{
+					success = true;
+					end_bracket_pos = token.start;
+					break;
+				}
+				else
+				{
+					--nested_bracket_count;
+				}
+			}
+		}
+	}
 
-	// Set final buffer position to end of bracket
+	// Set final buffer position to end at the bracket (not past it)
 	if(end_bracket_pos) buffer->p = end_bracket_pos;
 
 	if(!success)
@@ -382,6 +472,10 @@ enum class MetaType
 	_void_pointer,
 	_float,
 	_float_pointer,
+	_size_t,
+	_size_t_pointer,
+	_GLuint,
+	_GLuint_pointer,
 };
 
 struct StructMember
@@ -417,6 +511,8 @@ InterpretTokenAsMetaType(Token token, bool is_pointer)
 	mInterpretToken(u16)
 	mInterpretToken(u32)
 	mInterpretToken(u64)
+	mInterpretToken(GLuint)
+	mInterpretToken(size_t)
 
 	return meta_type;
 }
@@ -450,7 +546,10 @@ int main()
 	while(GetLastError() != ERROR_NO_MORE_FILES)
 	{
 		// Skip win32_ files to avoid #include <windows.h> megapollution
-		if(strncmp("win32_", file_data.cFileName, 6) == 0)
+		if(   strncmp("win32_", file_data.cFileName, 6) == 0
+           or strncmp("meta_", file_data.cFileName, 5) == 0
+           or strncmp("opengl.h", file_data.cFileName, 8) == 0
+           or strncmp("platform.h", file_data.cFileName, 10) == 0)
 		{
 			FindNextFileA(handle, &file_data);
 			continue;
@@ -494,12 +593,90 @@ int main()
 			}
 			else if(token.type == TokenType_::Identifier)
 			{
+				if(TokenMatchesString(token, "MetaBreakHere"))
+				{
+					printf(".");
+				}
+
+				if(TokenMatchesString(token, "enum") and NextTokenMatchesString(&file, "class"))
+				{ // enum class
+					SkipTokens(&file, 1);
+					Token enum_class_name_token = NextToken(&file);
+
+					if(CheckNextTokenType_(&file, TokenType_::Colon))
+					{ // enum type specification (e.g., enum class Color : u8 {})
+						SkipTokens(&file, 2); // skip colon and type name
+					}
+
+					bool valid = true;
+					valid = valid && ConfirmTokenType_(&file, TokenType_::OpenSquigglyBracket);
+					if(!valid) continue;
+
+					// Output declaration to H file
+					fprintf(header_file, "String MetaString(const %.*s *s);\n\n",
+						    int(enum_class_name_token.length), enum_class_name_token.start);
+
+					// Output beginning of definition to CPP file.
+					fprintf(out_file, "\nString MetaString(const %.*s *s)\n",
+						    int(enum_class_name_token.length), enum_class_name_token.start);
+					fprintf(out_file, "{\n");
+
+					fprintf(out_file, "\tTIMED_BLOCK;\n");
+					fprintf(out_file, "\n");
+
+					fprintf(out_file, "\tString string = {};\n");
+					fprintf(out_file, "\tstring.length = 0;\n");
+					fprintf(out_file, "\tstring.max_length = 1024;\n");
+					fprintf(out_file, "\tstring.data = ScratchString(string.max_length);\n");
+					fprintf(out_file, "\n");
+					fprintf(out_file, "\tAppendCString(&string, \"%.*s::\");\n",
+							(int)enum_class_name_token.length, enum_class_name_token.start);
+
+					fprintf(out_file, "\tswitch(*s)\n");
+					fprintf(out_file, "\t{\n");
+
+					bool parsing = true;
+					while(parsing)
+					{
+						Token member_name_token = NextToken(&file);
+						if(member_name_token.type == TokenType_::CloseSquigglyBracket)
+						{
+							break;
+						}
+
+						if(CheckNextTokenType_(&file, TokenType_::Comma))
+						{
+					        SeekAfterChar(&file, ',');
+						}
+						else
+						{
+							parsing = false;
+						}
+
+
+						fprintf(out_file, "\t\tcase(%.*s::%.*s): {\n",
+							    (int)enum_class_name_token.length, enum_class_name_token.start,
+							    (int)member_name_token.length, member_name_token.start);
+						fprintf(out_file, "\t\t\tAppendCString(&string, \"%.*s\");\n",
+							    (int)member_name_token.length, member_name_token.start);
+						fprintf(out_file, "\t\t} break;\n");
+					}
+
+					fprintf(out_file, "\t\tdefault: {\n");
+					fprintf(out_file, "\t\t\tAppendCString(&string, \"?????\");\n");
+					fprintf(out_file, "\t\t} break;\n");
+					fprintf(out_file, "\t}\n");
+					fprintf(out_file, "\n");
+					fprintf(out_file, "\treturn string;\n");
+					fprintf(out_file, "}\n");
+
+				}
+
 				bool struct_is_templated = false;
 				if(TokenMatchesString(token, "template"))
 				{
 					bool valid = true;
-					valid = valid && ConfirmTokenType_(&file, TokenType_::OpenAngleBracket);
-					SeekChar(&file, '<');
+					//Token open_angle = NextToken(&file);
 					SeekMatchingBracket(&file);
 					valid = valid && ConfirmTokenType_(&file, TokenType_::CloseAngleBracket);
 
@@ -538,17 +715,23 @@ int main()
 					// memcpy(meta_data.name, struct_name_token.start, struct_name_token.length);
 					// meta_data.name[struct_name_token.length] = '\0';
 
+					char *template_type_string = "";
 					if(struct_is_templated)
 					{
 						fprintf(header_file, "template<typename Type>\n");
 						fprintf(out_file, "template<typename Type>\n");
+						template_type_string = "<Type>";
 					}
 
 					// Output declaration to H file
-					fprintf(header_file, "String MetaString(const %.*s *s);\n\n", int(struct_name_token.length), struct_name_token.start);
+					fprintf(header_file, "String MetaString(const %.*s%s *s);\n\n",
+						    int(struct_name_token.length), struct_name_token.start,
+						    template_type_string);
 
 					// Output beginning of definition to CPP file.
-					fprintf(out_file, "String MetaString(const %.*s *s)\n", int(struct_name_token.length), struct_name_token.start);
+					fprintf(out_file, "String MetaString(const %.*s%s *s)\n",
+						    int(struct_name_token.length), struct_name_token.start,
+						    template_type_string);
 					fprintf(out_file, "{\n");
 
 					fprintf(out_file, "\tTIMED_BLOCK;\n");
@@ -579,28 +762,48 @@ int main()
 
 						Token base_type_token = NextToken(&file);
 
-						// @note: this will break for explicit nested struct members (anonymous struct)
+						bool member_is_const = false;
+						if(TokenMatchesString(base_type_token, "const"))
+						{
+							base_type_token = NextToken(&file);
+							member_is_const = true;
+						}
+
+						if(CheckNextTokenType_(&file, TokenType_::Tilde))
+						{ // Destructor declaration
+							// Skip over destructor name, and the function signature check below will
+							// catch the rest of this and parse the rest as a function declaration or definition.
+							Token destructor_name = NextToken(&file);
+						}
+
+						// Check if it's a function signature.
+						if(CheckNextTokenType_(&file, TokenType_::OpenParen))
+						{
+							SeekMatchingBracket(&file);
+							if(ConfirmTokenType_(&file, TokenType_::CloseParen))
+							{
+								Token token = NextToken(&file);
+
+								if(token.type == TokenType_::SemiColon)
+								{ // Function declaration. Skip to next member
+									continue;
+								}
+								else if(token.type == TokenType_::OpenSquigglyBracket)
+								{ // Function definition. Skip to matching end brace, then go to next member.
+									file.p = token.start;
+									SeekMatchingBracket(&file);
+									continue;
+								}
+							}
+						}
+
+						// @note: this might break for explicit nested struct members (anonymous struct)
 						if(base_type_token.type == TokenType_::CloseSquigglyBracket) break;
 
 						// Loop over comma-separated members here.
 						bool in_comma_separated_list = true;
 						while(in_comma_separated_list)
 						{
-							bool is_pointer;
-							char no_pointer[] = "";
-							char yes_pointer[] = " *";
-							char *pointer_character_string = nullptr;
-							if(CheckNextTokenType_(&file, TokenType_::Asterisk))
-							{ // Pointer
-								ConfirmTokenType_(&file, TokenType_::Asterisk);
-								pointer_character_string = yes_pointer;
-								is_pointer = true;
-							}
-							else
-							{
-								pointer_character_string = no_pointer;
-								is_pointer = false;
-							}
 
 							// Check if the member is templated.
 							if(CheckNextTokenType_(&file, TokenType_::OpenAngleBracket))
@@ -617,22 +820,46 @@ int main()
 								}
 							}
 
+							bool is_pointer = false;
+							char no_pointer[] = "";
+							char yes_pointer[] = " *";
+							char *pointer_character_string = nullptr;
+							if(CheckNextTokenType_(&file, TokenType_::Asterisk))
+							{ // Pointer
+								ConfirmTokenType_(&file, TokenType_::Asterisk);
+								pointer_character_string = yes_pointer;
+								is_pointer = true;
+							}
+							else
+							{
+								pointer_character_string = no_pointer;
+								is_pointer = false;
+							}
+
 							if(CheckNextTokenType_(&file, TokenType_::Identifier))
 							{ // Member name (no current support for multi-identifier declarations, like const, volatile, etc.)
 								Token member_name = NextToken(&file);
 
-								char yes_array[] = "[]";
-								if(CheckNextTokenType_(&file, TokenType_::OpenSquareBracket))
-								{ // Array member
-									pointer_character_string = yes_array;
+								if(TokenMatchesString(member_name, "const"))
+								{
+									member_name = NextToken(&file);
+									member_is_const = true;
 								}
-
-
 
 								MetaType base_meta_type = MetaType::unknown;
 								base_meta_type = InterpretTokenAsMetaType(base_type_token, is_pointer);
 
-								char base_type_format_specifier = 'd';
+								char *base_type_format_specifier = "d";
+
+								int array_dimension = 0;
+								char yes_array[] = "[]";
+								while(CheckNextTokenType_(&file, TokenType_::OpenSquareBracket))
+								{ // Array member
+									//pointer_character_string = yes_array;
+									SeekMatchingBracket(&file);
+									SkipTokens(&file, 1);
+									++array_dimension;
+								}
 
 								bool known_meta_type = true;
 
@@ -649,35 +876,81 @@ int main()
 								Fmt(u16, u)
 								Fmt(u32, u)
 								Fmt(u64, u)
+								Fmt(GLuint, u)
+								Fmt(size_t, zu)
 								else
 								{
-									// We found an unknown base meta type, so printf the error...
-									// printf("Undefined base meta type (%.*s) found in struct \"%.*s\" (file: %s)\n",
-									// 	   (int)base_type_token.length, base_type_token.start,
-									// 	   (int)struct_name_token.length, struct_name_token.start,
-									// 	   file_data.cFileName);
-
 									known_meta_type = false;
 								}
 
-								if(known_meta_type)
+								char *const_string = "";
+								if(member_is_const) const_string = "const ";
+
+								if(array_dimension == 0 and known_meta_type)
 								{
-									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%%c (%.*s%s)\\n\", s->%.*s);\n\n",
+									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%%s (%s%.*s%s)\\n\", s->%.*s);\n\n",
 											(int)member_name.length, member_name.start,
 											base_type_format_specifier,
+											const_string,
 											(int)base_type_token.length, base_type_token.start,
 											pointer_character_string,
 											(int)member_name.length, member_name.start);
 								}
+								else if(array_dimension > 0)
+								{
+									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s",
+											(int)member_name.length, member_name.start,
+											const_string,
+											(int)base_type_token.length, base_type_token.start);
+									for(int i=0; i<array_dimension; i++)
+									{
+										fprintf(out_file, "[]");
+									}
+									fprintf(out_file, ")\\n\", s->%.*s);\n\n",
+											(int)member_name.length, member_name.start);
+								}
+								else
+								{ // Append the member as a string from a recursive MetaString() call, unless it's a pointer.
+									if(is_pointer)
+									{
+										fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s%s)\\n\", s->%.*s);\n\n",
+												(int)member_name.length, member_name.start,
+												const_string,
+												(int)base_type_token.length, base_type_token.start,
+												pointer_character_string,
+												(int)member_name.length, member_name.start);
+									}
+									else
+									{
+										fprintf(out_file, "\tAppendCString(&string, \"  %.*s: \");\n",
+											    (int)member_name.length, member_name.start);
+										fprintf(out_file, "\tAppendString(&string, MetaString(&s->%.*s));\n",
+												(int)member_name.length, member_name.start);
+										fprintf(out_file, "\tAppendCString(&string, \"(%s%.*s%s)\\n\");\n\n",
+												const_string,
+												(int)base_type_token.length, base_type_token.start,
+												pointer_character_string);
+									}
+								}
+							}
+
+							if(CheckNextTokenType_(&file, TokenType_::Equals))
+							{ // Default value initialization.
+								SkipTokens(&file, 1);
+								if(CheckNextTokenType_(&file, TokenType_::OpenSquigglyBracket))
+								{ // Aggregate initializer.
+									SeekMatchingBracket(&file);
+									ConfirmTokenType_(&file, TokenType_::CloseSquigglyBracket);
+
+								    in_comma_separated_list = false;
+								    continue;
+								}
 								else
 								{
-									// Append the member as a string from a recursive MetaString() call.
-									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: \");\n",
-										    (int)member_name.length, member_name.start);
-									fprintf(out_file, "\tAppendString(&string, MetaString(&s->%.*s));\n",
-											(int)member_name.length, member_name.start);
-									fprintf(out_file, "\tAppendCString(&string, \"(%.*s)\\n\");\n\n",
-											(int)base_type_token.length, base_type_token.start);
+									// @robustness: This will fail if there's a semi-colon inside
+									// of a definition; e.g., char *a = ";;;;";
+									SeekChar(&file, ';');
+									in_comma_separated_list = false;
 								}
 							}
 
@@ -741,8 +1014,6 @@ int main()
 	// bool valid = true;
 	// valid = valid && SeekNextLineThatBeginsWith(&file, "Introspect");
 	// char *initial = file.p;
-	// valid = valid && ConfirmNextToken(&file, "Introspect");
-	// valid = valid && ConfirmNextToken(&file, "struct");
 	// if(!valid)
 	// {
 	// 	printf("Invalid struct format: %.*s", int(file.p-initial), initial);
@@ -752,7 +1023,6 @@ int main()
 	// Token struct_name_token = NextToken(&file);
 	// printf("struct name: %.*s\n", (int)struct_name_token.length, struct_name_token.start);
 
-	// valid = valid && ConfirmNextToken(&file, "{");
 	// if(!valid)
 	// {
 	// 	printf("Invalid struct format: %.*s", int(file.p-initial), initial);

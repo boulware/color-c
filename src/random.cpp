@@ -43,7 +43,10 @@ RandomU32(u32 min, u32 max)
 
 	LCG &lcg = random::default_lcg;
 	lcg.seed = (lcg.a * lcg.seed + lcg.c) % lcg.m;
-	return (lcg.seed % (max-min+1)) + min;
+	u32 result = (lcg.seed % (max-min+1)) + min;
+
+	//log("U32: %u", result);
+	return result;
 }
 
 void

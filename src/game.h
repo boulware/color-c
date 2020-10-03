@@ -13,6 +13,7 @@
 #include "sprite.h"
 #include "battle.h"
 #include "editor.h"
+#include "main_menu.h"
 
 enum class GameState
 {
@@ -44,12 +45,12 @@ struct Game
 	GLuint temp_texture;
 	Vec2i string_bmp_size;
 
-	FT_Library ft_lib;
-
 	UnitSet player_party;
 	Battle current_battle;
 
 	Editor editor_state;
+
+	MainMenu mainmenu_state;
 
 	Sprite pointer_cursor;
 	Sprite target_cursor;

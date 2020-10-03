@@ -91,12 +91,14 @@ namespace c
 	const float error_flash_speed = 0.017f;
 
 	// Drawing depths
-	const float near_plane = 0.f;
-	const float far_plane = 1000.f;
-	const float clip_A = 2/(far_plane-near_plane); // [A] in z'=Az+B (the depth=>clip space eqn)
+	const float near_plane = 0.0f;
+	const float far_plane = 1000.0f;
+	const float clip_A = 2.0f/(far_plane-near_plane); // [A] in z'=Az+B (the depth=>clip space eqn)
 	const float clip_B = -(far_plane+near_plane)/(far_plane-near_plane); // [B] in z'=Az+B
 
-	const float hud_draw_depth = 100.f;
+	const float hover_ui_draw_depth = 80.f;
+	const float hud_draw_depth = 100.0f;
+	const float field_draw_depth = 150.0f;
 
 	// UI
 	const TextLayout def_text_layout = {
@@ -120,6 +122,20 @@ namespace c
 			.font = &text_render::default_font,
 			.color = c::grey,
 			.font_size = 32,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::grey,
+		.button_hover_color = c::white,
+		.label_hover_color = c::white,
+		.align = c::align_topleft
+	};
+
+	const ButtonLayout small_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::grey,
+			.font_size = 16,
 			.align = c::align_center,
 			.draw_debug = false
 		},
@@ -354,18 +370,44 @@ namespace c
 	// Enemy intents
 	const Vec2f enemy_intent_offset = {0.5f*unit_slot_size.x, -50.f};
 	const Vec2f enemy_intent_button_size = {150.f, 40.f};
-	const ButtonLayout enemy_intent_button_layout = {
+	const ButtonLayout enemy_cannot_use_button_layout = {
 		.label_layout = {
 			.font = &text_render::default_font,
 			.color = c::grey,
-			.font_size = 16,
+			.font_size = 24,
 			.align = c::align_center,
 			.draw_debug = false
 		},
 		.button_color = c::grey,
 		.button_hover_color = c::lt_grey,
 		.label_hover_color = c::lt_grey,
-		.align = c::align_center
+		.align = c::align_bottomcenter
+	};
+	const ButtonLayout enemy_can_use_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 24,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::white,
+		.button_hover_color = c::yellow,
+		.label_hover_color = c::yellow,
+		.align = c::align_bottomcenter
+	};
+	const ButtonLayout enemy_intented_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::orange,
+			.font_size = 24,
+			.align = c::align_center,
+			.draw_debug = false
+		},
+		.button_color = c::orange,
+		.button_hover_color = c::red,
+		.label_hover_color = c::red,
+		.align = c::align_bottomcenter
 	};
 
 	// traitset string format: "%dV %dF %dA"

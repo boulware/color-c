@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include <string>
-
 #include "macros.h"
 #include "game.h"
 #include "platform.h"

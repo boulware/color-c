@@ -461,24 +461,6 @@ NextTokenAsDoubleQuotedString(Buffer *buffer, Token *token)
 	return is_valid_double_quoted_string;
 }
 
-// Returns true and advances the buffer past the token (including trim) if the next token matches target_string.
-// If it doesn't match, returns false and doesn't advance the buffer position.
-// bool
-// ConfirmNextToken(Buffer *buffer, const char *target_string, const char *trim = c::whitespace)
-// {
-// 	char *initial = buffer->p;
-// 	Token next_token = NextToken(buffer, trim);
-// 	if(CompareStrings(next_token.start, target_string))
-// 	{
-// 		return true;
-// 	}
-// 	else
-// 	{
-// 		buffer->p = initial;
-// 		return false;
-// 	}
-// }
-
 // Returns false if no bytes remain in buffer or invalid utf-8 bytes are encountered
 bool
 NextAsUtf32Char(StringBuffer *buffer, u32 *utf32_char)

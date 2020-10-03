@@ -21,6 +21,7 @@
 #include "lang.h"
 #include "log.h"
 #include "macros.h"
+#include "main_menu.h"
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
@@ -64,9 +65,7 @@ String MetaString(const AbilityTier *s)
 	AppendString(&string, MetaString(&s->required_traits));
 	AppendCString(&string, "(TraitSet)\n");
 
-	AppendCString(&string, "  effects: ");
-	AppendString(&string, MetaString(&s->effects));
-	AppendCString(&string, "(Effect)\n");
+	AppendCString(&string, "  effects: %p (Effect[])\n", s->effects);
 
 	AppendCString(&string, "}");
 
@@ -90,9 +89,7 @@ String MetaString(const Ability *s)
 	AppendString(&string, MetaString(&s->name));
 	AppendCString(&string, "(String)\n");
 
-	AppendCString(&string, "  tiers: ");
-	AppendString(&string, MetaString(&s->tiers));
-	AppendCString(&string, "(AbilityTier)\n");
+	AppendCString(&string, "  tiers: %p (AbilityTier[])\n", s->tiers);
 
 	AppendCString(&string, "}");
 
@@ -102,6 +99,64 @@ String MetaString(const Ability *s)
 // ---------------FILE START---------------
 // align.h
 // ------------------------------------------
+
+String MetaString(const AlignX *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AlignX::");
+	switch(*s)
+	{
+		case(AlignX::left): {
+			AppendCString(&string, "left");
+		} break;
+		case(AlignX::center): {
+			AppendCString(&string, "center");
+		} break;
+		case(AlignX::right): {
+			AppendCString(&string, "right");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const AlignY *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AlignY::");
+	switch(*s)
+	{
+		case(AlignY::top): {
+			AppendCString(&string, "top");
+		} break;
+		case(AlignY::center): {
+			AppendCString(&string, "center");
+		} break;
+		case(AlignY::bottom): {
+			AppendCString(&string, "bottom");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
 
 String MetaString(const Align *s)
 {
@@ -131,7 +186,8 @@ String MetaString(const Align *s)
 // array.h
 // ------------------------------------------
 
-String MetaString(const Ability *s)
+template<typename Type>
+String MetaString(const Array<Type> *s)
 {
 	TIMED_BLOCK;
 
@@ -140,11 +196,15 @@ String MetaString(const Ability *s)
 	string.max_length = 1024;
 	string.data = ScratchString(string.max_length);
 
-	AppendCString(&string, "Ability {\n");
+	AppendCString(&string, "Array {\n");
 
-	AppendCString(&string, "  nit: ");
-	AppendString(&string, MetaString(&s->nit));
-	AppendCString(&string, "()\n");
+	AppendCString(&string, "  data: %p (Type *)\n", s->data);
+
+	AppendCString(&string, "  arena: %p (Arena *)\n", s->arena);
+
+	AppendCString(&string, "  count: %d (int)\n", s->count);
+
+	AppendCString(&string, "  max_count: %d (int)\n", s->max_count);
 
 	AppendCString(&string, "}");
 
@@ -230,6 +290,20 @@ String MetaString(const Battle *s)
 	AppendString(&string, MetaString(&s->selected_ability_id));
 	AppendCString(&string, "(Id<Ability>)\n");
 
+	AppendCString(&string, "  units: ");
+	AppendString(&string, MetaString(&s->units));
+	AppendCString(&string, "(UnitSet)\n");
+
+	AppendCString(&string, "  unit_slots: %p (Vec2f[])\n", s->unit_slots);
+
+	AppendCString(&string, "  intents: %p (Intent[])\n", s->intents);
+
+	AppendCString(&string, "  show_preview: %d (bool)\n", s->show_preview);
+
+	AppendCString(&string, "  preview_events: ");
+	AppendString(&string, MetaString(&s->preview_events));
+	AppendCString(&string, "(Array<BattleEvent>)\n");
+
 	AppendCString(&string, "  is_player_turn: %d (bool)\n", s->is_player_turn);
 
 	AppendCString(&string, "  preview_damage_timer: ");
@@ -242,27 +316,17 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  ending_player_turn: %d (bool)\n", s->ending_player_turn);
 
-	AppendCString(&string, "  units: ");
-	AppendString(&string, MetaString(&s->units));
-	AppendCString(&string, "(UnitSet)\n");
+	AppendCString(&string, "  last_frame_hovered_thought_owner_id: ");
+	AppendString(&string, MetaString(&s->last_frame_hovered_thought_owner_id));
+	AppendCString(&string, "(Id<Unit>)\n");
 
-	AppendCString(&string, "  unit_slots: ");
-	AppendString(&string, MetaString(&s->unit_slots));
-	AppendCString(&string, "(Vec2f)\n");
+	AppendCString(&string, "  last_frame_hovered_thought_id: ");
+	AppendString(&string, MetaString(&s->last_frame_hovered_thought_id));
+	AppendCString(&string, "(Id<Ability>)\n");
 
-	AppendCString(&string, "  intents: ");
-	AppendString(&string, MetaString(&s->intents));
-	AppendCString(&string, "(Intent)\n");
-
-	AppendCString(&string, "  show_preview: %d (bool)\n", s->show_preview);
-
-	AppendCString(&string, "  preview_intent: ");
-	AppendString(&string, MetaString(&s->preview_intent));
-	AppendCString(&string, "(Intent)\n");
-
-	AppendCString(&string, "  preview_events: ");
-	AppendString(&string, MetaString(&s->preview_events));
-	AppendCString(&string, "(Array<BattleEvent>)\n");
+	AppendCString(&string, "  last_frame_hovered_unit_id: ");
+	AppendString(&string, MetaString(&s->last_frame_hovered_unit_id));
+	AppendCString(&string, "(Id<Unit>)\n");
 
 	AppendCString(&string, "}");
 
@@ -312,9 +376,7 @@ String MetaString(const Bitmap *s)
 
 	AppendCString(&string, "  height: %u (u32)\n", s->height);
 
-	AppendCString(&string, "  pixels: ");
-	AppendString(&string, MetaString(&s->pixels));
-	AppendCString(&string, "(BgraPixel)\n");
+	AppendCString(&string, "  pixels: %p (BgraPixel *)\n", s->pixels);
 
 	AppendCString(&string, "}");
 
@@ -397,9 +459,7 @@ String MetaString(const TimedBlock *s)
 
 	AppendCString(&string, "TimedBlock {\n");
 
-	AppendCString(&string, "  entry: ");
-	AppendString(&string, MetaString(&s->entry));
-	AppendCString(&string, "(TimedBlockEntry)\n");
+	AppendCString(&string, "  entry: %p (TimedBlockEntry *)\n", s->entry);
 
 	AppendCString(&string, "  start_count: %u (u64)\n", s->start_count);
 
@@ -415,6 +475,143 @@ String MetaString(const TimedBlock *s)
 // ---------------FILE START---------------
 // editor.h
 // ------------------------------------------
+
+String MetaString(const EditorMode *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EditorMode::");
+	switch(*s)
+	{
+		case(EditorMode::None): {
+			AppendCString(&string, "None");
+		} break;
+		case(EditorMode::Ability): {
+			AppendCString(&string, "Ability");
+		} break;
+		case(EditorMode::Breed): {
+			AppendCString(&string, "Breed");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const InputElementType *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "InputElementType::");
+	switch(*s)
+	{
+		case(InputElementType::None): {
+			AppendCString(&string, "None");
+		} break;
+		case(InputElementType::String): {
+			AppendCString(&string, "String");
+		} break;
+		case(InputElementType::Integer): {
+			AppendCString(&string, "Integer");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const AbilityPropertyIndex *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AbilityPropertyIndex::");
+	switch(*s)
+	{
+		case(AbilityPropertyIndex::search): {
+			AppendCString(&string, "search");
+		} break;
+		case(AbilityPropertyIndex::name): {
+			AppendCString(&string, "name");
+		} break;
+		case(AbilityPropertyIndex::tier0required_vigor): {
+			AppendCString(&string, "tier0required_vigor");
+		} break;
+		case(AbilityPropertyIndex::tier0required_focus): {
+			AppendCString(&string, "tier0required_focus");
+		} break;
+		case(AbilityPropertyIndex::tier0required_armor): {
+			AppendCString(&string, "tier0required_armor");
+		} break;
+		case(AbilityPropertyIndex::tier1required_vigor): {
+			AppendCString(&string, "tier1required_vigor");
+		} break;
+		case(AbilityPropertyIndex::tier1required_focus): {
+			AppendCString(&string, "tier1required_focus");
+		} break;
+		case(AbilityPropertyIndex::tier1required_armor): {
+			AppendCString(&string, "tier1required_armor");
+		} break;
+		case(AbilityPropertyIndex::tier2required_vigor): {
+			AppendCString(&string, "tier2required_vigor");
+		} break;
+		case(AbilityPropertyIndex::tier2required_focus): {
+			AppendCString(&string, "tier2required_focus");
+		} break;
+		case(AbilityPropertyIndex::tier2required_armor): {
+			AppendCString(&string, "tier2required_armor");
+		} break;
+		case(AbilityPropertyIndex::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const BreedPropertyIndex *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BreedPropertyIndex::");
+	switch(*s)
+	{
+		case(BreedPropertyIndex::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
 
 String MetaString(const InputElement *s)
 {
@@ -489,9 +686,7 @@ String MetaString(const Editor *s)
 
 	AppendCString(&string, "  text_cursor_pos: %d (int)\n", s->text_cursor_pos);
 
-	AppendCString(&string, "  input_elements: ");
-	AppendString(&string, MetaString(&s->input_elements));
-	AppendCString(&string, "(InputElement)\n");
+	AppendCString(&string, "  input_elements: %p (InputElement[])\n", s->input_elements);
 
 	AppendCString(&string, "  temp_ability: ");
 	AppendString(&string, MetaString(&s->temp_ability));
@@ -517,6 +712,44 @@ String MetaString(const Editor *s)
 // ---------------FILE START---------------
 // effect.h
 // ------------------------------------------
+
+String MetaString(const EffectType *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "EffectType::");
+	switch(*s)
+	{
+		case(EffectType::NoEffect): {
+			AppendCString(&string, "NoEffect");
+		} break;
+		case(EffectType::Damage): {
+			AppendCString(&string, "Damage");
+		} break;
+		case(EffectType::DamageIgnoreArmor): {
+			AppendCString(&string, "DamageIgnoreArmor");
+		} break;
+		case(EffectType::Restore): {
+			AppendCString(&string, "Restore");
+		} break;
+		case(EffectType::Gift): {
+			AppendCString(&string, "Gift");
+		} break;
+		case(EffectType::Steal): {
+			AppendCString(&string, "Steal");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
 
 String MetaString(const Effect *s)
 {
@@ -656,6 +889,35 @@ String MetaString(const EffectParams_Steal *s)
 // game.h
 // ------------------------------------------
 
+String MetaString(const GameState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "GameState::");
+	switch(*s)
+	{
+		case(GameState::MainMenu): {
+			AppendCString(&string, "MainMenu");
+		} break;
+		case(GameState::Battle): {
+			AppendCString(&string, "Battle");
+		} break;
+		case(GameState::Editor): {
+			AppendCString(&string, "Editor");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
 String MetaString(const Game *s)
 {
 	TIMED_BLOCK;
@@ -689,45 +951,27 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->input));
 	AppendCString(&string, "(InputState)\n");
 
-	AppendCString(&string, "  color_shader: ");
-	AppendString(&string, MetaString(&s->color_shader));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  color_shader: %u (GLuint)\n", s->color_shader);
 
-	AppendCString(&string, "  uv_shader: ");
-	AppendString(&string, MetaString(&s->uv_shader));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  uv_shader: %u (GLuint)\n", s->uv_shader);
 
-	AppendCString(&string, "  color_vao: ");
-	AppendString(&string, MetaString(&s->color_vao));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  color_vao: %u (GLuint)\n", s->color_vao);
 
-	AppendCString(&string, "  color_vbo: ");
-	AppendString(&string, MetaString(&s->color_vbo));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  color_vbo: %u (GLuint)\n", s->color_vbo);
 
-	AppendCString(&string, "  uv_vao: ");
-	AppendString(&string, MetaString(&s->uv_vao));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  uv_vao: %u (GLuint)\n", s->uv_vao);
 
-	AppendCString(&string, "  uv_vbo: ");
-	AppendString(&string, MetaString(&s->uv_vbo));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  uv_vbo: %u (GLuint)\n", s->uv_vbo);
 
 	AppendCString(&string, "  window_size: ");
 	AppendString(&string, MetaString(&s->window_size));
 	AppendCString(&string, "(Vec2f)\n");
 
-	AppendCString(&string, "  temp_texture: ");
-	AppendString(&string, MetaString(&s->temp_texture));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  temp_texture: %u (GLuint)\n", s->temp_texture);
 
 	AppendCString(&string, "  string_bmp_size: ");
 	AppendString(&string, MetaString(&s->string_bmp_size));
 	AppendCString(&string, "(Vec2i)\n");
-
-	AppendCString(&string, "  ft_lib: ");
-	AppendString(&string, MetaString(&s->ft_lib));
-	AppendCString(&string, "(FT_Library)\n");
 
 	AppendCString(&string, "  player_party: ");
 	AppendString(&string, MetaString(&s->player_party));
@@ -740,6 +984,10 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  editor_state: ");
 	AppendString(&string, MetaString(&s->editor_state));
 	AppendCString(&string, "(Editor)\n");
+
+	AppendCString(&string, "  mainmenu_state: ");
+	AppendString(&string, MetaString(&s->mainmenu_state));
+	AppendCString(&string, "(MainMenu)\n");
 
 	AppendCString(&string, "  pointer_cursor: ");
 	AppendString(&string, MetaString(&s->pointer_cursor));
@@ -1053,13 +1301,13 @@ String MetaString(const InputState *s)
 
 	AppendCString(&string, "InputState {\n");
 
-	AppendCString(&string, "  pressed_keys: %u (u8[])\n", s->pressed_keys);
+	AppendCString(&string, "  pressed_keys: %p (u8[])\n", s->pressed_keys);
 
-	AppendCString(&string, "  released_keys: %u (u8[])\n", s->released_keys);
+	AppendCString(&string, "  released_keys: %p (u8[])\n", s->released_keys);
 
-	AppendCString(&string, "  repeated_keys: %u (u8[])\n", s->repeated_keys);
+	AppendCString(&string, "  repeated_keys: %p (u8[])\n", s->repeated_keys);
 
-	AppendCString(&string, "  down_keys: %u (u8[])\n", s->down_keys);
+	AppendCString(&string, "  down_keys: %p (u8[])\n", s->down_keys);
 
 	AppendCString(&string, "  mouse_pos: ");
 	AppendString(&string, MetaString(&s->mouse_pos));
@@ -1099,7 +1347,7 @@ String MetaString(const LogState *s)
 
 	AppendCString(&string, "  log_length: %u (u8)\n", s->log_length);
 
-	AppendCString(&string, "  log_strings: %c (char[])\n", s->log_strings);
+	AppendCString(&string, "  log_strings: %p (char[][])\n", s->log_strings);
 
 	AppendCString(&string, "  show_log: %d (bool)\n", s->show_log);
 
@@ -1111,6 +1359,34 @@ String MetaString(const LogState *s)
 // ---------------FILE START---------------
 // macros.h
 // ------------------------------------------
+
+// ---------------FILE START---------------
+// main_menu.h
+// ------------------------------------------
+
+String MetaString(const MainMenu *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "MainMenu {\n");
+
+	AppendCString(&string, "  option_strings: ");
+	AppendString(&string, MetaString(&s->option_strings));
+	AppendCString(&string, "(Array<String>)\n");
+
+	AppendCString(&string, "  option_count: %d (int)\n", s->option_count);
+
+	AppendCString(&string, "  cur_option: %d (int)\n", s->cur_option);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // math.h
@@ -1145,116 +1421,6 @@ String MetaString(const Arena *s)
 // ---------------FILE START---------------
 // meta.h
 // ------------------------------------------
-
-// ---------------FILE START---------------
-// meta_print(manual).h
-// ------------------------------------------
-
-// ---------------FILE START---------------
-// meta_print.h
-// ------------------------------------------
-
-// ---------------FILE START---------------
-// meta_text_parsing.h
-// ------------------------------------------
-
-String MetaString(const Buffer *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Buffer {\n");
-
-	AppendCString(&string, "  data: %p (char *)\n", s->data);
-
-	AppendCString(&string, "  p: %p (char *)\n", s->p);
-
-	AppendCString(&string, "  byte_count: ");
-	AppendString(&string, MetaString(&s->byte_count));
-	AppendCString(&string, "(size_t)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-String MetaString(const StringBuffer *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "StringBuffer {\n");
-
-	AppendCString(&string, "  char: ");
-	AppendString(&string, MetaString(&s->char));
-	AppendCString(&string, "(const)\n");
-
-	AppendCString(&string, "  char: ");
-	AppendString(&string, MetaString(&s->char));
-	AppendCString(&string, "(const)\n");
-
-	AppendCString(&string, "  byte_count: ");
-	AppendString(&string, MetaString(&s->byte_count));
-	AppendCString(&string, "(size_t)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-String MetaString(const Token *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Token {\n");
-
-	AppendCString(&string, "  type: ");
-	AppendString(&string, MetaString(&s->type));
-	AppendCString(&string, "(TokenType_)\n");
-
-	AppendCString(&string, "  start: %p (char *)\n", s->start);
-
-	AppendCString(&string, "  length: ");
-	AppendString(&string, MetaString(&s->length));
-	AppendCString(&string, "(size_t)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-// ---------------FILE START---------------
-// opengl.h
-// ------------------------------------------
-
-String MetaString(const OpenGL *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "OpenGL {\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
 
 // ---------------FILE START---------------
 // oscillating_timer.h
@@ -1301,7 +1467,7 @@ String MetaString(const PassiveSkill *s)
 
 	AppendCString(&string, "PassiveSkill {\n");
 
-	AppendCString(&string, "  name: %c (char[])\n", s->name);
+	AppendCString(&string, "  name: %p (char[])\n", s->name);
 
 	AppendCString(&string, "}");
 
@@ -1319,13 +1485,9 @@ String MetaString(const PassiveNode *s)
 
 	AppendCString(&string, "PassiveNode {\n");
 
-	AppendCString(&string, "  passive_skill: ");
-	AppendString(&string, MetaString(&s->passive_skill));
-	AppendCString(&string, "(PassiveSkill)\n");
+	AppendCString(&string, "  passive_skill: %p (PassiveSkill *)\n", s->passive_skill);
 
-	AppendCString(&string, "  children: ");
-	AppendString(&string, MetaString(&s->children));
-	AppendCString(&string, "(PassiveNode)\n");
+	AppendCString(&string, "  children: %p (PassiveNode[])\n", s->children);
 
 	AppendCString(&string, "}");
 
@@ -1343,53 +1505,7 @@ String MetaString(const PassiveSkillTree *s)
 
 	AppendCString(&string, "PassiveSkillTree {\n");
 
-	AppendCString(&string, "  root: ");
-	AppendString(&string, MetaString(&s->root));
-	AppendCString(&string, "(PassiveNode)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-// ---------------FILE START---------------
-// platform.h
-// ------------------------------------------
-
-String MetaString(const Platform *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Platform {\n");
-
-	AppendCString(&string, "  define: ");
-	AppendString(&string, MetaString(&s->define));
-	AppendCString(&string, "(#)\n");
-
-	AppendCString(&string, "  undef: ");
-	AppendString(&string, MetaString(&s->undef));
-	AppendCString(&string, "(#)\n");
-
-	AppendCString(&string, "  endifC: ");
-	AppendString(&string, MetaString(&s->endifC));
-	AppendCString(&string, "(#)\n");
-
-	AppendCString(&string, "  Program: ");
-	AppendString(&string, MetaString(&s->Program));
-	AppendCString(&string, "(\)\n");
-
-	AppendCString(&string, "  x86: ");
-	AppendString(&string, MetaString(&s->x86));
-	AppendCString(&string, "(()\n");
-
-	AppendCString(&string, "  Windows: ");
-	AppendString(&string, MetaString(&s->Windows));
-	AppendCString(&string, "(\)\n");
+	AppendCString(&string, "  root: %p (PassiveNode *)\n", s->root);
 
 	AppendCString(&string, "}");
 
@@ -1439,9 +1555,7 @@ String MetaString(const Sprite *s)
 
 	AppendCString(&string, "Sprite {\n");
 
-	AppendCString(&string, "  texture: ");
-	AppendString(&string, MetaString(&s->texture));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  texture: %u (GLuint)\n", s->texture);
 
 	AppendCString(&string, "  size: ");
 	AppendString(&string, MetaString(&s->size));
@@ -1487,7 +1601,28 @@ String MetaString(const String *s)
 // ------------------------------------------
 
 template<typename Type>
-String MetaString(const TableEntry *s)
+String MetaString(const Id<Type> *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Id {\n");
+
+	AppendCString(&string, "  index: %d (int)\n", s->index);
+
+	AppendCString(&string, "  generation: %d (int)\n", s->generation);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+template<typename Type>
+String MetaString(const TableEntry<Type> *s)
 {
 	TIMED_BLOCK;
 
@@ -1513,9 +1648,82 @@ String MetaString(const TableEntry *s)
 	return string;
 }
 
+template<typename Type>
+String MetaString(const Table<Type> *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Table {\n");
+
+	AppendCString(&string, "  entries: %p (TableEntry<Type> *)\n", s->entries);
+
+	AppendCString(&string, "  entry_count: %d (int)\n", s->entry_count);
+
+	AppendCString(&string, "  max_entry_count: %d (int)\n", s->max_entry_count);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 // ---------------FILE START---------------
 // target_class.h
 // ------------------------------------------
+
+String MetaString(const TargetClass *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TargetClass::");
+	switch(*s)
+	{
+		case(TargetClass::self): {
+			AppendCString(&string, "self");
+		} break;
+		case(TargetClass::single_ally): {
+			AppendCString(&string, "single_ally");
+		} break;
+		case(TargetClass::single_ally_not_self): {
+			AppendCString(&string, "single_ally_not_self");
+		} break;
+		case(TargetClass::all_allies): {
+			AppendCString(&string, "all_allies");
+		} break;
+		case(TargetClass::all_allies_not_self): {
+			AppendCString(&string, "all_allies_not_self");
+		} break;
+		case(TargetClass::single_enemy): {
+			AppendCString(&string, "single_enemy");
+		} break;
+		case(TargetClass::all_enemies): {
+			AppendCString(&string, "all_enemies");
+		} break;
+		case(TargetClass::single_unit): {
+			AppendCString(&string, "single_unit");
+		} break;
+		case(TargetClass::single_unit_not_self): {
+			AppendCString(&string, "single_unit_not_self");
+		} break;
+		case(TargetClass::all_units): {
+			AppendCString(&string, "all_units");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // text_parsing.h
@@ -1536,9 +1744,7 @@ String MetaString(const Buffer *s)
 
 	AppendCString(&string, "  p: %p (char *)\n", s->p);
 
-	AppendCString(&string, "  byte_count: ");
-	AppendString(&string, MetaString(&s->byte_count));
-	AppendCString(&string, "(size_t)\n");
+	AppendCString(&string, "  byte_count: %zu (size_t)\n", s->byte_count);
 
 	AppendCString(&string, "}");
 
@@ -1556,17 +1762,11 @@ String MetaString(const StringBuffer *s)
 
 	AppendCString(&string, "StringBuffer {\n");
 
-	AppendCString(&string, "  char: ");
-	AppendString(&string, MetaString(&s->char));
-	AppendCString(&string, "(const)\n");
+	AppendCString(&string, "  data: %p (const char *)\n", s->data);
 
-	AppendCString(&string, "  char: ");
-	AppendString(&string, MetaString(&s->char));
-	AppendCString(&string, "(const)\n");
+	AppendCString(&string, "  p: %p (const char *)\n", s->p);
 
-	AppendCString(&string, "  byte_count: ");
-	AppendString(&string, MetaString(&s->byte_count));
-	AppendCString(&string, "(size_t)\n");
+	AppendCString(&string, "  byte_count: %zu (size_t)\n", s->byte_count);
 
 	AppendCString(&string, "}");
 
@@ -1586,9 +1786,7 @@ String MetaString(const Token *s)
 
 	AppendCString(&string, "  start: %p (char *)\n", s->start);
 
-	AppendCString(&string, "  length: ");
-	AppendString(&string, MetaString(&s->length));
-	AppendCString(&string, "(size_t)\n");
+	AppendCString(&string, "  length: %zu (size_t)\n", s->length);
 
 	AppendCString(&string, "}");
 
@@ -1624,13 +1822,9 @@ String MetaString(const Font *s)
 
 	AppendCString(&string, "  bitmap_top: %p (int *)\n", s->bitmap_top);
 
-	AppendCString(&string, "  gl_texture: ");
-	AppendString(&string, MetaString(&s->gl_texture));
-	AppendCString(&string, "(GLuint)\n");
+	AppendCString(&string, "  gl_texture: %p (GLuint *)\n", s->gl_texture);
 
-	AppendCString(&string, "  texture_size: ");
-	AppendString(&string, MetaString(&s->texture_size));
-	AppendCString(&string, "(Vec2i)\n");
+	AppendCString(&string, "  texture_size: %p (Vec2i *)\n", s->texture_size);
 
 	AppendCString(&string, "}");
 
@@ -1648,9 +1842,7 @@ String MetaString(const TextLayout *s)
 
 	AppendCString(&string, "TextLayout {\n");
 
-	AppendCString(&string, "  font: ");
-	AppendString(&string, MetaString(&s->font));
-	AppendCString(&string, "(Font)\n");
+	AppendCString(&string, "  font: %p (Font *)\n", s->font);
 
 	AppendCString(&string, "  color: ");
 	AppendString(&string, MetaString(&s->color));
@@ -1685,6 +1877,8 @@ String MetaString(const Timer *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Timer {\n");
+
+	AppendCString(&string, "  start: %f (float)\n", s->start);
 
 	AppendCString(&string, "  cur: %f (float)\n", s->cur);
 
@@ -1731,6 +1925,32 @@ String MetaString(const TraitSet *s)
 // unit.h
 // ------------------------------------------
 
+String MetaString(const Team *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Team::");
+	switch(*s)
+	{
+		case(Team::allies): {
+			AppendCString(&string, "allies");
+		} break;
+		case(Team::enemies): {
+			AppendCString(&string, "enemies");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
 String MetaString(const Breed *s)
 {
 	TIMED_BLOCK;
@@ -1752,9 +1972,7 @@ String MetaString(const Breed *s)
 	AppendString(&string, MetaString(&s->max_traits));
 	AppendCString(&string, "(TraitSet)\n");
 
-	AppendCString(&string, "  ability_ids: ");
-	AppendString(&string, MetaString(&s->ability_ids));
-	AppendCString(&string, "(Id<Ability>)\n");
+	AppendCString(&string, "  ability_ids: %p (Id<Ability>[])\n", s->ability_ids);
 
 	AppendCString(&string, "}");
 
@@ -1794,9 +2012,7 @@ String MetaString(const Unit *s)
 
 	AppendCString(&string, "  max_action_points: %d (int)\n", s->max_action_points);
 
-	AppendCString(&string, "  ability_ids: ");
-	AppendString(&string, MetaString(&s->ability_ids));
-	AppendCString(&string, "(Id<Ability>)\n");
+	AppendCString(&string, "  ability_ids: %p (Id<Ability>[])\n", s->ability_ids);
 
 	AppendCString(&string, "}");
 
@@ -1836,9 +2052,7 @@ String MetaString(const UnitSet *s)
 
 	AppendCString(&string, "  size: %d (int)\n", s->size);
 
-	AppendCString(&string, "  ids: ");
-	AppendString(&string, MetaString(&s->ids));
-	AppendCString(&string, "(Id<Unit>)\n");
+	AppendCString(&string, "  ids: %p (Id<Unit>[])\n", s->ids);
 
 	AppendCString(&string, "}");
 

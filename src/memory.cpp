@@ -14,9 +14,9 @@ AllocArena()
 void
 ClearArena(Arena *arena)
 {
-//	TIMED_BLOCK;
+	TIMED_BLOCK;
 
-	#if DEBUG_BUILD
+	#if !DEBUG_BUILD
 		// Zero the arena if we're on debug build. This should make bugs where "cleared" temp
 		// memory is references in future frames.
 		u8 *p = (u8*)arena->start;

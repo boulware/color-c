@@ -3,6 +3,7 @@
 
 struct Timer
 {
+	float start;
 	float cur;
 	float length_s;
 	bool finished;

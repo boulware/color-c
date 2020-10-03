@@ -29,11 +29,6 @@ struct Battle
 	Id<Unit> selected_unit_id;
 	Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
 
-	bool is_player_turn;
-	OscillatingTimer preview_damage_timer;
-	Timer end_button_clicked_timer;
-	bool ending_player_turn;
-
 	UnitSet units; // 0 through max_party_size-1 are ally slots, the remaining max_party_size slots are enemy slots
 	Vec2f unit_slots[c::max_target_count]; // concurrent array to *units
 	Intent intents[c::max_target_count]; // concurrent to *units, but currently wasted space because it has room for friendly intents.
@@ -43,8 +38,20 @@ struct Battle
 	// UnitSet inferred_target_set;
 
 	bool show_preview;
-	Intent preview_intent;
+	//Intent preview_intent;
 	Array<BattleEvent> preview_events;
+
+	bool is_player_turn;
+	OscillatingTimer preview_damage_timer;
+	Timer end_button_clicked_timer;
+	bool ending_player_turn;
+
+	// To track when to reset preview_damage_timer
+	// ...
+	Id<Unit> last_frame_hovered_thought_owner_id;
+	Id<Ability> last_frame_hovered_thought_id;
+
+	Id<Unit> last_frame_hovered_unit_id;
 };
 
 void DrawUnits(Battle *battle);

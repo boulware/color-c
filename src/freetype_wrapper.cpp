@@ -13,6 +13,15 @@ InitFreetype(FT_Library *lib)
 	}
 }
 
+bool
+CloseFreetype(FT_Library *lib)
+{
+	bool success = !FT_Done_Library(*lib);
+	if(!success) log("Failed to close FreeType.");
+
+	return success;
+}
+
 FT_Face
 LoadFontFaceFromFile(const char *filename, FT_Library lib)
 {

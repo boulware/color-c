@@ -15,6 +15,7 @@ struct LCG
 namespace random
 {
 	LCG default_lcg;
+	bool log_sequences;
 };
 
 void InitLcgSetSeed(LCG *lcg, u32 seed);

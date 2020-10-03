@@ -3,6 +3,8 @@
 #define Assert(x) if(!(x)) {*((volatile int*)0) = 0;}
 #define ArrayCount(x) (sizeof(x)/sizeof(x[0]))
 #define Introspect
+#define MetaBreakHere
+#define mStringify(s) #s
 
 
 // Creates a temporary string and formats it according to printf-style formatting rules.

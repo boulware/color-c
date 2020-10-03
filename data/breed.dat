@@ -27,7 +27,7 @@ traits (4,4,0)
 moveset "Strike" "Rally" "Taunt"
 
 unit "Slime"
-traits (8,1,2)
+traits (8,2,2)
 moveset "Strike" "Steal Armor"
 
 unit "Dragon"

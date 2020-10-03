@@ -108,4 +108,8 @@ Vec2f MousePos();
 int MouseScroll();
 bool MouseInRect(Rect rect);
 
+bool Down(const InputState *input, u8 key);
+bool Pressed(const InputState *input, u8 key);
+bool Released(const InputState *input, u8 key);
+
 #endif

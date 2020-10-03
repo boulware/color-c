@@ -50,6 +50,8 @@ float LineSize(TextLayout layout);
 
 bool ValidFont(Font *font);
 
+void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font, bool round_to_integer_pixel = false);
+
 //void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
 //Vec2f SizeUtf8Line(TextLayout layout, const char *string, ...);
 Vec2f DrawText(TextLayout layout, Vec2f origin, const char *string, ...);

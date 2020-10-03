@@ -55,9 +55,14 @@ enum class TokenType_
 	CloseSquareBracket,
 	OpenAngleBracket,
 	CloseAngleBracket,
+	OpenParen,
+	CloseParen,
+	Colon,
 	SemiColon,
 	Asterisk,
 	Comma,
+	Tilde,
+	Equals,
 	Identifier
 };
 
@@ -89,7 +94,6 @@ bool SkipToNextLine(Buffer *buffer);
 
 bool SkipChars(Buffer *buffer, const char *skip);
 //Token NextToken(Buffer *buffer, const char *trim);
-bool ConfirmNextToken(Buffer *buffer, const char *target_string, const char *trim);
 // bool SeekAfterToken(Buffer *buffer, const char *target_string);
 bool SeekNextLineThatBeginsWith(Buffer *buffer, const char *start_string);
 bool SeekAfterNextLineThatBeginsWith(Buffer *buffer, const char *start_string);

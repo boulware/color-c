@@ -1,5 +1,5 @@
-1) Fully implement turns (*AP restrictions, end turn button, enemies use abilities on their turn and then pass turn back)
-2) Enemy intent icons (hovering over shows the action preview) (have a full enemy turn intent icon above all the single intent icons which shows the overall result of all enemy actions?)
+// 1) Fully implement turns (*AP restrictions, end turn button, enemies use abilities on their turn and then pass turn back)
+// 2) Enemy intent icons (hovering over shows the action preview) (have a full enemy turn intent icon above all the single intent icons which shows the overall result of all enemy actions?)
 
 3) Allow abilities to use multiple target sets
 e.g.: in the ability data files, use a '^' to indicate that the effect on this line
@@ -23,3 +23,26 @@ effect Heal all_allies (0,5,0)
 4) Effects could be single-inheritance instead of using a void* to effect parameters? Not sure which road I want to go down here. AOWTC it's a void*, but it's just a little spooky. Even a union is an option, but it might be even worse than a void*.
 
 5) Units dying in battles.
+
+6) Enemy AI
+
+// 7) Snap preview fade in/out when a new target is hovered. This happens when...
+//     * A new unit/ability combination is hovered, which happens in a few different cases:
+//         - The selected ability doesn't change, but the mouse is moved to a different unit
+//           than the previous frame
+//         - A new ability is selected with the QWER hotkeys (this is easily fixed by just resetting
+//           the timer when a new ability is selected)
+
+// 8) Framestep
+
+9) Make issuing draw calls in the platform layer work properly (DrawText(), DrawRect(), etc.)
+
+10) Battle restart with button
+
+//11) Hovering ability buttons will "passthrough" the HUD and hover units if you're in the right spot.
+
+12) Have a struct tag that tells the meta program not to write an implementation for a particular struct, so I can write a handwritten one instead (useful for things like String)
+
+13) Interactable/collapsible/expandable meta string stuff
+
+14) Depth count tab formatting for MetaString()

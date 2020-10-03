@@ -43,6 +43,6 @@ struct TimedBlock
 };
 
 
-#define TIMED_BLOCK TimedBlock PASTE(timed_block_entry, __LINE__)(__COUNTER__, __FILE__, __FUNCTION__, __LINE__)
+#define TIMED_BLOCK TimedBlock PASTE(timed_block_entry, __LINE__)(__COUNTER__, __FILE__, __FUNCSIG__, __LINE__)
 
 #endif

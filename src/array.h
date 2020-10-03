@@ -11,16 +11,22 @@ struct Array
 };
 
 template<typename Type>
-Type *begin(Array<Type> &array)
+Type *
+begin(Array<Type> &array)
 {
 	return (array.data);
 }
 
 template<typename Type>
-Type *end(Array<Type> &array)
+Type *
+end(Array<Type> &array)
 {
 	return (array.data + array.count);
 }
+
+template<typename Type>
+Type &
+ElementAt(Array<Type> *array, int index);
 
 template<typename Type>
 void
@@ -29,6 +35,14 @@ operator+=(Array<Type> &array, Type entry);
 template<typename Type>
 void
 ResizeArray(Array<Type> *array, int new_max_count);
+
+template<typename Type>
+void
+ClearArray(Array<Type> *array);
+
+template<typename Type>
+void
+AppendArrayToArray(Array<Type> *root_array, Array<Type> appended_array);
 
 template<typename Type>
 Array<Type>
