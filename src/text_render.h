@@ -54,7 +54,8 @@ void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font fo
 
 //void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
 //Vec2f SizeUtf8Line(TextLayout layout, const char *string, ...);
-Vec2f DrawText(TextLayout layout, Vec2f origin, const char *string, ...);
+Rect DrawText(TextLayout layout, Vec2f origin, String string);
+Rect DrawText(TextLayout layout, Vec2f origin, const char *string, ...);
 void EasyDrawText(const char *string, ...);
 
 Vec2f SizeTextUtf32(TextLayout layout, Utf32String string, int char_count);

@@ -14,7 +14,9 @@
 #include "battle.h"
 #include "editor.h"
 #include "main_menu.h"
+#include "options_menu.h"
 #include "game_state.h"
+#include "campaign.h"
 
 struct Game
 {
@@ -43,8 +45,9 @@ struct Game
 	Battle current_battle;
 
 	Editor editor_state;
-
+	OptionsMenu options_menu;
 	MainMenu mainmenu_state;
+	Campaign campaign;
 
 	Sprite pointer_cursor;
 	Sprite target_cursor;

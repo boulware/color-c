@@ -105,4 +105,6 @@ u32 DigitToUtf32Char(u32 digit);
 
 bool TokenMatchesString(Token token, const char *string);
 
+void fprintf(Buffer *buffer, const char *string, ...);
+
 #endif

@@ -293,7 +293,7 @@ ListPanelEntry(ListPanel_ *panel, const String entry_name)
 		}
 
 		// @note: spooky! We should write a real implementation of DrawText that takes a String.
-		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name);
+		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name).size;
 		//SetDrawDepth(120.0f);
 
 

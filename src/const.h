@@ -196,6 +196,31 @@ namespace c
 		.draw_debug = false
 	};
 
+	// Options menu
+	const TextLayout options_selected_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::gold,
+		.font_size = 16,
+		.align = c::align_topleft,
+		.draw_debug = false
+	};
+
+	const TextLayout options_unselected_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::white,
+		.font_size = 16,
+		.align = c::align_topleft,
+		.draw_debug = false
+	};
+
+	const TextLayout options_modifying_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::red,
+		.font_size = 16,
+		.align = c::align_topleft,
+		.draw_debug = false
+	};
+
 	// Editor
 	const int max_field_text_length = 30;
 	const int max_field_label_length = 30;

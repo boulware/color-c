@@ -33,6 +33,7 @@ Game *game = nullptr;
 
 static bool QUIT_GAME = false;
 static bool FRAMESTEP = false;
+static bool ANYKEY_ACTIVE = false;
 static WindowContext wc;
 static InputState platform_input;
 
@@ -74,11 +75,47 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
+				if(ANYKEY_ACTIVE == true)
+				{
+					game->input.any_key = (u8)wParam;
+					ANYKEY_ACTIVE = false;
+				}
+
+				// if(lParam & KF_ALTDOWN)
+				// {
+				// 	game->input.pressed_keys[]
+				// }
+
 				game->input.pressed_keys[(u8)wParam] = 1;
 				platform_input.pressed_keys[(u8)wParam] = 1;
 			}
 
 			return 0;
+		} break;
+		case WM_SYSKEYDOWN:
+		{
+			if(game == nullptr) return 0;
+
+			log("0x%0*x", 2, (u8)wParam);
+
+			if(lParam & (1<<30))
+			{ // WM_KEYDOWN caused by key autorepeat
+				game->input.repeated_keys[(u8)wParam] = 1;
+				platform_input.repeated_keys[(u8)wParam] = 1;
+			}
+			else
+			{
+				if(ANYKEY_ACTIVE == true)
+				{
+					game->input.any_key = (u8)wParam;
+					ANYKEY_ACTIVE = false;
+				}
+
+				game->input.pressed_keys[(u8)wParam] = 1;
+				platform_input.pressed_keys[(u8)wParam] = 1;
+			}
+
+			return DefWindowProc(hwnd, uMsg, wParam, lParam);
 		} break;
 		case WM_KEYUP: {
 			if(game == nullptr) return 0;
@@ -378,6 +415,13 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 }
 
 void
+win32_AnyKey()
+{
+	game->input.any_key = 0;
+	ANYKEY_ACTIVE = true;
+}
+
+void
 WIN32_DELETE_OPENGL_WINDOW(HWND hwnd)
 {
 	//HGLRC hRc = wglGetCurrentContext();
@@ -466,6 +510,7 @@ void WIN32_BIND_PLATFORM_FUNCTIONS(Platform *platform)
 	//mBindPlatformFunction(ExitGame);
 	mBindPlatformFunction(AllocateMemory);
 	mBindPlatformFunction(PerformanceCounterFrequency);
+	mBindPlatformFunction(AnyKey);
 
 	platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
 

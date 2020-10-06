@@ -6,6 +6,7 @@
 #include "battle.h"
 #include "better_text_parsing.h"
 #include "bitmap.h"
+#include "campaign.h"
 #include "color.h"
 #include "const.h"
 #include "debug.h"
@@ -383,6 +384,26 @@ String MetaString(const Bitmap *s)
 	AppendCString(&string, "  height: %u (u32)\n", s->height);
 
 	AppendCString(&string, "  pixels: %p (BgraPixel *)\n", s->pixels);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// campaign.h
+// ------------------------------------------
+
+String MetaString(const Campaign *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Campaign {\n");
 
 	AppendCString(&string, "}");
 
@@ -958,9 +979,17 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->editor_state));
 	AppendCString(&string, "(Editor)\n");
 
+	AppendCString(&string, "  options_menu: ");
+	AppendString(&string, MetaString(&s->options_menu));
+	AppendCString(&string, "(OptionsMenu)\n");
+
 	AppendCString(&string, "  mainmenu_state: ");
 	AppendString(&string, MetaString(&s->mainmenu_state));
 	AppendCString(&string, "(MainMenu)\n");
+
+	AppendCString(&string, "  campaign: ");
+	AppendString(&string, MetaString(&s->campaign));
+	AppendCString(&string, "(Campaign)\n");
 
 	AppendCString(&string, "  pointer_cursor: ");
 	AppendString(&string, MetaString(&s->pointer_cursor));
@@ -1010,6 +1039,9 @@ String MetaString(const GameState *s)
 		} break;
 		case(GameState::Battle): {
 			AppendCString(&string, "Battle");
+		} break;
+		case(GameState::Campaign): {
+			AppendCString(&string, "Campaign");
 		} break;
 		case(GameState::Editor): {
 			AppendCString(&string, "Editor");
@@ -1349,6 +1381,8 @@ String MetaString(const InputState *s)
 
 	AppendCString(&string, "  down_keys: %p (u8[])\n", s->down_keys);
 
+	AppendCString(&string, "  any_key: %u (u8)\n", s->any_key);
+
 	AppendCString(&string, "  prev_mouse_pos: ");
 	AppendString(&string, MetaString(&s->prev_mouse_pos));
 	AppendCString(&string, "(Vec2f)\n");
@@ -1541,6 +1575,10 @@ String MetaString(const OptionsMenu *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "OptionsMenu {\n");
+
+	AppendCString(&string, "  selected_option: %d (int)\n", s->selected_option);
+
+	AppendCString(&string, "  option_being_modified: %d (bool)\n", s->option_being_modified);
 
 	AppendCString(&string, "}");
 

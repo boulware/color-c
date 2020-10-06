@@ -64,7 +64,7 @@ LoadFileIntoMemoryAndNullTerminate(const char *filename)
 	size_t file_size = ftell(file);
 	fseek(file, 0, SEEK_SET);
 
-	char *data = (char *)malloc(file_size+1);
+	char *data = (char *)calloc(file_size+1, 1);
 	fread(data, 1, file_size, file);
 	fclose(file);
 
@@ -78,7 +78,7 @@ LoadFileIntoMemoryAndNullTerminate(const char *filename)
 }
 
 void
-FindHeaderFilesAndOutputIncludes(const char *dir, FILE *out)
+FindHeaderFilesAndOutputIncludes(const char *dir, Buffer *out)
 {
 	WIN32_FIND_DATA file_data;
 	HANDLE handle = FindFirstFileA(dir, &file_data);
@@ -523,26 +523,25 @@ int main()
 {
 	#define root_dir "D:/work/programming/color-c/"
 
-	FILE *out_file = fopen(root_dir "src/meta_print.cpp", "w");
-	if(!out_file)
-	{
-		printf("Failed to open meta_print.cpp file");
-		return 0;
-	}
-	fprintf(out_file, "#include \"meta_print.h\"\n\n");
-	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", out_file);
+	const size_t buffer_size = 10000000; // 10MB
 
-	FILE *header_file = fopen(root_dir "src/meta_print.h", "w");
-	if(!header_file)
-	{
-		printf("Failed to open meta_print.h file");
-		return 0;
-	}
-	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", header_file);
-	fprintf(header_file, "\n");
+	Buffer out_file = {};
+	out_file.data = (char *)calloc(buffer_size, 1);
+	out_file.p = out_file.data;
+	out_file.byte_count = buffer_size;
+
+	Buffer header_file = {};
+	header_file.data = (char *)calloc(buffer_size, 1);
+	header_file.p = header_file.data;
+	header_file.byte_count = buffer_size;
+
+	fprintf(&out_file, "#include \"meta_print.h\"\n\n");
+	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", &out_file);
+	FindHeaderFilesAndOutputIncludes(root_dir "src/*.h", &header_file);
 
 	WIN32_FIND_DATA file_data;
 	HANDLE handle = FindFirstFileA(root_dir "src/*.h", &file_data);
+
 
 	while(GetLastError() != ERROR_NO_MORE_FILES)
 	{
@@ -563,14 +562,17 @@ int main()
 			strcpy(filename_with_folder+path_length, file_data.cFileName);
 		}
 
+		// const char *stop_string = "game_state.h";
+		// if(strncmp(stop_string, file_data.cFileName, strlen(stop_string)) == 0) return 0;
+
 		Buffer file = LoadFileIntoMemoryAndNullTerminate(filename_with_folder);
 
-		fprintf(out_file, "\n// ---------------FILE START---------------\n");
-		fprintf(out_file, "// %s\n", file_data.cFileName);
-		fprintf(out_file, "// ------------------------------------------\n");
-		// fprintf(out_file, "#include <string.h>\n");
-		// fprintf(out_file, "#include \"utf32string.h\"\n");
-		//fprintf(out_file, "\n");
+		fprintf(&out_file, "\n// ---------------FILE START---------------\n");
+		fprintf(&out_file, "// %s\n", file_data.cFileName);
+		fprintf(&out_file, "// ------------------------------------------\n");
+		// fprintf(&out_file, "#include <string.h>\n");
+		// fprintf(&out_file, "#include \"utf32string.h\"\n");
+		//fprintf(&out_file, "\n");
 
 		bool is_parsing = true;
 		while(is_parsing and BufferBytesRemaining(file) > 0)
@@ -594,11 +596,6 @@ int main()
 			}
 			else if(token.type == TokenType_::Identifier)
 			{
-				if(TokenMatchesString(token, "MetaBreakHere"))
-				{
-					printf(".");
-				}
-
 				if(TokenMatchesString(token, "enum") and NextTokenMatchesString(&file, "class"))
 				{ // enum class
 					SkipTokens(&file, 1);
@@ -614,27 +611,27 @@ int main()
 					if(!valid) continue;
 
 					// Output declaration to H file
-					fprintf(header_file, "String MetaString(const %.*s *s);\n\n",
+					fprintf(&header_file, "String MetaString(const %.*s *s);\n\n",
 						    int(enum_class_name_token.length), enum_class_name_token.start);
 
 					// Output beginning of definition to CPP file.
-					fprintf(out_file, "\nString MetaString(const %.*s *s)\n",
+					fprintf(&out_file, "\nString MetaString(const %.*s *s)\n",
 						    int(enum_class_name_token.length), enum_class_name_token.start);
-					fprintf(out_file, "{\n");
+					fprintf(&out_file, "{\n");
 
-					fprintf(out_file, "\tTIMED_BLOCK;\n");
-					fprintf(out_file, "\n");
+					fprintf(&out_file, "\tTIMED_BLOCK;\n");
+					fprintf(&out_file, "\n");
 
-					fprintf(out_file, "\tString string = {};\n");
-					fprintf(out_file, "\tstring.length = 0;\n");
-					fprintf(out_file, "\tstring.max_length = 1024;\n");
-					fprintf(out_file, "\tstring.data = ScratchString(string.max_length);\n");
-					fprintf(out_file, "\n");
-					fprintf(out_file, "\tAppendCString(&string, \"%.*s::\");\n",
+					fprintf(&out_file, "\tString string = {};\n");
+					fprintf(&out_file, "\tstring.length = 0;\n");
+					fprintf(&out_file, "\tstring.max_length = 1024;\n");
+					fprintf(&out_file, "\tstring.data = ScratchString(string.max_length);\n");
+					fprintf(&out_file, "\n");
+					fprintf(&out_file, "\tAppendCString(&string, \"%.*s::\");\n",
 							(int)enum_class_name_token.length, enum_class_name_token.start);
 
-					fprintf(out_file, "\tswitch(*s)\n");
-					fprintf(out_file, "\t{\n");
+					fprintf(&out_file, "\tswitch(*s)\n");
+					fprintf(&out_file, "\t{\n");
 
 					bool parsing = true;
 					while(parsing)
@@ -655,21 +652,21 @@ int main()
 						}
 
 
-						fprintf(out_file, "\t\tcase(%.*s::%.*s): {\n",
+						fprintf(&out_file, "\t\tcase(%.*s::%.*s): {\n",
 							    (int)enum_class_name_token.length, enum_class_name_token.start,
 							    (int)member_name_token.length, member_name_token.start);
-						fprintf(out_file, "\t\t\tAppendCString(&string, \"%.*s\");\n",
+						fprintf(&out_file, "\t\t\tAppendCString(&string, \"%.*s\");\n",
 							    (int)member_name_token.length, member_name_token.start);
-						fprintf(out_file, "\t\t} break;\n");
+						fprintf(&out_file, "\t\t} break;\n");
 					}
 
-					fprintf(out_file, "\t\tdefault: {\n");
-					fprintf(out_file, "\t\t\tAppendCString(&string, \"?????\");\n");
-					fprintf(out_file, "\t\t} break;\n");
-					fprintf(out_file, "\t}\n");
-					fprintf(out_file, "\n");
-					fprintf(out_file, "\treturn string;\n");
-					fprintf(out_file, "}\n");
+					fprintf(&out_file, "\t\tdefault: {\n");
+					fprintf(&out_file, "\t\t\tAppendCString(&string, \"?????\");\n");
+					fprintf(&out_file, "\t\t} break;\n");
+					fprintf(&out_file, "\t}\n");
+					fprintf(&out_file, "\n");
+					fprintf(&out_file, "\treturn string;\n");
+					fprintf(&out_file, "}\n");
 
 				}
 
@@ -694,7 +691,7 @@ int main()
 
 				if(TokenMatchesString(token, "struct"))
 				{ // Try to parse from here as a struct.
-					fprintf(out_file, "\n");
+					fprintf(&out_file, "\n");
 					StructMetaData meta_data = {};
 
 					bool valid = true;
@@ -719,31 +716,31 @@ int main()
 					char *template_type_string = "";
 					if(struct_is_templated)
 					{
-						fprintf(header_file, "template<typename Type>\n");
-						fprintf(out_file, "template<typename Type>\n");
+						fprintf(&header_file, "template<typename Type>\n");
+						fprintf(&out_file, "template<typename Type>\n");
 						template_type_string = "<Type>";
 					}
 
 					// Output declaration to H file
-					fprintf(header_file, "String MetaString(const %.*s%s *s);\n\n",
+					fprintf(&header_file, "String MetaString(const %.*s%s *s);\n\n",
 						    int(struct_name_token.length), struct_name_token.start,
 						    template_type_string);
 
 					// Output beginning of definition to CPP file.
-					fprintf(out_file, "String MetaString(const %.*s%s *s)\n",
+					fprintf(&out_file, "String MetaString(const %.*s%s *s)\n",
 						    int(struct_name_token.length), struct_name_token.start,
 						    template_type_string);
-					fprintf(out_file, "{\n");
+					fprintf(&out_file, "{\n");
 
-					fprintf(out_file, "\tTIMED_BLOCK;\n");
-					fprintf(out_file, "\n");
+					fprintf(&out_file, "\tTIMED_BLOCK;\n");
+					fprintf(&out_file, "\n");
 
-					fprintf(out_file, "\tString string = {};\n");
-					fprintf(out_file, "\tstring.length = 0;\n");
-					fprintf(out_file, "\tstring.max_length = 1024;\n");
-					fprintf(out_file, "\tstring.data = ScratchString(string.max_length);\n");
-					fprintf(out_file, "\n");
-					fprintf(out_file, "\tAppendCString(&string, \"%.*s {\\n\");\n\n",
+					fprintf(&out_file, "\tString string = {};\n");
+					fprintf(&out_file, "\tstring.length = 0;\n");
+					fprintf(&out_file, "\tstring.max_length = 1024;\n");
+					fprintf(&out_file, "\tstring.data = ScratchString(string.max_length);\n");
+					fprintf(&out_file, "\n");
+					fprintf(&out_file, "\tAppendCString(&string, \"%.*s {\\n\");\n\n",
 							(int)struct_name_token.length, struct_name_token.start);
 
 					// PrintToken(struct_name_token);
@@ -889,7 +886,7 @@ int main()
 
 								if(array_dimension == 0 and known_meta_type)
 								{
-									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%%s (%s%.*s%s)\\n\", s->%.*s);\n\n",
+									fprintf(&out_file, "\tAppendCString(&string, \"  %.*s: %%%s (%s%.*s%s)\\n\", s->%.*s);\n\n",
 											(int)member_name.length, member_name.start,
 											base_type_format_specifier,
 											const_string,
@@ -899,22 +896,22 @@ int main()
 								}
 								else if(array_dimension > 0)
 								{
-									fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s",
+									fprintf(&out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s",
 											(int)member_name.length, member_name.start,
 											const_string,
 											(int)base_type_token.length, base_type_token.start);
 									for(int i=0; i<array_dimension; i++)
 									{
-										fprintf(out_file, "[]");
+										fprintf(&out_file, "[]");
 									}
-									fprintf(out_file, ")\\n\", s->%.*s);\n\n",
+									fprintf(&out_file, ")\\n\", s->%.*s);\n\n",
 											(int)member_name.length, member_name.start);
 								}
 								else
 								{ // Append the member as a string from a recursive MetaString() call, unless it's a pointer.
 									if(is_pointer)
 									{
-										fprintf(out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s%s)\\n\", s->%.*s);\n\n",
+										fprintf(&out_file, "\tAppendCString(&string, \"  %.*s: %%p (%s%.*s%s)\\n\", s->%.*s);\n\n",
 												(int)member_name.length, member_name.start,
 												const_string,
 												(int)base_type_token.length, base_type_token.start,
@@ -923,11 +920,11 @@ int main()
 									}
 									else
 									{
-										fprintf(out_file, "\tAppendCString(&string, \"  %.*s: \");\n",
+										fprintf(&out_file, "\tAppendCString(&string, \"  %.*s: \");\n",
 											    (int)member_name.length, member_name.start);
-										fprintf(out_file, "\tAppendString(&string, MetaString(&s->%.*s));\n",
+										fprintf(&out_file, "\tAppendString(&string, MetaString(&s->%.*s));\n",
 												(int)member_name.length, member_name.start);
-										fprintf(out_file, "\tAppendCString(&string, \"(%s%.*s%s)\\n\");\n\n",
+										fprintf(&out_file, "\tAppendCString(&string, \"(%s%.*s%s)\\n\");\n\n",
 												const_string,
 												(int)base_type_token.length, base_type_token.start,
 												pointer_character_string);
@@ -992,10 +989,10 @@ int main()
 						}
 					}
 
-					fprintf(out_file, "\tAppendCString(&string, \"}\");\n");
-					fprintf(out_file, "\n");
-					fprintf(out_file, "\treturn string;\n");
-					fprintf(out_file, "}\n");
+					fprintf(&out_file, "\tAppendCString(&string, \"}\");\n");
+					fprintf(&out_file, "\n");
+					fprintf(&out_file, "\treturn string;\n");
+					fprintf(&out_file, "}\n");
 				}
 			}
 		}
@@ -1005,8 +1002,30 @@ int main()
 	}
 
 	FindClose(handle);
-	fclose(out_file);
-	fclose(header_file);
+
+	FILE *real_out_file = fopen(root_dir "src/meta_print.cpp", "w");
+	if(!real_out_file)
+	{
+		printf("Failed to open meta_print.cpp file");
+		return 0;
+	}
+	fwrite(out_file.data, 1, out_file.p - out_file.data, real_out_file);
+	fclose(real_out_file);
+
+	FILE *real_header_file = fopen(root_dir "src/meta_print.h", "w");
+	if(!real_header_file)
+	{
+		printf("Failed to open meta_print.h file");
+		return 0;
+	}
+	fwrite(header_file.data, 1, header_file.p - header_file.data, real_header_file);
+	fclose(real_header_file);
+
+//	fclose(out_file);
+//	fclose(header_file);
+
+
+
 		// if(token.type == TokenType_::Identifier)
 		// {
 

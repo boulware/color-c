@@ -1,5 +1,7 @@
 #include "text_parsing.h"
 
+#include "math.h"
+
 size_t StringLength(const char *s)
 {
 	size_t i = 0;
@@ -565,4 +567,33 @@ bool SkipToNextLine(Buffer *buffer)
 
 	if(initial != buffer->p) return true;
 	else return false;
+}
+
+void fprintf(Buffer *buffer, const char *fmt, ...)
+{
+	const size_t max_formatted_string_length = 1000000; // 1 MB
+	char *formatted_string = (char *)malloc(max_formatted_string_length);
+	va_list args;
+	va_start(args, fmt);
+	//dst = TempFormatString(fmt, args);
+	int formatted_length = vsprintf(formatted_string, fmt, args);
+	if(formatted_length > max_formatted_string_length)
+	{
+		// log(__FUNCTION__ " received a string longer (after applying formatting) "
+		// 	"than c::max_formatted_string_length (%d). "
+		// 	"The string is still formatted, but clipped to max formatted string length.",
+		// 	max_formatted_string_length);
+
+		formatted_string[max_formatted_string_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
+	}
+	va_end(args);
+
+	size_t bytes_remaining = BufferBytesRemaining(*buffer);
+	for(int i=0; i<m::Min(bytes_remaining, max_formatted_string_length); ++i)
+	{
+		if(formatted_string[i] == 0) break;
+
+		*buffer->p = formatted_string[i];
+		++buffer->p;
+	}
 }

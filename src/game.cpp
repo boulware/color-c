@@ -244,7 +244,7 @@ GameUpdateAndRender()
     Vec2f pos = {1600.f,0.f};
     TextLayout frametime_layout = c::def_text_layout;
     frametime_layout.align = c::align_topright;
-    pos.y += DrawText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).y;
+    pos.y += DrawText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
 
     // Right click cancels selected ability if one is selected.
     // If no ability is selected, cancels selected unit if one is selected.
@@ -282,6 +282,14 @@ GameUpdateAndRender()
     else if(game->current_state == GameState::Editor)
     {
         new_state = TickEditor(&game->editor_state);
+    }
+    else if(game->current_state == GameState::Options)
+    {
+        new_state = TickOptionsMenu(&game->options_menu);
+    }
+    else if(game->current_state == GameState::Campaign)
+    {
+        new_state = TickCampaign(&game->campaign);
     }
 
     if(new_state != GameState::None)

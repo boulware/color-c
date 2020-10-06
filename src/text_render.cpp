@@ -5,6 +5,7 @@
 //#include "draw.h"
 #include "memory.h"
 #include "utf32string.h"
+#include "better_text_parsing.h"
 
 Font
 LoadFontData(FT_Face face, int size)
@@ -152,7 +153,7 @@ SizeUtf8Line(TextLayout layout, const char *string)
     return Vec2f{pen.x, LineHeight(layout)};
 }
 
-Vec2f
+Rect
 DrawText(TextLayout layout, Vec2f origin, String string)
 {
     TIMED_BLOCK;
@@ -185,10 +186,10 @@ DrawText(TextLayout layout, Vec2f origin, String string)
         DrawUnfilledRect({origin, text_size}, layout.color);
     }
 
-    return text_size;
+    return Rect{.pos = origin, .size = text_size};
 }
 
-Vec2f
+Rect
 DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 {
     TIMED_BLOCK;
@@ -198,43 +199,45 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
     char *formatted_string;
     mFormatString(formatted_string, string);
 
-    Buffer buffer = BufferFromCString(formatted_string);
-    u32 utf32_char;
-    Vec2f text_size = SizeUtf8Line(layout, formatted_string);
+    return DrawText(layout, origin, StringFromCString(formatted_string));
 
-    origin = AlignRect({origin, text_size}, layout.align).pos;
-    Vec2f pen = origin;
+    // Buffer buffer = BufferFromCString(formatted_string);
+    // u32 utf32_char;
+    // Vec2f text_size = SizeUtf8Line(layout, formatted_string);
 
-    while(NextAsUtf32Char(&buffer, &utf32_char))
-    {
-        if(utf32_char == '`')
-        { // beginning of color code
-            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
-            Token color_name = NextToken(&buffer);
-            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+    // origin = AlignRect({origin, text_size}, layout.align).pos;
+    // Vec2f pen = origin;
 
-            Color color = layout.color;
+    // while(NextAsUtf32Char(&buffer, &utf32_char))
+    // {
+    //     if(utf32_char == '`')
+    //     { // beginning of color code
+    //         ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+    //         Token color_name = NextToken(&buffer);
+    //         ConfirmNextTokenType(&buffer, TokenType_::Backtick);
 
-            if(TokenMatchesString(color_name, "red")) color = c::red;
+    //         Color color = layout.color;
 
-            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
-        }
-        else if(utf32_char == '\n')
-        {
-            break;
-        }
-        else
-        {
-            _RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
-        }
-    }
+    //         if(TokenMatchesString(color_name, "red")) color = c::red;
 
-    if(layout.draw_debug)
-    {
-        DrawUnfilledRect({origin, text_size}, layout.color);
-    }
+    //         gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+    //     }
+    //     else if(utf32_char == '\n')
+    //     {
+    //         break;
+    //     }
+    //     else
+    //     {
+    //         _RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
+    //     }
+    // }
 
-    return text_size;
+    // if(layout.draw_debug)
+    // {
+    //     DrawUnfilledRect({origin, text_size}, layout.color);
+    // }
+
+    // return text_size;
 }
 
 // @robustness: This doesn't actually return the width of the multiline text.
@@ -456,7 +459,7 @@ ErrorDrawText(Vec2f origin, const char *string, ...)
     char *formatted_string;
     mFormatString(formatted_string, string);
 
-    Vec2f text_size = DrawText(layout, origin, formatted_string);
+    Vec2f text_size = DrawText(layout, origin, formatted_string).size;
     origin = AlignRect({origin, text_size}, layout.align).pos;
 
     Color flash_color = layout.color;
@@ -469,73 +472,73 @@ ErrorDrawText(Vec2f origin, const char *string, ...)
 void
 DrawDummyText(TextLayout layout, Vec2f pos)
 {
-    pos.y += DrawText(layout, pos, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.").y;
-    pos.y += DrawText(layout, pos, "Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique.").y;
-    pos.y += DrawText(layout, pos, "Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla.").y;
-    pos.y += DrawText(layout, pos, "Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit.").y;
-    pos.y += DrawText(layout, pos, "Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus.").y;
-    pos.y += DrawText(layout, pos, "Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus.").y;
-    pos.y += DrawText(layout, pos, "Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem.").y;
-    pos.y += DrawText(layout, pos, "Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet.").y;
-    pos.y += DrawText(layout, pos, "Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus.").y;
-    pos.y += DrawText(layout, pos, "Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante.").y;
-    pos.y += DrawText(layout, pos, "Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum.").y;
-    pos.y += DrawText(layout, pos, "Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus.").y;
-    pos.y += DrawText(layout, pos, "Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh.").y;
-    pos.y += DrawText(layout, pos, "Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada.").y;
-    pos.y += DrawText(layout, pos, "Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare.").y;
-    pos.y += DrawText(layout, pos, "Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris.").y;
-    pos.y += DrawText(layout, pos, "Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor.").y;
-    pos.y += DrawText(layout, pos, "Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam.").y;
-    pos.y += DrawText(layout, pos, "Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor.").y;
-    pos.y += DrawText(layout, pos, "Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc.").y;
-    pos.y += DrawText(layout, pos, "Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus.").y;
-    pos.y += DrawText(layout, pos, "Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam.").y;
-    pos.y += DrawText(layout, pos, "Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna.").y;
-    pos.y += DrawText(layout, pos, "Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet.").y;
-    pos.y += DrawText(layout, pos, "Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum.").y;
-    pos.y += DrawText(layout, pos, "Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor.").y;
-    pos.y += DrawText(layout, pos, "Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue.").y;
-    pos.y += DrawText(layout, pos, "Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque.").y;
-    pos.y += DrawText(layout, pos, "Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam.").y;
-    pos.y += DrawText(layout, pos, "Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis.").y;
-    pos.y += DrawText(layout, pos, "Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus.").y;
-    pos.y += DrawText(layout, pos, "Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum.").y;
-    pos.y += DrawText(layout, pos, "Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate.").y;
-    pos.y += DrawText(layout, pos, "Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique.").y;
-    pos.y += DrawText(layout, pos, "Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla.").y;
-    pos.y += DrawText(layout, pos, "In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis.").y;
-    pos.y += DrawText(layout, pos, "Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis.").y;
-    pos.y += DrawText(layout, pos, "Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam.").y;
-    pos.y += DrawText(layout, pos, "Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur.").y;
-    pos.y += DrawText(layout, pos, "Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis.").y;
-    pos.y += DrawText(layout, pos, "Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem.").y;
-    pos.y += DrawText(layout, pos, "Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum.").y;
-    pos.y += DrawText(layout, pos, "Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus.").y;
-    pos.y += DrawText(layout, pos, "Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula.").y;
-    pos.y += DrawText(layout, pos, "Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum.").y;
-    pos.y += DrawText(layout, pos, "Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh.").y;
-    pos.y += DrawText(layout, pos, "Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum.").y;
-    pos.y += DrawText(layout, pos, "Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus.").y;
-    pos.y += DrawText(layout, pos, "Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia.").y;
-    pos.y += DrawText(layout, pos, "Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie.").y;
-    pos.y += DrawText(layout, pos, "Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis.").y;
-    pos.y += DrawText(layout, pos, "Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper.").y;
-    pos.y += DrawText(layout, pos, "Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu.").y;
-    pos.y += DrawText(layout, pos, "Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium.").y;
-    pos.y += DrawText(layout, pos, "Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit.").y;
-    pos.y += DrawText(layout, pos, "Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue.").y;
-    pos.y += DrawText(layout, pos, "Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien.").y;
-    pos.y += DrawText(layout, pos, "Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium.").y;
-    pos.y += DrawText(layout, pos, "Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi.").y;
-    pos.y += DrawText(layout, pos, "Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada.").y;
-    pos.y += DrawText(layout, pos, "Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat.").y;
-    pos.y += DrawText(layout, pos, "In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam.").y;
-    pos.y += DrawText(layout, pos, "Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum.").y;
-    pos.y += DrawText(layout, pos, "Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna.").y;
-    pos.y += DrawText(layout, pos, "Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan.").y;
-    pos.y += DrawText(layout, pos, "In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat.").y;
-    pos.y += DrawText(layout, pos, "Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante.").y;
+    pos.y += DrawText(layout, pos, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.").size.y;
+    pos.y += DrawText(layout, pos, "Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique. Nunc fermentum tellus non massa porta tristique.").size.y;
+    pos.y += DrawText(layout, pos, "Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla. Fusce faucibus leo ac nibh tincidunt, nec vestibulum erat fringilla.").size.y;
+    pos.y += DrawText(layout, pos, "Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit. Vestibulum hendrerit dui vel velit congue, non mattis mi blandit.").size.y;
+    pos.y += DrawText(layout, pos, "Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus. Suspendisse tincidunt augue eget volutpat rhoncus.").size.y;
+    pos.y += DrawText(layout, pos, "Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus. Praesent nec ex dapibus, egestas est id, elementum purus.").size.y;
+    pos.y += DrawText(layout, pos, "Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem. Vivamus eu lorem quis dolor lacinia molestie vel ac sem.").size.y;
+    pos.y += DrawText(layout, pos, "Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet. Nulla vestibulum leo ut turpis consectetur, et sagittis erat laoreet.").size.y;
+    pos.y += DrawText(layout, pos, "Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus. Vestibulum blandit nulla et mauris sodales, at congue neque rhoncus.").size.y;
+    pos.y += DrawText(layout, pos, "Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante. Fusce ut nulla imperdiet, faucibus nibh non, ornare ante.").size.y;
+    pos.y += DrawText(layout, pos, "Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum. Fusce ullamcorper sapien at accumsan interdum.").size.y;
+    pos.y += DrawText(layout, pos, "Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus. Ut dignissim massa at felis aliquam rhoncus.").size.y;
+    pos.y += DrawText(layout, pos, "Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh. Proin eget felis vitae enim efficitur feugiat sed id nibh.").size.y;
+    pos.y += DrawText(layout, pos, "Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada. Maecenas scelerisque urna quis nibh malesuada, id elementum dolor malesuada.").size.y;
+    pos.y += DrawText(layout, pos, "Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare. Donec laoreet arcu eget arcu cursus, convallis ullamcorper enim ornare.").size.y;
+    pos.y += DrawText(layout, pos, "Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris. Sed quis lacus ut eros luctus ultricies nec et mauris.").size.y;
+    pos.y += DrawText(layout, pos, "Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor. Integer eu elit faucibus, cursus turpis nec, bibendum tortor.").size.y;
+    pos.y += DrawText(layout, pos, "Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam. Morbi finibus tellus venenatis, consequat libero in, cursus diam.").size.y;
+    pos.y += DrawText(layout, pos, "Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor. Sed gravida dolor sit amet erat vestibulum auctor.").size.y;
+    pos.y += DrawText(layout, pos, "Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc. Phasellus nec risus vehicula, volutpat tellus et, posuere nunc.").size.y;
+    pos.y += DrawText(layout, pos, "Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus. Morbi ac ligula sagittis, volutpat odio eu, semper lacus.").size.y;
+    pos.y += DrawText(layout, pos, "Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam. Suspendisse iaculis quam et facilisis aliquam.").size.y;
+    pos.y += DrawText(layout, pos, "Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna. Suspendisse ut ligula scelerisque, maximus nibh at, fermentum urna.").size.y;
+    pos.y += DrawText(layout, pos, "Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet. Pellentesque interdum felis a ipsum tempus, at vehicula massa aliquet.").size.y;
+    pos.y += DrawText(layout, pos, "Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum. Phasellus faucibus neque quis leo vestibulum, a condimentum nulla interdum.").size.y;
+    pos.y += DrawText(layout, pos, "Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor. Aenean feugiat augue eu neque volutpat auctor.").size.y;
+    pos.y += DrawText(layout, pos, "Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue. Vivamus sit amet tellus eu libero feugiat vulputate vitae non augue.").size.y;
+    pos.y += DrawText(layout, pos, "Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque. Quisque ut ipsum vel leo aliquet luctus sit amet vel neque.").size.y;
+    pos.y += DrawText(layout, pos, "Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam. Proin et ex eu diam ultricies ultrices laoreet at quam.").size.y;
+    pos.y += DrawText(layout, pos, "Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis. Duis ultricies augue sodales arcu vehicula, et malesuada dolor sagittis.").size.y;
+    pos.y += DrawText(layout, pos, "Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus. Suspendisse non felis sed felis congue dapibus.").size.y;
+    pos.y += DrawText(layout, pos, "Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum. Phasellus a augue quis ipsum interdum fermentum.").size.y;
+    pos.y += DrawText(layout, pos, "Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate. Donec accumsan ex blandit odio aliquet vulputate.").size.y;
+    pos.y += DrawText(layout, pos, "Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique. Integer et odio nec sem sagittis tristique.").size.y;
+    pos.y += DrawText(layout, pos, "Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla. Fusce a lacus at est volutpat molestie eget quis nulla.").size.y;
+    pos.y += DrawText(layout, pos, "In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis. In nec ipsum consequat libero sagittis lobortis.").size.y;
+    pos.y += DrawText(layout, pos, "Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis. Aliquam sollicitudin augue id nisl pulvinar, id fermentum neque mattis.").size.y;
+    pos.y += DrawText(layout, pos, "Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam. Vivamus vel nibh tristique, luctus nibh sed, viverra diam.").size.y;
+    pos.y += DrawText(layout, pos, "Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur. Proin semper tortor eget massa condimentum, eget luctus lorem consectetur.").size.y;
+    pos.y += DrawText(layout, pos, "Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis. Vestibulum accumsan dolor ut porttitor mattis.").size.y;
+    pos.y += DrawText(layout, pos, "Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem. Pellentesque sit amet sem lobortis, interdum dolor non, pharetra sem.").size.y;
+    pos.y += DrawText(layout, pos, "Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum. Integer placerat eros vel lectus dapibus rutrum.").size.y;
+    pos.y += DrawText(layout, pos, "Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus. Nullam ut sem eu magna posuere cursus.").size.y;
+    pos.y += DrawText(layout, pos, "Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula. Integer a dui ornare, hendrerit orci in, gravida ligula.").size.y;
+    pos.y += DrawText(layout, pos, "Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum. Aliquam a nulla eu nisi imperdiet interdum.").size.y;
+    pos.y += DrawText(layout, pos, "Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh. Morbi eget nulla id lorem pharetra dapibus ut eget nibh.").size.y;
+    pos.y += DrawText(layout, pos, "Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum. Integer scelerisque sapien at ligula lobortis dictum.").size.y;
+    pos.y += DrawText(layout, pos, "Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus. Quisque at ex eleifend, vestibulum urna non, congue metus.").size.y;
+    pos.y += DrawText(layout, pos, "Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia. Ut imperdiet tellus non metus mollis lacinia.").size.y;
+    pos.y += DrawText(layout, pos, "Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie. Aliquam quis neque at ex porta molestie.").size.y;
+    pos.y += DrawText(layout, pos, "Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis. Pellentesque et mi nec leo ornare convallis.").size.y;
+    pos.y += DrawText(layout, pos, "Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper. Proin facilisis magna ut quam posuere semper.").size.y;
+    pos.y += DrawText(layout, pos, "Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu. Nullam in augue sodales, consectetur tortor vitae, sodales arcu.").size.y;
+    pos.y += DrawText(layout, pos, "Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium. Cras malesuada elit vitae sem blandit, non mattis felis pretium.").size.y;
+    pos.y += DrawText(layout, pos, "Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit. Mauris mollis leo at mi scelerisque hendrerit.").size.y;
+    pos.y += DrawText(layout, pos, "Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue. Vestibulum id libero aliquam, cursus est ac, eleifend augue.").size.y;
+    pos.y += DrawText(layout, pos, "Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien. Mauris et ex ut quam volutpat eleifend vitae a sapien.").size.y;
+    pos.y += DrawText(layout, pos, "Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium. Donec eget massa ut nisl tempus pretium.").size.y;
+    pos.y += DrawText(layout, pos, "Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi. Mauris a erat tristique, vulputate velit eget, porta nisi.").size.y;
+    pos.y += DrawText(layout, pos, "Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada. Quisque cursus magna id ipsum viverra malesuada.").size.y;
+    pos.y += DrawText(layout, pos, "Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat. Sed vehicula lectus pretium lobortis placerat.").size.y;
+    pos.y += DrawText(layout, pos, "In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam. In sit amet mi id est cursus aliquam.").size.y;
+    pos.y += DrawText(layout, pos, "Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum. Phasellus ac nulla sit amet erat luctus interdum.").size.y;
+    pos.y += DrawText(layout, pos, "Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna. Curabitur id justo malesuada, tristique dui non, efficitur magna.").size.y;
+    pos.y += DrawText(layout, pos, "Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan. Curabitur sodales nibh a iaculis accumsan.").size.y;
+    pos.y += DrawText(layout, pos, "In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat. In ut turpis imperdiet massa bibendum placerat.").size.y;
+    pos.y += DrawText(layout, pos, "Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante. Sed id quam non velit accumsan facilisis in at ante.").size.y;
 }
 
 // void

@@ -278,7 +278,7 @@ DrawUnits(Battle *battle)
         TextLayout unit_name_layout = c::def_text_layout;
         unit_name_layout.font_size = 24;
         unit_name_layout.align = c::align_topcenter;
-        Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name);
+        Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name).size;
 
         //TraitSet preview_traits = unit->cur_traits;
 
@@ -314,7 +314,7 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
 
     TextLayout layout = c::def_text_layout;
     layout.align = c::align_topleft;
-    Vec2f name_text_size = DrawText(layout, RectTopLeft(infobox_aligned_rect), ability->name);
+    Vec2f name_text_size = DrawText(layout, RectTopLeft(infobox_aligned_rect), ability->name).size;
     //pen.y += name_size.y;
 
 
@@ -682,15 +682,15 @@ TickBattle(Battle *battle)
 
             // Draw unit name
             pen += c::hud_unit_name_offset;
-            pen.y += DrawText(c::def_text_layout, pen, selected_unit->name).y;
+            pen.y += DrawText(c::def_text_layout, pen, selected_unit->name).size.y;
 
             // Draw unit traits
             pen.y += DrawText(c::def_text_layout, pen, "Vigor: %d/%d",
-                                    selected_unit->cur_traits.vigor, selected_unit->max_traits.vigor).y;
+                                    selected_unit->cur_traits.vigor, selected_unit->max_traits.vigor).size.y;
             pen.y += DrawText(c::def_text_layout, pen, "Focus: %d/%d",
-                                    selected_unit->cur_traits.focus, selected_unit->max_traits.focus).y;
+                                    selected_unit->cur_traits.focus, selected_unit->max_traits.focus).size.y;
             pen.y += DrawText(c::def_text_layout, pen, "Armor: %d/%d",
-                                    selected_unit->cur_traits.armor, selected_unit->max_traits.armor).y;
+                                    selected_unit->cur_traits.armor, selected_unit->max_traits.armor).size.y;
 
 
 
@@ -1037,7 +1037,7 @@ TickBattle(Battle *battle)
             TextLayout unit_name_layout = c::def_text_layout;
             unit_name_layout.font_size = 24;
             unit_name_layout.align = c::align_topcenter;
-            Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name);
+            Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name).size;
 
             //TraitSet preview_traits = unit->cur_traits;
 

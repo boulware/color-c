@@ -29,7 +29,7 @@ TickMainMenu(MainMenu *menu)
 	}
 
 	GameState new_state = GameState::None;
-	if(Pressed(vk::enter))
+	if(Pressed(vk::enter) or Pressed(vk::LMB))
 	{
 		if(menu->selected_option == 0)
 		{
@@ -37,7 +37,7 @@ TickMainMenu(MainMenu *menu)
 		}
 		else if(menu->selected_option == 1)
 		{ // Campaign
-			// new_state = GameState::Campaign;
+			new_state = GameState::Campaign;
 		}
 		else if(menu->selected_option == 2)
 		{ // Editor
@@ -45,7 +45,7 @@ TickMainMenu(MainMenu *menu)
 		}
 		else if(menu->selected_option == 3)
 		{ // Options
-			//new_state = GameState::Options;
+			new_state = GameState::Options;
 		}
 		else if(menu->selected_option == 4)
 		{ // Quit
@@ -61,14 +61,22 @@ TickMainMenu(MainMenu *menu)
 	{
 		String &string = menu->option_strings[i]; //alias
 
+		Rect text_rect = {};
 		if(i == menu->selected_option)
 		{
-			pen.y += DrawText(c::main_menu_selected_text_layout, pen, string).y;
+			text_rect = DrawText(c::main_menu_selected_text_layout, pen, string);
 		}
 		else
 		{
-			pen.y += DrawText(c::main_menu_unselected_text_layout, pen, string).y;
+			text_rect = DrawText(c::main_menu_unselected_text_layout, pen, string);
 		}
+
+		if(MouseInRect(text_rect) and MouseMoved())
+		{
+			menu->selected_option = i;
+		}
+
+		pen.y += text_rect.size.y;
 	}
 
 	if(Pressed(vk::esc)) new_state = GameState::Quit;

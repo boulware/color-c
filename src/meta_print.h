@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "better_text_parsing.h"
 #include "bitmap.h"
+#include "campaign.h"
 #include "color.h"
 #include "const.h"
 #include "debug.h"
@@ -45,7 +46,6 @@
 #include "utf32string.h"
 #include "util.h"
 #include "vec.h"
-
 String MetaString(const AbilityTier *s);
 
 String MetaString(const Ability *s);
@@ -68,6 +68,8 @@ String MetaString(const Battle *s);
 String MetaString(const BgraPixel *s);
 
 String MetaString(const Bitmap *s);
+
+String MetaString(const Campaign *s);
 
 String MetaString(const Color *s);
 

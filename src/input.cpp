@@ -61,6 +61,13 @@ Repeated(u8 key)
 	return(input::global_input->repeated_keys[key] == 1);
 }
 
+u8 GetAnyKey()
+{
+	if(!input::global_input) return 0;
+
+	return(input::global_input->any_key);
+}
+
 Vec2f
 PrevMousePos()
 {
@@ -75,6 +82,12 @@ MousePos()
 	if(!input::global_input) return Vec2f{};
 
 	return(input::global_input->mouse_pos);
+}
+
+bool
+MouseMoved()
+{
+	return(MousePos() != PrevMousePos());
 }
 
 bool

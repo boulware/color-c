@@ -33,3 +33,5 @@
 #include "main_menu.cpp"
 #include "keybinds.cpp"
 #include "better_text_parsing.cpp"
+#include "options_menu.cpp"
+#include "campaign.cpp"

@@ -99,7 +99,7 @@ enum class VirtualKey : u8
     Undefined2     = 0x0F,
     Shift          = 0x10,
     Ctrl           = 0x11,
-    Menu           = 0x12,
+    Alt            = 0x12,
     Pause          = 0x13,
     CapsLock       = 0x14,
     IME_Kana       = 0x15,
@@ -245,8 +245,8 @@ enum class VirtualKey : u8
     RightShift     = 0xA1,
     LeftCtrl       = 0xA2,
     RightCtrl      = 0xA3,
-    LeftMenu       = 0xA4,
-    RightMenu      = 0xA5,
+    LeftAlt        = 0xA4,
+    RightAlt       = 0xA5,
     BrowserBack    = 0xA6,
     BrowserForward = 0xA7,
     BrowserRefresh = 0xA8,
@@ -358,7 +358,7 @@ const char *VirtualKey_userstrings[VirtualKey::COUNT] = {
     "Undefined2",
     "Shift",
     "Ctrl",
-    "Menu",
+    "Alt",
     "Pause",
     "CapsLock",
     "IME_Kana",
@@ -504,8 +504,8 @@ const char *VirtualKey_userstrings[VirtualKey::COUNT] = {
     "RightShift",
     "LeftCtrl",
     "RightCtrl",
-    "LeftMenu",
-    "RightMenu",
+    "LeftAlt",
+    "RightAlt",
     "BrowserBack",
     "BrowserForward",
     "BrowserRefresh",
@@ -613,6 +613,10 @@ struct InputState
     u8 released_keys[256];
     u8 repeated_keys[256];
     u8 down_keys[256];
+
+    u8 any_key; // Once the platform is signaled, it will place the next key press
+                // into this member, and the game layer can access it as needed.
+
     Vec2f prev_mouse_pos;
     Vec2f mouse_pos;
     int mouse_scroll;
@@ -634,8 +638,10 @@ bool Down(u8 key);
 bool Pressed(u8 key);
 bool Released(u8 key);
 bool Repeated(u8 key);
+u8 GetAnyKey();
 Vec2f PrevMousePos();
 Vec2f MousePos();
+bool MouseMoved();
 int MouseScroll();
 bool MouseInRect(Rect rect);
 

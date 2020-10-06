@@ -21,7 +21,7 @@ DrawTimedBlockData()
 									   TIMED_BLOCK_ARRAY[i].function_name,
 									   TIMED_BLOCK_ARRAY[i].hit_count,
 									   (double)TIMED_BLOCK_ARRAY[i].total_cycle_count,
-									   avg_cycles);
+									   avg_cycles).size;
 			max_right_extent = m::Max(max_right_extent, pos.x + text_size.x);
 			pos.y += text_size.y;
 		}

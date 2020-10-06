@@ -23,6 +23,7 @@ typedef bool fnsig_GetFileSize(const char *, size_t *);
 typedef bool fnsig_LoadFileIntoSizedBufferAndNullTerminate(const char *, Buffer *);
 typedef void *fnsig_AllocateMemory(size_t size);
 typedef s64 fnsig_PerformanceCounterFrequency();
+typedef void fnsig_AnyKey();
 //typedef Utf32String fnsig_LoadUtf8FileAsUtf32String(const char *);
 
 struct Platform {
@@ -51,6 +52,7 @@ struct Platform {
 	mPlatformFunction(LoadFileIntoSizedBufferAndNullTerminate);
 	mPlatformFunction(AllocateMemory);
 	mPlatformFunction(PerformanceCounterFrequency);
+	mPlatformFunction(AnyKey);
 
 	#undef mPlatformFunction
 };
