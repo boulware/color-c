@@ -37,7 +37,7 @@ ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 		temp_breed.ability_ids[i] = c::null_ability_id;
 	}
 
-	bool header_valid = ConfirmNextToken(buffer, "unit");
+	bool header_valid = ConfirmNextTokenAsIdentifier(buffer, "unit");
 	if(!header_valid)
 	{
 		// The current location in the buffer doesn't point to the beginning of a unit's data.
@@ -77,7 +77,7 @@ ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 				Token ability_name_token;
 				if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))
 				{
-					temp_breed.ability_ids[i] = GetIndexByName(ability_table, StringFromToken(ability_name_token));
+					temp_breed.ability_ids[i] = GetIndexFromName(ability_table, StringFromToken(ability_name_token));
 
 					if(temp_breed.ability_ids[i] == c::null_ability_id)
 					{
@@ -196,7 +196,7 @@ CreateUnit(Id<Breed> breed_id, Team team)
 Id<Unit>
 CreateUnitByName(String name, Team team)
 {
-	Id breed_id = GetIndexByName(g::breed_table, name);
+	Id breed_id = GetIndexFromName(g::breed_table, name);
 	return CreateUnit(breed_id, team);
 }
 
@@ -755,10 +755,8 @@ DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)
 	Ability *ability = GetAbilityFromId(ability_id);
 	if(!ValidUnit(caster) or !ValidAbility(ability)) return -1;
 
-	for(int i=c::max_ability_tier_count-1; i>=0; --i)
+	for(int i=0; i<ability->tiers.count; ++i)
 	{
-		if(!ability->tiers[i].init) continue;
-
 		if(caster->cur_traits >= ability->tiers[i].required_traits) return i;
 	}
 

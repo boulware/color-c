@@ -1,7 +1,5 @@
 #include "table.h"
 
-//#include <typeinfo>
-
 template<typename Type>
 TableEntry<Type>*
 begin(Table<Type> &table)
@@ -74,7 +72,7 @@ CreateEntry(Table<Type> *table)
 
 template <typename Type>
 Type *
-GetEntryByIndex(Table<Type> table, int index)
+GetEntryFromRawIndex(Table<Type> table, int index)
 {
 	if(index < 0 or index >= table.entry_count) return nullptr;
 	if(table.entries[index].active == false) return nullptr;
@@ -84,7 +82,7 @@ GetEntryByIndex(Table<Type> table, int index)
 
 template <typename Type>
 Id<Type>
-GetIndexByName(Table<Type> table, String search_string)
+GetIndexFromName(Table<Type> table, String search_string)
 {
 	Id<Type> table_id = NullIndex<Type>();
 
@@ -104,9 +102,9 @@ GetIndexByName(Table<Type> table, String search_string)
 
 template <typename Type>
 Type *
-GetEntryByName(Table<Type> table, String name)
+GetEntryFromName(Table<Type> table, String name)
 {
-	int index = GetIndexByName(table, name);
+	int index = GetIndexFromName(table, name);
 	if(index == -1) return nullptr;
 
 	return
@@ -129,6 +127,19 @@ GetEntryFromId(Table<Type> table, Id<Type> id)
 	if(entry.id != id) return nullptr;
 
 	return &entry.data;
+}
+
+template<typename Type>
+void
+DeleteEntry(Table<Type> *table, Id<Type> id)
+{
+	if(id.index < 0 or id.index >= table->entry_count) return; // Not a valid index (and thus id)
+
+	auto &entry = table->entries[id.index];
+	if(entry.id != id) return; // Outdated or invalid id, so don't delete the entry at this index.
+
+	entry.active = false; // Setting an entry to active is equivalent to deleting it, since any
+	                      // access with the current id will just return a nullptr, and once this
 }
 
 // template <typename Type>

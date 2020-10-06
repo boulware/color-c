@@ -1,6 +1,6 @@
 unit "Warrior"
 traits (10,5,3)
-moveset "Rest" "Strike" "Rig Up" "Rally"
+moveset "Rest" "Strike" "Repair" "Rig Up"
 
 unit "Rogue"
 traits (6,6,2)
@@ -20,7 +20,7 @@ moveset "Rewind"
 
 unit "Cleric"
 traits (4,10,4)
-moveset "Meditate" "Vitalize"
+moveset "Strike" "Meditate" "Vitalize"
 
 unit "Wolf"
 traits (4,4,0)
@@ -31,7 +31,7 @@ traits (8,2,2)
 moveset "Strike" "Steal Armor"
 
 unit "Dragon"
-traits (30,10,10)
+traits (20,10,10)
 moveset "Swipe" "Taunt" "Rest" "Breathe Fire"
 
 unit "Test"

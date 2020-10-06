@@ -4,6 +4,7 @@
 #include "align.h"
 #include "array.h"
 #include "battle.h"
+#include "better_text_parsing.h"
 #include "bitmap.h"
 #include "color.h"
 #include "const.h"
@@ -14,10 +15,12 @@
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
+#include "game_state.h"
 #include "global.h"
 #include "image.h"
 #include "imgui.h"
 #include "input.h"
+#include "keybinds.h"
 #include "lang.h"
 #include "log.h"
 #include "macros.h"
@@ -26,6 +29,7 @@
 #include "memory.h"
 #include "meta.h"
 #include "opengl.h"
+#include "options_menu.h"
 #include "oscillating_timer.h"
 #include "passive_skill_tree.h"
 #include "platform.h"
@@ -59,13 +63,17 @@ String MetaString(const AbilityTier *s)
 
 	AppendCString(&string, "AbilityTier {\n");
 
-	AppendCString(&string, "  init: %d (bool)\n", s->init);
-
 	AppendCString(&string, "  required_traits: ");
 	AppendString(&string, MetaString(&s->required_traits));
 	AppendCString(&string, "(TraitSet)\n");
 
-	AppendCString(&string, "  effects: %p (Effect[])\n", s->effects);
+	AppendCString(&string, "  target_class: ");
+	AppendString(&string, MetaString(&s->target_class));
+	AppendCString(&string, "(TargetClass)\n");
+
+	AppendCString(&string, "  effects_: ");
+	AppendString(&string, MetaString(&s->effects_));
+	AppendCString(&string, "(Array<Effect>)\n");
 
 	AppendCString(&string, "}");
 
@@ -89,7 +97,9 @@ String MetaString(const Ability *s)
 	AppendString(&string, MetaString(&s->name));
 	AppendCString(&string, "(String)\n");
 
-	AppendCString(&string, "  tiers: %p (AbilityTier[])\n", s->tiers);
+	AppendCString(&string, "  tiers: ");
+	AppendString(&string, MetaString(&s->tiers));
+	AppendCString(&string, "(Array<AbilityTier>)\n");
 
 	AppendCString(&string, "}");
 
@@ -234,8 +244,8 @@ String MetaString(const Intent *s)
 	AppendString(&string, MetaString(&s->ability_id));
 	AppendCString(&string, "(Id<Ability>)\n");
 
-	AppendCString(&string, "  targets: ");
-	AppendString(&string, MetaString(&s->targets));
+	AppendCString(&string, "  target_set: ");
+	AppendString(&string, MetaString(&s->target_set));
 	AppendCString(&string, "(UnitSet)\n");
 
 	AppendCString(&string, "}");
@@ -298,6 +308,10 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  intents: %p (Intent[])\n", s->intents);
 
+	AppendCString(&string, "  player_intent: ");
+	AppendString(&string, MetaString(&s->player_intent));
+	AppendCString(&string, "(Intent)\n");
+
 	AppendCString(&string, "  show_preview: %d (bool)\n", s->show_preview);
 
 	AppendCString(&string, "  preview_events: ");
@@ -316,22 +330,14 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  ending_player_turn: %d (bool)\n", s->ending_player_turn);
 
-	AppendCString(&string, "  last_frame_hovered_thought_owner_id: ");
-	AppendString(&string, MetaString(&s->last_frame_hovered_thought_owner_id));
-	AppendCString(&string, "(Id<Unit>)\n");
-
-	AppendCString(&string, "  last_frame_hovered_thought_id: ");
-	AppendString(&string, MetaString(&s->last_frame_hovered_thought_id));
-	AppendCString(&string, "(Id<Ability>)\n");
-
-	AppendCString(&string, "  last_frame_hovered_unit_id: ");
-	AppendString(&string, MetaString(&s->last_frame_hovered_unit_id));
-	AppendCString(&string, "(Id<Unit>)\n");
-
 	AppendCString(&string, "}");
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// better_text_parsing.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // bitmap.h
@@ -766,10 +772,6 @@ String MetaString(const Effect *s)
 	AppendString(&string, MetaString(&s->type));
 	AppendCString(&string, "(EffectType)\n");
 
-	AppendCString(&string, "  target_class: ");
-	AppendString(&string, MetaString(&s->target_class));
-	AppendCString(&string, "(TargetClass)\n");
-
 	AppendCString(&string, "  params: %p (void *)\n", s->params);
 
 	AppendCString(&string, "}");
@@ -889,35 +891,6 @@ String MetaString(const EffectParams_Steal *s)
 // game.h
 // ------------------------------------------
 
-String MetaString(const GameState *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "GameState::");
-	switch(*s)
-	{
-		case(GameState::MainMenu): {
-			AppendCString(&string, "MainMenu");
-		} break;
-		case(GameState::Battle): {
-			AppendCString(&string, "Battle");
-		} break;
-		case(GameState::Editor): {
-			AppendCString(&string, "Editor");
-		} break;
-		default: {
-			AppendCString(&string, "?????");
-		} break;
-	}
-
-	return string;
-}
-
 String MetaString(const Game *s)
 {
 	TIMED_BLOCK;
@@ -1006,6 +979,48 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  test_int: %d (int)\n", s->test_int);
 
 	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// game_state.h
+// ------------------------------------------
+
+String MetaString(const GameState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "GameState::");
+	switch(*s)
+	{
+		case(GameState::None): {
+			AppendCString(&string, "None");
+		} break;
+		case(GameState::Quit): {
+			AppendCString(&string, "Quit");
+		} break;
+		case(GameState::MainMenu): {
+			AppendCString(&string, "MainMenu");
+		} break;
+		case(GameState::Battle): {
+			AppendCString(&string, "Battle");
+		} break;
+		case(GameState::Editor): {
+			AppendCString(&string, "Editor");
+		} break;
+		case(GameState::Options): {
+			AppendCString(&string, "Options");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
 
 	return string;
 }
@@ -1255,6 +1270,8 @@ String MetaString(const ButtonResponse *s)
 
 	AppendCString(&string, "  hovered: %d (bool)\n", s->hovered);
 
+	AppendCString(&string, "  just_now_hovered: %d (bool)\n", s->just_now_hovered);
+
 	AppendCString(&string, "  rect: ");
 	AppendString(&string, MetaString(&s->rect));
 	AppendCString(&string, "(Rect)\n");
@@ -1290,6 +1307,29 @@ String MetaString(const TextEntryResponse *s)
 // input.h
 // ------------------------------------------
 
+String MetaString(const VirtualKey *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "VirtualKey::");
+	switch(*s)
+	{
+		case(VirtualKey::None): {
+			AppendCString(&string, "None");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
 String MetaString(const InputState *s)
 {
 	TIMED_BLOCK;
@@ -1309,6 +1349,10 @@ String MetaString(const InputState *s)
 
 	AppendCString(&string, "  down_keys: %p (u8[])\n", s->down_keys);
 
+	AppendCString(&string, "  prev_mouse_pos: ");
+	AppendString(&string, MetaString(&s->prev_mouse_pos));
+	AppendCString(&string, "(Vec2f)\n");
+
 	AppendCString(&string, "  mouse_pos: ");
 	AppendString(&string, MetaString(&s->mouse_pos));
 	AppendCString(&string, "(Vec2f)\n");
@@ -1318,6 +1362,69 @@ String MetaString(const InputState *s)
 	AppendCString(&string, "  utf32_translated_stream: %p (u32 *)\n", s->utf32_translated_stream);
 
 	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// keybinds.h
+// ------------------------------------------
+
+String MetaString(const KeyBind *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "KeyBind::");
+	switch(*s)
+	{
+		case(KeyBind::Select): {
+			AppendCString(&string, "Select");
+		} break;
+		case(KeyBind::Deselect): {
+			AppendCString(&string, "Deselect");
+		} break;
+		case(KeyBind::Exit): {
+			AppendCString(&string, "Exit");
+		} break;
+		case(KeyBind::SelectUnit1): {
+			AppendCString(&string, "SelectUnit1");
+		} break;
+		case(KeyBind::SelectUnit2): {
+			AppendCString(&string, "SelectUnit2");
+		} break;
+		case(KeyBind::SelectUnit3): {
+			AppendCString(&string, "SelectUnit3");
+		} break;
+		case(KeyBind::SelectUnit4): {
+			AppendCString(&string, "SelectUnit4");
+		} break;
+		case(KeyBind::CycleUnits): {
+			AppendCString(&string, "CycleUnits");
+		} break;
+		case(KeyBind::SelectAbility1): {
+			AppendCString(&string, "SelectAbility1");
+		} break;
+		case(KeyBind::SelectAbility2): {
+			AppendCString(&string, "SelectAbility2");
+		} break;
+		case(KeyBind::SelectAbility3): {
+			AppendCString(&string, "SelectAbility3");
+		} break;
+		case(KeyBind::SelectAbility4): {
+			AppendCString(&string, "SelectAbility4");
+		} break;
+		case(KeyBind::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
 
 	return string;
 }
@@ -1379,9 +1486,7 @@ String MetaString(const MainMenu *s)
 	AppendString(&string, MetaString(&s->option_strings));
 	AppendCString(&string, "(Array<String>)\n");
 
-	AppendCString(&string, "  option_count: %d (int)\n", s->option_count);
-
-	AppendCString(&string, "  cur_option: %d (int)\n", s->cur_option);
+	AppendCString(&string, "  selected_option: %d (int)\n", s->selected_option);
 
 	AppendCString(&string, "}");
 
@@ -1421,6 +1526,26 @@ String MetaString(const Arena *s)
 // ---------------FILE START---------------
 // meta.h
 // ------------------------------------------
+
+// ---------------FILE START---------------
+// options_menu.h
+// ------------------------------------------
+
+String MetaString(const OptionsMenu *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "OptionsMenu {\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // oscillating_timer.h
@@ -1687,6 +1812,9 @@ String MetaString(const TargetClass *s)
 	AppendCString(&string, "TargetClass::");
 	switch(*s)
 	{
+		case(TargetClass::none): {
+			AppendCString(&string, "none");
+		} break;
 		case(TargetClass::self): {
 			AppendCString(&string, "self");
 		} break;
@@ -1716,6 +1844,9 @@ String MetaString(const TargetClass *s)
 		} break;
 		case(TargetClass::all_units): {
 			AppendCString(&string, "all_units");
+		} break;
+		case(TargetClass::COUNT): {
+			AppendCString(&string, "COUNT");
 		} break;
 		default: {
 			AppendCString(&string, "?????");
@@ -1751,7 +1882,7 @@ String MetaString(const Buffer *s)
 	return string;
 }
 
-String MetaString(const StringBuffer *s)
+String MetaString(const TokenType_ *s)
 {
 	TIMED_BLOCK;
 
@@ -1760,15 +1891,67 @@ String MetaString(const StringBuffer *s)
 	string.max_length = 1024;
 	string.data = ScratchString(string.max_length);
 
-	AppendCString(&string, "StringBuffer {\n");
-
-	AppendCString(&string, "  data: %p (const char *)\n", s->data);
-
-	AppendCString(&string, "  p: %p (const char *)\n", s->p);
-
-	AppendCString(&string, "  byte_count: %zu (size_t)\n", s->byte_count);
-
-	AppendCString(&string, "}");
+	AppendCString(&string, "TokenType_::");
+	switch(*s)
+	{
+		case(TokenType_::Unknown): {
+			AppendCString(&string, "Unknown");
+		} break;
+		case(TokenType_::Pound): {
+			AppendCString(&string, "Pound");
+		} break;
+		case(TokenType_::OpenSquigglyBracket): {
+			AppendCString(&string, "OpenSquigglyBracket");
+		} break;
+		case(TokenType_::CloseSquigglyBracket): {
+			AppendCString(&string, "CloseSquigglyBracket");
+		} break;
+		case(TokenType_::OpenSquareBracket): {
+			AppendCString(&string, "OpenSquareBracket");
+		} break;
+		case(TokenType_::CloseSquareBracket): {
+			AppendCString(&string, "CloseSquareBracket");
+		} break;
+		case(TokenType_::OpenAngleBracket): {
+			AppendCString(&string, "OpenAngleBracket");
+		} break;
+		case(TokenType_::CloseAngleBracket): {
+			AppendCString(&string, "CloseAngleBracket");
+		} break;
+		case(TokenType_::OpenParen): {
+			AppendCString(&string, "OpenParen");
+		} break;
+		case(TokenType_::CloseParen): {
+			AppendCString(&string, "CloseParen");
+		} break;
+		case(TokenType_::Colon): {
+			AppendCString(&string, "Colon");
+		} break;
+		case(TokenType_::SemiColon): {
+			AppendCString(&string, "SemiColon");
+		} break;
+		case(TokenType_::Asterisk): {
+			AppendCString(&string, "Asterisk");
+		} break;
+		case(TokenType_::Comma): {
+			AppendCString(&string, "Comma");
+		} break;
+		case(TokenType_::Tilde): {
+			AppendCString(&string, "Tilde");
+		} break;
+		case(TokenType_::Equals): {
+			AppendCString(&string, "Equals");
+		} break;
+		case(TokenType_::Backtick): {
+			AppendCString(&string, "Backtick");
+		} break;
+		case(TokenType_::Identifier): {
+			AppendCString(&string, "Identifier");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
 
 	return string;
 }
@@ -1783,6 +1966,10 @@ String MetaString(const Token *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Token {\n");
+
+	AppendCString(&string, "  type: ");
+	AppendString(&string, MetaString(&s->type));
+	AppendCString(&string, "(TokenType_)\n");
 
 	AppendCString(&string, "  start: %p (char *)\n", s->start);
 

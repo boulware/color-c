@@ -182,7 +182,7 @@ SetActiveContainer(ImguiContainer *container)
 float
 GetButtonHeight(ImguiContainer container)
 {
-	return LineSize(container.button_layout.label_layout) + 2*imgui::button_padding.y;
+	return LineHeight(container.button_layout.label_layout) + 2*imgui::button_padding.y;
 }
 
 // ListPanelResponse
@@ -206,7 +206,7 @@ GetButtonHeight(ImguiContainer container)
 // 	Vec2f pen = layout.rect.pos + Vec2f{0.f,20.f};
 
 // 	// Calculate which entries should be drawn based on scroll_offset
-// 	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
+// 	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineHeight(text_layout);
 // 	int index_of_first_drawn_entry = (int)(scroll_offset / v_distance_between_entries);
 // 	float remainder = v_distance_between_entries*((scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
 // 	//pen.y += remainder;
@@ -216,7 +216,7 @@ GetButtonHeight(ImguiContainer container)
 // 	for(int i=0; i<entry_count; i++)
 // 	{
 // 		if(i < index_of_first_drawn_entry) continue;
-// 		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+// 		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{layout.rect.size.x-2.f*outer_padding.x, LineHeight(text_layout)+2.f*inner_padding.y}};
 
 // 		if(PointInRect(entry_rect, MousePos()))
 // 		{ // Entry hovered
@@ -263,7 +263,7 @@ ListPanelEntry(ListPanel_ *panel, const String entry_name)
 	Vec2f pen = panel->layout.rect.pos + Vec2f{0.f,20.f};
 
 	// Calculate which entries should be drawn based on scroll_offset
-	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineSize(text_layout);
+	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineHeight(text_layout);
 	int index_of_first_drawn_entry = (int)(panel->scroll_offset / v_distance_between_entries);
 	float remainder = v_distance_between_entries*((panel->scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
 	//pen.y += remainder;
@@ -273,11 +273,11 @@ ListPanelEntry(ListPanel_ *panel, const String entry_name)
 	// for(int i=0; i<entry_count; i++)
 	// {
 	int i = panel->cur_entry_count;
-	pen.y += i*(LineSize(text_layout) + 2.f*(outer_padding+inner_padding).y);
+	pen.y += i*(LineHeight(text_layout) + 2.f*(outer_padding+inner_padding).y);
 	if(i >= index_of_first_drawn_entry)
 	{
 
-		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineSize(text_layout)+2.f*inner_padding.y}};
+		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineHeight(text_layout)+2.f*inner_padding.y}};
 
 		if(PointInRect(entry_rect, MousePos()))
 		{ // Entry hovered

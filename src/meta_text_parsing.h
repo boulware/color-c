@@ -33,6 +33,7 @@ struct StringBuffer
 
 StringBuffer CreateStringBuffer(const char *string);
 
+// Buffer BufferFromCString(const char *string);
 
 bool
 CompareStrings(const char *a, const char *b);

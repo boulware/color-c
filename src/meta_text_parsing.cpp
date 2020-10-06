@@ -52,6 +52,7 @@ CreateStringBuffer(const char *string)
 	return buffer;
 }
 
+
 void
 FreeBuffer(Buffer *buffer)
 {
@@ -463,7 +464,7 @@ NextTokenAsDoubleQuotedString(Buffer *buffer, Token *token)
 
 // Returns false if no bytes remain in buffer or invalid utf-8 bytes are encountered
 bool
-NextAsUtf32Char(StringBuffer *buffer, u32 *utf32_char)
+NextAsUtf32Char(Buffer *buffer, u32 *utf32_char)
 {
 	//char *initial = buffer->p;
 

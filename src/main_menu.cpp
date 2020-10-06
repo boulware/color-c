@@ -1,2 +1,78 @@
 #include "main_menu.h"
 
+void
+InitMainMenu(MainMenu *menu)
+{
+	menu->selected_option = 0;
+    menu->option_strings = CreatePermanentArray<String>(5);
+    menu->option_strings += StringFromCString("Battle");
+    menu->option_strings += StringFromCString("Campaign");
+    menu->option_strings += StringFromCString("Editor");
+    menu->option_strings += StringFromCString("Options");
+    menu->option_strings += StringFromCString("Quit");
+}
+
+// Updates and draws main menu
+// Returns the game state that should be entered (returns GameState::None if we should stay in menu)
+GameState
+TickMainMenu(MainMenu *menu)
+{
+	if(Pressed(vk::down) or Repeated(vk::down))
+	{
+		++menu->selected_option;
+		if(menu->selected_option >= menu->option_strings.count) menu->selected_option = 0;
+	}
+	if(Pressed(vk::up) or Repeated(vk::up))
+	{
+		--menu->selected_option;
+		if(menu->selected_option < 0) menu->selected_option = menu->option_strings.count-1;
+	}
+
+	GameState new_state = GameState::None;
+	if(Pressed(vk::enter))
+	{
+		if(menu->selected_option == 0)
+		{
+			new_state = GameState::Battle;
+		}
+		else if(menu->selected_option == 1)
+		{ // Campaign
+			// new_state = GameState::Campaign;
+		}
+		else if(menu->selected_option == 2)
+		{ // Editor
+			new_state = GameState::Editor;
+		}
+		else if(menu->selected_option == 3)
+		{ // Options
+			//new_state = GameState::Options;
+		}
+		else if(menu->selected_option == 4)
+		{ // Quit
+			new_state = GameState::Quit;
+		}
+	}
+
+	// Draw
+	Vec2f pen = 0.5f*game->window_size;
+	pen.y -= 0.5f*(menu->option_strings.count * LineHeight(c::main_menu_unselected_text_layout));
+
+	for(int i=0; i<menu->option_strings.count; ++i)
+	{
+		String &string = menu->option_strings[i]; //alias
+
+		if(i == menu->selected_option)
+		{
+			pen.y += DrawText(c::main_menu_selected_text_layout, pen, string).y;
+		}
+		else
+		{
+			pen.y += DrawText(c::main_menu_unselected_text_layout, pen, string).y;
+		}
+	}
+
+	if(Pressed(vk::esc)) new_state = GameState::Quit;
+
+	return new_state;
+}
+

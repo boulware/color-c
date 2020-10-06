@@ -1,18 +1,17 @@
 #ifndef ABILITY_H
 #define ABILITY_H
 
+#include "array.h"
 #include "traitset.h"
 #include "target_class.h"
 #include "text_parsing.h"
 #include "effect.h"
 
-Introspect
 struct AbilityTier
 {
-	bool init;
-
 	TraitSet required_traits;
-	Effect effects[c::max_effect_count];
+	TargetClass target_class;
+	Array<Effect> effects_;
 };
 
 // struct Ability
@@ -28,19 +27,18 @@ struct AbilityTier
 // 	TargetClass target_class;	// what kinds of units this ability can target (allies, single unit, teams, self, etc.)
 // };
 
-Introspect
 struct Ability
 {
 	bool init;
 
 	String name;
-	AbilityTier tiers[c::max_ability_tier_count];
+	Array<AbilityTier> tiers;
 };
 
 Ability *GetAbilityFromId(Id<Ability> id);
 
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
 bool LoadAbilityFile(const char *filename, Table<Ability> *table);
-char *GenerateAbilityTierText(const AbilityTier *tier);
+char *GenerateAbilityTierText(AbilityTier tier);
 
 #endif

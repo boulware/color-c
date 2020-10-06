@@ -122,5 +122,7 @@ struct Editor
 };
 
 void StartEditor(Editor *editor);
+GameState TickEditor(Editor *editor);
+
 
 #endif

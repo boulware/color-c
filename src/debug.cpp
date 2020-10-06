@@ -34,7 +34,7 @@ DrawTimedBlockData()
 		if(TIMED_BLOCK_ARRAY[i].hit_count > 0)
 		{
 			u64 avg_cycles = TIMED_BLOCK_ARRAY[i].total_cycle_count/TIMED_BLOCK_ARRAY[i].hit_count;
-			float line_size = LineSize(function_cycles_layout);
+			float line_size = LineHeight(function_cycles_layout);
 			DrawFilledRect({{max_right_extent, bar_y},
 						   {max_bar_width*(float)avg_cycles/(float)max_average_cycles, line_size}},
 						   c::green);

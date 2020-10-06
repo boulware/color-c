@@ -55,4 +55,6 @@ String AsString(const String *s);
 
 bool AppendString(String *dst, String src);
 
+bool CompareStrings(String a, String b);
+
 #endif

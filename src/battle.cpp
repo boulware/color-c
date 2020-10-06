@@ -5,6 +5,7 @@
 #include "random.h"
 #include "array.h"
 #include "table.h"
+#include "keybinds.h"
 
 Rect
 GetAbilityHudButtonRect(Battle battle, int ability_index)
@@ -76,25 +77,21 @@ ValidBreed(const Breed *breed)
     return(breed and breed->init);
 }
 
+// Returns a UnitSet containing all units (as a subset of [all_units]) that are considered
+// a valid selected unit for the given target class [tc] for a caster specified by [caster_id]
 UnitSet
-GenerateValidTargetUnitSet(Id<Unit> caster_id, Id<Ability> ability_id, UnitSet all_units)
+ValidSelectionUnitSet(Id<Unit> caster_id, TargetClass tc, UnitSet all_units)
 {
-    int tier = DetermineAbilityTier(caster_id, ability_id);
-    if(tier < 0) return UnitSet{};
+    UnitSet target_set = {};
 
     Unit *caster = GetUnitFromId(caster_id);
-    Ability *ability = GetAbilityFromId(ability_id);
-    if(!ValidUnit(caster) or !ValidAbility(ability)) return UnitSet{};
-
-    UnitSet target_set = {};
-    TargetClass tc = ability->tiers[tier].effects[0].target_class;
+    if(!ValidUnit(caster)) return target_set;
 
     for(Id target_id : all_units)
     {
-        if(CheckValidTarget(caster_id, target_id, tc))
-        {
-            AddUnitToUnitSet(target_id, &target_set);
-        }
+        if(!CheckValidTarget(caster_id, target_id, tc)) continue;
+
+        AddUnitToUnitSet(target_id, &target_set);
     }
 
     return target_set;
@@ -111,17 +108,17 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
         return {};
     }
 
-    // Check for valid intent target set size.
-    if(intent.targets.size < 0 or intent.targets.size > c::max_target_count)
-    {
-        VerboseError(__FUNCTION__"() received an intent whose target set had an invalid size (%d).", intent.targets.size);
+    // // Check for valid intent target set size.
+    // if(intent.targets.size < 0 or intent.targets.size > c::max_target_count)
+    // {
+    //     VerboseError(__FUNCTION__"() received an intent whose target set had an invalid size (%d).", intent.targets.size);
 
-        #if DEBUG_BUILD
-            Assert(false);
-        #else
-            return {};
-        #endif
-    }
+    //     #if DEBUG_BUILD
+    //         Assert(false);
+    //     #else
+    //         return {};
+    //     #endif
+    // }
 
     auto caster_id = intent.caster_id;
     auto ability_id = intent.ability_id;
@@ -143,7 +140,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
     // Determine which ability tier should be used in the preview
     int tier = DetermineAbilityTier(caster_id, ability_id);
     if(tier < 0) return {}; // The caster can't use the ability, so there is no effect to preview.
-    const AbilityTier &cur_ability_tier = ability->tiers[tier]; // alias
+    AbilityTier *cur_ability_tier = &ability->tiers[tier]; // alias
 
     int events_initial_size = 20; // We want this big enough that most of the time, it won't need to be resized,
                                   // but not wasting too much memory for the average preview event.
@@ -152,10 +149,13 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
                                   // on the order of 10 events at a time.
     auto events = CreateTempArray<BattleEvent>(events_initial_size);
 
+    bool first_effect = true;
+    int target_set_index = 0; // index into intent.target_sets
+    //TargetClass cur_target_class = {};
     // Create an event in [events] for each effect in the current ability tier.
-    for(Effect effect : cur_ability_tier.effects)
+    for(auto effect : cur_ability_tier->effects_)
     {
-        for(Id<Unit> target_id : intent.targets)
+        for(Id<Unit> target_id : intent.target_set)
         {
             Unit *target = GetUnitFromId(target_id);
             if(!target) continue;
@@ -234,19 +234,6 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
     return events;
 }
 
-// void
-// ApplyBattleEvent(const BattleEvent *event)
-// {
-
-
-//     for(int i=0; i<event->battle->units.size; i++)
-//     {
-//         if(!ValidUnit(UnitAtIndex(event->battle->units, i))) continue;
-
-//         UnitAtIndex(event->battle->units, i)->cur_traits += event->trait_changes[i];
-//     }
-// }
-
 TraitSet
 EventTraitChangesForUnit(Array<BattleEvent> events, Id<Unit> unit_id)
 {
@@ -313,224 +300,8 @@ DrawUnits(Battle *battle)
     }
 }
 
-// void
-// DrawTargetingInfo(Battle *battle)
-// {
-//     // Targeting info has a priority list:
-//     // [decreasing, beginning at highest priority]
-//     // 1) An ability is selected AND a valid target for that ability is hovered => draw inferred target set and outcome if that ability were to be used.
-//     // 2) An ability button is being hovered => draw valid targets for hovered ability
-//     // 3) An ability is selected => draw valid targets for selected ability
-
-//     TextLayout target_indication_layout = c::def_text_layout;
-//     target_indication_layout.font_size = 16;
-//     target_indication_layout.align = c::align_bottomcenter;
-
-//     UnitSet target_set = {};
-
-//     if(battle->selected_ability and UnitInUnitSet(battle->hovered_unit, battle->selected_ability_valid_target_set))
-//     {
-//         // 1) An ability is selected AND a valid target for that ability is hovered => draw inferred target set and outcome if that ability were to be used.
-//         target_set = battle->inferred_target_set;
-//         target_indication_layout.color = c::red;
-
-//         battle->previewed_intent = {battle->selected_unit, battle->selected_ability, target_set};
-//         battle->show_action_preview = true;
-//     }
-//     else
-//     {
-//         if(battle->hovered_ability and battle->hovered_ability != battle->selected_ability)
-//         {
-//             // 2) An ability button is being hovered => draw valid targets for hovered ability
-//             target_set = battle->hovered_ability_valid_target_set;
-//             target_indication_layout.color = c::yellow;
-//         }
-//         else if(battle->selected_ability)
-//         {
-//             // 3) An ability is selected => draw valid targets for selected ability
-//             target_set = battle->selected_ability_valid_target_set;
-//             target_indication_layout.color = c::orange;
-//         }
-//         else
-//         {
-//             // There is no hovered nor selected ability, so there's no targeting
-//             // info to draw.
-//             return;
-//         }
-//     }
-
-//     // For each unit in the battle, draw TARGET above its unit slot if it's in the relevant target set
-//     for(int i=0; i<battle->units.size; i++)
-//     {
-//         Id<Unit> unit_id = battle->units.ids[i];
-//         Unit *unit = GetUnitFromId(unit_id);
-//         if(!ValidUnit(unit)) continue;
-//         if(!UnitInUnitSet(unit_id, target_set)) continue;
-
-//         Vec2f origin = battle->unit_slots[i];
-//         DrawText(target_indication_layout,
-//                  origin + Vec2f{0.5f*c::unit_slot_size.x, 0.f},
-//                  "TARGET");
-//     }
-// }
-
-// void
-// DrawUnitHudData(Battle *battle)
-// {
-//     Unit *unit = GetUnitFromId(battle->selected_unit_id);
-//     if(!ValidUnit(unit)) return;
-
-//     // Draw HUD frame along bottom of screen.
-//     float bottom_offset = 225.f;
-//     Vec2f pen = battle->hud.pos;
-//     DrawFilledRect(battle->hud, c::dk_grey);
-//     DrawLine(pen, pen+Vec2f{battle->hud.size.x, 0.f}, c::white);
-
-//     // Draw unit name
-//     float left_padding = 20.f;
-//     float top_padding = 10.f;
-//     pen.x += left_padding;
-//     pen.y += top_padding;
-
-//     TextLayout name_layout = c::def_text_layout;
-//     name_layout.font_size = 32;
-//     pen.y += DrawText(name_layout, pen, unit->name).y;
-
-//     // Draw unit traits
-//     TextLayout trait_layout = c::def_text_layout;
-//     trait_layout.font_size = 32;
-//     float name_trait_padding = 20.f;
-//     pen.y += name_trait_padding;
-//     pen.y += DrawText(trait_layout, pen, "Vigor: %d/%d",
-//                             unit->cur_traits.vigor, unit->max_traits.vigor).y;
-//     pen.y += DrawText(trait_layout, pen, "Focus: %d/%d",
-//                             unit->cur_traits.focus, unit->max_traits.focus).y;
-//     pen.y += DrawText(trait_layout, pen, "Armor: %d/%d",
-//                             unit->cur_traits.armor, unit->max_traits.armor).y;
-
-//     // Ability buttons
-//     ImguiContainer container = c::def_ui_container;
-//     container.pos = battle->hud.pos + c::hud_ability_buttons_offset;
-//     SetActiveContainer(&container);
-
-//     for(int i=0; i<c::moveset_max_size; i++)
-//     {
-
-//         Ability *ability = &unit->abilities[i];
-//         if(!ability or !ability->init) continue;
-
-//         Rect button_rect = GetAbilityHudButtonRect(*battle, i);
-
-//         // if(battle->selected_ability == ability)
-//         // {
-//         //  // This ability button corresponds to the selected ability
-//         //  DrawButton(c::selected_ability_button_layout, button_rect, "%s", ability->name);
-//         // }
-//         // else if(ability == battle->hovered_ability)
-//         // {
-//         //  // This ability button is being hovered
-//         //  DrawButton(c::hovered_ability_button_layout, button_rect, "%s", ability->name);
-
-//         //  if(Pressed(vk::LMB) and battle->selected_unit->cur_action_points > 0)
-//         //  {
-//         //      battle->selected_ability = ability;
-//         //  }
-//         // }
-//         // else
-//         // {
-//         //  // This ability button isn't hovered or selected, so just draw it normally
-//         //  DrawButton(c::ability_button_layout, button_rect, "%s", ability->name);
-//         // }
-//     }
-// }
-
-// void
-// GenerateEnemyIntents(Battle *battle)
-// {
-//  TIMED_BLOCK;
-
-//  // Choose enemy abilities randomly and perform them
-//  for(int i=0; i<c::max_target_count; i++)
-//  {
-//      Unit *unit = battle->units[i];
-//      if(!unit or !unit->init) continue; // Skip non-existent units
-//      if(unit->team != Team::enemies) continue; // Skip ally units
-
-//      u32 chosen_ability_index; // The index of the ability chosen to cast for this enemy
-//      u32 chosen_target_index; // The index (into battle->units[])
-//      UnitSet all_targets = AllBattleUnitsAsUnitSet(battle);
-
-//      int valid_ability_count = 0; // Number of valid abilities
-//      int valid_ability_indices[c::moveset_max_size] = {}; // Indices of abilities that are initialized.
-//      UnitSet valid_target_sets[c::moveset_max_size] = {}; // Valid target sets corresponding to valid_ability_indices
-//      for(int i=0; i<c::moveset_max_size; i++)
-//      {
-//          Ability *ability = &unit->abilities[i];
-//          if(!ability->init) continue;
-
-//          UnitSet valid_target_set = GenerateValidUnitSet(unit, ability, all_targets);
-//          if(valid_target_set.size > 0)
-//          {
-//              valid_ability_indices[valid_ability_count] = i;
-//              valid_target_sets[i] = valid_target_set;
-//              ++valid_ability_count;
-//          }
-
-//      }
-
-//      if(valid_ability_count <= 0) continue;
-
-//      chosen_ability_index = valid_ability_indices[RandomU32(0, valid_ability_count-1)];
-//      Ability *chosen_ability = &unit->abilities[chosen_ability_index];
-//      UnitSet chosen_ability_valid_targets = valid_target_sets[chosen_ability_index];
-
-
-//      chosen_target_index = RandomU32(0, chosen_ability_valid_targets.size-1);
-//      Unit *chosen_target = chosen_ability_valid_targets.units[chosen_target_index];
-
-//      UnitSet inferred_targets = GenerateInferredUnitSet(unit, chosen_target, chosen_ability, all_targets);
-
-//      battle->intents[i] = {unit, chosen_ability, inferred_targets};
-
-//      //ApplyAbilityToUnitSet(unit, *chosen_ability, inferred_targets);
-//  }
-// }
-
 void
-UpdateHoveredUnit(Battle *battle)
-{
-    // for(int i=0; i<c::max_target_count; i++)
-    // {
-    //  if(PointInRect(Rect{battle->unit_slots[i], c::unit_slot_size}, MousePos()))
-    //  {
-    //      if(!battle->units[i] or !battle->units[i]->init) continue;
-    //      battle->hovered_unit = battle->units[i];
-    //      break;
-    //  }
-    // }
-}
-
-void
-UpdateHoveredAbility(Battle *battle)
-{
-    // if(!battle->selected_unit) return; // No selected unit implies no ability buttons to be hovered.
-
-    // for(int i=0; i<c::moveset_max_size; i++)
-    // {
-    //  Ability *ability = &battle->selected_unit->abilities[i];
-    //  if(!ability or !ability->init) continue;
-
-    //  Rect ability_button_rect = GetAbilityHudButtonRect(*battle, i);
-    //  if(PointInRect(ability_button_rect, MousePos()))
-    //  {
-    //      battle->hovered_ability = ability;
-    //      return;
-    //  }
-    // }
-}
-
-void
-DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int tier, Align align)
+DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Align align)
 {
     SetDrawDepth(1.f);
     Ability *ability = GetAbilityFromId(ability_id);
@@ -554,27 +325,42 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int tier, Align align)
 
     pen.y += name_text_size.y;
     DrawLine(pen, pen + Vec2f{c::ability_info_box_size.x, 0.f});
+    pen.y += c::tier_data_y_half_padding;
 
     TextLayout tier_inactive_text_layout = c::small_text_layout;
+    tier_inactive_text_layout.color = c::lt_grey;
     TextLayout tier_active_text_layout = c::small_text_layout;
-    tier_active_text_layout.color = c::gold;
+    tier_active_text_layout.color = c::white;
 
     for(int i=0; i<ArrayCount(ability->tiers); i++)
     {
-        if(!ability->tiers[i].init) continue;
+        AbilityTier &tier = ability->tiers[i]; // alias
+        //if(!tier.init) continue;
 
-        if(i == tier)
+        if(i == active_tier_level)
         {
-            pen.y += DrawText(tier_active_text_layout, pen,
-                              "Tier %d: %s",
-                              i, GenerateAbilityTierText(&ability->tiers[i])).y;
+            pen.y += DrawTextMultiline(tier_active_text_layout, pen,
+                                       "Tier %d (req `red`%dV, `lt_blue`%dF, `gold`%dA`reset`):\n    %s",
+                                       i,
+                                       tier.required_traits.vigor,
+                                       tier.required_traits.focus,
+                                       tier.required_traits.armor,
+                                       GenerateAbilityTierText(tier)).y;
         }
         else
         {
-            pen.y += DrawText(tier_inactive_text_layout, pen,
-                              "Tier %d: %s",
-                              i, GenerateAbilityTierText(&ability->tiers[i])).y;
+            pen.y += DrawTextMultiline(tier_inactive_text_layout, pen,
+                                       "Tier %d (req `red`%dV, `lt_blue`%dF, `gold`%dA`reset`):\n    %s",
+                                       i,
+                                       tier.required_traits.vigor,
+                                       tier.required_traits.focus,
+                                       tier.required_traits.armor,
+                                       GenerateAbilityTierText(tier)).y;
         }
+
+        pen.y += c::tier_data_y_half_padding;
+        DrawLine({pen.x, pen.y}, {pen.x + c::ability_info_box_size.x, pen.y}, c::grey);
+        pen.y += c::tier_data_y_half_padding;
     }
 }
 
@@ -619,6 +405,10 @@ DrawEnemyIntentThoughtBubble(Battle *battle)
                 response = DrawButton(c::enemy_intented_button_layout,
                                       {pen, c::enemy_intent_button_size},
                                       ability->name);
+                if(response.just_now_hovered)
+                {
+                    ResetHigh(&battle->preview_damage_timer);
+                }
                 if(response.hovered)
                 {
                     battle->show_preview = true;
@@ -632,7 +422,7 @@ DrawEnemyIntentThoughtBubble(Battle *battle)
                                       ability->name);
             }
 
-            if(response.hovered and Down(vk::alt))
+            if(response.hovered and (Down(vk::alt) or Down(vk::mouse5)))
             {
                 DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);
             }
@@ -667,8 +457,13 @@ GenerateEnemyIntents(Battle *battle)
         for(int i=0; i<ArrayCount(unit->ability_ids); i++)
         {
             Id ability_id = unit->ability_ids[i];
+            int tier_index = DetermineAbilityTier(unit_id, ability_id);
+            if(tier_index < 0) continue;
 
-            UnitSet valid_target_set = GenerateValidTargetUnitSet(unit_id, ability_id, battle->units);
+            Ability *ability = GetAbilityFromId(ability_id);
+            if(!ValidAbility(ability)) continue;
+
+            UnitSet valid_target_set = ValidSelectionUnitSet(unit_id, ability->tiers[tier_index].target_class, battle->units);
             if(valid_target_set.size > 0)
             {
                 valid_ability_indices[valid_ability_count] = i;
@@ -694,13 +489,11 @@ GenerateEnemyIntents(Battle *battle)
             Ability *chosen_ability = GetAbilityFromId(chosen_ability_id);
             if(!ValidAbility(chosen_ability)) continue;
 
-            TargetClass tc = chosen_ability->tiers[tier_index].effects[0].target_class;
-            UnitSet inferred_targets = GenerateInferredUnitSet(unit_id, chosen_target_id, tc, battle->units);
-            battle->intents[i] = Intent{
-                .caster_id  = unit_id,
-                .ability_id = chosen_ability_id,
-                .targets = inferred_targets
-            };
+            //AbilityTier &active_tier = chosen_ability->tiers[tier_index];
+
+            battle->intents[i].caster_id = unit_id;
+            battle->intents[i].ability_id = chosen_ability_id;
+            battle->intents[i].target_set = valid_target_sets[chosen_ability_index];
         }
     }
 }
@@ -719,8 +512,7 @@ SetSelectedUnit(Battle *battle, Id<Unit> new_unit_id)
     battle->selected_ability_id = c::null_ability_id;
 }
 
-void
-InitiateBattle(Battle *battle, UnitSet battle_units)
+void InitBattle(Battle *battle)
 {
     // Fill out timers
     battle->preview_damage_timer = {
@@ -729,12 +521,14 @@ InitiateBattle(Battle *battle, UnitSet battle_units)
         .speed = 0.015f
     };
     ResetHigh(&battle->preview_damage_timer);
-    // battle->preview_damage_timer.max = 1.f;
-    // battle->preview_damage_timer.speed = 0.02f;
 
     battle->end_button_clicked_timer = {};
     battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
+}
 
+void
+StartBattle(Battle *battle, UnitSet battle_units)
+{
     battle->units = battle_units;
 
     // Set action points=1 for all units
@@ -753,8 +547,8 @@ InitiateBattle(Battle *battle, UnitSet battle_units)
     battle->is_player_turn = true;
 }
 
-void
-UpdateBattle(Battle *battle)
+GameState
+TickBattle(Battle *battle)
 {
     { // Restart battle button
 
@@ -767,19 +561,19 @@ UpdateBattle(Battle *battle)
 
     { // Process hotkey input
         // Ally unit selection with number keys (1-4)
-        if(Pressed(vk::num1))
+        if(Pressed(KeyBind::SelectUnit1))
         {
             SetSelectedUnit(battle, battle->units.ids[0]);
         }
-        if(Pressed(vk::num2))
+        if(Pressed(KeyBind::SelectUnit2))
         {
             SetSelectedUnit(battle, battle->units.ids[1]);
         }
-        if(Pressed(vk::num3))
+        if(Pressed(KeyBind::SelectUnit3))
         {
             SetSelectedUnit(battle, battle->units.ids[2]);
         }
-        if(Pressed(vk::num4))
+        if(Pressed(KeyBind::SelectUnit4))
         {
             SetSelectedUnit(battle, battle->units.ids[3]);
         }
@@ -787,7 +581,7 @@ UpdateBattle(Battle *battle)
         // Right click cancels selected ability if one is selected.
         // If no ability is selected, cancels selected unit if one is selected.
         // If neither a unit nor ability is selected, do nothing
-        if(Pressed(vk::rmb))
+        if(Pressed(KeyBind::Deselect))
         {
             if(battle->selected_ability_id != c::null_ability_id)
             {
@@ -800,7 +594,7 @@ UpdateBattle(Battle *battle)
         }
 
         // Tab to go to next ally unit
-        if(Pressed(vk::tab))
+        if(PressedOrRepeated(KeyBind::CycleUnits))
         {
             // Find index into battle->units of currently selected unit
             int selected_unit_index = -1;
@@ -831,7 +625,7 @@ UpdateBattle(Battle *battle)
             Unit *selected_unit = GetUnitFromId(battle->selected_unit_id);
             if(ValidUnit(selected_unit) and selected_unit->cur_action_points > 0)
             {
-                if(Pressed(vk::q))
+                if(Pressed(KeyBind::SelectAbility1))
                 {
                     auto ability_id = selected_unit->ability_ids[0];
                     Ability *ability = GetAbilityFromId(ability_id);
@@ -840,7 +634,7 @@ UpdateBattle(Battle *battle)
                         SetSelectedAbility(battle, ability_id);
                     }
                 }
-                else if(Pressed(vk::w))
+                else if(Pressed(KeyBind::SelectAbility2))
                 {
                     auto ability_id = selected_unit->ability_ids[1];
                     Ability *ability = GetAbilityFromId(ability_id);
@@ -849,7 +643,7 @@ UpdateBattle(Battle *battle)
                         SetSelectedAbility(battle, ability_id);
                     }
                 }
-                else if(Pressed(vk::e))
+                else if(Pressed(KeyBind::SelectAbility3))
                 {
                     auto ability_id = selected_unit->ability_ids[2];
                     Ability *ability = GetAbilityFromId(ability_id);
@@ -858,7 +652,7 @@ UpdateBattle(Battle *battle)
                         SetSelectedAbility(battle, ability_id);
                     }
                 }
-                else if(Pressed(vk::r))
+                else if(Pressed(KeyBind::SelectAbility4))
                 {
                     auto ability_id = selected_unit->ability_ids[3];
                     Ability *ability = GetAbilityFromId(ability_id);
@@ -973,27 +767,36 @@ UpdateBattle(Battle *battle)
                     Unit *unit = GetUnitFromId(unit_id);
                     if(ValidUnit(unit)) hovered_unit_id = unit_id;
 
-                    DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(unit));
+                    //DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(unit));
 
                     break;
                 }
             }
-
-            if(battle->last_frame_hovered_unit_id != hovered_unit_id)
-            {
-                ResetHigh(&battle->preview_damage_timer);
-            }
-
-            battle->last_frame_hovered_unit_id = hovered_unit_id;
         }
     }
 
     UnitSet hovered_ability_valid_target_set = {};
     UnitSet selected_ability_valid_target_set = {};
     { // Update valid target sets for hovered_ability and selected_ability if they exist.
-        //UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
-        hovered_ability_valid_target_set = GenerateValidTargetUnitSet(battle->selected_unit_id, hovered_ability_id, battle->units);
-        selected_ability_valid_target_set = GenerateValidTargetUnitSet(battle->selected_unit_id, battle->selected_ability_id, battle->units);
+        int hovered_tier_index = DetermineAbilityTier(battle->selected_unit_id, hovered_ability_id);
+        Ability *hovered_ability = GetAbilityFromId(hovered_ability_id);
+        if(ValidAbility(hovered_ability) and hovered_tier_index >= 0)
+        {
+
+            hovered_ability_valid_target_set = ValidSelectionUnitSet(battle->selected_unit_id,
+                                                                     hovered_ability->tiers[hovered_tier_index].target_class,
+                                                                     battle->units);
+        }
+
+        int selected_tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
+        Ability *selected_ability = GetAbilityFromId(battle->selected_ability_id);
+        if(ValidAbility(selected_ability) and selected_tier_index >= 0)
+        {
+
+            selected_ability_valid_target_set = ValidSelectionUnitSet(battle->selected_unit_id,
+                                                                     selected_ability->tiers[selected_tier_index].target_class,
+                                                                     battle->units);
+        }
     }
 
     Intent player_intent = {};
@@ -1002,28 +805,30 @@ UpdateBattle(Battle *battle)
         // the intent target list will be empty)
 
         //UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
-        player_intent.caster_id = battle->selected_unit_id;
-        player_intent.ability_id = battle->selected_ability_id;
-        int tier = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
-        if(tier >= 0)
+        int tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
+        if(tier_index >= 0)
         {
             Ability *selected_ability = GetAbilityFromId(battle->selected_ability_id);
+
             if(ValidAbility(selected_ability))
             {
-                // @incomplete: this just uses the target class of the first effect, which
-                //              is an incomplete and dumb way to do this if we want to allow
-                //              multiple target classes within a single ability tier.
-                TargetClass target_class = selected_ability->tiers[tier].effects[0].target_class;
+                player_intent.caster_id = battle->selected_unit_id;
+                player_intent.ability_id = battle->selected_ability_id;
+                int tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
 
-                // This will be empty if there is no hovered unit.
-                player_intent.targets = GenerateInferredUnitSet(battle->selected_unit_id, hovered_unit_id,
-                                                                target_class, battle->units);
+                if(tier_index >= 0)
+                {
+                    player_intent.target_set = GenerateInferredUnitSet(battle->selected_unit_id,
+                                                                       hovered_unit_id,
+                                                                       selected_ability->tiers[tier_index].target_class,
+                                                                       battle->units);
+                }
             }
         }
     }
 
     { // Process player mouse input
-        if(Pressed(vk::LMB))
+        if(Pressed(KeyBind::Select))
         {
             // @note: Strictly speaking, these mostly probably don't need to be else ifs, but
             // I probably don't want one mouse click to be able to perform more than one kind of action sequence,
@@ -1054,7 +859,7 @@ UpdateBattle(Battle *battle)
                 // Just leaving this note here to remind me if I notice something strange going on later.
                 battle->selected_unit_id = hovered_unit_id;
             }
-            else if(ValidUnit(selected_unit) and selected_unit->cur_action_points > 0 and player_intent.targets.size > 0)
+            else if(ValidUnit(selected_unit) and selected_unit->cur_action_points > 0)
             { // Execute the player intent if a valid target is clicked and the selected unit has enough action points.
 
                 // Generate the event associated with the player intent and execute it.
@@ -1091,7 +896,13 @@ UpdateBattle(Battle *battle)
             {
                 // It's player turn, but the turn is not ending. Draw the normal end turn button.
                 ButtonResponse response = DrawButton(c::end_button_normal_layout, c::end_turn_button_rect, "End Turn");
-                if(response.hovered)
+
+                if(response.just_now_hovered or Pressed(vk::shift))
+                {
+                    ResetHigh(&battle->preview_damage_timer);
+                }
+
+                if(response.hovered or Down(vk::shift))
                 {
                     // Draw the net effect of all enemy intents
                     TraitSet traitset_changes[c::max_target_count] = {};
@@ -1149,16 +960,8 @@ UpdateBattle(Battle *battle)
         if(UnitInUnitSet(hovered_unit_id, selected_ability_valid_target_set))
         {
             // 1) An ability is selected AND a valid target for that ability is hovered => draw inferred target set and outcome if that ability were to be used.
-            target_set = player_intent.targets;
-            target_indication_layout.color = c::red;
-
             battle->show_preview = true;
-            Intent intent = Intent{
-                .caster_id  = battle->selected_unit_id,
-                .ability_id = battle->selected_ability_id,
-                .targets = target_set
-            };
-            battle->preview_events = GenerateBattlePreviewEvent(battle, intent);
+            battle->preview_events = GenerateBattlePreviewEvent(battle, player_intent);
         }
         else
         {
@@ -1321,4 +1124,11 @@ UpdateBattle(Battle *battle)
     // //   battle->show_action_preview = true;
     // //   battle->previewed_intent = intent;
     // // }
+
+    GameState new_state = GameState::None;
+    { // Return to main menu if esc is pressed
+        if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;
+    }
+
+    return new_state;
 }

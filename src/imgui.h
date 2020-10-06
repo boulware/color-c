@@ -67,6 +67,7 @@ struct ButtonResponse
 {
 	bool pressed;
 	bool hovered;
+	bool just_now_hovered;
 	Rect rect;
 };
 

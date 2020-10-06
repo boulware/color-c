@@ -19,7 +19,7 @@ typedef void fnsig_CopyMemoryBlock(void*, void*, int);
 typedef void fnsig_ShowCursor();
 typedef void fnsig_HideCursor();
 typedef	bool fnsig_SwapIntervalEXT(int);
-typedef u32 fnsig_GetFileSize(const char*);
+typedef bool fnsig_GetFileSize(const char *, size_t *);
 typedef bool fnsig_LoadFileIntoSizedBufferAndNullTerminate(const char *, Buffer *);
 typedef void *fnsig_AllocateMemory(size_t size);
 typedef s64 fnsig_PerformanceCounterFrequency();

@@ -62,6 +62,14 @@ Repeated(u8 key)
 }
 
 Vec2f
+PrevMousePos()
+{
+	if(!input::global_input) return Vec2f{};
+
+	return(input::global_input->prev_mouse_pos);
+}
+
+Vec2f
 MousePos()
 {
 	if(!input::global_input) return Vec2f{};

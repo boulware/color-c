@@ -14,13 +14,7 @@
 #include "battle.h"
 #include "editor.h"
 #include "main_menu.h"
-
-enum class GameState
-{
-	MainMenu,
-	Battle,
-	Editor,
-};
+#include "game_state.h"
 
 struct Game
 {

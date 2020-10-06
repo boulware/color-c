@@ -110,7 +110,7 @@ _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font, b
 }
 
 float
-LineSize(TextLayout layout)
+LineHeight(TextLayout layout)
 {
     TIMED_BLOCK;
 
@@ -132,7 +132,7 @@ SizeUtf8Line(TextLayout layout, const char *string)
 {
     TIMED_BLOCK;
 
-    StringBuffer buffer = CreateStringBuffer(string);
+    Buffer buffer = BufferFromCString(string);
     u32 utf32_char;
     Vec2f pen = {0.f,0.f};
     float scale = TextLayoutScale(layout);
@@ -149,7 +149,7 @@ SizeUtf8Line(TextLayout layout, const char *string)
         }
     }
 
-    return Vec2f{pen.x, LineSize(layout)};
+    return Vec2f{pen.x, LineHeight(layout)};
 }
 
 Vec2f
@@ -198,7 +198,7 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
     char *formatted_string;
     mFormatString(formatted_string, string);
 
-    StringBuffer buffer = CreateStringBuffer(formatted_string);
+    Buffer buffer = BufferFromCString(formatted_string);
     u32 utf32_char;
     Vec2f text_size = SizeUtf8Line(layout, formatted_string);
 
@@ -207,7 +207,19 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 
     while(NextAsUtf32Char(&buffer, &utf32_char))
     {
-        if(utf32_char == '\n')
+        if(utf32_char == '`')
+        { // beginning of color code
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Token color_name = NextToken(&buffer);
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+
+            Color color = layout.color;
+
+            if(TokenMatchesString(color_name, "red")) color = c::red;
+
+            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+        }
+        else if(utf32_char == '\n')
         {
             break;
         }
@@ -225,6 +237,10 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
     return text_size;
 }
 
+// @robustness: This doesn't actually return the width of the multiline text.
+//              It just uses the width of the first line. The height should be correct.
+//              I didn't fix this because I rarely use the width, but it's something
+//              that will probably end up popping up at some point.
 Vec2f
 DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 {
@@ -235,7 +251,7 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
     char *formatted_string;
     mFormatString(formatted_string, string);
 
-    StringBuffer buffer = CreateStringBuffer(formatted_string);
+    Buffer buffer = BufferFromCString(formatted_string);
     u32 utf32_char;
     Vec2f text_size = SizeUtf8Line(layout, formatted_string);
 
@@ -244,10 +260,29 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 
     while(NextAsUtf32Char(&buffer, &utf32_char))
     {
-        if(utf32_char == '\n')
+        if(utf32_char == '`')
+        { // beginning of color code
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Token color_name = NextToken(&buffer);
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Color color = layout.color;
+
+            if(     TokenMatchesString(color_name, "reset")) color = layout.color;
+            else if(TokenMatchesString(color_name, "red")) color = c::red;
+            else if(TokenMatchesString(color_name, "green")) color = c::green;
+            else if(TokenMatchesString(color_name, "blue")) color = c::blue;
+            else if(TokenMatchesString(color_name, "lt_blue")) color = c::lt_blue;
+            else if(TokenMatchesString(color_name, "yellow")) color = c::yellow;
+            else if(TokenMatchesString(color_name, "gold")) color = c::gold;
+
+            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+        }
+        else if(utf32_char == '\n')
         {
+            if(pen.x > text_size.x) text_size.x = pen.x;
+            text_size.y += LineHeight(layout);
             pen.x = origin.x;
-            pen.y += LineSize(layout);
+            pen.y += LineHeight(layout);
         }
         else
         {
@@ -282,7 +317,7 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
         if(utf32_char == '\n')
         {
             pen.x = origin.x;
-            pen.y += LineSize(layout);
+            pen.y += LineHeight(layout);
         }
         else
         {
@@ -331,7 +366,7 @@ SizeText(TextLayout layout, String string, int char_count)
         }
     }
 
-    return Vec2f{pen.x, LineSize(layout)};
+    return Vec2f{pen.x, LineHeight(layout)};
 }
 
 // [char_count] is an optional parameter which will count only that number of chars
@@ -369,7 +404,7 @@ SizeTextUtf32(TextLayout layout, Utf32String string, int char_count=-1)
         }
     }
 
-    return Vec2f{pen.x, LineSize(layout)};
+    return Vec2f{pen.x, LineHeight(layout)};
 }
 
 Vec2f

@@ -46,11 +46,11 @@ struct TextLayout
 	float max_width;
 };
 
-float LineSize(TextLayout layout);
+float LineHeight(TextLayout layout);
 
 bool ValidFont(Font *font);
 
-void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font, bool round_to_integer_pixel = false);
+void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font, bool round_to_integer_pixel = true);
 
 //void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
 //Vec2f SizeUtf8Line(TextLayout layout, const char *string, ...);

@@ -8,21 +8,17 @@ struct Array
 	Arena *arena;  // Pointer to arena to use for allocation.
 	int count;     // Current number of entries.
 	int max_count; // Max number of entries in currently allocated memory.
+
+	Type &operator[](int index);
 };
 
 template<typename Type>
 Type *
-begin(Array<Type> &array)
-{
-	return (array.data);
-}
+begin(Array<Type> &array);
 
 template<typename Type>
 Type *
-end(Array<Type> &array)
-{
-	return (array.data + array.count);
-}
+end(Array<Type> &array);
 
 template<typename Type>
 Type &

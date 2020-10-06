@@ -3,12 +3,15 @@
 
 #include "array.h"
 #include "string.h"
+#include "game_state.h"
 
 struct MainMenu
 {
 	Array<String> option_strings;
-	int option_count;
-	int cur_option;
+	int selected_option;
 };
+
+void InitMainMenu(MainMenu *menu);
+GameState TickMainMenu(MainMenu *menu);
 
 #endif

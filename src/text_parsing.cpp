@@ -1,10 +1,9 @@
 #include "text_parsing.h"
 
-StringBuffer
-CreateStringBuffer(const char *string)
+Buffer BufferFromCString(const char *string)
 {
-	StringBuffer buffer;
-	buffer.data = string;
+	Buffer buffer;
+	buffer.data = (char*)string;
 	buffer.p = buffer.data;
 	buffer.byte_count = StringLength(string);
 
@@ -20,24 +19,6 @@ FreeBuffer(Buffer *buffer)
 
 size_t
 BufferBytesRemaining(Buffer buffer)
-{
-	// 		|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-	// 		....................s.............p.....................e
-	// s	-------------------->
-	// s+sz -------------------------------------------------------->
-	// p    ---------------------------------->
-	if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)
-	{
-		log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
-		return 0;
-	}
-
-	size_t remaining = buffer.data+buffer.byte_count-buffer.p;
-	return(remaining);
-}
-
-size_t
-BufferBytesRemaining(StringBuffer buffer)
 {
 	// 		|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 	// 		....................s.............p.....................e
@@ -347,9 +328,9 @@ SeekAfterNextLineThatBeginsWith(Buffer *buffer, const char *start_string)
 }
 
 // Fetch next token, left- and right-trimming any char in trim, and setting the buffer position
-// to immediately after the token (including skipping right-side trim characters)
+// to immediately after the token
 Token
-NextToken(Buffer *buffer, const char *trim = c::whitespace)
+NextToken_(Buffer *buffer, const char *trim = c::whitespace)
 {
 	Token token = {};
 
@@ -366,6 +347,7 @@ NextToken(Buffer *buffer, const char *trim = c::whitespace)
 
 	token.start = buffer->p;
 
+	// Skip to end of token.
 	bytes_remaining = BufferBytesRemaining(*buffer);
 	for(size_t _=0; _<bytes_remaining; _++)
 	{
@@ -422,25 +404,25 @@ NextTokenAsDoubleQuotedString(Buffer *buffer, Token *token)
 
 // Returns true and advances the buffer past the token (including trim) if the next token matches target_string.
 // If it doesn't match, returns false and doesn't advance the buffer position.
-bool
-ConfirmNextToken(Buffer *buffer, const char *target_string, const char *trim = c::whitespace)
-{
-	char *initial = buffer->p;
-	Token next_token = NextToken(buffer, trim);
-	if(CompareStrings(next_token.start, target_string))
-	{
-		return true;
-	}
-	else
-	{
-		buffer->p = initial;
-		return false;
-	}
-}
+// bool
+// ConfirmNextToken(Buffer *buffer, const char *target_string, const char *trim = c::whitespace)
+// {
+// 	char *initial = buffer->p;
+// 	Token next_token = NextToken(buffer, trim);
+// 	if(CompareStrings(next_token.start, target_string))
+// 	{
+// 		return true;
+// 	}
+// 	else
+// 	{
+// 		buffer->p = initial;
+// 		return false;
+// 	}
+// }
 
 // Returns false if no bytes remain in buffer or invalid utf-8 bytes are encountered
 bool
-NextAsUtf32Char(StringBuffer *buffer, u32 *utf32_char)
+NextAsUtf32Char(Buffer *buffer, u32 *utf32_char)
 {
 	//char *initial = buffer->p;
 
@@ -494,21 +476,21 @@ DigitToUtf32Char(u32 digit)
 	return(u32('0')+digit);
 }
 
-bool
-TokenMatchesString(Token token, const char *string)
-{
-	for(int i=0; i<token.length; i++)
-	{
-		if(token.start[i] != string[i]) return false;
+// bool
+// TokenMatchesString(Token token, const char *string)
+// {
+// 	for(int i=0; i<token.length; i++)
+// 	{
+// 		if(token.start[i] != string[i]) return false;
 
-		// We're assuming that tokens are not null-terminated (the length of a token should
-		// always correspond to the non-null-terminated length)
-		// In this case, we've reached the end of [string] before the end of token, so we don't consider it a match.
-		if(string[i] == '\0') return false;
-	}
+// 		// We're assuming that tokens are not null-terminated (the length of a token should
+// 		// always correspond to the non-null-terminated length)
+// 		// In this case, we've reached the end of [string] before the end of token, so we don't consider it a match.
+// 		if(string[i] == '\0') return false;
+// 	}
 
-	return true;
-}
+// 	return true;
+// }
 
 // bool
 // SeekAfterToken(Buffer *buffer, const char *target_string)

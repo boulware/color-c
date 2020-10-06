@@ -30,3 +30,6 @@
 #include "string.cpp"
 #include "utf32string.cpp"
 #include "array.cpp"
+#include "main_menu.cpp"
+#include "keybinds.cpp"
+#include "better_text_parsing.cpp"

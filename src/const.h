@@ -179,6 +179,23 @@ namespace c
 		.text_entry_layout = c::def_text_entry_layout
 	};
 
+	// Main menu
+	const TextLayout main_menu_unselected_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::lt_grey,
+		.font_size = 64,
+		.align = c::align_topcenter,
+		.draw_debug = false
+	};
+
+	const TextLayout main_menu_selected_text_layout = {
+		.font = &text_render::default_font,
+		.color = c::gold,
+		.font_size = 64,
+		.align = c::align_topcenter,
+		.draw_debug = false
+	};
+
 	// Editor
 	const int max_field_text_length = 30;
 	const int max_field_label_length = 30;
@@ -268,6 +285,9 @@ namespace c
 	const Vec2f ability_info_box_size = {500.f,225.f};
 	const Color ability_info_bg_color = {0.1f, 0.1f, 0.1f, 1.f};
 	const Vec2f hud_ability_info_offset = {700.f, 10.f};
+
+	// Ability card
+	const float tier_data_y_half_padding = 10.f;
 
 
 	// const ButtonLayout ability_button_layout =

@@ -65,6 +65,8 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN: {
 			if(game == nullptr) return 0;
 
+			log("0x%0*x", 2, (u8)wParam);
+
 			if(lParam & (1<<30))
 			{ // WM_KEYDOWN caused by key autorepeat
 				game->input.repeated_keys[(u8)wParam] = 1;
@@ -261,18 +263,21 @@ win32_GetMousePosF(float *x, float *y)
 	*y = (float)mouse_pos_i.y;
 }
 
-u32
-win32_GetFileSize(const char *filename)
+bool
+win32_GetFileSize(const char *filename, size_t *size_in_bytes)
 {
 	HANDLE file = CreateFile(filename,
-							 FILE_READ_DATA, FILE_SHARE_READ,
+							 FILE_READ_DATA,
+							 0,
 							 NULL,
-							 OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL,
+							 OPEN_EXISTING,
+							 FILE_ATTRIBUTE_NORMAL,
 							 NULL);
+
 	if(file == INVALID_HANDLE_VALUE)
 	{
 		log("Failed to open file to find its size: %s", filename);
-		return 0;
+		return false;
 	}
 
 	DWORD filesize_high;
@@ -280,7 +285,8 @@ win32_GetFileSize(const char *filename)
 	if(filesize_high != 0) log("FileSizeHigh != 0 (%u)", filesize_high);
 	CloseHandle(file);
 
-	return filesize_low;
+	*size_in_bytes = filesize_low;
+	return true;
 }
 
 void
@@ -307,12 +313,17 @@ win32_WriteLineToFile(char *filename, char *line)
 bool
 win32_LoadFileIntoSizedBufferAndNullTerminate(const char *filename, Buffer *buffer)
 {
-	buffer->byte_count = win32_GetFileSize(filename);
+	if(!win32_GetFileSize(filename, &buffer->byte_count))
+	{
+		return false;
+	}
 
 	HANDLE file = CreateFile(filename,
-							 FILE_READ_DATA, FILE_SHARE_READ,
+							 GENERIC_READ,
+							 0,
 							 NULL,
-							 OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL,
+							 OPEN_EXISTING,
+							 FILE_ATTRIBUTE_NORMAL,
 							 NULL);
 
 	if(file == INVALID_HANDLE_VALUE)
@@ -335,9 +346,11 @@ bool
 win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, u32 buffer_length)
 {
 	HANDLE file = CreateFile(filename,
-							 FILE_READ_DATA, FILE_SHARE_READ,
+							 FILE_READ_DATA,
+							 0,
 							 NULL,
-							 OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL,
+							 OPEN_EXISTING,
+							 FILE_ATTRIBUTE_NORMAL,
 							 NULL);
 
 	if(file == INVALID_HANDLE_VALUE)
@@ -649,7 +662,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 			FRAMESTEP = !FRAMESTEP;
 		}
 
-		if(Pressed(vk::esc)) QUIT_GAME = true;
+		//if(Pressed(vk::esc)) QUIT_GAME = true;
 
 		if(!FRAMESTEP or Pressed(vk::F5) or Repeated(vk::F5))
 		{
@@ -659,6 +672,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			GetKeyboardState((BYTE*)&game->input.down_keys);
+			game->input.prev_mouse_pos = game->input.mouse_pos;
 			win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);
 
 			// Null-terminate the translated stream and give the game input its address.

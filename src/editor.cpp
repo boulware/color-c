@@ -74,13 +74,13 @@ GenerateInputElementString(InputElement *input_element, void *value_ptr)
 	}
 }
 
-void
-UpdateAndDrawEditor(Editor *editor)
+GameState
+TickEditor(Editor *editor)
 {
 	if(!editor->init)
 	{
 		log("Editor was not initialized. Skipping " __FUNCTION__);
-		return;
+		return GameState::None;
 	}
 
 	// List panel scroll smoothing.
@@ -174,7 +174,7 @@ UpdateAndDrawEditor(Editor *editor)
 			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
 			GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
 
-//			DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability.tiers[0]));
+	//			DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability.tiers[0]));
 		}
 	}
 
@@ -368,4 +368,7 @@ UpdateAndDrawEditor(Editor *editor)
 	// 	response = IntegerBox(c::editor_focus_integer_box_layout, {610.f,500.f}, StringFromCString("Armor"), editor->test_int);
 	// 	editor->test_int = m::Max(0, editor->test_int+response.value_change);
 	// }
+
+	if(Pressed(vk::esc)) return GameState::MainMenu;
+	else return GameState::None;
 }

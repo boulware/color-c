@@ -2,6 +2,7 @@
 #include "align.h"
 #include "array.h"
 #include "battle.h"
+#include "better_text_parsing.h"
 #include "bitmap.h"
 #include "color.h"
 #include "const.h"
@@ -12,10 +13,12 @@
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
+#include "game_state.h"
 #include "global.h"
 #include "image.h"
 #include "imgui.h"
 #include "input.h"
+#include "keybinds.h"
 #include "lang.h"
 #include "log.h"
 #include "macros.h"
@@ -24,6 +27,7 @@
 #include "memory.h"
 #include "meta.h"
 #include "opengl.h"
+#include "options_menu.h"
 #include "oscillating_timer.h"
 #include "passive_skill_tree.h"
 #include "platform.h"
@@ -97,9 +101,9 @@ String MetaString(const EffectParams_Gift *s);
 
 String MetaString(const EffectParams_Steal *s);
 
-String MetaString(const GameState *s);
-
 String MetaString(const Game *s);
+
+String MetaString(const GameState *s);
 
 String MetaString(const ListPanelLayout *s);
 
@@ -121,13 +125,19 @@ String MetaString(const ButtonResponse *s);
 
 String MetaString(const TextEntryResponse *s);
 
+String MetaString(const VirtualKey *s);
+
 String MetaString(const InputState *s);
+
+String MetaString(const KeyBind *s);
 
 String MetaString(const LogState *s);
 
 String MetaString(const MainMenu *s);
 
 String MetaString(const Arena *s);
+
+String MetaString(const OptionsMenu *s);
 
 String MetaString(const OscillatingTimer *s);
 
@@ -156,7 +166,7 @@ String MetaString(const TargetClass *s);
 
 String MetaString(const Buffer *s);
 
-String MetaString(const StringBuffer *s);
+String MetaString(const TokenType_ *s);
 
 String MetaString(const Token *s);
 

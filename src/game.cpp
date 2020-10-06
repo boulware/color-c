@@ -35,7 +35,8 @@ GameInit()
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
 
-    InitLcgSystemSeed(&random::default_lcg);
+    //InitLcgSystemSeed(&random::default_lcg);
+    InitLcgSetSeed(&random::default_lcg, 13);
 
     game->temp_texture = GenerateAndBindTexture();
     gl->Enable(GL_BLEND);
@@ -154,17 +155,17 @@ GameInit()
 
     UnitSet battle_units = game->player_party;
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
-    // Array<String> main_menu_strings = CreatePermanentArray(4);
-    // main_menu_strings += StringFromCString("Campaign");
-    // main_menu_strings += StringFromCString("Editor");
-    // main_menu_strings += StringFromCString("Options");
-    // main_menu_strings += StringFromCString("Quit");
+    InitMainMenu(&game->mainmenu_state);
 
-    InitiateBattle(&game->current_battle, battle_units);
+    InitBattle(&game->current_battle);
+    StartBattle(&game->current_battle, battle_units);
+
     StartEditor(&game->editor_state);
+
+    LoadKeybindsFromFile("data/default_keybinds.dat");
 
     // Debug
     debug::start_count = __rdtsc();
@@ -173,7 +174,7 @@ GameInit()
     game->draw_debug_text = false;
     game->test_float = 0.f;
 
-    game->current_state = GameState::Battle;
+    game->current_state = GameState::MainMenu;
 
     // To use this, set OPTIMIZE to true, convert the original function into a function pointer
     // with the name OPTIMIZING_FUNCTION, and declare two functions named with "Slow" and "Fast"
@@ -269,31 +270,33 @@ GameUpdateAndRender()
     if(Pressed(vk::F1)) game->current_state = GameState::Battle;
     if(Pressed(vk::F2)) game->current_state = GameState::Editor;
 
+    GameState new_state = GameState::None;
     if(game->current_state == GameState::MainMenu)
     {
-//        UpdateMainMenu(&game->mainmenu_state);
+        new_state = TickMainMenu(&game->mainmenu_state);
     }
     else if(game->current_state == GameState::Battle)
     {
-        UpdateBattle(&game->current_battle);
+        new_state = TickBattle(&game->current_battle);
     }
     else if(game->current_state == GameState::Editor)
     {
-        UpdateAndDrawEditor(&game->editor_state);
+        new_state = TickEditor(&game->editor_state);
     }
 
+    if(new_state != GameState::None)
+    {
+        game->current_state = new_state;
+        if(game->current_state == GameState::Quit) game->exit_requested = true;
+    }
 
     if(game->draw_debug_text)
     {
         DrawTimedBlockData();
     }
 
-    //DrawTextMultiline(c::def_text_layout, {500.0f,400.0f}, AsString(&game->editor_state));
-
-    //DrawText(c::def_text_layout, {500.f,500.f}, "%zu", ArenaBytesAllocated(memory::per_frame_arena));
-
     // Log timed block data and exit game.
-    if(Pressed(vk::escape))
+    if(game->exit_requested)
     {
         LogToFile("logs/DebugTimings.txt", "-----------------------");
         for(int i=0; i<debug::timed_block_array_size; i++)
@@ -320,8 +323,6 @@ GameUpdateAndRender()
             }
 
         }
-
-        game->exit_requested = true;
     }
 }
 

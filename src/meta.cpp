@@ -3,6 +3,7 @@
 /*
 
 * Skipping macros that use '\' to extend past multiple lines
+* Skipping #if 0 statements
 
 * Nested member (struct members that are structs themselves)
 * Templated structs

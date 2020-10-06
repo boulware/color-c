@@ -65,15 +65,15 @@ CreateEntry(Table<Type> *table);
 
 template <typename Type>
 Type *
-GetEntryByIndex(Table<Type> table, int index);
+GetEntryFromRawIndex(Table<Type> table, int index);
 
 template <typename Type>
 Id<Type>
-GetIndexByName(Table<Type> table, String search_string);
+GetIndexFromName(Table<Type> table, String search_string);
 
 template <typename Type>
 Type *
-GetEntryByName(Table<Type> table, String name);
+GetEntryFromName(Table<Type> table, String name);
 
 template <typename Type>
 Id<Type>

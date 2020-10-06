@@ -20,7 +20,6 @@ struct Effect
 	//		Ignores armor
 
 	EffectType type;
-	TargetClass target_class;
 	void *params;
 };
 

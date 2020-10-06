@@ -10,7 +10,7 @@ ActivateColorShader(Color color)
 }
 
 void
-ActivateUvShader(Color color={1.f,1.f,1.f})
+ActivateUvShader(Color color={1.f,1.f,1.f,0.f})
 {
 	gl->UseProgram(game->uv_shader);
 	gl->BindVertexArray(game->uv_vao);
@@ -102,6 +102,15 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
 	response.rect = aligned_button_rect;
 
 	if(PointInRect(aligned_button_rect, MousePos()))
+	{
+		response.hovered = true;
+		if(!PointInRect(aligned_button_rect, PrevMousePos()))
+		{
+			response.just_now_hovered = true;
+		}
+	}
+
+	if(response.hovered)
 	{
 		// Button is being hovered
 		DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
