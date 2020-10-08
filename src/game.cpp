@@ -35,8 +35,9 @@ GameInit()
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
 
-    //InitLcgSystemSeed(&random::default_lcg);
-    InitLcgSetSeed(&random::default_lcg, 13);
+    InitLcgSystemSeed(&random::default_lcg);
+    //TestDistributionAndLog();
+    //InitLcgSetSeed(&random::default_lcg, 13);
 
     game->temp_texture = GenerateAndBindTexture();
     gl->Enable(GL_BLEND);
@@ -63,6 +64,10 @@ GameInit()
     gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&game->window_size);
     gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);
 
+    game->camera_pos = 0.5f*game->window_size; //{0.f,0.f};
+    gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&game->camera_pos);
+    gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&game->camera_pos);
+
     // Set up UV VAO/VBO
     gl->GenVertexArrays(1, &game->uv_vao);
     gl->BindVertexArray(game->uv_vao);
@@ -86,6 +91,7 @@ GameInit()
 
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1);
     gl->Enable(GL_BLEND);
+
 
     // Ability table
     g::ability_table = AllocTable<Ability>(100);
@@ -159,10 +165,10 @@ GameInit()
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     InitMainMenu(&game->mainmenu_state);
-
     InitBattle(&game->current_battle);
-    StartBattle(&game->current_battle, battle_units);
+    InitCampaign(&game->campaign);
 
+    StartBattle(&game->current_battle, battle_units);
     StartEditor(&game->editor_state);
 
     LoadKeybindsFromFile("data/default_keybinds.dat");
@@ -174,7 +180,7 @@ GameInit()
     game->draw_debug_text = false;
     game->test_float = 0.f;
 
-    game->current_state = GameState::MainMenu;
+    game->current_state = GameState::Campaign;
 
     // To use this, set OPTIMIZE to true, convert the original function into a function pointer
     // with the name OPTIMIZING_FUNCTION, and declare two functions named with "Slow" and "Fast"
@@ -290,6 +296,10 @@ GameUpdateAndRender()
     else if(game->current_state == GameState::Campaign)
     {
         new_state = TickCampaign(&game->campaign);
+    }
+    else if(game->current_state == GameState::Test)
+    {
+        new_state = TickTestMode(&game->test_mode);
     }
 
     if(new_state != GameState::None)

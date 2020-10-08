@@ -9,7 +9,8 @@ enum class GameState
 	Battle,
     Campaign,
 	Editor,
-	Options
+	Options,
+    Test
 };
 
 #endif

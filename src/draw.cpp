@@ -20,6 +20,13 @@ ActivateUvShader(Color color={1.f,1.f,1.f,0.f})
 }
 
 void
+SetCameraPos(Vec2f camera_pos)
+{
+    gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&camera_pos);
+    gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&camera_pos);
+}
+
+void
 SetDrawDepth(float depth)
 {
 	float clip_space_depth = c::clip_A*depth+c::clip_B;

@@ -18,6 +18,7 @@ Vec2f operator-(Vec2f a, Vec2f b);
 Vec2f operator-=(Vec2f &a, Vec2f b);
 Vec2f operator*(float c, Vec2f a);
 Vec2f operator*(Vec2f a, Vec2f b);
+Vec2f operator*=(Vec2f &v, float c);
 Vec2f Normalize(Vec2f v);
 float Length(Vec2f v);
 float Distance(Vec2f a, Vec2f b);

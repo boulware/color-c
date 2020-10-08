@@ -15,6 +15,7 @@
 #include "freetype_wrapper.h"
 #include "game.h"
 #include "game_state.h"
+#include "geometry.h"
 #include "global.h"
 #include "image.h"
 #include "imgui.h"
@@ -27,6 +28,7 @@
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
+#include "node_graph.h"
 #include "opengl.h"
 #include "options_menu.h"
 #include "oscillating_timer.h"
@@ -37,6 +39,7 @@
 #include "string.h"
 #include "table.h"
 #include "target_class.h"
+#include "test_mode.h"
 #include "text_parsing.h"
 #include "text_render.h"
 #include "timer.h"
@@ -68,6 +71,10 @@ String MetaString(const Battle *s);
 String MetaString(const BgraPixel *s);
 
 String MetaString(const Bitmap *s);
+
+String MetaString(const Node *s);
+
+String MetaString(const Edge *s);
 
 String MetaString(const Campaign *s);
 
@@ -165,6 +172,8 @@ template<typename Type>
 String MetaString(const Table<Type> *s);
 
 String MetaString(const TargetClass *s);
+
+String MetaString(const TestMode *s);
 
 String MetaString(const Buffer *s);
 

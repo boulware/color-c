@@ -221,6 +221,27 @@ namespace c
 		.draw_debug = false
 	};
 
+	// Campaign
+
+
+	// Force-directed graph parameters
+
+	// Pretty good parameters for GenerateTreeFromMainBranch()
+	const Vec2f node_size = {20.f, 20.f};
+	const float fdg_edge_length          = 50.f;
+	const float fdg_spring_constant      = 0.01f;
+	const float fdg_charge_strength      = 1000.0f;
+	const float fdg_friction             = 0.99f;
+
+	const float max_speed = 2.f;
+
+	// const Vec2f node_size = {40.f, 40.f};
+	// const float fdg_edge_length          = 100.f;
+	// const float fdg_spring_constant      = 0.01f;
+	// const float fdg_charge_strength      = 1000.0f;
+	// const float fdg_friction             = 0.9995f;
+
+
 	// Editor
 	const int max_field_text_length = 30;
 	const int max_field_label_length = 30;

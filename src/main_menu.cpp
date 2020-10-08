@@ -4,11 +4,12 @@ void
 InitMainMenu(MainMenu *menu)
 {
 	menu->selected_option = 0;
-    menu->option_strings = CreatePermanentArray<String>(5);
+    menu->option_strings = CreatePermanentArray<String>(6);
     menu->option_strings += StringFromCString("Battle");
     menu->option_strings += StringFromCString("Campaign");
     menu->option_strings += StringFromCString("Editor");
     menu->option_strings += StringFromCString("Options");
+    menu->option_strings += StringFromCString("Test");
     menu->option_strings += StringFromCString("Quit");
 }
 
@@ -48,6 +49,10 @@ TickMainMenu(MainMenu *menu)
 			new_state = GameState::Options;
 		}
 		else if(menu->selected_option == 4)
+		{
+			new_state = GameState::Test;
+		}
+		else if(menu->selected_option == 5)
 		{ // Quit
 			new_state = GameState::Quit;
 		}

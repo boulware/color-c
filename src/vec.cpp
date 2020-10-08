@@ -57,6 +57,13 @@ operator*(Vec2f a, Vec2f b)
 }
 
 Vec2f
+operator*=(Vec2f &v, float c)
+{
+	v = c*v;
+	return v;
+}
+
+Vec2f
 Round(Vec2f v)
 {
 	return {float(int(v.x+0.5f)), float(int(v.y+0.5f))};

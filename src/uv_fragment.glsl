@@ -5,6 +5,7 @@ layout(location=0) uniform vec2 window_size;
 layout(location=1) uniform sampler2D tex;
 layout(location=2) uniform vec4 blend_color;
 layout(location=3) uniform float draw_depth;
+layout(location=4) uniform vec2 camera_pos;
 
 // IN
 in vec2 texcoords;

@@ -16,15 +16,38 @@ Array<Type>::operator[](int index)
 }
 
 template<typename Type>
-void
-operator+=(Array<Type> &array, Type entry)
+Type *
+Append(Array<Type> *array, Type value)
 {
-	if(array.count >= array.max_count)
+	Assert(array->data != nullptr);
+
+	if(array->count >= array->max_count)
 	{
-		ResizeArray(&array, 2*array.max_count);
+		ResizeArray(array, 2*array->max_count);
 	}
 
-	array.data[array.count++] = entry;
+	Type *entry = &array->data[array->count++];
+	*entry = value;
+	return entry;
+}
+
+template<typename Type>
+bool
+ElementInArray(Array<Type> *array, Type value)
+{
+	for(auto other : *array)
+	{
+		if(other == value) return true;
+	}
+
+	return false;
+}
+
+template<typename Type>
+Type *
+operator+=(Array<Type> &array, Type value)
+{
+	return Append(&array, value);
 }
 
 template<typename Type>
@@ -59,10 +82,14 @@ template<typename Type>
 void
 ResizeArray(Array<Type> *array, int new_max_count)
 {
-	if(new_max_count > array->max_count)
+	TIMED_BLOCK;
+
+	if(new_max_count > array->_allocated_count)
 	{
 		void *new_data = AllocFromArena(array->arena, sizeof(Type)*new_max_count);
-		CopyMemoryBlock(array->data, new_data, sizeof(Type)*array->count);
+		CopyMemoryBlock(new_data, array->data, sizeof(Type)*array->count);
+		array->data = (Type*)new_data;
+		array->_allocated_count = new_max_count;
 	}
 	else
 	{
@@ -103,7 +130,8 @@ CreatePermanentArray(int max_count)
 		.data = (Type*)AllocFromArena(&memory::permanent_arena, sizeof(Type)*max_count),
 		.arena = &memory::permanent_arena,
 		.count = 0,
-		.max_count = max_count
+		.max_count = max_count,
+		._allocated_count = max_count
 	};
 }
 
@@ -115,6 +143,7 @@ CreateTempArray(int max_count)
 		.data = (Type*)AllocFromArena(&memory::per_frame_arena, sizeof(Type)*max_count),
 		.arena = &memory::per_frame_arena,
 		.count = 0,
-		.max_count = max_count
+		.max_count = max_count,
+		._allocated_count = max_count
 	};
 }

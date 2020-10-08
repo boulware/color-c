@@ -35,3 +35,5 @@
 #include "better_text_parsing.cpp"
 #include "options_menu.cpp"
 #include "campaign.cpp"
+#include "geometry.cpp"
+#include "test_mode.cpp"

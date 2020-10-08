@@ -17,6 +17,7 @@
 #include "options_menu.h"
 #include "game_state.h"
 #include "campaign.h"
+#include "test_mode.h"
 
 struct Game
 {
@@ -38,6 +39,8 @@ struct Game
 
 	Vec2f window_size;
 
+	Vec2f camera_pos;
+
 	GLuint temp_texture;
 	Vec2i string_bmp_size;
 
@@ -48,6 +51,7 @@ struct Game
 	OptionsMenu options_menu;
 	MainMenu mainmenu_state;
 	Campaign campaign;
+	TestMode test_mode;
 
 	Sprite pointer_cursor;
 	Sprite target_cursor;

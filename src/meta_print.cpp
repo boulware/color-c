@@ -17,6 +17,7 @@
 #include "freetype_wrapper.h"
 #include "game.h"
 #include "game_state.h"
+#include "geometry.h"
 #include "global.h"
 #include "image.h"
 #include "imgui.h"
@@ -29,6 +30,7 @@
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
+#include "node_graph.h"
 #include "opengl.h"
 #include "options_menu.h"
 #include "oscillating_timer.h"
@@ -39,6 +41,7 @@
 #include "string.h"
 #include "table.h"
 #include "target_class.h"
+#include "test_mode.h"
 #include "text_parsing.h"
 #include "text_render.h"
 #include "timer.h"
@@ -217,6 +220,8 @@ String MetaString(const Array<Type> *s)
 
 	AppendCString(&string, "  max_count: %d (int)\n", s->max_count);
 
+	AppendCString(&string, "  _allocated_count: %d (int)\n", s->_allocated_count);
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -394,6 +399,50 @@ String MetaString(const Bitmap *s)
 // campaign.h
 // ------------------------------------------
 
+String MetaString(const Node *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Node {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  vel: ");
+	AppendString(&string, MetaString(&s->vel));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Edge *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Edge {\n");
+
+	AppendCString(&string, "  indices: %p (int[])\n", s->indices);
+
+	AppendCString(&string, "  rest_length: %f (float)\n", s->rest_length);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 String MetaString(const Campaign *s)
 {
 	TIMED_BLOCK;
@@ -404,6 +453,38 @@ String MetaString(const Campaign *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Campaign {\n");
+
+	AppendCString(&string, "  root: %p (Node *)\n", s->root);
+
+	AppendCString(&string, "  nodes: ");
+	AppendString(&string, MetaString(&s->nodes));
+	AppendCString(&string, "(Array<Node>)\n");
+
+	AppendCString(&string, "  edges: ");
+	AppendString(&string, MetaString(&s->edges));
+	AppendCString(&string, "(Array<Edge>)\n");
+
+	AppendCString(&string, "  end_index: %d (int)\n", s->end_index);
+
+	AppendCString(&string, "  drag_start_index: %d (int)\n", s->drag_start_index);
+
+	AppendCString(&string, "  fdg_running: %d (bool)\n", s->fdg_running);
+
+	AppendCString(&string, "  camera_offset: ");
+	AppendString(&string, MetaString(&s->camera_offset));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  generation_timer: ");
+	AppendString(&string, MetaString(&s->generation_timer));
+	AppendCString(&string, "(Timer)\n");
+
+	AppendCString(&string, "  generation_finished: %d (bool)\n", s->generation_finished);
+
+	AppendCString(&string, "  max_speed: %f (float)\n", s->max_speed);
+
+	AppendCString(&string, "  graph_fully_connected: %d (bool)\n", s->graph_fully_connected);
+
+	AppendCString(&string, "  generation_count: %d (int)\n", s->generation_count);
 
 	AppendCString(&string, "}");
 
@@ -961,6 +1042,10 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->window_size));
 	AppendCString(&string, "(Vec2f)\n");
 
+	AppendCString(&string, "  camera_pos: ");
+	AppendString(&string, MetaString(&s->camera_pos));
+	AppendCString(&string, "(Vec2f)\n");
+
 	AppendCString(&string, "  temp_texture: %u (GLuint)\n", s->temp_texture);
 
 	AppendCString(&string, "  string_bmp_size: ");
@@ -990,6 +1075,10 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  campaign: ");
 	AppendString(&string, MetaString(&s->campaign));
 	AppendCString(&string, "(Campaign)\n");
+
+	AppendCString(&string, "  test_mode: ");
+	AppendString(&string, MetaString(&s->test_mode));
+	AppendCString(&string, "(TestMode)\n");
 
 	AppendCString(&string, "  pointer_cursor: ");
 	AppendString(&string, MetaString(&s->pointer_cursor));
@@ -1049,6 +1138,9 @@ String MetaString(const GameState *s)
 		case(GameState::Options): {
 			AppendCString(&string, "Options");
 		} break;
+		case(GameState::Test): {
+			AppendCString(&string, "Test");
+		} break;
 		default: {
 			AppendCString(&string, "?????");
 		} break;
@@ -1056,6 +1148,10 @@ String MetaString(const GameState *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// geometry.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // global.h
@@ -1562,6 +1658,10 @@ String MetaString(const Arena *s)
 // ------------------------------------------
 
 // ---------------FILE START---------------
+// node_graph.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
 // options_menu.h
 // ------------------------------------------
 
@@ -1890,6 +1990,42 @@ String MetaString(const TargetClass *s)
 			AppendCString(&string, "?????");
 		} break;
 	}
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// test_mode.h
+// ------------------------------------------
+
+String MetaString(const TestMode *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TestMode {\n");
+
+	AppendCString(&string, "  a0: ");
+	AppendString(&string, MetaString(&s->a0));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  a1: ");
+	AppendString(&string, MetaString(&s->a1));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  b0: ");
+	AppendString(&string, MetaString(&s->b0));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  b1: ");
+	AppendString(&string, MetaString(&s->b1));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
 
 	return string;
 }

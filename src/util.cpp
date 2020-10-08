@@ -165,3 +165,15 @@ String AsString(const int *s)
 
 	return string;
 }
+
+u32
+ClampFloatToU32(float f)
+{
+	u32 value = 0;
+
+	if(f <= 0.f) value = 0;
+	else if(f >= (float)((u32)(1<<31))) value = (u32)(1<<31);
+	else value = (u32)f;
+
+	return value;
+}
