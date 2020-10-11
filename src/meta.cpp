@@ -521,7 +521,7 @@ InterpretTokenAsMetaType(Token token, bool is_pointer)
 
 int main()
 {
-	#define root_dir "D:/work/programming/color-c/"
+	#define root_dir "C:/color-c/"
 
 	const size_t buffer_size = 10000000; // 10MB
 
@@ -689,6 +689,12 @@ int main()
 					}
 				}
 
+				if(TokenMatchesString(token, "NoIntrospect"))
+				{
+					token = NextToken(&file); // expected "struct"
+					token = NextToken(&file); // skipping struct
+				}
+
 				if(TokenMatchesString(token, "struct"))
 				{ // Try to parse from here as a struct.
 					fprintf(&out_file, "\n");
@@ -765,6 +771,10 @@ int main()
 						{
 							base_type_token = NextToken(&file);
 							member_is_const = true;
+						}
+						else if(TokenMatchesString(base_type_token, "volatile"))
+						{
+							base_type_token = NextToken(&file);
 						}
 
 						if(CheckNextTokenType_(&file, TokenType_::Tilde))

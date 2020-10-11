@@ -22,8 +22,16 @@ Type *
 end(Array<Type> &array);
 
 template<typename Type>
+bool
+ValidArray(Array<Type> array);
+
+template<typename Type>
 Type *
 Append(Array<Type> *array, Type entry);
+
+template<typename Type>
+Type *
+AppendEmptyElement(Array<Type> *array);
 
 template<typename Type>
 Type *
@@ -47,10 +55,15 @@ AppendArrayToArray(Array<Type> *root_array, Array<Type> appended_array);
 
 template<typename Type>
 Array<Type>
-CreatePermanentArray(int allocated_size);
+CreateArrayFromArena(int max_count, Arena *arena);
 
 template<typename Type>
 Array<Type>
-CreateTempArray(int allocated_size);
+CreatePermanentArray(int max_count);
+
+template<typename Type>
+Array<Type>
+CreateTempArray(int max_count);
+
 
 #endif

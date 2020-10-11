@@ -41,8 +41,8 @@ requires (0,1,0)
 effect Restore all_allies (0,1,0)
 
 ability "Steal Armor"
-requires (0,4,0)
 tier 0
+requires (0,4,0)
 effect Steal single_unit (0,0,1)
 
 ability "Shoot"

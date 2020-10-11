@@ -112,7 +112,7 @@ ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 	{
 		buffer->p = initial;
 		size_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));
-		log("Encountered invalid unit data in buffer at address: %p (\"%.*s\")",
+		Log("Encountered invalid unit data in buffer at address: %p (\"%.*s\")",
 			buffer->p, number_of_bytes_to_print, buffer->p);
 
 		return false;
@@ -155,7 +155,7 @@ LoadBreedFile(const char *filename, Table<Breed> *breed_table, Table<Ability> ab
 
 	if(c::verbose_success_logging)
 	{
-		log("Loaded %zu unit breeds from file: %s", unit_count_loaded, filename);
+		Log("Loaded %zu unit breeds from file: %s", unit_count_loaded, filename);
 	}
 	FreeBuffer(&file);
 	return true;
@@ -247,7 +247,7 @@ CreateUnitByName(String name, Team team)
 // 		return true;
 // 	}
 
-// 	log("Invalid TargetClass encountered (%d)", int(tc));
+// 	Log("Invalid TargetClass encountered (%d)", int(tc));
 // 	return false;
 // }
 
@@ -335,7 +335,7 @@ CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)
 		return true;
 	}
 
-	log("Invalid TargetClass encountered (%d)", int(tc));
+	Log("Invalid TargetClass encountered (%d)", int(tc));
 	return false;
 }
 
@@ -587,7 +587,7 @@ DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color colo
 	}
 	else if(c::verbose_error_logging)
 	{
-		log("Invalid case encountered in function " __FUNCTION__ " (current:%d, max:%d, preview:%d)",
+		Log("Invalid case encountered in function " __FUNCTION__ " (current:%d, max:%d, preview:%d)",
 			current, max, preview);
 
 		return Vec2f{};

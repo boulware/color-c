@@ -83,6 +83,10 @@ template <typename Type>
 Type *
 GetEntryFromId(Table<Type> table, Id<Type> id);
 
+template<typename Type>
+void
+DeleteEntry(Table<Type> *table, Id<Type> id);
+
 // template <typename Type>
 // Id<Type>
 // GetGenerationalIndexFromIndex(Table<Type> table, int index);

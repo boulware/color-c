@@ -315,3 +315,9 @@ RectBottomRight(Rect rect)
 {
 	return rect.pos + rect.size;
 }
+
+Vec2f
+RectBottomCenter(Rect rect)
+{
+	return rect.pos + Vec2f{0.5f*rect.size.x, 1.f*rect.size.y};
+}

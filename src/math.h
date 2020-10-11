@@ -19,6 +19,7 @@ namespace m
 	Type Pow(Type base, unsigned int power);
 
 	float Sqrt(float a);
+	float Round(float value);
 };
 
 #endif

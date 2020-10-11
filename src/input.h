@@ -634,6 +634,8 @@ namespace input
     InputState *global_input;
 }
 
+void ResetInputState(InputState *input);
+
 bool Down(u8 key);
 bool Pressed(u8 key);
 bool Released(u8 key);

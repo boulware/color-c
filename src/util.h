@@ -9,6 +9,7 @@ bool CompareStrings(const char *a, const char *b);
 bool CompareStringsStrict(const char *a, const char *b);
 void CopyStringN_unsafe(char *dst, const char *src, size_t n);
 char *TempFormatString(const char *fmt, va_list args);
+bool CompareBytesN(const void *a, const void *b, size_t count);
 
 template <typename Type>
 bool InRange(Type value, Type min, Type max);

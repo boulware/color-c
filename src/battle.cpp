@@ -12,7 +12,7 @@ GetAbilityHudButtonRect(Battle battle, int ability_index)
 {
     if(ability_index < 0 or ability_index > c::moveset_max_size)
     {
-        log("(" __FUNCTION__ ") received invalid ability_index");
+        Log("(" __FUNCTION__ ") received invalid ability_index");
         return Rect{};
     }
 
@@ -217,7 +217,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
             }
             else
             {
-                if(c::verbose_error_logging) log("Encountered unimplemented effect type. ((int)EffectType => %d)", int(effect.type));
+                if(c::verbose_error_logging) Log("Encountered unimplemented effect type. ((int)EffectType => %d)", int(effect.type));
             }
 
             // Don't add the event if its trait changes would have no net effect.

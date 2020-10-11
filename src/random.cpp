@@ -18,7 +18,7 @@ InitLcgSetSeed(LCG *lcg, u32 seed)
 	for(int i=0; i<100; i++) RandomU32(0,0);
 }
 
-void
+u64
 InitLcgSystemSeed(LCG *lcg)
 {
 	// TODO: Can m actually be 2^32-1 and still be random enough?
@@ -30,6 +30,8 @@ InitLcgSystemSeed(LCG *lcg)
 
 	// Do some iterations to get out of the start range
 	for(int i=0; i<100; i++) RandomU32(0,0);
+
+	return lcg->seed;
 }
 
 u32
@@ -46,7 +48,7 @@ RandomU32(u32 min, u32 max)
 	lcg.seed = (lcg.a * lcg.seed + lcg.c) % lcg.m;
 	u32 result = (lcg.seed % (max-min+1)) + min;
 
-	//log("U32: %u", result);
+	//Log("U32: %u", result);
 	return result;
 }
 
@@ -83,5 +85,5 @@ TestDistributionAndLog()
 		++buckets[RandomU32(0, range-1)];
 	}
 
-	for(int i=0; i<range; i++) log("%u: %u", i, buckets[i]);
+	for(int i=0; i<range; i++) Log("%u: %u", i, buckets[i]);
 }

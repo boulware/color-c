@@ -4,6 +4,282 @@
 		"selected_items":
 		[
 			[
+				"mute",
+				"mutex_handle"
+			],
+			[
+				"Semaphore",
+				"ReleaseSemaphore"
+			],
+			[
+				"next_entr",
+				"next_entry_to_read"
+			],
+			[
+				"entry",
+				"entry_data_buffer"
+			],
+			[
+				"next_in",
+				"next_index_to_read"
+			],
+			[
+				"size",
+				"size_in_bytes"
+			],
+			[
+				"RingBu",
+				"RingBufferBytesRemaining"
+			],
+			[
+				"next",
+				"next_entry_to_write"
+			],
+			[
+				"Next",
+				"NextEntryToAdd"
+			],
+			[
+				"NextEntry",
+				"NextEntryToDo"
+			],
+			[
+				"Inter",
+				"InterlockedIncrement"
+			],
+			[
+				"original",
+				"original_next_entry_to_add"
+			],
+			[
+				"new_next",
+				"new_next_entry_to_add"
+			],
+			[
+				"origin",
+				"original_next_entry_to_add"
+			],
+			[
+				"NextE",
+				"NextEntryToAdd"
+			],
+			[
+				"or",
+				"original_next_entry_to_do"
+			],
+			[
+				"Token",
+				"TokenMatchesString"
+			],
+			[
+				"tmp",
+				"temp_arena"
+			],
+			[
+				"Crate",
+				"CreateArrayFromArena"
+			],
+			[
+				"Create",
+				"CreateArrayFromArena"
+			],
+			[
+				"per",
+				"per_frame_arena"
+			],
+			[
+				"Arena",
+				"AllocArena"
+			],
+			[
+				"padd",
+				"padded_rect"
+			],
+			[
+				"generate",
+				"generate_node_graph_params"
+			],
+			[
+				"function",
+				"function_params"
+			],
+			[
+				"funct",
+				"function_params"
+			],
+			[
+				"Gener",
+				"GenerateNodeGraph"
+			],
+			[
+				"thread",
+				"thread_id"
+			],
+			[
+				"Node",
+				"NodeGraphParams"
+			],
+			[
+				"Draw",
+				"DrawUnfilledRect"
+			],
+			[
+				"ForceSim",
+				"ForceSimState"
+			],
+			[
+				"generat",
+				"generation_count"
+			],
+			[
+				"aligne",
+				"align_center"
+			],
+			[
+				"grph",
+				"graph_fully_connected"
+			],
+			[
+				"fully",
+				"graph_fully_connected"
+			],
+			[
+				"indi",
+				"indices_to_search"
+			],
+			[
+				"connec",
+				"connected_edges"
+			],
+			[
+				"generation",
+				"generation_finished"
+			],
+			[
+				"gener",
+				"generation_finished"
+			],
+			[
+				"Rand",
+				"RandomU32"
+			],
+			[
+				"fdg",
+				"fdg_edge_length"
+			],
+			[
+				"camera",
+				"camera_offset"
+			],
+			[
+				"nodes",
+				"nodes"
+			],
+			[
+				"main",
+				"main_path_node_count"
+			],
+			[
+				"edges",
+				"edges"
+			],
+			[
+				"align",
+				"aligned_rect"
+			],
+			[
+				"edg",
+				"edge_indices"
+			],
+			[
+				"pos",
+				"pos_average"
+			],
+			[
+				"color",
+				"color_shader"
+			],
+			[
+				"iters",
+				"iters_per_tick"
+			],
+			[
+				"Mouse",
+				"MouseInRect"
+			],
+			[
+				"test",
+				"test_node"
+			],
+			[
+				"option",
+				"option_being_modified"
+			],
+			[
+				"format",
+				"formatted_string"
+			],
+			[
+				"real_",
+				"real_out_file"
+			],
+			[
+				"taregt",
+				"target_string"
+			],
+			[
+				"KeyBind",
+				"KeyBindToVirtualKey"
+			],
+			[
+				"String",
+				"StringFromCString"
+			],
+			[
+				"exit",
+				"exit_requested"
+			],
+			[
+				"Game",
+				"GameState"
+			],
+			[
+				"curre",
+				"current_state"
+			],
+			[
+				"mainmenu",
+				"mainmenu_state"
+			],
+			[
+				"align_top",
+				"align_topcenter"
+			],
+			[
+				"selectedunit",
+				"selected_unit_id"
+			],
+			[
+				"hovered_uint",
+				"hovered_unit_id"
+			],
+			[
+				"hovered_ability",
+				"hovered_ability"
+			],
+			[
+				"Tier",
+				"DetermineAbilityTier"
+			],
+			[
+				"Select",
+				"ValidSelectionUnitSet"
+			],
+			[
+				"Determin",
+				"DetermineAbilityTier"
+			],
+			[
 				"null",
 				"null_unit_id"
 			],
@@ -14,10 +290,6 @@
 			[
 				"Set",
 				"SetDrawDepth"
-			],
-			[
-				"Create",
-				"CreateTempArray"
 			],
 			[
 				"target_ind",
@@ -70,10 +342,6 @@
 			[
 				"Change",
 				"ChangeSelectedUnit"
-			],
-			[
-				"Gener",
-				"GenerateBattlePreviewEvent"
 			],
 			[
 				"preview",
@@ -150,10 +418,6 @@
 			[
 				"events",
 				"events_initial_size"
-			],
-			[
-				"Token",
-				"TokenMatchesString"
 			],
 			[
 				"Conf",
@@ -250,281 +514,53 @@
 			[
 				"entry_",
 				"entry_count"
-			],
-			[
-				"ListP",
-				"ListPanelLayout"
-			],
-			[
-				"unit_sche",
-				"unit_schematic_table"
-			],
-			[
-				"Table",
-				"TableIndex"
-			],
-			[
-				"DataTab",
-				"DataTableEntry"
-			],
-			[
-				"DataT",
-				"DataTableEntry"
-			],
-			[
-				"Strn",
-				"StringFromCString"
-			],
-			[
-				"entr",
-				"entry_size"
-			],
-			[
-				"unit_slot",
-				"unit_slot_size"
-			],
-			[
-				"require",
-				"required_traits"
-			],
-			[
-				"def_text",
-				"def_text_layout"
-			],
-			[
-				"value_",
-				"value_ptr"
-			],
-			[
-				"input",
-				"input_elements"
-			],
-			[
-				"Ge",
-				"GenerateInputElementString"
-			],
-			[
-				"Input",
-				"InputElement"
-			],
-			[
-				"Element",
-				"InputElementType"
-			],
-			[
-				"Abli",
-				"AbilityPropertyIndex"
-			],
-			[
-				"cursor",
-				"text_cursor_pos"
-			],
-			[
-				"Integer",
-				"IntegerBox"
-			],
-			[
-				"temp",
-				"temp_ability"
-			],
-			[
-				"Ability",
-				"AbilityPropertyIndex"
-			],
-			[
-				"Abil",
-				"AbilityPropertyIndex"
-			],
-			[
-				"inputele",
-				"input_elements"
-			],
-			[
-				"As",
-				"InputElementTextAsString"
-			],
-			[
-				"Inpute",
-				"InputElementTextAsString"
-			],
-			[
-				"InputEle",
-				"InputElementType"
-			],
-			[
-				"Inputel",
-				"InputElementType"
-			],
-			[
-				"actve",
-				"active_index"
-			],
-			[
-				"Abi",
-				"AbilityPropertyIndex"
-			],
-			[
-				"field_",
-				"field_positions"
-			],
-			[
-				"Edit",
-				"EditorMode"
-			],
-			[
-				"editor",
-				"editor_integer_box_layout"
-			],
-			[
-				"test_",
-				"test_string"
-			],
-			[
-				"Intege",
-				"IntegerBoxResponse"
-			],
-			[
-				"Integ",
-				"IntegerBoxResponse"
-			],
-			[
-				"pos",
-				"panel_scroll_pos"
-			],
-			[
-				"active",
-				"active_index"
-			],
-			[
-				"unit",
-				"unit_schematic"
-			],
-			[
-				"abilit",
-				"ability_count"
-			],
-			[
-				"first",
-				"first_ability_index"
-			],
-			[
-				"panel_entr",
-				"panel_entry_ids"
-			],
-			[
-				"panelscr",
-				"panel_scroll_vel"
-			],
-			[
-				"panel_",
-				"panel_scroll_vel"
-			],
-			[
-				"panel",
-				"panel_scroll_vel"
-			],
-			[
-				"Drw",
-				"DrawTextMultiline"
-			],
-			[
-				"Fmt",
-				"Fmt_first"
-			],
-			[
-				"basety",
-				"base_type_format_specifier"
-			],
-			[
-				"data",
-				"file_data"
-			],
-			[
-				"filename",
-				"filename_with_folder"
-			],
-			[
-				"base_type",
-				"base_type_format_specifier"
-			],
-			[
-				"base_t",
-				"base_type_format_specifier"
-			],
-			[
-				"OPTIM",
-				"OPTIMIZING_FUNCTION"
-			],
-			[
-				"utf32",
-				"utf32_char"
-			],
-			[
-				"Utf32",
-				"Utf32StringFromCString"
-			],
-			[
-				"Utf",
-				"Utf32String"
-			],
-			[
-				"field",
-				"field_positions"
-			],
-			[
-				"defa",
-				"def_text_entry_layout"
-			],
-			[
-				"TextEntr",
-				"TextEntryLayout"
-			],
-			[
-				"lab",
-				"search_label"
-			],
-			[
-				"String",
-				"StringLength"
-			],
-			[
-				"def_Text",
-				"def_text_entry_layout"
-			],
-			[
-				"pressed",
-				"pressed_index"
-			],
-			[
-				"hovered",
-				"hovered_index"
-			],
-			[
-				"entry",
-				"entry_rect"
-			],
-			[
-				"LIstP",
-				"ListPanelLayout"
-			],
-			[
-				"Game",
-				"GameState"
-			],
-			[
-				"meb",
-				"member_name"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/array.h",
+			"file": "src/win32_platform.cpp",
 			"settings":
 			{
-				"buffer_size": 1032,
+				"buffer_size": 26818,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 113 files for \"color-c\"\n\nC:\\color-c\\src\\meta.cpp:\n  522  int main()\n  523  {\n  524: \t#define root_dir \"D:/work/programming/color-c/\"\n  525  \n  526  \tconst size_t buffer_size = 10000000; // 10MB\n\nC:\\color-c\\src\\win32_platform.cpp:\n  848  \tvoid (*GameInit)();\n  849  \tvoid (*GameUpdateAndRender)();\n  850: \tHMODULE game_module = LoadLibraryA(\"D:/work/programming/color-c/game.dll\");\n  851  \tif(game_module == NULL)\n  852  \t{\n\n2 matches across 2 files\n",
+			"settings":
+			{
+				"buffer_size": 459,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/meta.cpp",
+			"settings":
+			{
+				"buffer_size": 28372,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "build/b.bat",
+			"settings":
+			{
+				"buffer_size": 1504,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
+			"settings":
+			{
+				"buffer_size": 40,
 				"line_ending": "Windows"
 			}
 		}
@@ -545,12 +581,16 @@
 				"Increment Selection"
 			],
 			[
-				"lower ",
-				"Convert Case: Lower Case"
-			],
-			[
 				"incre",
 				"Increment Selection"
+			],
+			[
+				"INCRE",
+				"Increment Selection"
+			],
+			[
+				"lower ",
+				"Convert Case: Lower Case"
 			],
 			[
 				"Incre",
@@ -652,7 +692,7 @@
 	},
 	"distraction_free":
 	{
-		"menu_visible": true,
+		"menu_visible": false,
 		"show_minimap": false,
 		"show_open_files": false,
 		"show_tabs": false,
@@ -661,83 +701,127 @@
 	},
 	"expanded_folders":
 	[
-		"/D/work/programming/color-c",
-		"/D/work/programming/color-c/src"
+		"/C/color-c"
 	],
 	"file_history":
 	[
-		"/D/work/programming/color-c/src/imgui.h",
-		"/D/work/programming/color-c/src/battle.h",
-		"/D/work/programming/color-c/src/text_render.h",
-		"/D/work/programming/color-c/src/text_render.cpp",
-		"/D/work/programming/color-c/data/breed.dat",
-		"/D/work/programming/color-c/src/main_menu.cpp",
-		"/D/work/programming/color-c/data/main_menu_strings.dat",
-		"/D/work/programming/color-c/src/string.cpp",
-		"/D/work/programming/color-c/src/memory.cpp",
-		"/D/work/programming/color-c/src/main_menu.h",
+		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/game.cpp",
+		"/C/color-c/logs/log2.txt",
+		"/C/color-c/logs/critical.log",
+		"/C/color-c/logs/DebugTimings.txt",
+		"/C/color-c/src/work_entry.h",
+		"/C/color-c/data/ability.dat",
+		"/C/color-c/src/log.cpp",
+		"/C/color-c/src/ring_buffer.h",
+		"/C/color-c/src/const.h",
+		"/C/color-c/src/game_code_include.cpp",
+		"/D/work/programming/color-c/src/log.cpp",
+		"/D/work/programming/color-c/logs/log.txt",
+		"/D/work/programming/color-c/TEST.txt",
+		"/D/work/programming/color-c/src/log.h",
+		"/D/work/programming/color-c/src/platform.h",
+		"/D/work/programming/color-c/logs/log2.txt",
+		"/D/work/programming/color-c/src/ring_buffer.cpp",
+		"/D/work/programming/color-c/src/ring_buffer.h",
+		"/D/work/programming/color-c/src/macros.h",
+		"/D/work/programming/color-c/src/campaign.cpp",
 		"/D/work/programming/color-c/src/game.h",
-		"/D/work/programming/color-c/src/battle.cpp",
-		"/D/work/programming/color-c/src/draw.cpp",
-		"/D/work/programming/color-c/src/array.h",
+		"/D/work/programming/color-c/src/work_entry.h",
+		"/D/work/programming/color-c/src/memory.h",
+		"/D/work/programming/color-c/build/win32_platform.i",
+		"/D/work/programming/color-c/build/b.bat",
 		"/D/work/programming/color-c/src/array.cpp",
+		"/D/work/programming/color-c/src/node_graph.cpp",
+		"/D/work/programming/color-c/src/game.cpp",
+		"/D/work/programming/color-c/src/meta.cpp",
+		"/D/work/programming/color-c/src/random.h",
+		"/D/work/programming/color-c/src/random.cpp",
+		"/D/work/programming/color-c/src/win32_platform.cpp",
+		"/D/work/programming/color-c/src/memory.cpp",
+		"/D/work/programming/color-c/src/generate_node_graph_params.h",
+		"/D/work/programming/color-c/src/campaign.h",
+		"/D/work/programming/color-c/src/node_graph.h",
+		"/D/work/programming/color-c/src/array.h",
+		"/D/work/programming/color-c/src/scratch.cpp",
+		"/D/work/programming/color-c/src/game_code_include.cpp",
+		"/D/work/programming/color-c/src/freetype_wrapper.cpp",
+		"/D/work/programming/color-c/src/freetype_wrapper.h",
+		"/D/work/programming/color-c/build/game.i",
+		"/D/work/programming/color-c/src/const.h",
+		"/D/work/programming/color-c/src/geometry.h",
+		"/D/work/programming/color-c/src/main_menu.cpp",
+		"/D/work/programming/color-c/src/geometry.cpp",
+		"/D/work/programming/color-c/src/test_mode.cpp",
+		"/D/work/programming/color-c/src/test_mode.h",
+		"/D/work/programming/color-c/src/game_state.h",
+		"/D/work/programming/color-c/src/timer.h",
+		"/D/work/programming/color-c/src/vec.cpp",
+		"/D/work/programming/color-c/src/vec.h",
+		"/D/work/programming/color-c/src/color_fragment.glsl",
+		"/D/work/programming/color-c/src/color_vertex.glsl",
+		"/D/work/programming/color-c/src/draw.cpp",
+		"/D/work/programming/color-c/src/uv_vertex.glsl",
+		"/D/work/programming/color-c/src/uv_fragment.glsl",
+		"/D/work/programming/color-c/src/util.cpp",
+		"/D/work/programming/color-c/src/input.cpp",
+		"/D/work/programming/color-c/src/keybinds.cpp",
+		"/D/work/programming/color-c/src/keybinds.h",
+		"/D/work/programming/color-c/src/meta_print.h",
+		"/D/work/programming/color-c/src/input.h",
+		"/D/work/programming/color-c/src/meta_text_parsing.cpp",
+		"/D/work/programming/color-c/data/default_keybinds.dat",
+		"/D/work/programming/color-c/src/options_menu.cpp",
+		"/D/work/programming/color-c/src/options_menu.h",
+		"/D/work/programming/color-c/src/text_render.cpp",
+		"/D/work/programming/color-c/src/imgui.cpp",
+		"/D/work/programming/color-c/src/debug.cpp",
+		"/D/work/programming/color-c/src/battle.cpp",
 		"/D/work/programming/color-c/_/todo.txt",
+		"/D/work/programming/color-c/src/text_render.h",
+		"/D/work/programming/color-c/build/freetype-2.9.1/docs/FTL.TXT",
+		"/D/work/programming/color-c/src/text_parsing.cpp",
+		"/D/work/programming/color-c/src/better_text_parsing.cpp",
+		"/D/work/programming/color-c/src/meta_text_parsing.h",
+		"/D/work/programming/color-c/src/string.cpp",
+		"/D/work/programming/color-c/src/meta_print.cpp",
+		"/D/work/programming/color-c/src/better_text_parsing.h",
+		"/D/work/programming/color-c/src/string.h",
+		"/D/work/programming/color-c/src/text_parsing.h",
+		"/D/work/programming/color-c/src/oscillating_timer.cpp",
+		"/D/work/programming/color-c/src/debug.h",
+		"/D/work/programming/color-c/src/ability.cpp",
+		"/D/work/programming/color-c/src/unit.cpp",
+		"/D/work/programming/color-c/src/main_menu.h",
+		"/D/work/programming/color-c/src/editor.h",
+		"/D/work/programming/color-c/src/battle.h",
+		"/D/work/programming/color-c/src/target_class.h",
+		"/D/work/programming/color-c/src/editor.cpp",
+		"/D/work/programming/color-c/logs/DebugTimings.txt",
+		"/D/work/programming/color-c/src/ability.h",
+		"/D/work/programming/color-c/src/effect.h",
+		"/D/work/programming/color-c/src/table.cpp",
+		"/D/work/programming/color-c/src/target_class.cpp",
+		"/D/work/programming/color-c/data/ability.dat",
+		"/D/work/programming/color-c/src/imgui.h",
+		"/D/work/programming/color-c/data/breed.dat",
+		"/D/work/programming/color-c/data/main_menu_strings.dat",
 		"/D/work/programming/color-c/src/todo_session.txt",
 		"/D/work/programming/color-c/src/unit.h",
-		"/D/work/programming/color-c/src/game.cpp",
-		"/D/work/programming/color-c/src/const.h",
-		"/D/work/programming/color-c/src/imgui.cpp",
-		"/D/work/programming/color-c/src/random.h",
 		"/D/work/programming/color-c/src/traitset.h",
-		"/D/work/programming/color-c/data/ability.dat",
-		"/D/work/programming/color-c/src/random.cpp",
-		"/D/work/programming/color-c/logs/log.txt",
-		"/D/work/programming/color-c/src/log.cpp",
-		"/D/work/programming/color-c/src/vec.h",
-		"/D/work/programming/color-c/src/unit.cpp",
-		"/D/work/programming/color-c/src/win32_platform.cpp",
-		"/D/work/programming/color-c/src/timer.h",
 		"/D/work/programming/color-c/src/oscillating_timer.h",
-		"/D/work/programming/color-c/src/freetype_wrapper.h",
 		"/D/work/programming/color-c/src/timer.cpp",
-		"/D/work/programming/color-c/src/oscillating_timer.cpp",
-		"/D/work/programming/color-c/src/input.h",
-		"/D/work/programming/color-c/src/debug.h",
-		"/D/work/programming/color-c/src/input.cpp",
-		"/D/work/programming/color-c/src/game_code_include.cpp",
-		"/D/work/programming/color-c/src/debug.cpp",
-		"/D/work/programming/color-c/src/meta.cpp",
 		"/D/work/programming/color-c/src/math.cpp",
-		"/D/work/programming/color-c/src/table.cpp",
-		"/D/work/programming/color-c/src/effect.h",
-		"/D/work/programming/color-c/build/b.bat",
-		"/D/work/programming/color-c/src/macros.h",
-		"/D/work/programming/color-c/src/ability.h",
 		"/D/work/programming/color-c/src/table.h",
 		"/D/work/programming/color-c/src/traitset.cpp",
-		"/D/work/programming/color-c/src/util.cpp",
-		"/D/work/programming/color-c/src/editor.h",
-		"/D/work/programming/color-c/src/editor.cpp",
 		"/D/work/programming/color-c/src/global.h",
-		"/D/work/programming/color-c/src/ability.cpp",
-		"/D/work/programming/color-c/src/meta_print.cpp",
-		"/D/work/programming/color-c/src/meta_print.h",
-		"/D/work/programming/color-c/src/target_class.h",
 		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
-		"/D/work/programming/color-c/src/memory.h",
 		"/D/work/programming/color-c/src/util.h",
-		"/D/work/programming/color-c/src/meta_text_parsing.cpp",
-		"/D/work/programming/color-c/src/meta_text_parsing.h",
-		"/D/work/programming/color-c/src/string.h",
-		"/D/work/programming/color-c/src/scratch.cpp",
-		"/D/work/programming/color-c/build/game.i",
 		"/D/work/programming/color-c/src/passive_skill_tree.cpp",
 		"/D/work/programming/color-c/src/data_table.h",
 		"/D/work/programming/color-c/src/data_table.cpp",
 		"/D/work/programming/color-c/src/draw.h",
-		"/D/work/programming/color-c/src/text_parsing.h",
 		"/D/work/programming/color-c/data/unit_schematic.dat",
-		"/D/work/programming/color-c/src/text_parsing.cpp",
 		"/D/work/programming/color-c/build/meta.i",
 		"/D/work/programming/color-c/src/utf32string.h",
 		"/D/work/programming/color-c/src/meta_platform.cpp",
@@ -745,55 +829,10 @@
 		"/D/work/programming/color-c/src/meta_print(manual).h",
 		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/WinBase.h",
 		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/fileapi.h",
-		"/D/work/programming/color-c/build/win32_platform.i",
-		"/D/work/programming/color-c/logs/DebugTimings.txt",
 		"/D/work/programming/color-c/src/utf32string.cpp",
-		"/D/work/programming/color-c/src/vec.cpp",
 		"/D/work/programming/color-c/src/meta.h",
 		"/D/work/programming/color-c/src/win32_platform.h",
-		"/D/work/programming/color-c/src/platform.h",
-		"/D/work/programming/playground/main.cpp",
-		"/D/work/programming/color-c/src/bitmap.cpp",
-		"/D/work/programming/color-c/src/strings.h",
-		"/D/work/programming/color-c/src/food.h",
-		"/D/work/programming/color-c/src/strings.cpp",
-		"/C/Users/Harm/Documents/My Games/TIS-100/76561198027512610/save/00150.0.txt",
-		"/D/work/programming/color-c/src/freetype.h",
-		"/D/work/programming/color-c/src/csv.h",
-		"/D/work/programming/color-c/src/target_class.cpp",
-		"/D/work/programming/color-c/src/uv_fragment.glsl",
-		"/D/work/programming/color-c/src/color_vertex.glsl",
-		"/D/work/programming/color-c/src/effect.cpp",
-		"/D/work/programming/color-c/src/color_fragment.glsl",
-		"/D/work/programming/color-c/src/uv_vertex.glsl",
-		"/D/work/programming/fps/src/shaders/default_3d.vs.glsl",
-		"/D/work/programming/color-c/data/tier_ability.dat",
-		"/D/work/programming/color-c/build/freetype/CMakeLists.txt",
-		"/D/work/programming/color-c/src/color.h",
-		"/D/work/programming/color-c/build/freetype/docs/reference/ft2-header_file_macros.html",
-		"/D/work/programming/color-c/_/design.txt",
-		"/D/work/programming/color-c/build/freetype/src/gzip/infutil.c",
-		"/D/work/programming/color-c/src/sprite.cpp",
-		"/D/work/programming/color-c/src/opengl.h",
-		"/D/work/programming/color-c/src/bitmap.h",
-		"/C/Users/Harm/Downloads/main.c",
-		"/D/work/programming/fps/src/game.cpp",
-		"/D/work/programming/fps/src/opengl.cpp",
-		"/D/work/programming/color-c/src/passive_skill_tree.h",
-		"/D/work/programming/color-c/src/align.cpp",
-		"/D/work/programming/color-c/src/game.i",
-		"/D/work/programming/fps/src/win32_platform_layer.cpp",
-		"/D/work/programming/color-c/src/fragment.glsl",
-		"/D/work/programming/color-c/src/log.txt",
-		"/D/work/programming/fps/src/platform.h",
-		"/D/work/programming/color-c/src/align.h",
-		"/D/work/programming/color-c/src/image.cpp",
-		"/D/work/programming/color-c/color-c.sublime-project",
-		"/D/work/programming/color-c/src/freetype_wrapper.cpp",
-		"/C/Users/Harm/Desktop/current_remedybg/remedybg_0_3_0_6/README.txt",
-		"/D/work/programming/color-c/src/font.h",
-		"/D/work/programming/color-c/src/font.cpp",
-		"/D/work/programming/color-c/data/unit.dat"
+		"/D/work/programming/playground/main.cpp"
 	],
 	"find":
 	{
@@ -804,6 +843,7 @@
 		"height": 164.0,
 		"where_history":
 		[
+			"C:\\color-c\\src, -*.i",
 			"D:\\work\\programming\\color-c\\src, -*.i",
 			"D:\\work\\programming\\color-c\\src",
 			"D:\\work\\programming\\color-c\\src\\[^\\]*.cpp",
@@ -822,9 +862,119 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"color-c",
+			"\\",
+			"WriteLineTo",
+			"test_int",
+			"RingBuffer",
+			"1024",
+			");\n",
+			"ClearArena",
+			"WorkQueue",
+			"WriteLineToFile",
+			"log(",
+			"Introspect",
+			"CreateWorkQu",
+			"const",
+			"DrawText",
+			"u32",
+			"seed",
+			"seed: ",
+			"AllocArena",
+			"GraphIsFullyConnected",
+			"campaign->map.",
+			"game",
+			"indices[1]",
+			"indices[0]",
+			"campaign",
+			"indices[1]",
+			"indices[0]",
+			"CreateTempArray",
+			"Node",
+			"campaign",
+			"param",
+			"#include \"node_graph.h\"",
+			".indices[1]",
+			".indices[0]",
+			"campaign",
+			"SetCa",
+			"SetCamer",
+			"Camera",
+			"SetCamera",
+			"camera_offset",
+			"DrawText",
+			"red",
+			"Connected",
+			", edge_percent",
+			"max_count",
+			"ResizeArray",
+			"75",
+			"edge",
+			"DrawText",
+			"void",
+			"5.f",
+			"RandomU32",
+			"ResizeArray",
+			";\n",
+			"95f",
+			"Resize",
+			"Permanent",
+			"calloc",
+			"malloc",
+			"printf(&header",
+			"printf",
+			"12",
+			"09",
+			"Menu",
+			"AnyKey",
+			"platofrm",
+			"small_text",
+			"small_text3",
+			"Ef ",
+			"\".\"",
+			"fprintf(",
+			"out_file",
+			"Ef ",
+			"mode",
+			"Mode",
+			"Pressed",
+			"u8 key",
+			"Pressed",
+			"StringFromToken",
+			"Token",
+			"StringFrom",
+			"VirtualKey_userstrings",
+			"win32_GetFileSize",
+			"points to location",
+			"LoadFile",
+			"token = {",
+			"token =",
+			"NextToken",
+			"LoadFileIntoSizedBufferAndNullTerminate",
+			"platform",
+			"Reserved",
+			"Pressed(vk::lmb)",
+			"bind",
+			"esc",
+			"Esc",
+			"esc",
+			"exit_requested",
+			"esc",
+			"LineSize",
+			"UpdateMainMenu",
+			"main_menu",
+			"ElementAt",
+			"GenerateAbilityTierText",
+			"tier->",
+			"tier",
+			"effect.target_class",
+			"GetIndexByName",
+			"^",
+			"hovered",
+			"effect.target_class",
 			"last_frame",
 			"show_preview",
 			"Battle",
@@ -842,117 +992,7 @@
 			"InitLcgSystemSeed",
 			"DrawAbilityInfoBox",
 			"DrawAbilityInf",
-			"\\t",
-			"unit_slots",
-			"slot",
-			"enemy",
-			"freetype",
-			"F1",
-			"&game->input",
-			"input::global_input",
-			"preview_damage_timer",
-			"Preview",
-			"mStringify",
-			"math",
-			"Preview",
-			"BattleEvent",
-			"ValidTarget",
-			"intents",
-			"enemy intents",
-			"battle->intents",
-			"battle->preview_events",
-			"struct Id",
-			"return",
-			"struct Intent",
-			"GenerateInf",
-			"inferred_target_set",
-			"GenerateBattlePreviewEvent",
-			"AddUnit",
-			"TargetSet",
-			"CheckValidTarget",
-			"CheckValid",
-			"Valid",
-			"intent",
-			"Valid",
-			"GenerateValid",
-			"DrawTargetingInfo",
-			"*",
-			"Breed *",
-			"Unit *",
-			"*",
-			"Test",
-			"\"Test\"",
-			"mFormatString",
-			"TIMED_BLOCK",
-			"TempFormatString",
-			"GetGenerationalIndexFromIndex",
-			"struct UnitSet",
-			"AddUnitToUnitSet",
-			"AddUnitTo",
-			"GenerateInferred",
-			"AddUnitToUnitSet",
-			"struct Id",
-			"ByID",
-			"struct UnitSet",
-			"ability_table_indices",
-			"struct Breed",
-			"schematic",
-			"unit_schematic",
-			"UnitSchematic",
-			"GetUnitFromId",
-			"DrawEnemyIntents",
-			"show_preview",
-			"ApplyBattleEvent",
-			"CheckValidTarget",
-			"class TargetClass",
-			"TargetClass",
-			"struct TargetClass",
-			"null_ability_id",
-			"battle->",
-			"struct UnitSet",
-			"Generate",
-			"struct UnitSet",
-			"begin",
-			"struct UnitSet",
-			"UnitSet",
-			"struct TraitSet",
-			"Id<Unit> target_id : intent.targets)\n                {\n                    Unit *target = GetUnitFromId(target_id);\n                    if(!target) continue;\n                    Unit *target_unit = UnitAtIndex(intent.targets, i);",
-			"struct Event",
-			"TableIndex",
-			"ById",
-			"index",
-			"id",
-			"GetAbilityByGen",
-			"ByGenerationalIndex",
-			"struct UnitSet",
-			".\n",
-			"mFormat",
-			"struct UnitSet",
-			"struct BattleEvent",
-			"caster_index",
-			"Table",
-			"TableIndex",
-			"template",
-			"table.h",
-			"TableIndex",
-			"SeekMatchingBracket",
-			"struct Intent",
-			"targets",
-			"NextToken",
-			"[]",
-			"InterpretTokenAsMetaType",
-			"const Ability *s",
-			"Comma",
-			"Confirm",
-			"Semicolon",
-			"malloc",
-			"SkipWhitespaceAndComments",
-			"Effe",
-			"struct Effe",
-			"Introspect",
-			"MemberOffset",
-			"struct UnitSet",
-			"GenerateBattlePreviewEvent"
+			"\\t"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -960,6 +1000,30 @@
 		"regex": false,
 		"replace_history":
 		[
+			"/",
+			"graph->",
+			"b",
+			"a",
+			"graph",
+			"b",
+			"a",
+			"graph",
+			"params",
+			".b",
+			".a",
+			"graph",
+			", edge_percent, &t, &u",
+			", edge_percent, &t, &t",
+			"cam_move_speed",
+			"fprintf(&",
+			"in_file",
+			"KeyBind keybind",
+			"LineHeight",
+			"tier.",
+			"tc",
+			"GetIndexFromName",
+			"selected",
+			"tc",
 			"input",
 			"ipnut",
 			"UnitSet",
@@ -1063,20 +1127,7 @@
 			"label",
 			"0.5f",
 			"0.f",
-			"1.f",
-			"0.f,",
-			"128.f",
-			"0.f",
-			"1.f",
-			"} break;",
-			": {",
-			"case ",
-			"uv_",
-			"color_",
-			"_RenderUtf32Char",
-			"color_",
-			"color_vao",
-			"uv_"
+			"1.f"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1087,8 +1138,174 @@
 	"groups":
 	[
 		{
+			"selected": 3,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/win32_platform.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26818,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23698,
+								23698
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 10759.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 459,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										133,
+										140
+									],
+									[
+										371,
+										378
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								137,
+								137
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/meta.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28372,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10236,
+								10236
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 6422.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "build/b.bat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1504,
+								1504
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 40,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		},
 		{
@@ -1096,31 +1313,32 @@
 			"sheets":
 			[
 				{
-					"buffer": 0,
-					"file": "src/array.h",
+					"buffer": 2,
+					"file": "src/meta.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1032,
+						"buffer_size": 28372,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								373,
-								373
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -1154,7 +1372,7 @@
 		"cols":
 		[
 			0.0,
-			0.4275,
+			0.54875,
 			1.0
 		],
 		"rows":
@@ -1163,10 +1381,10 @@
 			1.0
 		]
 	},
-	"menu_visible": true,
+	"menu_visible": false,
 	"output.exec":
 	{
-		"height": 231.0
+		"height": 213.0
 	},
 	"output.find_results":
 	{
@@ -1186,52 +1404,484 @@
 		"selected_items":
 		[
 			[
+				"metac",
+				"src\\meta.cpp"
+			],
+			[
+				"bb",
+				"build\\b.bat"
+			],
+			[
+				"abilityd",
+				"data\\ability.dat"
+			],
+			[
+				"log",
+				"logs\\log.txt"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"log2",
+				"logs\\log2.txt"
+			],
+			[
+				"criti",
+				"logs\\critical.log"
+			],
+			[
+				"inc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"onst",
+				"src\\const.h"
+			],
+			[
+				"ringbu",
+				"src\\ring_buffer.h"
+			],
+			[
+				"win",
+				"build\\win32_platform.i"
+			],
+			[
+				"mac",
+				"src\\macros.h"
+			],
+			[
+				"work_e",
+				"src\\work_entry.h"
+			],
+			[
+				"plat",
+				"src\\platform.h"
+			],
+			[
+				"mem",
+				"src\\memory.h"
+			],
+			[
 				"array",
-				"src\\array.h"
+				"src\\array.cpp"
 			],
 			[
-				"string",
-				"src\\string.cpp"
-			],
-			[
-				"memory",
-				"src\\memory.cpp"
-			],
-			[
-				"gameh",
-				"src\\game.h"
+				"node",
+				"src\\node_graph.cpp"
 			],
 			[
 				"game",
 				"src\\game.cpp"
 			],
 			[
-				"unith",
-				"src\\unit.h"
+				"logt",
+				"logs\\log.txt"
 			],
 			[
-				"todo",
-				"_\\todo.txt"
+				"memory",
+				"src\\memory.h"
 			],
 			[
-				"imguih",
-				"src\\imgui.h"
+				"meta",
+				"src\\meta.cpp"
 			],
 			[
-				"imgui",
-				"src\\imgui.cpp"
+				"macr",
+				"src\\macros.h"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"win32",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"logc",
+				"src\\log.cpp"
+			],
+			[
+				"memr",
+				"src\\memory.cpp"
+			],
+			[
+				"platfor",
+				"src\\platform.h"
+			],
+			[
+				"include",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"freetype",
+				"src\\freetype_wrapper.h"
+			],
+			[
+				"gamecin",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"win32i",
+				"build\\win32_platform.i"
+			],
+			[
+				"camp",
+				"src\\campaign.h"
+			],
+			[
+				"win32pla",
+				"build\\win32_platform.i"
+			],
+			[
+				".i",
+				"build\\game.i"
+			],
+			[
+				"arrayh",
+				"src\\array.h"
 			],
 			[
 				"const",
 				"src\\const.h"
 			],
 			[
+				"inclu",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"geom",
+				"src\\geometry.cpp"
+			],
+			[
+				"main",
+				"src\\main_menu.cpp"
+			],
+			[
+				"gamest",
+				"src\\game_state.h"
+			],
+			[
+				"gamecode",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"arrayc",
+				"src\\array.cpp"
+			],
+			[
+				"timer",
+				"src\\timer.h"
+			],
+			[
+				"rand",
+				"src\\random.cpp"
+			],
+			[
+				"random",
+				"src\\random.cpp"
+			],
+			[
+				"uv",
+				"src\\uv_vertex.glsl"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"colorfra",
+				"src\\color_fragment.glsl"
+			],
+			[
+				"color_v",
+				"src\\color_vertex.glsl"
+			],
+			[
+				"uv_ver",
+				"src\\uv_vertex.glsl"
+			],
+			[
+				"uv_fr",
+				"src\\uv_fragment.glsl"
+			],
+			[
+				"util",
+				"src\\util.cpp"
+			],
+			[
+				"vec",
+				"src\\vec.h"
+			],
+			[
+				"drawc",
+				"src\\draw.cpp"
+			],
+			[
+				"cmap",
+				"src\\campaign.h"
+			],
+			[
+				"campa",
+				"src\\campaign.cpp"
+			],
+			[
+				"inputc",
+				"src\\input.cpp"
+			],
+			[
+				"inputh",
+				"src\\input.h"
+			],
+			[
+				"inluc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"metacp",
+				"src\\meta.cpp"
+			],
+			[
+				"metapr",
+				"src\\meta_print.h"
+			],
+			[
+				"keybn",
+				"src\\keybinds.h"
+			],
+			[
+				"batt",
+				"src\\battle.cpp"
+			],
+			[
+				"debug",
+				"src\\debug.cpp"
+			],
+			[
+				"imgui",
+				"src\\imgui.cpp"
+			],
+			[
+				"render",
+				"src\\text_render.cpp"
+			],
+			[
+				"gamse",
+				"src\\game_state.h"
+			],
+			[
+				"vech",
+				"src\\vec.h"
+			],
+			[
+				"todo",
+				"_\\todo.txt"
+			],
+			[
+				"txt",
+				"build\\freetype-2.9.1\\docs\\FTL.TXT"
+			],
+			[
+				"lot",
+				"logs\\log.txt"
+			],
+			[
+				"keybin",
+				"src\\keybinds.h"
+			],
+			[
 				"textre",
 				"src\\text_render.cpp"
 			],
 			[
+				"gamcode",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"text",
+				"src\\text_render.cpp"
+			],
+			[
+				"metatext",
+				"src\\meta_text_parsing.h"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"metaprin",
+				"src\\meta_print.cpp"
+			],
+			[
+				"metaprint",
+				"src\\meta_print.cpp"
+			],
+			[
+				"metaprinth",
+				"src\\meta_print.h"
+			],
+			[
+				"gamesta",
+				"src\\game_state.h"
+			],
+			[
+				"keybind",
+				"src\\keybinds.h"
+			],
+			[
+				"bettertex",
+				"src\\better_text_parsing.cpp"
+			],
+			[
+				"textpars",
+				"src\\text_parsing.cpp"
+			],
+			[
+				"battle",
+				"src\\battle.cpp"
+			],
+			[
+				"stringc",
+				"src\\string.cpp"
+			],
+			[
+				"betterte",
+				"src\\better_text_parsing.cpp"
+			],
+			[
+				"platf",
+				"src\\platform.h"
+			],
+			[
+				"ogt",
+				"src\\oscillating_timer.cpp"
+			],
+			[
+				"texre",
+				"src\\text_render.cpp"
+			],
+			[
+				"debugc",
+				"src\\debug.cpp"
+			],
+			[
+				"keybindsh",
+				"src\\keybinds.h"
+			],
+			[
+				"abil",
+				"src\\ability.cpp"
+			],
+			[
+				"unitc",
+				"src\\unit.cpp"
+			],
+			[
+				"default",
+				"data\\default_keybinds.dat"
+			],
+			[
+				"metacpp",
+				"src\\meta.cpp"
+			],
+			[
+				"metapars",
+				"src\\meta_text_parsing.h"
+			],
+			[
+				"keybinds",
+				"src\\keybinds.cpp"
+			],
+			[
+				"targetc",
+				"src\\target_class.h"
+			],
+			[
+				"editorh",
+				"src\\editor.h"
+			],
+			[
 				"battelh",
 				"src\\battle.h"
+			],
+			[
+				"debugtim",
+				"logs\\DebugTimings.txt"
+			],
+			[
+				"TargetS",
+				"src\\target_class.h"
+			],
+			[
+				"gamecodeinc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"mainmenu",
+				"src\\main_menu.h"
+			],
+			[
+				"consth",
+				"src\\const.h"
+			],
+			[
+				"textrend",
+				"src\\text_render.h"
+			],
+			[
+				"tablec",
+				"src\\table.cpp"
+			],
+			[
+				"battelc",
+				"src\\battle.cpp"
+			],
+			[
+				"argetclas",
+				"src\\target_class.h"
+			],
+			[
+				"unitcp",
+				"src\\unit.cpp"
+			],
+			[
+				"TargetClass",
+				"src\\target_class.h"
+			],
+			[
+				"abilityda",
+				"data\\ability.dat"
+			],
+			[
+				"effecth",
+				"src\\effect.h"
+			],
+			[
+				"battleh",
+				"src\\battle.h"
+			],
+			[
+				"abilityh",
+				"src\\ability.h"
+			],
+			[
+				"effe",
+				"src\\effect.h"
+			],
+			[
+				"metap",
+				"src\\meta_print.cpp"
+			],
+			[
+				"unith",
+				"src\\unit.h"
+			],
+			[
+				"imguih",
+				"src\\imgui.h"
 			],
 			[
 				"todos",
@@ -1242,32 +1892,8 @@
 				"data\\ability.dat"
 			],
 			[
-				"logt",
-				"logs\\log.txt"
-			],
-			[
-				"log",
-				"src\\log.cpp"
-			],
-			[
-				"rand",
-				"src\\random.cpp"
-			],
-			[
 				"breed",
 				"data\\breed.dat"
-			],
-			[
-				"gamec",
-				"src\\game.cpp"
-			],
-			[
-				"vec",
-				"src\\vec.h"
-			],
-			[
-				"battleh",
-				"src\\battle.h"
 			],
 			[
 				"todoses",
@@ -1278,424 +1904,16 @@
 				"src\\freetype_wrapper.h"
 			],
 			[
-				"text",
-				"src\\text_render.cpp"
-			],
-			[
 				"debugh",
 				"src\\debug.h"
-			],
-			[
-				"debugc",
-				"src\\debug.cpp"
 			],
 			[
 				"input",
 				"src\\input.cpp"
 			],
 			[
-				"win32",
-				"src\\win32_platform.cpp"
-			],
-			[
 				"osc",
 				"src\\oscillating_timer.h"
-			],
-			[
-				"timerh",
-				"src\\timer.h"
-			],
-			[
-				"metac",
-				"src\\meta.cpp"
-			],
-			[
-				"macro",
-				"src\\macros.h"
-			],
-			[
-				"math",
-				"src\\math.cpp"
-			],
-			[
-				"table",
-				"src\\table.cpp"
-			],
-			[
-				"logc",
-				"src\\log.cpp"
-			],
-			[
-				"arrayc",
-				"src\\array.cpp"
-			],
-			[
-				"bb",
-				"build\\b.bat"
-			],
-			[
-				"traitset",
-				"src\\traitset.h"
-			],
-			[
-				"ability",
-				"data\\ability.dat"
-			],
-			[
-				"abilityh",
-				"src\\ability.h"
-			],
-			[
-				"effecth",
-				"src\\effect.h"
-			],
-			[
-				"unitc",
-				"src\\unit.cpp"
-			],
-			[
-				"abilty",
-				"data\\ability.dat"
-			],
-			[
-				"tableh",
-				"src\\table.h"
-			],
-			[
-				"dat",
-				"data\\breed.dat"
-			],
-			[
-				"utilc",
-				"src\\util.cpp"
-			],
-			[
-				"editroh",
-				"src\\editor.h"
-			],
-			[
-				"tablec",
-				"src\\table.cpp"
-			],
-			[
-				"arrayh",
-				"src\\array.h"
-			],
-			[
-				"editor",
-				"src\\editor.cpp"
-			],
-			[
-				"gl",
-				"src\\global.h"
-			],
-			[
-				"effect",
-				"src\\effect.h"
-			],
-			[
-				"battec",
-				"src\\battle.cpp"
-			],
-			[
-				"unit",
-				"src\\unit.h"
-			],
-			[
-				"battle",
-				"src\\battle.h"
-			],
-			[
-				"batt",
-				"src\\battle.cpp"
-			],
-			[
-				"editorh",
-				"src\\editor.h"
-			],
-			[
-				"abili",
-				"src\\ability.h"
-			],
-			[
-				"metatext",
-				"src\\meta_text_parsing.h"
-			],
-			[
-				"eff",
-				"src\\effect.h"
-			],
-			[
-				"effec",
-				"src\\effect.h"
-			],
-			[
-				"metaprinth",
-				"src\\meta_print.h"
-			],
-			[
-				"metacp",
-				"src\\meta.cpp"
-			],
-			[
-				"metapr",
-				"src\\meta_print.cpp"
-			],
-			[
-				"stringh",
-				"src\\string.h"
-			],
-			[
-				"meta.cp",
-				"src\\meta.cpp"
-			],
-			[
-				"tab",
-				"src\\table.h"
-			],
-			[
-				"meta",
-				"src\\meta_print.cpp"
-			],
-			[
-				"memry",
-				"src\\memory.cpp"
-			],
-			[
-				"cons",
-				"src\\const.h"
-			],
-			[
-				"abil",
-				"data\\ability.dat"
-			],
-			[
-				"battlec",
-				"src\\battle.cpp"
-			],
-			[
-				"gamei",
-				"build\\game.i"
-			],
-			[
-				"edit",
-				"src\\editor.cpp"
-			],
-			[
-				"c",
-				"src\\const.h"
-			],
-			[
-				"inputh",
-				"src\\input.h"
-			],
-			[
-				"glob",
-				"src\\global.h"
-			],
-			[
-				"onst",
-				"src\\const.h"
-			],
-			[
-				"abilityc",
-				"src\\ability.cpp"
-			],
-			[
-				"globlh",
-				"src\\global.h"
-			],
-			[
-				"datta",
-				"src\\data_table.cpp"
-			],
-			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
-				"memorh",
-				"src\\memory.h"
-			],
-			[
-				"unitsc",
-				"data\\unit_schematic.dat"
-			],
-			[
-				"editr",
-				"src\\editor.cpp"
-			],
-			[
-				"Util",
-				"src\\util.cpp"
-			],
-			[
-				"memoryh",
-				"src\\memory.h"
-			],
-			[
-				"textpar",
-				"src\\text_parsing.h"
-			],
-			[
-				"util",
-				"src\\util.cpp"
-			],
-			[
-				"memor",
-				"src\\memory.h"
-			],
-			[
-				"memr",
-				"src\\memory.cpp"
-			],
-			[
-				"str",
-				"src\\string.cpp"
-			],
-			[
-				"editorc",
-				"src\\editor.cpp"
-			],
-			[
-				"img",
-				"src\\imgui.cpp"
-			],
-			[
-				"con",
-				"src\\const.h"
-			],
-			[
-				"aiblity",
-				"src\\ability.h"
-			],
-			[
-				"abilit",
-				"data\\ability.dat"
-			],
-			[
-				"uti",
-				"src\\util.cpp"
-			],
-			[
-				"mathc",
-				"src\\math.cpp"
-			],
-			[
-				"b",
-				"build\\b.bat"
-			],
-			[
-				"strin",
-				"src\\string.h"
-			],
-			[
-				"eta",
-				"src\\meta_text_parsing.h"
-			],
-			[
-				"memo",
-				"src\\memory.cpp"
-			],
-			[
-				"texted",
-				"src\\text_render.cpp"
-			],
-			[
-				"etai",
-				"build\\meta.i"
-			],
-			[
-				"metai",
-				"build\\meta.i"
-			],
-			[
-				"utf",
-				"src\\utf32string.h"
-			],
-			[
-				"metapri",
-				"src\\meta_print.cpp"
-			],
-			[
-				"wni",
-				"src\\win32_platform.cpp"
-			],
-			[
-				"glo",
-				"src\\global.h"
-			],
-			[
-				"mem",
-				"src\\memory.cpp"
-			],
-			[
-				"textp",
-				"src\\text_parsing.h"
-			],
-			[
-				"stringc",
-				"src\\string.cpp"
-			],
-			[
-				"utf32",
-				"src\\utf32string.cpp"
-			],
-			[
-				"",
-				"src\\draw.cpp"
-			],
-			[
-				"data",
-				"src\\data_table.cpp"
-			],
-			[
-				"win",
-				"src\\win32_platform.cpp"
-			],
-			[
-				"meta_",
-				"src\\meta_print.cpp"
-			],
-			[
-				"text_",
-				"src\\text_render.cpp"
-			],
-			[
-				"mac",
-				"src\\macros.h"
-			],
-			[
-				"eta_pr",
-				"src\\meta_print(manual).cpp"
-			],
-			[
-				"prin",
-				"src\\meta_print.h"
-			],
-			[
-				"metate",
-				"src\\meta_text_parsing.cpp"
-			],
-			[
-				"macr",
-				"src\\macros.h"
-			],
-			[
-				"stirng",
-				"src\\string.cpp"
-			],
-			[
-				"textpars",
-				"src\\text_parsing.cpp"
-			],
-			[
-				"strings",
-				"src\\strings.h"
-			],
-			[
-				"freety",
-				"src\\freetype_wrapper.h"
 			]
 		],
 		"width": 0.0
@@ -1718,7 +1936,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

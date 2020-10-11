@@ -8,7 +8,16 @@ AllocArena()
 	arena.end = (u8*)arena.start + memory::arena_size;
 	arena.current = arena.start;
 
+	++game->number_of_arenas_allocated;
+
 	return arena;
+}
+
+void
+FreeArena(Arena *arena)
+{
+	if(!arena->start) return;
+	platform->FreeMemory(arena->start);
 }
 
 void
@@ -27,6 +36,8 @@ ClearArena(Arena *arena)
 		}
 	#endif
 	arena->current = arena->start;
+
+	arena->allocs_since_reset = 0;
 }
 
 size_t
@@ -48,14 +59,14 @@ ScratchString(int size)
 
 	if(size > memory::arena_size)
 	{
-		log("ScratchString() tried to allocate a string larger than an arena. Ignoring request.");
+		Log("ScratchString() tried to allocate a string larger than an arena. Ignoring request.");
 		return nullptr;
 	}
 
 	if(ArenaBytesRemaining(memory::per_frame_arena) < size)
 	{
 #if 0
-		log("memory::per_frame_arena tried to allocate past its end. It's not large enough. \
+		Log("memory::per_frame_arena tried to allocate past its end. It's not large enough. \
 To avoid overflow, we're resetting the pointer back to the beginning, but this will\
 cause other scratch data to be overwritten before the frame ends.");
 #endif
@@ -73,13 +84,13 @@ AllocFromArena(Arena *arena, size_t byte_count, bool zero)
 {
 	if(byte_count > memory::arena_size)
 	{
-		log(__FUNCTION__" tried to allocate a memory block larger than an arena. Ignoring request.");
+		Log(__FUNCTION__" tried to allocate a memory block larger than an arena. Ignoring request.");
 		return nullptr;
 	}
 
 	if(ArenaBytesRemaining(*arena) < byte_count)
 	{
-		log("CRITICAL ERROR: " __FUNCTION__ "() tried to allocate past end of permanent storage. We'll fall back on malloc() "
+		Log("CRITICAL ERROR: " __FUNCTION__ "() tried to allocate past end of permanent storage. We'll fall back on malloc() "
 			"here in the release build just to be a bit error-resistant, but this is a serious error "
 			"and we might see memory leaks as a result.");
 
@@ -100,6 +111,8 @@ AllocFromArena(Arena *arena, size_t byte_count, bool zero)
 			*(((u8*)p)+i) = 0;
 		}
 	}
+
+	++arena->allocs_since_reset;
 
 	return p;
 }

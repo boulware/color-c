@@ -10,6 +10,15 @@ CopyMemoryBlock(void *dst, void *src, int count) {
 	}
 }
 
+void
+ZeroMemoryBlock(void *dst, int byte_count)
+{
+	for(int i=0; i<byte_count; ++i)
+	{
+		((u8*)dst)[i] = 0;
+	}
+}
+
 bool
 CompareBytesN(const void *a, const void *b, size_t count)
 {
@@ -120,7 +129,7 @@ TempFormatString(const char *fmt, va_list args)
 	int formatted_length = vsprintf(formatted_string, fmt, args);
 	if(formatted_length > c::max_formatted_string_length)
 	{
-		log(__FUNCTION__ " received a string longer (after applying formatting) "
+		Log(__FUNCTION__ " received a string longer (after applying formatting) "
 			"than c::max_formatted_string_length (%d). "
 			"The string is still formatted, but clipped to max formatted string length.",
 			c::max_formatted_string_length);

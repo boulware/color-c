@@ -13,6 +13,9 @@ struct Unit;
 
 namespace c
 {
+	// Threading
+	u32 mutex_timeout_ms = 1;
+
 	// Colors
 	const Color red 	= {1.f,0.f,0.f,1.f};
 	const Color green 	= {0.f,1.f,0.f,1.f};
@@ -234,6 +237,7 @@ namespace c
 	const float fdg_friction             = 0.99f;
 
 	const float max_speed = 2.f;
+	const float semi_stable_speed = 10.f;
 
 	// const Vec2f node_size = {40.f, 40.f};
 	// const float fdg_edge_length          = 100.f;

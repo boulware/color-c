@@ -9,21 +9,21 @@ bool ActiveContainerIsValid()
 	// Check that the active_container isn't nullptr
 	if(imgui::active_container == nullptr)
 	{
-		log("imgui::active_container not set when it was expected to be.");
+		Log("imgui::active_container not set when it was expected to be.");
 		is_valid = false;
 	}
 
 	// Check that the label font for the button layout is init'd.
 	if(!ValidFont(imgui::active_container->button_layout.label_layout.font))
 	{
-		log("imgui::active_container->button_layout has no font loaded when it was expected to have one.");
+		Log("imgui::active_container->button_layout has no font loaded when it was expected to have one.");
 		is_valid = false;
 	}
 
 	// Check that the text font for the text entry layout is init'd.
 	if(!ValidFont(imgui::active_container->text_entry_layout.text_layout.font))
 	{
-		log("imgui::active_container->text_layout has no font loaded when it was expected to have one.");
+		Log("imgui::active_container->text_layout has no font loaded when it was expected to have one.");
 		is_valid = false;
 	}
 

@@ -1,6 +1,7 @@
 #include "string.h"
 
 #include "text_parsing.h"
+#include "util.h"
 
 char &CharAt(String *string, u32 index)
 {
@@ -47,7 +48,7 @@ InsertChar(String *string, char inserted_char, int pos)
 	if(StringFull(*string)) return false;
 	if(pos < 0 or pos > string->length)
 	{
-		if(c::verbose_error_logging) log(__FUNCTION__ "() received invalid pos for string (pos=%d)", pos);
+		if(c::verbose_error_logging) Log(__FUNCTION__ "() received invalid pos for string (pos=%d)", pos);
 		return false;
 	}
 
@@ -94,7 +95,7 @@ DeleteRange(String *string, int start, int end)
 	if(start >= end or StringEmpty(*string)) return false;
 	if(start < 0 or start > string->length or end < 0 or end > string->length)
 	{
-		if(c::verbose_error_logging) log(__FUNCTION__ "() received invalid indices for string (start=%d, end=%d)", start, end);
+		if(c::verbose_error_logging) Log(__FUNCTION__ "() received invalid indices for string (start=%d, end=%d)", start, end);
 		return false;
 	}
 
@@ -272,7 +273,7 @@ Utf8ToUtf32(String string, int index, u32 *utf32_char)
 	}
 	else
 	{
-		//log("Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.", char_code);
+		//Log("Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.", char_code);
 		return false;
 	}
 

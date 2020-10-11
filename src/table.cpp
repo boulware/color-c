@@ -55,7 +55,7 @@ CreateEntry(Table<Type> *table)
 	if(table->entry_count >= table->max_entry_count)
 	{
 		// @unsure: does the mStringify macro happen before or after templatization?
-		log("[%s] Table couldn't create a requested entry because it was full.", mStringify(Type));
+		Log("[%s] Table couldn't create a requested entry because it was full.", mStringify(Type));
 		return Id<Type>{.index = 0, .generation = 0};
 	}
 

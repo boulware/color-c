@@ -10,4 +10,7 @@ struct WindowContext
 	HGLRC rc;
 };
 
+void *win32_AllocateMemory(size_t size);
+bool win32_FreeMemory(void *p);
+
 #endif

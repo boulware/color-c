@@ -3,6 +3,8 @@
 Token
 NextToken(Buffer *buffer)
 {
+	if(BufferBytesRemaining(*buffer) <= 0) return {};
+
 	Token token = {};
 	char *&p = buffer->p;
 

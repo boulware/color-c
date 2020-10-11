@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "better_text_parsing.h"
 #include "bitmap.h"
+#include "buffer.h"
 #include "campaign.h"
 #include "color.h"
 #include "const.h"
@@ -11,10 +12,12 @@
 #include "draw.h"
 #include "editor.h"
 #include "effect.h"
+#include "font_loading.h"
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
 #include "game_state.h"
+#include "generate_node_graph_params.h"
 #include "geometry.h"
 #include "global.h"
 #include "image.h"
@@ -35,6 +38,7 @@
 #include "passive_skill_tree.h"
 #include "platform.h"
 #include "random.h"
+#include "ring_buffer.h"
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
@@ -49,6 +53,7 @@
 #include "utf32string.h"
 #include "util.h"
 #include "vec.h"
+#include "work_entry.h"
 String MetaString(const AbilityTier *s);
 
 String MetaString(const Ability *s);
@@ -72,9 +77,7 @@ String MetaString(const BgraPixel *s);
 
 String MetaString(const Bitmap *s);
 
-String MetaString(const Node *s);
-
-String MetaString(const Edge *s);
+String MetaString(const Buffer *s);
 
 String MetaString(const Campaign *s);
 
@@ -114,6 +117,8 @@ String MetaString(const Game *s);
 
 String MetaString(const GameState *s);
 
+String MetaString(const GenerateNodeGraph_Params *s);
+
 String MetaString(const ListPanelLayout *s);
 
 String MetaString(const ListPanelResponse *s);
@@ -146,6 +151,18 @@ String MetaString(const MainMenu *s);
 
 String MetaString(const Arena *s);
 
+String MetaString(const Node *s);
+
+String MetaString(const Edge *s);
+
+String MetaString(const NodeGraph *s);
+
+String MetaString(const ForceSimParams *s);
+
+String MetaString(const ForceSimInvalidationReason *s);
+
+String MetaString(const ForceSimState *s);
+
 String MetaString(const OptionsMenu *s);
 
 String MetaString(const OscillatingTimer *s);
@@ -157,6 +174,8 @@ String MetaString(const PassiveNode *s);
 String MetaString(const PassiveSkillTree *s);
 
 String MetaString(const LCG *s);
+
+String MetaString(const RingBuffer *s);
 
 String MetaString(const Sprite *s);
 
@@ -174,8 +193,6 @@ String MetaString(const Table<Type> *s);
 String MetaString(const TargetClass *s);
 
 String MetaString(const TestMode *s);
-
-String MetaString(const Buffer *s);
 
 String MetaString(const TokenType_ *s);
 

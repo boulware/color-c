@@ -76,7 +76,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 	bool header_ok = CompareBytesN(file.data, png_header, sizeof(png_header));
 	if(!header_ok)
 	{
-		log("LoadPngFromFile() was given a file with an invalid PNG file header.");
+		Log("LoadPngFromFile() was given a file with an invalid PNG file header.");
 		success = false;
 		goto FINAL;
 	}
@@ -92,7 +92,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 	ByteSwapIHDR(&ihdr);
 	if(!CompareBytesN(chunk.type, "IHDR", 4))
 	{
-		log("First PNG chunk was not IHDR (file: \"%s\")", filename);
+		Log("First PNG chunk was not IHDR (file: \"%s\")", filename);
 		success = false;
 		goto FINAL;
 	}
@@ -104,7 +104,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 		ihdr.filter_method != 0 or
 		ihdr.interlace_method != 0)
 	{
-		log("PNG decoder doesn't support format (format: color_type %u, compression %u, filter %u, interlace %u) (file: \"%s\")",
+		Log("PNG decoder doesn't support format (format: color_type %u, compression %u, filter %u, interlace %u) (file: \"%s\")",
 			ihdr.color_type, ihdr.compression_method, ihdr.filter_method, ihdr.interlace_method, filename);
 		success = false;
 		goto FINAL;
@@ -121,7 +121,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 		{
 			// width*height pixels, 4 bytes per pixel, 1 filter byte per row
 			u32 expected_byte_count = 4 * ihdr.width * ihdr.height + ihdr.height;
-			log("IDAT size: %u (expected: %u)", chunk.length, expected_byte_count);
+			Log("IDAT size: %u (expected: %u)", chunk.length, expected_byte_count);
 			u8 *pixels = (u8*)chunk.data + 1; // Skip filter byte
 		}
 		else if(CompareBytesN(chunk.type, "IEND", 4))
@@ -130,7 +130,7 @@ LoadPngFileIntoTexture(const char *filename, GLuint *texture)
 		}
 		else
 		{
-			log("Skipping unsupported chunk type (%.4s) in PNG file \"%s\"", chunk.type, filename);
+			Log("Skipping unsupported chunk type (%.4s) in PNG file \"%s\"", chunk.type, filename);
 		}
 
 		file.p += png::chunk_preamble_size + chunk.length + png::crc_size;

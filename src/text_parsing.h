@@ -4,37 +4,14 @@
 #include "types.h"
 #include "memory.h"
 #include "string.h"
+#include "buffer.h"
 
 const u8 utf8_mask_1byte = 0b0;
 const u8 utf8_mask_2byte = 0b110;
 const u8 utf8_mask_3byte = 0b1110;
 const u8 utf8_mask_4byte = 0b11110;
 
-struct Buffer
-{
-	char *data;
-	char *p; // current position within *data
-	size_t byte_count; // Generally, this will hide the fact that Buffer is null-terminated.
-					   // byte_count should represent the number of bytes of 'real' data.
-					   // As such, malloc()s should ask for byte_count+1 bytes.
-};
 
-// struct StringBuffer
-// {
-// 	const char *data;
-// 	const char *p; // current position within *data
-// 	size_t byte_count; // Generally, this will hide the fact that Buffer is null-terminated.
-// 					   // byte_count should represent the number of bytes of 'real' data.
-// 					   // As such, malloc()s should ask for byte_count+1 bytes.
-// };
-
-// StringBuffer CreateStringBuffer(const char *string);
-
-Buffer BufferFromCString(const char *string);
-
-void FreeBuffer(Buffer *buffer);
-
-size_t BufferBytesRemaining(Buffer buffer);
 
 enum class TokenType_
 {

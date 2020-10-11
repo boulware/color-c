@@ -79,7 +79,7 @@ TickEditor(Editor *editor)
 {
 	if(!editor->init)
 	{
-		log("Editor was not initialized. Skipping " __FUNCTION__);
+		Log("Editor was not initialized. Skipping " __FUNCTION__);
 		return GameState::None;
 	}
 

@@ -19,7 +19,7 @@ namespace random
 };
 
 void InitLcgSetSeed(LCG *lcg, u32 seed);
-void InitLcgSystemSeed(LCG *lcg);
+u64 InitLcgSystemSeed(LCG *lcg);
 void Seed();
 u32 RandomU32(u32 min, u32 max);
 

@@ -103,12 +103,12 @@ Bitmap LoadArgbBitmapFromFile(const char *filename)
 	bmp::Header header = *(bmp::Header*)buffer.data;
 	if(!CompareBytesN(header.signature, "BM", 2))
 	{
-		log("Invalid file format signature in bitmap file (\"%s\")", filename);
+		Log("Invalid file format signature in bitmap file (\"%s\")", filename);
 		goto FINAL;
 	}
 	if(header.bits_per_pixel != 32)
 	{
-		log("Unsupported bmp file format (format: bpp %u, compression %u) (file: \"%s\")",
+		Log("Unsupported bmp file format (format: bpp %u, compression %u) (file: \"%s\")",
 			header.bits_per_pixel, header.compression, filename);
 		goto FINAL;
 	}

@@ -19,6 +19,7 @@ Game *game = nullptr;
 
 #include "meta_print.cpp"
 
+#include "ability.cpp"
 #include "game_code_include.cpp"
 
 extern "C" void
@@ -201,6 +202,9 @@ GameUpdateAndRender()
 {
     //TIMED_BLOCK;
     debug::timed_block_array_size = __COUNTER__;
+    ClearArena(&memory::per_frame_arena);
+
+    //DrawText(c::def_text_layout, {}, "%d", game->
 
     // SetDrawDepth(1.f);
     // DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(&game->pointer_cursor));
@@ -231,8 +235,6 @@ GameUpdateAndRender()
         else OPTIMIZING_FUNCTION = SLOW_FUNCTION;
         #endif
     }
-
-    ClearArena(&memory::per_frame_arena);
 
     // Reset timed block data
     if(Pressed(vk::R))
@@ -313,10 +315,13 @@ GameUpdateAndRender()
         DrawTimedBlockData();
     }
 
+    //DrawTextMultiline(c::def_text_layout, {}, "#: %d", game->number_of_arenas_allocated);
+
     // Log timed block data and exit game.
+    #if 0
     if(game->exit_requested)
     {
-        LogToFile("logs/DebugTimings.txt", "-----------------------");
+       LogToFile("logs/DebugTimings.txt", "-----------------------");
         for(int i=0; i<debug::timed_block_array_size; i++)
         {
             TimedBlockEntry *entry = TIMED_BLOCK_ARRAY+i;
@@ -342,6 +347,7 @@ GameUpdateAndRender()
 
         }
     }
+    #endif
 }
 
 TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

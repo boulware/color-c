@@ -34,7 +34,7 @@ LoadKeybindsFromFile(const char *filename)
 
 		if(keybind_index < 0)
 		{
-			log(__FUNCSIG__"(): invalid syntax in file \"%s\"", filename);
+			Log(__FUNCSIG__"(): invalid syntax in file \"%s\"", filename);
 		}
 
 		for(u8 i=0; i<ArrayCount(VirtualKey_userstrings); ++i)

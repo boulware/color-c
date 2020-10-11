@@ -43,7 +43,7 @@ InsertChar(Utf32String *string, u32 inserted_char, int pos)
 	if(StringFull(*string)) return false;
 	if(pos < 0 or pos > string->length)
 	{
-		if(c::verbose_error_logging) log(__FUNCTION__ "() received invalid pos for string (pos=%d)", pos);
+		if(c::verbose_error_logging) Log(__FUNCTION__ "() received invalid pos for string (pos=%d)", pos);
 		return false;
 	}
 
@@ -89,7 +89,7 @@ DeleteRange(Utf32String *string, int start, int end)
 	if(start >= end or StringEmpty(*string)) return false;
 	if(start < 0 or start > string->length or end < 0 or end > string->length)
 	{
-		if(c::verbose_error_logging) log(__FUNCTION__ "() received invalid indices for string (start=%d, end=%d)", start, end);
+		if(c::verbose_error_logging) Log(__FUNCTION__ "() received invalid indices for string (start=%d, end=%d)", start, end);
 		return false;
 	}
 

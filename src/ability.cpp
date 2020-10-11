@@ -50,7 +50,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 			if(parsed_tier != cur_tier)
 			{
 				valid_ability_data = false;
-				if(c::verbose_error_logging) log(__FUNCTION__"() encountered invalid ability tier number. Got %d, expected %d", parsed_tier, cur_tier);
+				if(c::verbose_error_logging) Log(__FUNCTION__"() encountered invalid ability tier number. Got %d, expected %d", parsed_tier, cur_tier);
 			}
 
 			ability->tiers += {};
@@ -67,7 +67,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 				if(cur_effect_index >= c::max_effect_count)
 				{
 					valid_ability_data = false;
-					if(c::verbose_error_logging) log(__FUNCTION__"() encountered more effects than max_effect_count.");
+					if(c::verbose_error_logging) Log(__FUNCTION__"() encountered more effects than max_effect_count.");
 				}
 
 				token = NextToken(buffer);
@@ -140,7 +140,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 	{
 		buffer->p = initial;
 		size_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));
-		log("Encountered invalid ability data in buffer at address: %p (\"%.*s\")",
+		Log("Encountered invalid ability data in buffer at address: %p (\"%.*s\")",
 			buffer->p, number_of_bytes_to_print, buffer->p);
 
 		return false;
@@ -179,7 +179,7 @@ LoadAbilityFile(const char *filename, Table<Ability> *table)
 		}
 	}
 
-	//log("Loaded %zu abilities from file: %s", ability_count_loaded, filename);
+	//Log("Loaded %zu abilities from file: %s", ability_count_loaded, filename);
 	FreeBuffer(&file);
 	return true;
 }

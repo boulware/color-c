@@ -369,7 +369,7 @@ CheckOpenGLBinds(const OpenGL *opengl)
 	int fnptr_size = sizeof(void(*)(void));
 	while(p < end) {
 		if(*(void(**)(void))p == nullptr) {
-			log("An OpenGL bind failed.");
+			Log("An OpenGL bind failed.");
 			return false;
 		}
 		p += fnptr_size;

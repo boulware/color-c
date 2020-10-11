@@ -72,7 +72,7 @@ BufferBytesRemaining(Buffer buffer)
 	// p    ---------------------------------->
 	if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)
 	{
-		//log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
+		//Log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
 		return 0;
 	}
 
@@ -90,7 +90,7 @@ BufferBytesRemaining(StringBuffer buffer)
 	// p    ---------------------------------->
 	if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)
 	{
-		//log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
+		//Log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
 		return 0;
 	}
 
@@ -136,7 +136,7 @@ CharToInt(char c)
 {
 	if(!IsDigit(c))
 	{
-		//log("CharToInt() received non-digit character.");
+		//Log("CharToInt() received non-digit character.");
 		return 0;
 	}
 	else
@@ -257,7 +257,7 @@ ParseNextAsS32(Buffer *buffer, s32 *value)
 		}
 		else
 		{
-			//log("ParseNextAsS32() found illegal character (%c)", *buffer->p);
+			//Log("ParseNextAsS32() found illegal character (%c)", *buffer->p);
 			if(start_of_token_found and at_least_one_digit_found)
 			{
 				// We've found the start of the token and interpreted at least one digit, so this s32 is valid.
@@ -504,7 +504,7 @@ NextAsUtf32Char(Buffer *buffer, u32 *utf32_char)
 	}
 	else
 	{
-		//log("Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.", char_code);
+		//Log("Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.", char_code);
 		return false;
 	}
 
@@ -579,7 +579,7 @@ void fprintf(Buffer *buffer, const char *fmt, ...)
 	int formatted_length = vsprintf(formatted_string, fmt, args);
 	if(formatted_length > max_formatted_string_length)
 	{
-		// log(__FUNCTION__ " received a string longer (after applying formatting) "
+		// Log(__FUNCTION__ " received a string longer (after applying formatting) "
 		// 	"than c::max_formatted_string_length (%d). "
 		// 	"The string is still formatted, but clipped to max formatted string length.",
 		// 	max_formatted_string_length);

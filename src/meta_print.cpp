@@ -6,6 +6,7 @@
 #include "battle.h"
 #include "better_text_parsing.h"
 #include "bitmap.h"
+#include "buffer.h"
 #include "campaign.h"
 #include "color.h"
 #include "const.h"
@@ -13,10 +14,12 @@
 #include "draw.h"
 #include "editor.h"
 #include "effect.h"
+#include "font_loading.h"
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
 #include "game_state.h"
+#include "generate_node_graph_params.h"
 #include "geometry.h"
 #include "global.h"
 #include "image.h"
@@ -37,6 +40,7 @@
 #include "passive_skill_tree.h"
 #include "platform.h"
 #include "random.h"
+#include "ring_buffer.h"
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
@@ -51,6 +55,7 @@
 #include "utf32string.h"
 #include "util.h"
 #include "vec.h"
+#include "work_entry.h"
 
 // ---------------FILE START---------------
 // ability.h
@@ -396,10 +401,10 @@ String MetaString(const Bitmap *s)
 }
 
 // ---------------FILE START---------------
-// campaign.h
+// buffer.h
 // ------------------------------------------
 
-String MetaString(const Node *s)
+String MetaString(const Buffer *s)
 {
 	TIMED_BLOCK;
 
@@ -408,40 +413,22 @@ String MetaString(const Node *s)
 	string.max_length = 1024;
 	string.data = ScratchString(string.max_length);
 
-	AppendCString(&string, "Node {\n");
+	AppendCString(&string, "Buffer {\n");
 
-	AppendCString(&string, "  pos: ");
-	AppendString(&string, MetaString(&s->pos));
-	AppendCString(&string, "(Vec2f)\n");
+	AppendCString(&string, "  data: %p (char *)\n", s->data);
 
-	AppendCString(&string, "  vel: ");
-	AppendString(&string, MetaString(&s->vel));
-	AppendCString(&string, "(Vec2f)\n");
+	AppendCString(&string, "  p: %p (char *)\n", s->p);
+
+	AppendCString(&string, "  byte_count: %zu (size_t)\n", s->byte_count);
 
 	AppendCString(&string, "}");
 
 	return string;
 }
 
-String MetaString(const Edge *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Edge {\n");
-
-	AppendCString(&string, "  indices: %p (int[])\n", s->indices);
-
-	AppendCString(&string, "  rest_length: %f (float)\n", s->rest_length);
-
-	AppendCString(&string, "}");
-
-	return string;
-}
+// ---------------FILE START---------------
+// campaign.h
+// ------------------------------------------
 
 String MetaString(const Campaign *s)
 {
@@ -454,37 +441,23 @@ String MetaString(const Campaign *s)
 
 	AppendCString(&string, "Campaign {\n");
 
-	AppendCString(&string, "  root: %p (Node *)\n", s->root);
+	AppendCString(&string, "  arena: ");
+	AppendString(&string, MetaString(&s->arena));
+	AppendCString(&string, "(Arena)\n");
 
-	AppendCString(&string, "  nodes: ");
-	AppendString(&string, MetaString(&s->nodes));
-	AppendCString(&string, "(Array<Node>)\n");
+	AppendCString(&string, "  map_generation_work_queue: %p (WorkQueue *)\n", s->map_generation_work_queue);
 
-	AppendCString(&string, "  edges: ");
-	AppendString(&string, MetaString(&s->edges));
-	AppendCString(&string, "(Array<Edge>)\n");
+	AppendCString(&string, "  generation_finished: %p (bool[])\n", s->generation_finished);
 
-	AppendCString(&string, "  end_index: %d (int)\n", s->end_index);
+	AppendCString(&string, "  restart_counts: %p (int[])\n", s->restart_counts);
 
-	AppendCString(&string, "  drag_start_index: %d (int)\n", s->drag_start_index);
+	AppendCString(&string, "  max_speeds: %p (float[])\n", s->max_speeds);
 
-	AppendCString(&string, "  fdg_running: %d (bool)\n", s->fdg_running);
+	AppendCString(&string, "  maps: %p (NodeGraph[])\n", s->maps);
 
-	AppendCString(&string, "  camera_offset: ");
-	AppendString(&string, MetaString(&s->camera_offset));
-	AppendCString(&string, "(Vec2f)\n");
-
-	AppendCString(&string, "  generation_timer: ");
-	AppendString(&string, MetaString(&s->generation_timer));
-	AppendCString(&string, "(Timer)\n");
-
-	AppendCString(&string, "  generation_finished: %d (bool)\n", s->generation_finished);
-
-	AppendCString(&string, "  max_speed: %f (float)\n", s->max_speed);
-
-	AppendCString(&string, "  graph_fully_connected: %d (bool)\n", s->graph_fully_connected);
-
-	AppendCString(&string, "  generation_count: %d (int)\n", s->generation_count);
+	AppendCString(&string, "  generation_params_template: ");
+	AppendString(&string, MetaString(&s->generation_params_template));
+	AppendCString(&string, "(GenerateNodeGraph_Params)\n");
 
 	AppendCString(&string, "}");
 
@@ -982,6 +955,10 @@ String MetaString(const EffectParams_Steal *s)
 }
 
 // ---------------FILE START---------------
+// font_loading.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
 // freetype.h
 // ------------------------------------------
 
@@ -1092,6 +1069,12 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->red_target_cursor));
 	AppendCString(&string, "(Sprite)\n");
 
+	AppendCString(&string, "  generate_node_graph_params: ");
+	AppendString(&string, MetaString(&s->generate_node_graph_params));
+	AppendCString(&string, "(GenerateNodeGraph_Params)\n");
+
+	AppendCString(&string, "  number_of_arenas_allocated: %d (int)\n", s->number_of_arenas_allocated);
+
 	AppendCString(&string, "  test_float: %f (float)\n", s->test_float);
 
 	AppendCString(&string, "  test_int: %d (int)\n", s->test_int);
@@ -1145,6 +1128,46 @@ String MetaString(const GameState *s)
 			AppendCString(&string, "?????");
 		} break;
 	}
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// generate_node_graph_params.h
+// ------------------------------------------
+
+
+
+String MetaString(const GenerateNodeGraph_Params *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "GenerateNodeGraph_Params {\n");
+
+	AppendCString(&string, "  thread_finished: %p (bool *)\n", s->thread_finished);
+
+	AppendCString(&string, "  restart_count: %p (int *)\n", s->restart_count);
+
+	AppendCString(&string, "  max_speed: %p (float *)\n", s->max_speed);
+
+	AppendCString(&string, "  graph: %p (NodeGraph *)\n", s->graph);
+
+	AppendCString(&string, "  main_path_min: %u (u32)\n", s->main_path_min);
+
+	AppendCString(&string, "  main_path_max: %u (u32)\n", s->main_path_max);
+
+	AppendCString(&string, "  max_linear_branch_length: %d (int)\n", s->max_linear_branch_length);
+
+	AppendCString(&string, "  linear_branch_extension_chance: %f (float)\n", s->linear_branch_extension_chance);
+
+	AppendCString(&string, "  loop_generation_count: %d (int)\n", s->loop_generation_count);
+
+	AppendCString(&string, "}");
 
 	return string;
 }
@@ -1586,6 +1609,8 @@ String MetaString(const LogState *s)
 
 	AppendCString(&string, "  log_strings: %p (char[][])\n", s->log_strings);
 
+	AppendCString(&string, "  queue: %p (WorkQueue *)\n", s->queue);
+
 	AppendCString(&string, "  show_log: %d (bool)\n", s->show_log);
 
 	AppendCString(&string, "}");
@@ -1648,6 +1673,8 @@ String MetaString(const Arena *s)
 
 	AppendCString(&string, "  current: %p (void *)\n", s->current);
 
+	AppendCString(&string, "  allocs_since_reset: %d (int)\n", s->allocs_since_reset);
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -1660,6 +1687,167 @@ String MetaString(const Arena *s)
 // ---------------FILE START---------------
 // node_graph.h
 // ------------------------------------------
+
+String MetaString(const Node *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Node {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  vel: ");
+	AppendString(&string, MetaString(&s->vel));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Edge *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Edge {\n");
+
+	AppendCString(&string, "  a: %d (int)\n", s->a);
+
+	AppendCString(&string, "  b: %d (int)\n", s->b);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const NodeGraph *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "NodeGraph {\n");
+
+	AppendCString(&string, "  nodes: ");
+	AppendString(&string, MetaString(&s->nodes));
+	AppendCString(&string, "(Array<Node>)\n");
+
+	AppendCString(&string, "  edges: ");
+	AppendString(&string, MetaString(&s->edges));
+	AppendCString(&string, "(Array<Edge>)\n");
+
+	AppendCString(&string, "  start_index: %d (int)\n", s->start_index);
+
+	AppendCString(&string, "  end_index: %d (int)\n", s->end_index);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ForceSimParams *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ForceSimParams {\n");
+
+	AppendCString(&string, "  temp_arena: %p (Arena *)\n", s->temp_arena);
+
+	AppendCString(&string, "  edge_free_length: %f (float)\n", s->edge_free_length);
+
+	AppendCString(&string, "  spring_constant: %f (float)\n", s->spring_constant);
+
+	AppendCString(&string, "  charge_strength: %f (float)\n", s->charge_strength);
+
+	AppendCString(&string, "  friction: %f (float)\n", s->friction);
+
+	AppendCString(&string, "  max_speed: %f (float)\n", s->max_speed);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const ForceSimInvalidationReason *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ForceSimInvalidationReason::");
+	switch(*s)
+	{
+		case(ForceSimInvalidationReason::Unspecified): {
+			AppendCString(&string, "Unspecified");
+		} break;
+		case(ForceSimInvalidationReason::NotFullyConnected): {
+			AppendCString(&string, "NotFullyConnected");
+		} break;
+		case(ForceSimInvalidationReason::MaxSpeedExceeded): {
+			AppendCString(&string, "MaxSpeedExceeded");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const ForceSimState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "ForceSimState {\n");
+
+	AppendCString(&string, "  invalid_state: %d (bool)\n", s->invalid_state);
+
+	AppendCString(&string, "  invalidation_reason: ");
+	AppendString(&string, MetaString(&s->invalidation_reason));
+	AppendCString(&string, "(ForceSimInvalidationReason)\n");
+
+	AppendCString(&string, "  semi_stable: %d (bool)\n", s->semi_stable);
+
+	AppendCString(&string, "  max_speed: %f (float)\n", s->max_speed);
+
+	AppendCString(&string, "  finished: %d (bool)\n", s->finished);
+
+	AppendCString(&string, "  restart_count: %d (int)\n", s->restart_count);
+
+	AppendCString(&string, "  max_restart_count: %d (int)\n", s->max_restart_count);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // options_menu.h
@@ -1797,6 +1985,34 @@ String MetaString(const LCG *s)
 	AppendCString(&string, "  c: %u (u32)\n", s->c);
 
 	AppendCString(&string, "  seed: %u (u32)\n", s->seed);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// ring_buffer.h
+// ------------------------------------------
+
+String MetaString(const RingBuffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "RingBuffer {\n");
+
+	AppendCString(&string, "  next_index_to_read: %zu (size_t)\n", s->next_index_to_read);
+
+	AppendCString(&string, "  next_index_to_write: %zu (size_t)\n", s->next_index_to_write);
+
+	AppendCString(&string, "  size_in_bytes: %zu (size_t)\n", s->size_in_bytes);
+
+	AppendCString(&string, "  data: %p (void *)\n", s->data);
 
 	AppendCString(&string, "}");
 
@@ -2033,28 +2249,6 @@ String MetaString(const TestMode *s)
 // ---------------FILE START---------------
 // text_parsing.h
 // ------------------------------------------
-
-String MetaString(const Buffer *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Buffer {\n");
-
-	AppendCString(&string, "  data: %p (char *)\n", s->data);
-
-	AppendCString(&string, "  p: %p (char *)\n", s->p);
-
-	AppendCString(&string, "  byte_count: %zu (size_t)\n", s->byte_count);
-
-	AppendCString(&string, "}");
-
-	return string;
-}
 
 String MetaString(const TokenType_ *s)
 {
@@ -2645,3 +2839,7 @@ String MetaString(const Rect *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// work_entry.h
+// ------------------------------------------

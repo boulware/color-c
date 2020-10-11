@@ -11,7 +11,7 @@ CompileShaderFromSourceFile(char *filename, GLenum type)
 	bool load_file_result = platform->LoadFileIntoFixedBufferAndNullTerminate(filename, source_text, sizeof(source_text));
 	if(load_file_result == false)
 	{
-		log("Couldn't load shader source file (file didn't exist or source was larger than MAX_SHADER_SOURCE_LENGTH [%d]): %s", MAX_SHADER_SOURCE_LENGTH, filename);
+		Log("Couldn't load shader source file (file didn't exist or source was larger than MAX_SHADER_SOURCE_LENGTH [%d]): %s", MAX_SHADER_SOURCE_LENGTH, filename);
 		return 0;
 	}
 
@@ -26,13 +26,13 @@ CompileShaderFromSourceFile(char *filename, GLenum type)
 	{
 		char compile_info_log[MAX_GL_INFO_LOG_LENGTH];
 		gl->GetShaderInfoLog(shader, sizeof(compile_info_log), nullptr, compile_info_log);
-		log("Failed to compile shader source file (%s):\n%s", filename, compile_info_log);
+		Log("Failed to compile shader source file (%s):\n%s", filename, compile_info_log);
 		gl->DeleteShader(shader);
 		return 0;
 	}
 	else
 	{
-		//log("Successfully compiled shader source file: %s", filename);
+		//Log("Successfully compiled shader source file: %s", filename);
 	}
 
 	return shader;
@@ -53,11 +53,11 @@ LinkShaders(GLuint vert_shader, GLuint frag_shader)
 	{
 		char link_fail_info[MAX_GL_INFO_LOG_LENGTH];
 		gl->GetProgramInfoLog(program, sizeof(link_fail_info), nullptr, link_fail_info);
-		log("Failed to link shader program:\n%s", link_fail_info);
+		Log("Failed to link shader program:\n%s", link_fail_info);
 		return 0;
 	}
 
-	//log("Successfully linked shader program.");
+	//Log("Successfully linked shader program.");
 	return program;
 }
 
@@ -68,12 +68,12 @@ GenerateShaderProgramFromFiles(char *vs_filename, char *fs_filename)
 	GLuint fs = CompileShaderFromSourceFile(fs_filename, GL_FRAGMENT_SHADER);
 	if(vs != 0 and fs != 0)
 	{
-		//log("Successfully generated shader program.");
+		//Log("Successfully generated shader program.");
 		return LinkShaders(vs, fs);
 	}
 	else
 	{
-		log("Failed to generate shader program.");
+		Log("Failed to generate shader program.");
 		if(vs == 0) gl->DeleteShader(vs);
 		if(fs == 0) gl->DeleteShader(fs);
 		return 0;
@@ -84,5 +84,5 @@ void
 LogGlError()
 {
 	GLenum error = gl->GetError();
-	log("Current GL Error Code: %u", error);
+	Log("Current GL Error Code: %u", error);
 }

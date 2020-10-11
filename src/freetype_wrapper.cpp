@@ -8,7 +8,7 @@ InitFreetype(FT_Library *lib)
 		return true;
 	}
 	else {
-		log("Failed to initialize FreeType.");
+		Log("Failed to initialize FreeType.");
 		return false;
 	}
 }
@@ -17,7 +17,7 @@ bool
 CloseFreetype(FT_Library *lib)
 {
 	bool success = !FT_Done_Library(*lib);
-	if(!success) log("Failed to close FreeType.");
+	if(!success) Log("Failed to close FreeType.");
 
 	return success;
 }
@@ -28,7 +28,7 @@ LoadFontFaceFromFile(const char *filename, FT_Library lib)
 	FT_Face face;
 	FT_Error error = FT_New_Face(lib, filename, 0, &face);
 
-	if(error) log("Failed to load font (file: \"%s\")", filename);
+	if(error) Log("Failed to load font (file: \"%s\")", filename);
 
 	return face;
 }

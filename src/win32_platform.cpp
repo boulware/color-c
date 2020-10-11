@@ -21,15 +21,24 @@
 #include "const.h"
 #include "global.h"
 #include "debug.h"
+#include "win32_work_queue.h"
 
 Platform *platform = nullptr;
 OpenGL *gl = nullptr;
 Game *game = nullptr;
 
-#include "log.cpp"
-#include "input.cpp"
-#include "vec.cpp"
-#include "math.cpp"
+WorkQueueSystem g_work_queue_system = {};
+
+// #include "log.cpp"
+// #include "input.cpp"
+// #include "vec.cpp"
+// #include "math.cpp"
+//#include "game_code_include.cpp"
+//#include "text_render.cpp"
+
+#include "platform_include.cpp"
+#include "work_entry.h"
+#include "ring_buffer.h"
 
 static bool QUIT_GAME = false;
 static bool FRAMESTEP = false;
@@ -66,7 +75,7 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN: {
 			if(game == nullptr) return 0;
 
-			log("0x%0*x", 2, (u8)wParam);
+			//Log("0x%0*x", 2, (u8)wParam);
 
 			if(lParam & (1<<30))
 			{ // WM_KEYDOWN caused by key autorepeat
@@ -96,7 +105,7 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if(game == nullptr) return 0;
 
-			log("0x%0*x", 2, (u8)wParam);
+			//Log("0x%0*x", 2, (u8)wParam);
 
 			if(lParam & (1<<30))
 			{ // WM_KEYDOWN caused by key autorepeat
@@ -202,14 +211,14 @@ WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			return 0;
 		};
 		case WM_CHAR: {
-			//log("%u", wParam);
+			//Log("%u", wParam);
 			if(pos_in_translated_stream < ArrayCount(utf32_translated_stream0))
 			{
 				current_translated_stream[pos_in_translated_stream++] = wParam;
 			}
 			else
 			{
-				log("utf32-translated stream in win32 platform layer reached maximum size.");
+				Log("utf32-translated stream in win32 platform layer reached maximum size.");
 			}
 		} break;
 		case WM_INPUTLANGCHANGE: {
@@ -256,6 +265,12 @@ win32_CurrentTime()
 	return count.QuadPart;
 }
 
+u32
+win32_GetCallingThreadId()
+{
+	return GetCurrentThreadId();
+}
+
 float
 win32_TimeElapsedMs(s64 start, s64 end)
 {
@@ -266,6 +281,13 @@ void *
 win32_AllocateMemory(size_t size)
 {
 	return VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+}
+
+// Returns true on success, false otherwise.
+bool
+win32_FreeMemory(void *p)
+{
+	return VirtualFree(p, 0, MEM_RELEASE);
 }
 
 void
@@ -313,13 +335,13 @@ win32_GetFileSize(const char *filename, size_t *size_in_bytes)
 
 	if(file == INVALID_HANDLE_VALUE)
 	{
-		log("Failed to open file to find its size: %s", filename);
+		Log("Failed to open file to find its size: %s", filename);
 		return false;
 	}
 
 	DWORD filesize_high;
 	DWORD filesize_low = GetFileSize(file, &filesize_high);
-	if(filesize_high != 0) log("FileSizeHigh != 0 (%u)", filesize_high);
+	if(filesize_high != 0) Log("FileSizeHigh != 0 (%u)", filesize_high);
 	CloseHandle(file);
 
 	*size_in_bytes = filesize_low;
@@ -336,11 +358,12 @@ win32_WriteLineToFile(char *filename, char *line)
 							 NULL);
 
 	if(file == INVALID_HANDLE_VALUE) {
-		log("Failed to open text file for writing line: %s", filename);
+		//Log("Failed to open text file for writing line: %s", filename);
 		return;
 	}
 
-	WriteFile(file, line, strlen(line), nullptr, NULL);
+	DWORD byte_count_written;
+	WriteFile(file, line, strlen(line), &byte_count_written, NULL);
 	char newline = '\n';
 	WriteFile(file, &newline, 1, nullptr, NULL);
 
@@ -365,7 +388,7 @@ win32_LoadFileIntoSizedBufferAndNullTerminate(const char *filename, Buffer *buff
 
 	if(file == INVALID_HANDLE_VALUE)
 	{
-		log("Failed to open file for reading: %s", filename);
+		Log("Failed to open file for reading: %s", filename);
 		return false;
 	}
 
@@ -392,7 +415,7 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 
 	if(file == INVALID_HANDLE_VALUE)
 	{
-		log("Failed to open file for reading: %s", filename);
+		Log("Failed to open file for reading: %s", filename);
 		return false;
 	}
 
@@ -401,7 +424,7 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 
 	if(number_of_bytes_read > buffer_length-1)
 	{
-		//log("win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data");
+		//Log("win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data");
 		buffer[buffer_length-1] = '\0';
 		CloseHandle(file);
 		return false;
@@ -413,6 +436,8 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 		return true;
 	}
 }
+
+
 
 void
 win32_AnyKey()
@@ -436,9 +461,15 @@ win32_ExitGame()
 	WIN32_DELETE_OPENGL_WINDOW(wc.hwnd);
 }
 
+int
+win32_MyInterlockedIncrement(int volatile *v)
+{
+	return InterlockedIncrement((LONG volatile *)v);
+}
+
 void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 {
-	const char *window_class_name = "Lang WC";
+	const char *window_class_name = "Trait WC";
 	WNDCLASSEX window_class = {};
 	window_class.cbSize = sizeof(WNDCLASSEX);
 	window_class.style = CS_OWNDC;
@@ -467,7 +498,7 @@ void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 	AdjustWindowRectEx(&window_rect, window_style, FALSE, NULL);
 	wc.hwnd = CreateWindowEx(0,
 							 window_class_name,
-							 "LangL",
+							 "Trait",
 							 window_style,
 							 0,
 							 0,
@@ -487,7 +518,7 @@ void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 	pfd.cColorBits = 32;
 	pfd.cDepthBits = 24;
 	int pfd_index = ChoosePixelFormat(wc.hdc, &pfd);
-	if(pfd_index == 0) log("ChoosePixelFormat() failed.");
+	if(pfd_index == 0) Log("ChoosePixelFormat() failed.");
 	SetPixelFormat(wc.hdc, pfd_index, &pfd);
 	wc.rc = wglCreateContext(wc.hdc);
 	wglMakeCurrent(wc.hdc, wc.rc);
@@ -511,6 +542,14 @@ void WIN32_BIND_PLATFORM_FUNCTIONS(Platform *platform)
 	mBindPlatformFunction(AllocateMemory);
 	mBindPlatformFunction(PerformanceCounterFrequency);
 	mBindPlatformFunction(AnyKey);
+	//mBindPlatformFunction(StartJob);
+	mBindPlatformFunction(GetCallingThreadId);
+	mBindPlatformFunction(MyInterlockedIncrement);
+	mBindPlatformFunction(CreateWorkQueue);
+	mBindPlatformFunction(AddWorkEntry);
+	mBindPlatformFunction(QueueReleaseSemaphore);
+	mBindPlatformFunction(FreeMemory);
+	mBindPlatformFunction(WorkQueuePendingJobCount);
 
 	platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
 
@@ -663,7 +702,17 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	game = new Game{};
 
 	WIN32_BIND_PLATFORM_FUNCTIONS(platform);
-	start_log();
+	memory::permanent_arena = AllocArena();
+	memory::per_frame_arena = AllocArena();
+
+	g_work_queue_system.queues = CreatePermanentArray<WorkQueue>(8);
+	g_work_queue_system.init   = true;
+
+    // ----------------------------------------------------------------------------
+    // Barrier for creating work queues. Below this point, it should be good to go.
+    // ----------------------------------------------------------------------------
+
+	InitLog(&game->log_state);
 
 	CreateWindowAndOpenGlContext(hInstance, nCmdShow);
 	WIN32_BIND_OPENGL_EXTENSIONS(gl);
@@ -671,10 +720,10 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	void (*GameHook)(Platform*, OpenGL*, Game*);
 	void (*GameInit)();
 	void (*GameUpdateAndRender)();
-	HMODULE game_module = LoadLibraryA("D:/work/programming/color-c/game.dll");
+	HMODULE game_module = LoadLibraryA("game.dll");
 	if(game_module == NULL)
 	{
-		log("Failed to load library game.dll");
+		Log("Failed to load library game.dll");
 	}
 	else
 	{
@@ -694,6 +743,14 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	//platform->SwapIntervalEXT(0);
 	input::global_input = &platform_input;
 
+    FT_Library ft_lib;
+    if(InitFreetype(&ft_lib))
+    {
+        FT_Face roboto_face = LoadFontFaceFromFile("resource/Roboto-Bold.ttf", ft_lib);
+        text_render::default_font = LoadFontData(roboto_face, 64);
+        CloseFreetype(&ft_lib);
+    }
+
 	while(!QUIT_GAME)
 	{
 		while(PeekMessage(&msg, wc.hwnd, NULL, NULL, PM_REMOVE) != 0)
@@ -707,7 +764,6 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 			FRAMESTEP = !FRAMESTEP;
 		}
 
-		//if(Pressed(vk::esc)) QUIT_GAME = true;
 
 		if(!FRAMESTEP or Pressed(vk::F5) or Repeated(vk::F5))
 		{
@@ -715,6 +771,30 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 
 			// START update
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+ //    HANDLE mutex_handle;
+
+	// volatile u32 next_entry_to_read;
+	// volatile u32 next_entry_to_write;
+	// HANDLE semaphore_handle;
+
+	// volatile RingBuffer entry_data_buffer;
+	// WorkEntry entries[1024];
+
+			if(g_work_queue_system.init)
+			{
+				Vec2f pen = {};
+				for(auto &queue : g_work_queue_system.queues)
+				{
+					Rect text_rect = DrawText(c::def_text_layout, pen, "%s: %zu running, %zu completed",
+											  queue.name,
+											  win32_WorkQueuePendingJobCount(&queue),
+											  queue.job_completion_count);
+
+					pen.y += text_rect.size.y;
+				}
+			}
+			//DrawText(c::def_text_layout, {0.f, 100.f}, "next_entry_to_read: %u", game->log_state.queue->next_entry_to_read);
 
 			GetKeyboardState((BYTE*)&game->input.down_keys);
 			game->input.prev_mouse_pos = game->input.mouse_pos;
@@ -766,7 +846,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	win32_ExitGame();
 	FreeLibrary(game_module);
 
-	return 0;
+	ExitProcess(0);
 }
 
-//TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];
+TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

@@ -18,6 +18,7 @@
 #include "game_state.h"
 #include "campaign.h"
 #include "test_mode.h"
+#include "generate_node_graph_params.h"
 
 struct Game
 {
@@ -56,6 +57,9 @@ struct Game
 	Sprite pointer_cursor;
 	Sprite target_cursor;
 	Sprite red_target_cursor;
+
+	GenerateNodeGraph_Params generate_node_graph_params;
+	int number_of_arenas_allocated;
 
 	// test/debug
 	float test_float;
