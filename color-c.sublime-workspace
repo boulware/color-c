@@ -4,6 +4,58 @@
 		"selected_items":
 		[
 			[
+				"map_",
+				"selected_map_index"
+			],
+			[
+				"node",
+				"node_color"
+			],
+			[
+				"start_",
+				"start_index"
+			],
+			[
+				"Work",
+				"WorkQueuePendingJobCount"
+			],
+			[
+				"mapge",
+				"map_generation_work_queue"
+			],
+			[
+				"generat",
+				"generation_finished"
+			],
+			[
+				"resta",
+				"restart_count_layout"
+			],
+			[
+				"force",
+				"force_params"
+			],
+			[
+				"Gneer",
+				"GenerateNodeGraph_Params"
+			],
+			[
+				"Gener",
+				"GenerateNodeGraph_Params"
+			],
+			[
+				"Edge",
+				"EdgeAlreadyExists"
+			],
+			[
+				"map_gen",
+				"map_generation_work_queue"
+			],
+			[
+				"Genre",
+				"GenerateNodeGraph_Params"
+			],
+			[
 				"mute",
 				"mutex_handle"
 			],
@@ -108,10 +160,6 @@
 				"function_params"
 			],
 			[
-				"Gener",
-				"GenerateNodeGraph"
-			],
-			[
 				"thread",
 				"thread_id"
 			],
@@ -126,10 +174,6 @@
 			[
 				"ForceSim",
 				"ForceSimState"
-			],
-			[
-				"generat",
-				"generation_count"
 			],
 			[
 				"aligne",
@@ -470,97 +514,63 @@
 			[
 				"TokenTy",
 				"CheckNextTokenType_"
-			],
-			[
-				"open",
-				"open_bracket_token"
-			],
-			[
-				"Ope",
-				"OpenSquareBracket"
-			],
-			[
-				"Confir",
-				"ConfirmTokenType_"
-			],
-			[
-				"base_ty",
-				"base_type_token"
-			],
-			[
-				"previewtrat",
-				"preview_trait_changes"
-			],
-			[
-				"index",
-				"index_into_battle_units"
-			],
-			[
-				"selectd",
-				"selected_ability"
-			],
-			[
-				"Generate",
-				"GenerateBattlePreviewEvent"
-			],
-			[
-				"UnitSch",
-				"UnitSchematic"
-			],
-			[
-				"unitschta",
-				"unit_schematic_table"
-			],
-			[
-				"entry_",
-				"entry_count"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/win32_platform.cpp",
+			"contents": "#include \"campaign.h\"\n\n#include \"random.h\"\n#include \"generate_node_graph_params.h\"\n\n// bool\n// GraphIsFullyConnected(Campaign *campaign)\n// {\n//     //Node &root =  campaign->nodes[0];\n\n//     Array<int> indices_to_search = CreateTempArray<int>(20);\n//     indices_to_search += 0; // add \"root\"\n\n//     Array<int> searched_indices = CreateTempArray<int>(20);\n//     Array<Edge> connected_edges = CreateTempArray<Edge>(10);\n//     //for(int i=0; i<campaign->edges.count; ++i)\n//     while(indices_to_search.count > 0)\n//     {\n//         ClearArray(&connected_edges);\n//         int this_index = indices_to_search[indices_to_search.count-1];\n//         indices_to_search.count -= 1;\n//         searched_indices += this_index;\n//         for(auto edge : campaign->edges)\n//         {\n//             if(this_index == edge.indices[0])\n//             {\n//                 //connected_edges += edge;\n//                 if(     !ElementInArray(&searched_indices, edge.indices[1])\n//                     and !ElementInArray(&indices_to_search, edge.indices[1]))\n//                 {\n//                     indices_to_search += edge.indices[1];\n//                 }\n//             }\n//             else if(this_index == edge.indices[1])\n//             {\n//                 //connected_edges += edge;\n//                 if(    !ElementInArray(&searched_indices, edge.indices[0])\n//                    and !ElementInArray(&indices_to_search, edge.indices[0]))\n//                 {\n//                     indices_to_search += edge.indices[0];\n//                 }\n//             }\n//         }\n//     }\n\n//     campaign->graph_fully_connected = (searched_indices.count == campaign->nodes.count);\n//     return campaign->graph_fully_connected;\n// }\n\n// Node *\n// AddNode(Campaign *campaign, Node node, Array<int> edge_indices)\n// {\n//     int new_node_index = campaign->nodes.count;\n//     Node *new_node = Append(&campaign->nodes, node);\n\n//     if(edge_indices.data)\n//     {\n//         for(int existing_node_index : edge_indices)\n//         {\n//             Edge edge;\n//             edge.indices[0] = existing_node_index;\n//             edge.indices[1] = new_node_index;\n//             campaign->edges += edge;\n//         }\n//     }\n\n//     return new_node;\n// }\n\n// void\n// GenerateRandomTree(Campaign *campaign)\n// {\n//     TIMED_BLOCK;\n\n//     ClearArray(&campaign->nodes);\n//     ClearArray(&campaign->edges);\n//     campaign->drag_start_index = -1;\n\n//     u32 node_count = RandomU32(8, 16);\n//     ResizeArray(&campaign->nodes, node_count);\n\n//     for(int i=0; i<node_count; ++i)\n//     {\n\n//         u32 node_x = RandomU32(300, ClampFloatToU32(game->window_size.x)-300);\n//         u32 node_y = RandomU32(300, ClampFloatToU32(game->window_size.y)-300);\n\n//         Node node = {\n//             .pos = {(float)node_x, (float)node_y},\n//             .vel = {0.f,0.f}\n//         };\n\n//         campaign->nodes += node;\n//     }\n\n//     Array<Edge> edge_permutations = CreateTempArray<Edge>(100);\n//     for(int i=0; i<node_count; ++i)\n//     {\n//         for(int j=i; j<node_count; ++j)\n//         {\n//             Edge edge;\n//             edge.indices[0] = i;\n//             edge.indices[1] = j;\n//             edge_permutations += edge;\n//         }\n//     }\n\n//     int max_edge_count = 3;\n//     Array<int> edges_per_node = CreateTempArray<int>(node_count);\n//     for(int i=0; i<node_count; ++i) edges_per_node += 0;\n\n//     for(auto edge : edge_permutations)\n//     {\n//         int p = RandomU32(0,5);\n//         int a_index = edge.indices[0];\n//         int b_index = edge.indices[1];\n//         if(p == 0 and edges_per_node[a_index] < max_edge_count and edges_per_node[b_index] < max_edge_count)\n//         {\n//             campaign->edges += edge;\n//             ++edges_per_node[a_index];\n//             ++edges_per_node[b_index];\n//         }\n//     }\n\n//     int nodes_without_edges = 0;\n//     for(int v : edges_per_node)\n//     {\n//         if(v == 0) ++nodes_without_edges;\n//     }\n\n//     if(nodes_without_edges > node_count/4)\n//     {\n//         GenerateRandomTree(campaign);\n//     }\n// }\n\n// void\n// GenerateTreeFromMainBranch(Campaign *campaign)\n// {\n//     ++campaign->generation_count;\n\n//     ClearArray(&campaign->nodes);\n//     ClearArray(&campaign->edges);\n//     campaign->drag_start_index = -1;\n\n//     int m = 2;\n\n//     // Main path\n//     u32 main_path_node_count = RandomU32(m*6,m*8);\n//     ResizeArray(&campaign->nodes, main_path_node_count);\n//     for(int i=0; i<main_path_node_count; ++i)\n//     {\n//         Node node = {\n//             .pos = {400.f + 10.f*i, 450.f},\n//             .vel = {0.f,0.f}//{(float)RandomU32(0,2)-1, (float)RandomU32(0,2)-1}\n//         };\n//         campaign->nodes += node;\n//     }\n\n//     campaign->end_index = campaign->nodes.count-1;\n\n//     for(int i=1; i<campaign->nodes.count; ++i)\n//     {\n//         Edge edge = {};\n//         edge.indices[0] = i-1;\n//         edge.indices[1] = i;\n//         edge.rest_length = c::fdg_edge_length + RandomFloat(-30.f,30.f);\n//         if(!EdgeAlreadyExists(campaign, edge)) campaign->edges += edge;\n//     }\n\n//     // Linear branches\n\n//     int j = 0;\n//     int cur_branch = 0;\n//     int max_branch = 3;\n//     for(int i=0; i<main_path_node_count; ++i)\n//     {\n//         ++j;\n//         if(Chance(150.0f/m))\n//         {\n//             Node node = {\n//                 .pos = {410.f + 1.f*j, 460.f+1.f*j},\n//                 .vel = {0.f,0.f}//{(float)RandomU32(0,2)-1, (float)RandomU32(0,2)-1}\n//             };\n//             campaign->nodes += node;\n\n//             //int attach_index = RandomU32(1, main_path_node_count-2);\n//             Edge edge = {};\n//             edge.indices[0] = campaign->nodes.count-1;\n//             edge.indices[1] = i;//attach_index;\n//             edge.rest_length = c::fdg_edge_length + RandomFloat(-30.f,30.f);\n//             if(!EdgeAlreadyExists(campaign, edge)) campaign->edges += edge;\n\n//             if(++cur_branch >= max_branch) break;\n//             --i;\n//         }\n//     }\n\n//     int start_count = campaign->nodes.count;\n//     for(int i=0; i<m*5; ++i)\n//     {\n//         ++j;\n//         //if(Chance(50.0f))\n//         {\n//             Node node = {\n//                 .pos = {410.f + 1.f*j, 460.f+1.f*j},\n//                 .vel = {0.f,0.f}//{(float)RandomU32(0,2)-1, (float)RandomU32(0,2)-1}\n//             };\n//             campaign->nodes += node;\n\n//             Edge edge = {};\n//             edge.indices[0] = campaign->nodes.count-1;\n//             edge.indices[1] = RandomU32(0, campaign->nodes.count-2);;//attach_index;\n//             if(!EdgeAlreadyExists(campaign, edge)) campaign->edges += edge;\n\n//             edge.indices[0] = campaign->nodes.count-1;\n//             edge.indices[1] = RandomU32(0, campaign->nodes.count-2);;//attach_index;\n//             if(!EdgeAlreadyExists(campaign, edge)) campaign->edges += edge;\n//         }\n//     }\n// }\n\nvoid\nInitCampaign(Campaign *campaign)\n{\n    // campaign->map_generation_temp_arena = AllocArena();\n    // campaign->map_generation_arena = AllocArena();\n\n    campaign->arena = AllocArena();\n    campaign->selected_map_index = -1;\n\n    campaign->map_zoom_timer = {\n        .start = 0.f,\n        .cur = 0.f,\n        .length_s = 5.f,\n        .finished = false,\n    };\n\n\n    campaign->generation_params_template = {\n        .thread_finished = nullptr,\n        .restart_count   = nullptr,\n        .max_speed       = nullptr,\n        .graph           = nullptr,\n        .main_path_min = 12,\n        .main_path_max = 16,\n        .max_linear_branch_length = 3,\n        .linear_branch_extension_chance = 50.0f,\n        .loop_generation_count = 10,\n    };\n\n    int max_nodes = MaxNodesFromGenerationParams(campaign->generation_params_template);\n    int max_edges = MaxEdgesFromGenerationParams(campaign->generation_params_template);\n    for(int i=0; i<ArrayCount(campaign->maps); ++i)\n    {\n        campaign->maps[i].nodes = CreateArrayFromArena<Node>(max_nodes, &campaign->arena);\n        campaign->maps[i].edges = CreateArrayFromArena<Edge>(max_edges, &campaign->arena);\n    }\n\n    platform->CreateWorkQueue(&campaign->map_generation_work_queue, 3, \"Map generation\");\n\n    for(int i=0; i<ArrayCount(campaign->maps); ++i)\n    {\n        campaign->max_speeds[i] = 100.f;\n\n        GenerateNodeGraph_Params params = campaign->generation_params_template;\n        params.thread_finished = &campaign->generation_finished[i];\n        params.restart_count   = &campaign->restart_counts[i];\n        params.max_speed       = &campaign->max_speeds[i];\n        params.graph           = &campaign->maps[i];\n\n        WorkEntry entry = {\n            .callback = THREAD_GenerateNodeGraph,\n            .data = &params,\n            .data_byte_count = sizeof(params)\n        };\n\n        platform->AddWorkEntry(campaign->map_generation_work_queue, entry);\n    }\n\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // Log(\"Thread %d started.\", platform->StartJob(&params));\n    // GenerateNodeGraph(&campaign->map, params);\n    // campaign->nodes = CreatePermanentArray<Node>(10);\n    // campaign->edges = CreatePermanentArray<Edge>(10);\n\n    // Node root_node = {\n    //     .pos = 0.5f * game->window_size\n    // };\n    // campaign->root = AddNode(campaign, root_node);\n\n    // campaign->generation_timer = {\n    //     .start = 0.f,\n    //     .cur = 0.f,\n    //     .length_s = 0.8f,\n    //     .finished = false\n    // };\n    // campaign->generation_finished = false;\n    // campaign->drag_start_index = -1;\n    // campaign->fdg_running = true;\n}\n\nGameState\nTickCampaign(Campaign *campaign)\n{\n    // Check map generation status.\n    bool map_generation_finished = false;\n    if(platform->WorkQueuePendingJobCount(campaign->map_generation_work_queue) == 0)\n    {\n        map_generation_finished = true;\n    }\n\n    // Redo map generation when Enter is pressed.\n    if(Pressed(vk::enter) and map_generation_finished)\n    {\n        for(int i=0; i<ArrayCount(campaign->maps); ++i)\n        {\n            campaign->generation_finished[i] = false;\n            campaign->restart_counts[i] = 0;\n            campaign->max_speeds[i] = 100.f;\n\n            GenerateNodeGraph_Params params = campaign->generation_params_template;\n            params.thread_finished = &campaign->generation_finished[i];\n            params.restart_count   = &campaign->restart_counts[i];\n            params.max_speed       = &campaign->max_speeds[i];\n            params.graph           = &campaign->maps[i];\n\n            WorkEntry entry = {\n                .callback = THREAD_GenerateNodeGraph,\n                .data = &params,\n                .data_byte_count = sizeof(params)\n            };\n\n            platform->AddWorkEntry(campaign->map_generation_work_queue, entry);\n        }\n    }\n\n    if(campaign->selected_map_index < 0)\n    {\n        // Draw maps and \"Use this map\" button.\n        for(int i=0; i<ArrayCount(campaign->maps); ++i)\n        {\n            Rect map_rect = AlignRect({{(1.f/6.f)*(1+2*i)*game->window_size.x, 0.5f*game->window_size.y},\n                                       {400.f,400.f}}, c::align_center);\n            //if(campaign->generation_finished[i])\n            if(campaign->max_speeds[i] < 0.1f)\n            {\n                //DrawNodeGraphInRect(&campaign->map, {{50.f,50.f},{600.f,200.f}});\n                DrawNodeGraphInRect(&campaign->maps[i], map_rect, {10.f,10.f});\n            }\n            else\n            {\n                TextLayout layout = c::def_text_layout;\n                layout.align = c::align_center;\n                DrawText(layout, RectCenter(map_rect), \"Generating Map... \");\n            }\n\n            //DrawText(c::def_text_layout, RectTopLeft(map_rect), \"max speed: %f\", campaign->max_speeds[i]);\n            DrawUnfilledRect(map_rect, c::white);\n\n            if(map_generation_finished)\n            {\n                Rect button_rect = {};\n                Vec2f padding = {0.f, 10.f};\n                button_rect.pos = RectBottomCenter(map_rect) + padding;\n                button_rect.size = {200.f, 80.f};\n                ButtonLayout button_layout = c::def_button_layout;\n                button_layout.align = c::align_topcenter;\n                auto response = DrawButton(button_layout, button_rect, \"Use this map\");\n\n                if(response.pressed)\n                {\n                    campaign->selected_map_index = i;\n                    Reset(&campaign->map_zoom_timer);\n                }\n            }\n        }\n    }\n    else\n    {\n        if()\n    }\n\n\n    //DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(campaign));\n\n    // float cam_move_speed = 20.f;\n    // if(Down(vk::right))\n    // {\n    //     campaign->camera_offset.x -= cam_move_speed;\n    //     //SetCameraPos(game->camera_pos);\n    // }\n    // if(Down(vk::left))\n    // {\n    //     campaign->camera_offset.x += cam_move_speed;\n    //     //SetCameraPos(game->camera_pos);\n    // }\n    // if(Down(vk::up))\n    // {\n    //     campaign->camera_offset.y += cam_move_speed;\n    //     //SetCameraPos(game->camera_pos);\n    // }\n    // if(Down(vk::down))\n    // {\n    //     campaign->camera_offset.y -= cam_move_speed;\n    //     //SetCameraPos(game->camera_pos);\n    // }\n\n    // if(Pressed(vk::m)) game->camera_pos = 0.5f*game->window_size;\n\n    // if(Pressed(vk::enter))\n    // //if(Tick(&campaign->generation_timer))\n    // {\n    //     campaign->max_speed = 0.f;\n    //     GenerateTreeFromMainBranch(campaign);\n    //     //SetCameraPos({0.f,0.f});\n    //     campaign->generation_finished = false;\n    //     Reset(&campaign->generation_timer);\n    // }\n\n    // if(Pressed(vk::space))\n    // {\n    //     campaign->fdg_running = !campaign->fdg_running;\n    // }\n\n    // if(Pressed(vk::RMB))\n    // {\n    //     // AddNode(Campaign *campaign, Node node, Array<int> edge_indices)\n    //     Node node = {\n    //         .pos = MousePos()\n    //     };\n    //     AddNode(campaign, node);\n    // }\n\n\n\n\n\n\n    // Color line_color = c::white;\n    // if(campaign->generation_finished) line_color = c::white;\n\n    // for(int i=0; i<campaign->edges.count; ++i)\n    // {\n    //     int a0_index = campaign->edges[i].indices[0];\n    //     int a1_index = campaign->edges[i].indices[1];\n    //     Vec2f a0 = campaign->nodes[a0_index].pos;\n    //     Vec2f a1 = campaign->nodes[a1_index].pos;\n\n    //     for(int j=i+1; j<campaign->edges.count; ++j)\n    //     {\n    //         int b0_index = campaign->edges[j].indices[0];\n    //         int b1_index = campaign->edges[j].indices[1];\n    //         Vec2f b0 = campaign->nodes[b0_index].pos;\n    //         Vec2f b1 = campaign->nodes[b1_index].pos;\n\n    //         if(LineSegmentsInnerIntersect(a0, a1, b0, b1, 0.01f))\n    //         {\n    //             //line_color = c::red;\n    //             int temp = campaign->edges[i].indices[0];\n    //             campaign->edges[i].indices[0] = campaign->edges[j].indices[0];\n    //             campaign->edges[j].indices[0] = temp;\n\n    //             if(!GraphIsFullyConnected(campaign)) GenerateTreeFromMainBranch(campaign);\n\n    //             break;\n    //         }\n    //     }\n\n    //     DrawLine(a0, a1, line_color);\n    // }\n\n    // DrawText(c::def_text_layout, {0.f,0.f}, \"generations: %d\", campaign->generation_count);\n\n\n    // for(int i=0; i<campaign->nodes.count; ++i)\n    // {\n    //     Node &node = campaign->nodes[i]; // alias\n\n    //     Rect aligned_rect = AlignRect({node.pos, c::node_size}, c::align_center);\n\n    //     DrawFilledRect(aligned_rect, c::black);\n\n    //     Color outline_color = c::red;\n\n    //     if(PointInRect(aligned_rect, MousePos() - campaign->camera_offset))\n    //     {\n    //         outline_color = c::white;\n    //     }\n    //     else if(i == 0)                      outline_color = c::green;\n    //     else if(i == campaign->end_index)    outline_color = c::yellow;\n\n    //     DrawUnfilledRect(aligned_rect, outline_color);\n    // }\n\n    // //DrawText(c::def_text_layout, {0.f,0.f}, \"%d\", campaign->edges.count);\n\n    // if(Released(vk::LMB))\n    // {\n    //     campaign->drag_start_index = -1;\n    // }\n\n    GameState new_state = GameState::None;\n    if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;\n\n    return new_state;\n}",
+			"file": "src/campaign.cpp",
+			"file_size": 17101,
+			"file_write_time": 132469256388699749,
 			"settings":
 			{
-				"buffer_size": 26818,
+				"buffer_size": 16601,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 113 files for \"color-c\"\n\nC:\\color-c\\src\\meta.cpp:\n  522  int main()\n  523  {\n  524: \t#define root_dir \"D:/work/programming/color-c/\"\n  525  \n  526  \tconst size_t buffer_size = 10000000; // 10MB\n\nC:\\color-c\\src\\win32_platform.cpp:\n  848  \tvoid (*GameInit)();\n  849  \tvoid (*GameUpdateAndRender)();\n  850: \tHMODULE game_module = LoadLibraryA(\"D:/work/programming/color-c/game.dll\");\n  851  \tif(game_module == NULL)\n  852  \t{\n\n2 matches across 2 files\n",
+			"file": "src/campaign.h",
 			"settings":
 			{
-				"buffer_size": 459,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "src/meta.cpp",
-			"settings":
-			{
-				"buffer_size": 28372,
+				"buffer_size": 939,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "build/b.bat",
+			"file": "_/todo.txt",
 			"settings":
 			{
-				"buffer_size": 1504,
+				"buffer_size": 3433,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
+			"file": "src/timer.cpp",
 			"settings":
 			{
-				"buffer_size": 40,
+				"buffer_size": 352,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/timer.h",
+			"settings":
+			{
+				"buffer_size": 169,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/vec.cpp",
+			"settings":
+			{
+				"buffer_size": 5286,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -705,17 +715,65 @@
 	],
 	"file_history":
 	[
-		"/C/color-c/logs/log.txt",
-		"/C/color-c/src/game.cpp",
-		"/C/color-c/logs/log2.txt",
-		"/C/color-c/logs/critical.log",
-		"/C/color-c/logs/DebugTimings.txt",
-		"/C/color-c/src/work_entry.h",
-		"/C/color-c/data/ability.dat",
+		"/C/color-c/src/node_graph.h",
+		"/C/color-c/src/draw.cpp",
 		"/C/color-c/src/log.cpp",
-		"/C/color-c/src/ring_buffer.h",
+		"/C/color-c/src/win32_platform.cpp",
+		"/C/color-c/src/platform.h",
+		"/C/color-c/src/win32_work_queue.cpp",
+		"/C/color-c/src/node_graph.cpp",
+		"/C/color-c/logs/critical.log",
+		"/C/color-c/src/util.cpp",
+		"/C/color-c/src/win32_work_queue.h",
+		"/C/color-c/src/campaign.h",
+		"/C/color-c/src/vec.cpp",
 		"/C/color-c/src/const.h",
+		"/C/color-c/src/align.cpp",
+		"/C/color-c/.gitignore",
+		"/C/color-c/src/array.cpp",
+		"/C/color-c/src/array.h",
+		"/C/color-c/src/ring_buffer.h",
+		"/C/color-c/src/win32_platform.h",
+		"/C/color-c/src/generate_node_graph_params.h",
+		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/campaign.cpp",
+		"/C/color-c/src/platform_include.cpp",
+		"/C/color-c/src/editor.h",
+		"/C/color-c/src/game.cpp",
+		"/C/color-c/src/work_entry.h",
+		"/C/color-c/src/memory.cpp",
+		"/C/color-c/src/memory.h",
+		"/C/color-c/src/text_parsing.cpp",
+		"/C/color-c/src/log.h",
+		"/C/color-c/src/better_text_parsing.cpp",
+		"/C/color-c/src/effect.h",
 		"/C/color-c/src/game_code_include.cpp",
+		"/C/color-c/src/text_render.cpp",
+		"/C/color-c/src/text_parsing.h",
+		"/C/color-c/src/buffer.h",
+		"/C/color-c/src/buffer.cpp",
+		"/C/color-c/src/target_class.h",
+		"/C/color-c/data/ability.dat",
+		"/C/color-c/src/ability.cpp",
+		"/C/color-c/src/text_render.h",
+		"/C/color-c/src/font_loading.h",
+		"/C/color-c/src/font_loading.cpp",
+		"/C/color-c/src/freetype_wrapper.cpp",
+		"/C/color-c/src/table.cpp",
+		"/C/color-c/src/table.h",
+		"/C/color-c/build/b.bat",
+		"/C/color-c/src/meta.cpp",
+		"/C/color-c/src/string.cpp",
+		"/C/color-c/src/bitmap.cpp",
+		"/C/color-c/src/bitmap.h",
+		"/C/color-c/src/input.cpp",
+		"/C/color-c/src/input.h",
+		"/C/color-c/src/util.h",
+		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
+		"/C/color-c/src/math.h",
+		"/C/color-c/src/math.cpp",
+		"/C/color-c/logs/log2.txt",
+		"/C/color-c/logs/DebugTimings.txt",
 		"/D/work/programming/color-c/src/log.cpp",
 		"/D/work/programming/color-c/logs/log.txt",
 		"/D/work/programming/color-c/TEST.txt",
@@ -784,59 +842,11 @@
 		"/D/work/programming/color-c/src/better_text_parsing.cpp",
 		"/D/work/programming/color-c/src/meta_text_parsing.h",
 		"/D/work/programming/color-c/src/string.cpp",
-		"/D/work/programming/color-c/src/meta_print.cpp",
-		"/D/work/programming/color-c/src/better_text_parsing.h",
-		"/D/work/programming/color-c/src/string.h",
-		"/D/work/programming/color-c/src/text_parsing.h",
-		"/D/work/programming/color-c/src/oscillating_timer.cpp",
-		"/D/work/programming/color-c/src/debug.h",
-		"/D/work/programming/color-c/src/ability.cpp",
-		"/D/work/programming/color-c/src/unit.cpp",
-		"/D/work/programming/color-c/src/main_menu.h",
-		"/D/work/programming/color-c/src/editor.h",
-		"/D/work/programming/color-c/src/battle.h",
-		"/D/work/programming/color-c/src/target_class.h",
-		"/D/work/programming/color-c/src/editor.cpp",
-		"/D/work/programming/color-c/logs/DebugTimings.txt",
-		"/D/work/programming/color-c/src/ability.h",
-		"/D/work/programming/color-c/src/effect.h",
-		"/D/work/programming/color-c/src/table.cpp",
-		"/D/work/programming/color-c/src/target_class.cpp",
-		"/D/work/programming/color-c/data/ability.dat",
-		"/D/work/programming/color-c/src/imgui.h",
-		"/D/work/programming/color-c/data/breed.dat",
-		"/D/work/programming/color-c/data/main_menu_strings.dat",
-		"/D/work/programming/color-c/src/todo_session.txt",
-		"/D/work/programming/color-c/src/unit.h",
-		"/D/work/programming/color-c/src/traitset.h",
-		"/D/work/programming/color-c/src/oscillating_timer.h",
-		"/D/work/programming/color-c/src/timer.cpp",
-		"/D/work/programming/color-c/src/math.cpp",
-		"/D/work/programming/color-c/src/table.h",
-		"/D/work/programming/color-c/src/traitset.cpp",
-		"/D/work/programming/color-c/src/global.h",
-		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-mousemap",
-		"/D/work/programming/color-c/src/util.h",
-		"/D/work/programming/color-c/src/passive_skill_tree.cpp",
-		"/D/work/programming/color-c/src/data_table.h",
-		"/D/work/programming/color-c/src/data_table.cpp",
-		"/D/work/programming/color-c/src/draw.h",
-		"/D/work/programming/color-c/data/unit_schematic.dat",
-		"/D/work/programming/color-c/build/meta.i",
-		"/D/work/programming/color-c/src/utf32string.h",
-		"/D/work/programming/color-c/src/meta_platform.cpp",
-		"/D/work/programming/color-c/src/meta_print(manual).cpp",
-		"/D/work/programming/color-c/src/meta_print(manual).h",
-		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/WinBase.h",
-		"/C/Program Files (x86)/Windows Kits/10/Include/10.0.18362.0/um/fileapi.h",
-		"/D/work/programming/color-c/src/utf32string.cpp",
-		"/D/work/programming/color-c/src/meta.h",
-		"/D/work/programming/color-c/src/win32_platform.h",
-		"/D/work/programming/playground/main.cpp"
+		"/D/work/programming/color-c/src/meta_print.cpp"
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -865,6 +875,23 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"DrawButton",
+			"(*queue)",
+			"restart_count",
+			"invalid_state",
+			"sim_state",
+			"GenerateNodeGraph_Params",
+			"AllocateMemory",
+			"StartJob",
+			"DrawText",
+			"NextToken",
+			"Log(",
+			"GetAbilityFromId",
+			"FreeBuffer",
+			"TempFormatString",
+			"\"\n",
+			"TempFormatString",
+			"Round",
 			"color-c",
 			"\\",
 			"WriteLineTo",
@@ -975,24 +1002,7 @@
 			"^",
 			"hovered",
 			"effect.target_class",
-			"last_frame",
-			"show_preview",
-			"Battle",
-			"DrawButton",
-			"DrawAbilityInfoBox",
-			"AbilityInfo",
-			"GenerateEnemy",
-			"EventTraitChangesForUnit",
-			"show_preview",
-			"DrawEnemyIntentThoughtBubble",
-			"preview_events",
-			"At",
-			"for(auto event",
-			"end_button_clicked_time_s",
-			"InitLcgSystemSeed",
-			"DrawAbilityInfoBox",
-			"DrawAbilityInf",
-			"\\t"
+			"last_frame"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1000,6 +1010,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"queue",
 			"/",
 			"graph->",
 			"b",
@@ -1126,8 +1137,7 @@
 			"layout",
 			"label",
 			"0.5f",
-			"0.f",
-			"1.f"
+			"0.f"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1138,81 +1148,95 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/win32_platform.cpp",
+					"file": "src/campaign.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 26818,
+						"buffer_size": 16601,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23698,
-								23698
+								12883,
+								12883
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 10759.0,
+						"translation.y": 4583.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "src/campaign.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 459,
+						"buffer_size": 939,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										133,
-										140
-									],
-									[
-										371,
-										378
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								137,
-								137
+								418,
+								418
 							]
 						],
 						"settings":
 						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "_/todo.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3433,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1256,
+								1256
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1222,82 +1246,26 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "src/meta.cpp",
+					"buffer": 3,
+					"file": "src/timer.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 28372,
+						"buffer_size": 352,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10236,
-								10236
+								324,
+								324
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 6422.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "build/b.bat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1504,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1504,
-								1504
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Batch File/Batch File.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 40,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1305,20 +1273,14 @@
 					},
 					"stack_index": 2,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 2,
-					"file": "src/meta.cpp",
+					"buffer": 4,
+					"file": "src/timer.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 28372,
+						"buffer_size": 169,
 						"regions":
 						{
 						},
@@ -1331,14 +1293,42 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/vec.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5284,
+								5284
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3657.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1372,7 +1362,7 @@
 		"cols":
 		[
 			0.0,
-			0.54875,
+			0.54125,
 			1.0
 		],
 		"rows":
@@ -1394,7 +1384,7 @@
 	"project": "color-c.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1403,6 +1393,154 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"timer",
+				"src\\timer.cpp"
+			],
+			[
+				"vec",
+				"src\\vec.cpp"
+			],
+			[
+				"todo",
+				"_\\todo.txt"
+			],
+			[
+				"crit",
+				"logs\\critical.log"
+			],
+			[
+				"node",
+				"src\\node_graph.cpp"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"plat",
+				"src\\platform.h"
+			],
+			[
+				"paltf",
+				"src\\platform.h"
+			],
+			[
+				"camp",
+				"src\\campaign.cpp"
+			],
+			[
+				"log",
+				"src\\log.cpp"
+			],
+			[
+				"util",
+				"src\\util.cpp"
+			],
+			[
+				"arrayh",
+				"src\\array.h"
+			],
+			[
+				"win32",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"array",
+				"src\\array.h"
+			],
+			[
+				"critic",
+				"logs\\critical.log"
+			],
+			[
+				"nodegra",
+				"src\\node_graph.h"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"logt",
+				"logs\\log.txt"
+			],
+			[
+				"edit",
+				"src\\editor.h"
+			],
+			[
+				"win",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"workentr",
+				"src\\work_entry.h"
+			],
+			[
+				"memory",
+				"src\\memory.h"
+			],
+			[
+				"arra",
+				"src\\array.cpp"
+			],
+			[
+				"inclu",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"textpars",
+				"src\\text_parsing.cpp"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"text",
+				"src\\text_parsing.cpp"
+			],
+			[
+				"effec",
+				"src\\effect.h"
+			],
+			[
+				"targetcl",
+				"src\\target_class.h"
+			],
+			[
+				"abiltyd",
+				"data\\ability.dat"
+			],
+			[
+				"abil",
+				"src\\ability.cpp"
+			],
+			[
+				"inc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"textpar",
+				"src\\text_parsing.cpp"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"inputc",
+				"src\\input.cpp"
+			],
+			[
+				"bitm",
+				"src\\bitmap.h"
+			],
+			[
+				"table",
+				"src\\table.cpp"
+			],
 			[
 				"metac",
 				"src\\meta.cpp"
@@ -1416,24 +1554,12 @@
 				"data\\ability.dat"
 			],
 			[
-				"log",
-				"logs\\log.txt"
-			],
-			[
-				"gamec",
-				"src\\game.cpp"
-			],
-			[
 				"log2",
 				"logs\\log2.txt"
 			],
 			[
 				"criti",
 				"logs\\critical.log"
-			],
-			[
-				"inc",
-				"src\\game_code_include.cpp"
 			],
 			[
 				"onst",
@@ -1444,10 +1570,6 @@
 				"src\\ring_buffer.h"
 			],
 			[
-				"win",
-				"build\\win32_platform.i"
-			],
-			[
 				"mac",
 				"src\\macros.h"
 			],
@@ -1456,32 +1578,12 @@
 				"src\\work_entry.h"
 			],
 			[
-				"plat",
-				"src\\platform.h"
-			],
-			[
 				"mem",
 				"src\\memory.h"
 			],
 			[
-				"array",
-				"src\\array.cpp"
-			],
-			[
-				"node",
-				"src\\node_graph.cpp"
-			],
-			[
 				"game",
 				"src\\game.cpp"
-			],
-			[
-				"logt",
-				"logs\\log.txt"
-			],
-			[
-				"memory",
-				"src\\memory.h"
 			],
 			[
 				"meta",
@@ -1494,10 +1596,6 @@
 			[
 				"gameh",
 				"src\\game.h"
-			],
-			[
-				"win32",
-				"src\\win32_platform.cpp"
 			],
 			[
 				"logc",
@@ -1528,28 +1626,12 @@
 				"build\\win32_platform.i"
 			],
 			[
-				"camp",
-				"src\\campaign.h"
-			],
-			[
 				"win32pla",
 				"build\\win32_platform.i"
 			],
 			[
 				".i",
 				"build\\game.i"
-			],
-			[
-				"arrayh",
-				"src\\array.h"
-			],
-			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"inclu",
-				"src\\game_code_include.cpp"
 			],
 			[
 				"geom",
@@ -1570,10 +1652,6 @@
 			[
 				"arrayc",
 				"src\\array.cpp"
-			],
-			[
-				"timer",
-				"src\\timer.h"
 			],
 			[
 				"rand",
@@ -1608,14 +1686,6 @@
 				"src\\uv_fragment.glsl"
 			],
 			[
-				"util",
-				"src\\util.cpp"
-			],
-			[
-				"vec",
-				"src\\vec.h"
-			],
-			[
 				"drawc",
 				"src\\draw.cpp"
 			],
@@ -1626,10 +1696,6 @@
 			[
 				"campa",
 				"src\\campaign.cpp"
-			],
-			[
-				"inputc",
-				"src\\input.cpp"
 			],
 			[
 				"inputh",
@@ -1676,10 +1742,6 @@
 				"src\\vec.h"
 			],
 			[
-				"todo",
-				"_\\todo.txt"
-			],
-			[
 				"txt",
 				"build\\freetype-2.9.1\\docs\\FTL.TXT"
 			],
@@ -1692,24 +1754,12 @@
 				"src\\keybinds.h"
 			],
 			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
 				"gamcode",
 				"src\\game_code_include.cpp"
 			],
 			[
-				"text",
-				"src\\text_render.cpp"
-			],
-			[
 				"metatext",
 				"src\\meta_text_parsing.h"
-			],
-			[
-				"string",
-				"src\\string.cpp"
 			],
 			[
 				"metaprin",
@@ -1734,10 +1784,6 @@
 			[
 				"bettertex",
 				"src\\better_text_parsing.cpp"
-			],
-			[
-				"textpars",
-				"src\\text_parsing.cpp"
 			],
 			[
 				"battle",
@@ -1770,10 +1816,6 @@
 			[
 				"keybindsh",
 				"src\\keybinds.h"
-			],
-			[
-				"abil",
-				"src\\ability.cpp"
 			],
 			[
 				"unitc",
@@ -1862,58 +1904,6 @@
 			[
 				"battleh",
 				"src\\battle.h"
-			],
-			[
-				"abilityh",
-				"src\\ability.h"
-			],
-			[
-				"effe",
-				"src\\effect.h"
-			],
-			[
-				"metap",
-				"src\\meta_print.cpp"
-			],
-			[
-				"unith",
-				"src\\unit.h"
-			],
-			[
-				"imguih",
-				"src\\imgui.h"
-			],
-			[
-				"todos",
-				"src\\todo_session.txt"
-			],
-			[
-				"abi",
-				"data\\ability.dat"
-			],
-			[
-				"breed",
-				"data\\breed.dat"
-			],
-			[
-				"todoses",
-				"src\\todo_session.txt"
-			],
-			[
-				"fretyewa",
-				"src\\freetype_wrapper.h"
-			],
-			[
-				"debugh",
-				"src\\debug.h"
-			],
-			[
-				"input",
-				"src\\input.cpp"
-			],
-			[
-				"osc",
-				"src\\oscillating_timer.h"
 			]
 		],
 		"width": 0.0

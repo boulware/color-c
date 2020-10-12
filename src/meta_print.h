@@ -79,6 +79,8 @@ String MetaString(const Bitmap *s);
 
 String MetaString(const Buffer *s);
 
+String MetaString(const CampaignState *s);
+
 String MetaString(const Campaign *s);
 
 String MetaString(const Color *s);

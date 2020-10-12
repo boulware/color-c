@@ -41,6 +41,7 @@ struct Game
 	Vec2f window_size;
 
 	Vec2f camera_pos;
+	float camera_zoom;
 
 	GLuint temp_texture;
 	Vec2i string_bmp_size;

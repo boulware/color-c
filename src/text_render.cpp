@@ -146,44 +146,35 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
     mFormatString(formatted_string, string);
 
     return DrawText(layout, origin, StringFromCString(formatted_string));
+}
 
-    // Buffer buffer = BufferFromCString(formatted_string);
-    // u32 utf32_char;
-    // Vec2f text_size = SizeUtf8Line(layout, formatted_string);
+Rect
+DrawUiText(TextLayout layout, Vec2f origin, String string)
+{
+    Vec2f initial_cam_pos = game->camera_pos;
+    float initial_cam_zoom = game->camera_zoom;
+    SetCameraPos({0.f,0.f});
+    SetCameraZoom(1.f);
 
-    // origin = AlignRect({origin, text_size}, layout.align).pos;
-    // Vec2f pen = origin;
+    Rect text_rect = DrawText(layout, origin, string);
 
-    // while(NextAsUtf32Char(&buffer, &utf32_char))
-    // {
-    //     if(utf32_char == '`')
-    //     { // beginning of color code
-    //         ConfirmNextTokenType(&buffer, TokenType_::Backtick);
-    //         Token color_name = NextToken(&buffer);
-    //         ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+    SetCameraPos(initial_cam_pos);
+    SetCameraZoom(initial_cam_zoom);
 
-    //         Color color = layout.color;
+    return text_rect;
+}
 
-    //         if(TokenMatchesString(color_name, "red")) color = c::red;
+Rect
+DrawUiText(TextLayout layout, Vec2f origin, const char *string, ...)
+{
+    TIMED_BLOCK;
 
-    //         gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
-    //     }
-    //     else if(utf32_char == '\n')
-    //     {
-    //         break;
-    //     }
-    //     else
-    //     {
-    //         _RenderUtf32Char(utf32_char, &pen, layout.font_size, layout.color, *layout.font);
-    //     }
-    // }
+    ActivateUvShader(layout.color);
 
-    // if(layout.draw_debug)
-    // {
-    //     DrawUnfilledRect({origin, text_size}, layout.color);
-    // }
+    char *formatted_string;
+    mFormatString(formatted_string, string);
 
-    // return text_size;
+    return DrawUiText(layout, origin, StringFromCString(formatted_string));
 }
 
 // @robustness: This doesn't actually return the width of the multiline text.

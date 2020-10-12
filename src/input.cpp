@@ -81,13 +81,20 @@ MousePos()
 {
 	if(!input::global_input) return Vec2f{};
 
-	return(input::global_input->mouse_pos);
+	Vec2f transformed_pos = (1.f/game->camera_zoom * input::global_input->mouse_pos) + game->camera_pos;
+	return(transformed_pos);
 }
 
 bool
 MouseMoved()
 {
 	return(MousePos() != PrevMousePos());
+}
+
+Vec2f
+RelativeMousePos()
+{
+	return(input::global_input->mouse_pos - input::global_input->prev_mouse_pos);
 }
 
 bool

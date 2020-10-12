@@ -52,3 +52,5 @@ effect Heal all_allies (0,5,0)
 16) At some may point, implementing a proper pool as a replacement for table may be the proper solution if we have very transient entries -- aowtc, if an entry is deleted from a Table, the next entry will simply be created at the end of the table, and the index of the deleted entry will just be dead memory for the remainder of runtime. This isn't really an issue for the way I currently use tables (loading stuff from disk once and not really modifying it much), but if we have pools of objects that are more transient, this is something that needs to be addressed.
 
 17) Properly implement scancodes and related things so I can do things like differentiate between left and right alt (see MSDN MapVirtualKey())
+
+18)

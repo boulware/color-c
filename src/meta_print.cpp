@@ -430,6 +430,38 @@ String MetaString(const Buffer *s)
 // campaign.h
 // ------------------------------------------
 
+String MetaString(const CampaignState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "CampaignState::");
+	switch(*s)
+	{
+		case(CampaignState::Invalid): {
+			AppendCString(&string, "Invalid");
+		} break;
+		case(CampaignState::MapSelection): {
+			AppendCString(&string, "MapSelection");
+		} break;
+		case(CampaignState::TransitionIntoMap): {
+			AppendCString(&string, "TransitionIntoMap");
+		} break;
+		case(CampaignState::InMap): {
+			AppendCString(&string, "InMap");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
 String MetaString(const Campaign *s)
 {
 	TIMED_BLOCK;
@@ -440,6 +472,10 @@ String MetaString(const Campaign *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Campaign {\n");
+
+	AppendCString(&string, "  state: ");
+	AppendString(&string, MetaString(&s->state));
+	AppendCString(&string, "(CampaignState)\n");
 
 	AppendCString(&string, "  arena: ");
 	AppendString(&string, MetaString(&s->arena));
@@ -458,6 +494,12 @@ String MetaString(const Campaign *s)
 	AppendCString(&string, "  generation_params_template: ");
 	AppendString(&string, MetaString(&s->generation_params_template));
 	AppendCString(&string, "(GenerateNodeGraph_Params)\n");
+
+	AppendCString(&string, "  selected_map_index: %d (int)\n", s->selected_map_index);
+
+	AppendCString(&string, "  map_zoom_timer: ");
+	AppendString(&string, MetaString(&s->map_zoom_timer));
+	AppendCString(&string, "(Timer)\n");
 
 	AppendCString(&string, "}");
 
@@ -1022,6 +1064,8 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  camera_pos: ");
 	AppendString(&string, MetaString(&s->camera_pos));
 	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  camera_zoom: %f (float)\n", s->camera_zoom);
 
 	AppendCString(&string, "  temp_texture: %u (GLuint)\n", s->temp_texture);
 

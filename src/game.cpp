@@ -65,9 +65,12 @@ GameInit()
     gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&game->window_size);
     gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);
 
-    game->camera_pos = 0.5f*game->window_size; //{0.f,0.f};
-    gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&game->camera_pos);
-    gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&game->camera_pos);
+    //SetCameraPos(0.5f*game->window_size);
+    SetCameraPos({0.f,0.f});
+    SetCameraZoom(1.f);
+    // game->camera_pos = 0.5f*game->window_size; //{0.f,0.f};
+    // gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&game->camera_pos);
+    // gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&game->camera_pos);
 
     // Set up UV VAO/VBO
     gl->GenVertexArrays(1, &game->uv_vao);
@@ -252,7 +255,7 @@ GameUpdateAndRender()
     Vec2f pos = {1600.f,0.f};
     TextLayout frametime_layout = c::def_text_layout;
     frametime_layout.align = c::align_topright;
-    pos.y += DrawText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
+    pos.y += DrawUiText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
 
     // Right click cancels selected ability if one is selected.
     // If no ability is selected, cancels selected unit if one is selected.

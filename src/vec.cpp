@@ -321,3 +321,16 @@ RectBottomCenter(Rect rect)
 {
 	return rect.pos + Vec2f{0.5f*rect.size.x, 1.f*rect.size.y};
 }
+
+Rect
+RectLerp(Rect initial, Rect final, float t)
+{
+	Rect lerped_rect = {};
+	Vec2f top_left     = (1.f - t)*RectTopLeft(initial)     + (t)*RectTopLeft(final);
+	Vec2f bottom_right = (1.f - t)*RectBottomRight(initial) + (t)*RectBottomRight(final);
+
+	lerped_rect.pos = top_left;
+	lerped_rect.size = bottom_right - top_left;
+
+	return lerped_rect;
+}

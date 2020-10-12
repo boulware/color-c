@@ -359,10 +359,30 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
         DrawLine(a, b, c::white);
     }
 
-    for(auto node : transformed_nodes)
+    for(int i=0; i<transformed_nodes.count; ++i)
     {
+        auto &node = transformed_nodes[i];
         Rect aligned_rect = AlignRect({node.pos, {10.f,10.f}}, c::align_center);
-        DrawFilledRect(aligned_rect, c::black);
-        DrawUnfilledRect(aligned_rect, c::red);
+
+        if(i == graph->start_index)
+        { // Start node
+            DrawFilledRect(aligned_rect, c::green);
+        }
+        else if(i == graph->end_index)
+        {
+            DrawFilledRect(aligned_rect, c::yellow);
+        }
+        else
+        {
+            DrawFilledRect  (aligned_rect, c::black);
+        }
+
+        Color outline_color = c::red;
+        if(MouseInRect(aligned_rect))
+        {
+            outline_color = c::white;
+        }
+
+        DrawUnfilledRect(aligned_rect, outline_color);
     }
 }

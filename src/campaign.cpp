@@ -226,7 +226,18 @@ InitCampaign(Campaign *campaign)
     // campaign->map_generation_temp_arena = AllocArena();
     // campaign->map_generation_arena = AllocArena();
 
+    campaign->state = CampaignState::MapSelection;
+
     campaign->arena = AllocArena();
+    campaign->selected_map_index = -1;
+
+    campaign->map_zoom_timer = {
+        .start = 0.f,
+        .cur = 0.f,
+        .length_s = 1.f,
+        .finished = false,
+    };
+
 
     campaign->generation_params_template = {
         .thread_finished = nullptr,
@@ -300,87 +311,147 @@ InitCampaign(Campaign *campaign)
 GameState
 TickCampaign(Campaign *campaign)
 {
-    // if(campaign->generation_finished)
-    // {
-    //     GenerateNodeGraph_Params params = {
-    //         .graph = &campaign->map,
-    //         .campaign = campaign,
-    //         .main_path_min = 12,
-    //         .main_path_max = 16,
-    //         .max_linear_branch_length = 3,
-    //         .linear_branch_extension_chance = 50.0f,
-    //         .loop_generation_count = 10,
-    //     };
-
-    //     platform->StartJob(&params);
-    //     campaign->generation_finished = false;
-    // }
-
-    bool map_generation_finished = false;
-    if(platform->WorkQueuePendingJobCount(campaign->map_generation_work_queue) == 0)
+    if(campaign->state == CampaignState::MapSelection)
     {
-        map_generation_finished = true;
-    }
+        // Check map generation status.
+        bool map_generation_finished = false;
+        if(platform->WorkQueuePendingJobCount(campaign->map_generation_work_queue) == 0)
+        {
+            map_generation_finished = true;
+        }
 
-    if(Pressed(vk::enter) and map_generation_finished)
-    {
+        // Redo map generation when Enter is pressed.
+        if(Pressed(vk::enter) and map_generation_finished)
+        {
+            for(int i=0; i<ArrayCount(campaign->maps); ++i)
+            {
+                campaign->generation_finished[i] = false;
+                campaign->restart_counts[i] = 0;
+                campaign->max_speeds[i] = 100.f;
+
+                GenerateNodeGraph_Params params = campaign->generation_params_template;
+                params.thread_finished = &campaign->generation_finished[i];
+                params.restart_count   = &campaign->restart_counts[i];
+                params.max_speed       = &campaign->max_speeds[i];
+                params.graph           = &campaign->maps[i];
+
+                WorkEntry entry = {
+                    .callback = THREAD_GenerateNodeGraph,
+                    .data = &params,
+                    .data_byte_count = sizeof(params)
+                };
+
+                platform->AddWorkEntry(campaign->map_generation_work_queue, entry);
+            }
+        }
+
+        // Draw maps and "Use this map" button.
         for(int i=0; i<ArrayCount(campaign->maps); ++i)
         {
-            // Don't restart generation if the first one hasn't finished.
-            if(campaign->generation_finished[i] == false) continue;
+            Rect map_rect = AlignRect({{(1.f/6.f)*(1+2*i)*game->window_size.x, 0.5f*game->window_size.y},
+                                       {400.f,400.f}}, c::align_center);
+            //if(campaign->generation_finished[i])
+            if(campaign->max_speeds[i] < 0.1f)
+            {
+                DrawNodeGraphInRect(&campaign->maps[i], map_rect, {10.f,10.f});
+            }
+            else
+            {
+                TextLayout layout = c::def_text_layout;
+                layout.align = c::align_center;
+                DrawText(layout, RectCenter(map_rect), "Generating Map... ");
+            }
 
-            campaign->generation_finished[i] = false;
-            campaign->restart_counts[i] = 0;
-            campaign->max_speeds[i] = 100.f;
+            DrawUnfilledRect(map_rect, c::white);
 
-            GenerateNodeGraph_Params params = campaign->generation_params_template;
-            params.thread_finished = &campaign->generation_finished[i];
-            params.restart_count   = &campaign->restart_counts[i];
-            params.max_speed       = &campaign->max_speeds[i];
-            params.graph           = &campaign->maps[i];
+            if(map_generation_finished)
+            {
+                Rect button_rect = {};
+                Vec2f padding = {0.f, 10.f};
+                button_rect.pos = RectBottomCenter(map_rect) + padding;
+                button_rect.size = {200.f, 80.f};
+                ButtonLayout button_layout = c::def_button_layout;
+                button_layout.align = c::align_topcenter;
+                auto response = DrawButton(button_layout, button_rect, "Use this map");
 
-            WorkEntry entry = {
-                .callback = THREAD_GenerateNodeGraph,
-                .data = &params,
-                .data_byte_count = sizeof(params)
-            };
-
-            platform->AddWorkEntry(campaign->map_generation_work_queue, entry);
+                if(response.pressed)
+                {
+                    campaign->selected_map_index = i;
+                    campaign->state = CampaignState::TransitionIntoMap;
+                    Reset(&campaign->map_zoom_timer);
+                }
+            }
         }
     }
-
-    for(int i=0; i<ArrayCount(campaign->maps); ++i)
+    else if(campaign->state == CampaignState::TransitionIntoMap)
     {
-        Rect map_rect = AlignRect({{(1.f/6.f)*(1+2*i)*game->window_size.x, 0.5f*game->window_size.y},
-                                   {400.f,400.f}}, c::align_center);
-        //if(campaign->generation_finished[i])
-        if(campaign->max_speeds[i] < 0.1f)
-        {
-            //DrawNodeGraphInRect(&campaign->map, {{50.f,50.f},{600.f,200.f}});
-            DrawNodeGraphInRect(&campaign->maps[i], map_rect, {10.f,10.f});
-        }
-        else
-        {
-            TextLayout layout = c::def_text_layout;
-            layout.align = c::align_center;
-            DrawText(layout, RectCenter(map_rect), "Generating Map... ");
-        }
+        Tick(&campaign->map_zoom_timer);
 
-        //DrawText(c::def_text_layout, RectTopLeft(map_rect), "max speed: %f", campaign->max_speeds[i]);
-        DrawUnfilledRect(map_rect, c::white);
+        int i = campaign->selected_map_index;
+        Rect initial_map_rect = AlignRect({{(1.f/6.f)*(1+2*i)*game->window_size.x, 0.5f*game->window_size.y},
+                                          {400.f,400.f}}, c::align_center);
+        Rect final_map_rect = {{}, {800.f,800.f}};
+        float t = campaign->map_zoom_timer.cur;
+        float T = campaign->map_zoom_timer.length_s;
+        float t_over_T = t / T;
+        float cubic_t = -2*m::Pow(t_over_T, 3) + 3*m::Pow(t_over_T, 2);
+        Rect lerped_rect = RectLerp(initial_map_rect, final_map_rect, cubic_t);
 
-        if(map_generation_finished)
+        DrawNodeGraphInRect(&campaign->maps[i], lerped_rect, {10.f,10.f});
+
+        if(campaign->map_zoom_timer.finished)
         {
-            Rect button_rect = {};
-            Vec2f padding = {0.f, 10.f};
-            button_rect.pos = RectBottomCenter(map_rect) + padding;
-            button_rect.size = {200.f, 80.f};
-            ButtonLayout button_layout = c::def_button_layout;
-            button_layout.align = c::align_topcenter;
-            auto response = DrawButton(button_layout, button_rect, "Use this map");
+            campaign->state = CampaignState::InMap;
         }
     }
+    else if(campaign->state == CampaignState::InMap)
+    {
+        // Move around map with WASD
+        float cam_movespeed = 10.f;
+        if(Down(vk::S))
+        {
+            MoveCamera({0.f, cam_movespeed});
+        }
+        if(Down(vk::W))
+        {
+            MoveCamera({0.f, -cam_movespeed});
+        }
+        if(Down(vk::A))
+        {
+            MoveCamera({-cam_movespeed, 0.f});
+        }
+        if(Down(vk::D))
+        {
+            MoveCamera({cam_movespeed, 0.f});
+        }
 
+        // Mouse clicking and dragging moves around map
+        if(Down(vk::LMB) and MouseMoved())
+        {
+            Vec2f mouse_move = RelativeMousePos();
+            MoveCamera(-mouse_move);
+        }
+
+        // Mouse scroll zooms in and out
+        int mouse_scroll = MouseScroll();
+        if(mouse_scroll != 0)
+        {
+            float z = 1.f + (mouse_scroll / 10.f);
+            Log("%f", z);
+            ZoomCamera(z);
+        }
+
+        Rect map_rect = {{}, {800.f,800.f}};
+        DrawNodeGraphInRect(&campaign->maps[campaign->selected_map_index], map_rect, {10.f,10.f});
+    }
+
+
+    Vec2f rel_mouse_pos = MousePos();
+    //DrawText(c::def_text_layout, {}, "%f, %f", rel_mouse_pos.x, rel_mouse_pos.y);
+    DrawUiText(c::def_text_layout, {}, "%f, %f", game->camera_pos.x, game->camera_pos.y);
+
+
+    //DrawFilledRect({{}, {5.f,5.f}}, c::green);
 
     //DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(campaign));
 
@@ -501,7 +572,12 @@ TickCampaign(Campaign *campaign)
     // }
 
     GameState new_state = GameState::None;
-    if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;
+    if(Pressed(KeyBind::Exit))
+    {
+        SetCameraPos({});
+        SetCameraZoom(1.f);
+        new_state = GameState::MainMenu;
+    }
 
     return new_state;
 }

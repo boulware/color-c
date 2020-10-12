@@ -20,4 +20,9 @@ ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *c_string);
 
 void SetDrawDepth(float depth);
 
+void SetCameraPos(Vec2f camera_pos);
+void MoveCamera(Vec2f move);
+void SetCameraZoom(float z);
+void ZoomCamera(float dz);
+
 #endif

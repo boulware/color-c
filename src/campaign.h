@@ -4,9 +4,20 @@
 #include "array.h"
 #include "string.h"
 #include "node_graph.h"
+#include "timer.h"
+
+enum class CampaignState
+{
+    Invalid,
+    MapSelection,
+    TransitionIntoMap,
+    InMap,
+};
 
 struct Campaign
 {
+    CampaignState state;
+
     Arena arena;
 
     WorkQueue *map_generation_work_queue;
@@ -15,6 +26,8 @@ struct Campaign
     float max_speeds[3];
     NodeGraph maps[3];
     GenerateNodeGraph_Params generation_params_template;
+    int selected_map_index;
+    Timer map_zoom_timer;
     // Node *root;
     // Array<Node> nodes;
     // Array<Edge> edges;

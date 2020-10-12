@@ -22,8 +22,16 @@ ActivateUvShader(Color color={1.f,1.f,1.f,0.f})
 void
 SetCameraPos(Vec2f camera_pos)
 {
-    gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&camera_pos);
-    gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&camera_pos);
+	game->camera_pos = camera_pos;
+	gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&camera_pos);
+	gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&camera_pos);
+}
+
+void
+MoveCamera(Vec2f move)
+{
+	game->camera_pos += move;
+	SetCameraPos(game->camera_pos);
 }
 
 void
@@ -32,6 +40,21 @@ SetDrawDepth(float depth)
 	float clip_space_depth = c::clip_A*depth+c::clip_B;
 	gl->ProgramUniform1f(game->uv_shader, 3, clip_space_depth);
 	gl->ProgramUniform1f(game->color_shader, 2, clip_space_depth);
+}
+
+void
+SetCameraZoom(float z)
+{
+	game->camera_zoom = z;
+	gl->ProgramUniform1f(game->uv_shader,    5, z);
+	gl->ProgramUniform1f(game->color_shader, 5, z);
+}
+
+void
+ZoomCamera(float dz)
+{
+	game->camera_zoom *= dz;
+	SetCameraZoom(game->camera_zoom);
 }
 
 void

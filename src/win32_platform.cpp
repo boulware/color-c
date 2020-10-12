@@ -781,6 +781,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	// volatile RingBuffer entry_data_buffer;
 	// WorkEntry entries[1024];
 
+			#if 0
 			if(g_work_queue_system.init)
 			{
 				Vec2f pen = {};
@@ -794,6 +795,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 					pen.y += text_rect.size.y;
 				}
 			}
+			#endif
 			//DrawText(c::def_text_layout, {0.f, 100.f}, "next_entry_to_read: %u", game->log_state.queue->next_entry_to_read);
 
 			GetKeyboardState((BYTE*)&game->input.down_keys);
