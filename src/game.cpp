@@ -48,7 +48,7 @@ GameInit()
     if(InitFreetype(&ft_lib))
     {
         FT_Face roboto_face = LoadFontFaceFromFile("resource/Roboto-Bold.ttf", ft_lib);
-        text_render::default_font = LoadFontData(roboto_face, 64);
+        text_render::default_font = LoadFontData(roboto_face, 256);
         CloseFreetype(&ft_lib);
     }
 
@@ -183,7 +183,7 @@ GameInit()
     game->draw_debug_text = false;
     game->test_float = 0.f;
 
-    game->current_state = GameState::Campaign;
+    game->current_state = GameState::Battle;
 
     // To use this, set OPTIMIZE to true, convert the original function into a function pointer
     // with the name OPTIMIZING_FUNCTION, and declare two functions named with "Slow" and "Fast"
@@ -283,7 +283,7 @@ GameUpdateAndRender()
     GameState new_state = GameState::None;
     if(game->current_state == GameState::MainMenu)
     {
-        new_state = TickMainMenu(&game->mainmenu_state);
+        new_state = TickMainMenu(&game->mainmenu_state, game->state_entered);
     }
     else if(game->current_state == GameState::Battle)
     {
@@ -306,8 +306,10 @@ GameUpdateAndRender()
         new_state = TickTestMode(&game->test_mode);
     }
 
+    game->state_entered = false;
     if(new_state != GameState::None)
     {
+        game->state_entered = true;
         game->current_state = new_state;
         if(game->current_state == GameState::Quit) game->exit_requested = true;
     }

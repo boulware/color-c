@@ -31,6 +31,7 @@
 #include "log.h"
 #include "macros.h"
 #include "main_menu.h"
+#include "map.h"
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
@@ -42,6 +43,7 @@
 #include "platform.h"
 #include "random.h"
 #include "ring_buffer.h"
+#include "room.h"
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
@@ -541,6 +543,18 @@ String MetaString(const Campaign *s)
 	AppendCString(&string, "  start_node_pos: ");
 	AppendString(&string, MetaString(&s->start_node_pos));
 	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  node_pulse_timer: ");
+	AppendString(&string, MetaString(&s->node_pulse_timer));
+	AppendCString(&string, "(OscillatingTimer)\n");
+
+	AppendCString(&string, "  rooms: ");
+	AppendString(&string, MetaString(&s->rooms));
+	AppendCString(&string, "(Array<Room>)\n");
+
+	AppendCString(&string, "  player_party: ");
+	AppendString(&string, MetaString(&s->player_party));
+	AppendCString(&string, "(UnitSet)\n");
 
 	AppendCString(&string, "}");
 
@@ -1069,6 +1083,8 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  current_state: ");
 	AppendString(&string, MetaString(&s->current_state));
 	AppendCString(&string, "(GameState)\n");
+
+	AppendCString(&string, "  state_entered: %d (bool)\n", s->state_entered);
 
 	AppendCString(&string, "  log_state: ");
 	AppendString(&string, MetaString(&s->log_state));
@@ -1732,6 +1748,34 @@ String MetaString(const MainMenu *s)
 }
 
 // ---------------FILE START---------------
+// map.h
+// ------------------------------------------
+
+String MetaString(const MapResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "MapResponse {\n");
+
+	AppendCString(&string, "  start_node_pos: ");
+	AppendString(&string, MetaString(&s->start_node_pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  hovered_node_index: %d (int)\n", s->hovered_node_index);
+
+	AppendCString(&string, "  newly_hovered: %d (bool)\n", s->newly_hovered);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
 // math.h
 // ------------------------------------------
 
@@ -1789,6 +1833,10 @@ String MetaString(const Node *s)
 	AppendCString(&string, "  vel: ");
 	AppendString(&string, MetaString(&s->vel));
 	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  completed: %d (bool)\n", s->completed);
+
+	AppendCString(&string, "  reachable: %d (bool)\n", s->reachable);
 
 	AppendCString(&string, "}");
 
@@ -1857,6 +1905,10 @@ String MetaString(const NodeGraphResponse *s)
 	AppendCString(&string, "  start_node_pos: ");
 	AppendString(&string, MetaString(&s->start_node_pos));
 	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  newly_hovered: %d (bool)\n", s->newly_hovered);
+
+	AppendCString(&string, "  hovered_node_index: %d (int)\n", s->hovered_node_index);
 
 	AppendCString(&string, "}");
 
@@ -1993,11 +2045,9 @@ String MetaString(const OscillatingTimer *s)
 
 	AppendCString(&string, "  cur: %f (float)\n", s->cur);
 
-	AppendCString(&string, "  min: %f (float)\n", s->min);
+	AppendCString(&string, "  low: %f (float)\n", s->low);
 
-	AppendCString(&string, "  max: %f (float)\n", s->max);
-
-	AppendCString(&string, "  speed: %f (float)\n", s->speed);
+	AppendCString(&string, "  high: %f (float)\n", s->high);
 
 	AppendCString(&string, "  decreasing: %d (bool)\n", s->decreasing);
 
@@ -2116,6 +2166,71 @@ String MetaString(const RingBuffer *s)
 	AppendCString(&string, "  size_in_bytes: %zu (size_t)\n", s->size_in_bytes);
 
 	AppendCString(&string, "  data: %p (void *)\n", s->data);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// room.h
+// ------------------------------------------
+
+String MetaString(const RoomType *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "RoomType::");
+	switch(*s)
+	{
+		case(RoomType::Undefined): {
+			AppendCString(&string, "Undefined");
+		} break;
+		case(RoomType::Boss): {
+			AppendCString(&string, "Boss");
+		} break;
+		case(RoomType::Battle): {
+			AppendCString(&string, "Battle");
+		} break;
+		case(RoomType::Shop): {
+			AppendCString(&string, "Shop");
+		} break;
+		case(RoomType::Camp): {
+			AppendCString(&string, "Camp");
+		} break;
+		case(RoomType::Fishing): {
+			AppendCString(&string, "Fishing");
+		} break;
+		case(RoomType::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const Room *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Room {\n");
+
+	AppendCString(&string, "  type: ");
+	AppendString(&string, MetaString(&s->type));
+	AppendCString(&string, "(RoomType)\n");
 
 	AppendCString(&string, "}");
 

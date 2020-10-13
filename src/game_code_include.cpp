@@ -42,3 +42,5 @@
 #include "font_loading.cpp"
 #include "buffer.cpp"
 #include "camera.cpp"
+#include "room.cpp"
+#include "map.cpp"

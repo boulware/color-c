@@ -516,9 +516,8 @@ void InitBattle(Battle *battle)
 {
     // Fill out timers
     battle->preview_damage_timer = {
-        .min = 0.3f,
-        .max = 1.0f,
-        .speed = 0.015f
+        .low = 0.3f,
+        .high = 1.0f,
     };
     ResetHigh(&battle->preview_damage_timer);
 

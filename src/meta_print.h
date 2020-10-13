@@ -29,6 +29,7 @@
 #include "log.h"
 #include "macros.h"
 #include "main_menu.h"
+#include "map.h"
 #include "math.h"
 #include "memory.h"
 #include "meta.h"
@@ -40,6 +41,7 @@
 #include "platform.h"
 #include "random.h"
 #include "ring_buffer.h"
+#include "room.h"
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
@@ -154,6 +156,8 @@ String MetaString(const LogState *s);
 
 String MetaString(const MainMenu *s);
 
+String MetaString(const MapResponse *s);
+
 String MetaString(const Arena *s);
 
 String MetaString(const Node *s);
@@ -183,6 +187,10 @@ String MetaString(const PassiveSkillTree *s);
 String MetaString(const LCG *s);
 
 String MetaString(const RingBuffer *s);
+
+String MetaString(const RoomType *s);
+
+String MetaString(const Room *s);
 
 String MetaString(const Sprite *s);
 

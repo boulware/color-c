@@ -26,6 +26,7 @@ struct Game
 	bool exit_requested;
 
 	GameState current_state;
+	bool state_entered;
 
 	LogState log_state;
 	float frame_time_ms;

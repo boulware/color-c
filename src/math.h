@@ -16,7 +16,7 @@ namespace m
     Type Abs(Type value);
 
     template <class Type>
-    Type Pow(Type base, unsigned int power);
+    Type Pow(Type base, int power);
 
     float Sqrt(float a);
     float Round(float value);

@@ -5,7 +5,9 @@
 #include "string.h"
 #include "node_graph.h"
 #include "timer.h"
+#include "oscillating_timer.h"
 #include "camera.h"
+#include "room.h"
 
 enum class CampaignState
 {
@@ -28,31 +30,17 @@ struct Campaign
     NodeGraph maps[3];
     GenerateNodeGraph_Params generation_params_template;
     int selected_map_index;
-    Timer map_zoom_timer;
 
+    Timer map_zoom_timer;
     Camera start_camera;
     Camera end_camera;
 
     Vec2f start_node_pos;
-    // Vec2f camera_start_pos;
-    // Vec2f camera_end_pos;
-    // Rect camera_start_rect;
-    // Rect camera_end_rect;
-    // Node *root;
-    // Array<Node> nodes;
-    // Array<Edge> edges;
 
-    // int end_index;
-    // int drag_start_index;
-    // bool fdg_running;
+    OscillatingTimer node_pulse_timer;
 
-    // Vec2f camera_offset;
-
-    // Timer generation_timer;
-    // bool generation_finished;
-    // float max_speed;
-    // bool graph_fully_connected = true;
-    // int generation_count;
+    Array<Room> rooms;
+    UnitSet player_party;
 };
 
 //Node *AddNode(Campaign *campaign, Node node, Array<int> edge_indices = Array<int>{});

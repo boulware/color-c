@@ -9,6 +9,8 @@ struct Node
 {
     Vec2f pos;
     Vec2f vel;
+    bool completed;
+    bool reachable;
 };
 
 struct Edge
@@ -28,11 +30,13 @@ struct NodeGraph
 struct NodeGraphResponse
 {
     Vec2f start_node_pos;
+    bool newly_hovered;
+    int hovered_node_index = -1;
 };
 
 struct ForceSimParams
 {
-    Arena *temp_arena = nullptr;
+    Arena *temp_arena      = nullptr;
     float edge_free_length = 50.f;
     float spring_constant  = 0.01f;
     float charge_strength  = 1000.0f;
@@ -60,11 +64,12 @@ struct ForceSimState
 
 void THREAD_GenerateNodeGraph(void *data, Arena *thread_arena);
 
+void CompleteNode(NodeGraph *graph, int completed_node_index);
 void GenerateNodeGraph(NodeGraph *graph, GenerateNodeGraph_Params params);
 ForceSimState StepNodeGraphForceSimulation(NodeGraph *graph, ForceSimParams params, float dt, int iter_count);
 
 NodeGraphResponse TransformNodeGraphPointsToFitInsideRect(NodeGraph *graph, Rect rect);
-void DrawNodeGraph(NodeGraph *graph);
+NodeGraphResponse DrawNodeGraph(NodeGraph *graph, float t = 0.f);
 NodeGraphResponse DrawNodeGraphInRect(NodeGraph *graph, Rect rect);
 
 int MaxNodesFromGenerationParams(GenerateNodeGraph_Params params);

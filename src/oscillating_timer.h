@@ -4,8 +4,7 @@
 struct OscillatingTimer
 {
 	float cur;
-	float min, max;
-	float speed;
+	float low, high;
 	bool decreasing;
 };
 

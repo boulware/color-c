@@ -4,34 +4,34 @@ void Tick(OscillatingTimer *timer)
 {
 	if(timer->decreasing)
 	{
-		timer->cur -= timer->speed;
-		if(timer->cur < timer->min)
+		timer->cur -= c::frametime_s;
+		if(timer->cur <= timer->low)
 		{
 			timer->decreasing = false;
-			float excess_time = timer->min - timer->cur;
-			timer->cur = timer->min + excess_time;
+			float excess_time = timer->low - timer->cur;
+			timer->cur = timer->low + excess_time;
 		}
 	}
 	else
 	{
-		timer->cur += timer->speed;
-		if(timer->cur > timer->max)
+		timer->cur += c::frametime_s;
+		if(timer->cur >= timer->high)
 		{
 			timer->decreasing = true;
-			float excess_time = timer->cur - timer->max;
-			timer->cur = timer->max - excess_time;
+			float excess_time = timer->cur - timer->high;
+			timer->cur = timer->high - excess_time;
 		}
 	}
 }
 
 void ResetLow(OscillatingTimer *timer)
 {
-	timer->cur = timer->min;
+	timer->cur = timer->low;
 	timer->decreasing = false;
 }
 
 void ResetHigh(OscillatingTimer *timer)
 {
-	timer->cur = timer->max;
+	timer->cur = timer->high;
 	timer->decreasing = true;
 }

@@ -3,6 +3,7 @@
 #include "random.h"
 #include "generate_node_graph_params.h"
 #include "camera.h"
+#include "map.h"
 
 // bool
 // GraphIsFullyConnected(Campaign *campaign)
@@ -230,7 +231,19 @@ InitCampaign(Campaign *campaign)
     campaign->state = CampaignState::MapSelection;
 
     campaign->arena = AllocArena();
+
+    // Maps
+    int max_nodes = MaxNodesFromGenerationParams(campaign->generation_params_template);
+    int max_edges = MaxEdgesFromGenerationParams(campaign->generation_params_template);
+    for(int i=0; i<ArrayCount(campaign->maps); ++i)
+    {
+        campaign->maps[i].nodes = CreateArrayFromArena<Node>(max_nodes, &campaign->arena);
+        campaign->maps[i].edges = CreateArrayFromArena<Edge>(max_edges, &campaign->arena);
+    }
     campaign->selected_map_index = -1;
+
+    // Rooms
+    campaign->rooms = CreateArrayFromArena<Room>(max_nodes, &campaign->arena);
 
     campaign->map_zoom_timer = {
         .start = 0.f,
@@ -239,6 +252,10 @@ InitCampaign(Campaign *campaign)
         .finished = false,
     };
 
+    campaign->node_pulse_timer = {
+        .low = 0.f,
+        .high = 1.f,
+    };
 
     campaign->generation_params_template = {
         .thread_finished = nullptr,
@@ -252,13 +269,7 @@ InitCampaign(Campaign *campaign)
         .loop_generation_count = 10,
     };
 
-    int max_nodes = MaxNodesFromGenerationParams(campaign->generation_params_template);
-    int max_edges = MaxEdgesFromGenerationParams(campaign->generation_params_template);
-    for(int i=0; i<ArrayCount(campaign->maps); ++i)
-    {
-        campaign->maps[i].nodes = CreateArrayFromArena<Node>(max_nodes, &campaign->arena);
-        campaign->maps[i].edges = CreateArrayFromArena<Edge>(max_edges, &campaign->arena);
-    }
+
 
     platform->CreateWorkQueue(&campaign->map_generation_work_queue, 3, "Map generation");
 
@@ -439,6 +450,7 @@ TickCampaign(Campaign *campaign)
         //                            RectLerp(campaign->camera_start_rect, campaign->camera_end_rect, 0.f).size} );
                                         //campaign->camera_start_rect.size});
 
+        //Tick(&campaign->node_pulse_timer);
         DrawNodeGraph(&campaign->maps[i]);
 
 
@@ -447,7 +459,16 @@ TickCampaign(Campaign *campaign)
         if(campaign->map_zoom_timer.finished)
         {
             campaign->state = CampaignState::InMap;
-            //MoveCameraToWorldRect({{0.f,0.f},{400.f,400.f}});
+
+            NodeGraph &current_map = campaign->maps[campaign->selected_map_index];
+            //for(auto &room : campaign->rooms)
+            for(int _=0; _<current_map.nodes.count; ++_)
+            {
+                Room room = {.type = (RoomType)RandomU32(2, (u32)RoomType::COUNT-1)};
+                campaign->rooms += room;
+            }
+
+            campaign->rooms[current_map.end_index].type = RoomType::Boss;
         }
     }
     else if(campaign->state == CampaignState::InMap)
@@ -472,7 +493,7 @@ TickCampaign(Campaign *campaign)
         }
 
         // Mouse clicking and dragging moves around map
-        if(Down(vk::LMB) and MouseMoved())
+        if(Down(vk::RMB) and MouseMoved())
         {
             Vec2f mouse_move = RelativeMousePos();
             MoveCamera(&game->camera, -mouse_move);
@@ -482,13 +503,24 @@ TickCampaign(Campaign *campaign)
         int mouse_scroll = MouseScroll();
         if(mouse_scroll != 0)
         {
-            float z = 1.f - (mouse_scroll / c::zoom_sensitivity);
-            SetCameraView(&game->camera, z * game->camera.view);
-            //ZoomCameraIntoPoint(z, MousePos());
+            float zoom_amount = m::Pow(c::zoom_sensitivity, -mouse_scroll);
+            SetCameraView(&game->camera, zoom_amount * game->camera.view);
         }
 
         Rect map_rect = {{}, {100.f,100.f}};
-        DrawNodeGraph(&campaign->maps[campaign->selected_map_index]);
+        Tick(&campaign->node_pulse_timer);
+        float cubic_t = ParameterToCubic(campaign->node_pulse_timer.cur, campaign->node_pulse_timer.high);
+        auto map_response = DrawMap(campaign->maps[campaign->selected_map_index],
+                                    campaign->rooms,
+                                    cubic_t);
+
+        if(Pressed(vk::LMB) and map_response.hovered_node_index >= 0)
+        {
+            Node &node = campaign->maps[campaign->selected_map_index].nodes[map_response.hovered_node_index]; // alias
+            if(node.reachable) CompleteNode(&campaign->maps[campaign->selected_map_index], map_response.hovered_node_index);
+        }
+
+        //if(map_response.newly_hovered) ResetLow(&campaign->node_pulse_timer);
     }
 
 
@@ -616,11 +648,7 @@ TickCampaign(Campaign *campaign)
     // }
 
     GameState new_state = GameState::None;
-    if(Pressed(KeyBind::Exit))
-    {
-        SetCameraPos(&game->camera, {});
-        new_state = GameState::MainMenu;
-    }
+    if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;
 
     return new_state;
 }

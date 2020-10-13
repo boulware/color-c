@@ -13,10 +13,14 @@ struct Unit;
 
 namespace c
 {
+	// Misc
+	char *empty_string = "[EMPTY STRING]";
+
 	// Threading
 	u32 mutex_timeout_ms = 1;
 
 	// Colors
+	const Color dk_red  = {0.35f,0.f,0.f,1.f};
 	const Color red 	= {1.f,0.f,0.f,1.f};
 	const Color green 	= {0.f,1.f,0.f,1.f};
 	const Color blue 	= {0.f,0.f,1.f,1.f};
@@ -225,7 +229,7 @@ namespace c
 	};
 
 	// Campaign
-	float zoom_sensitivity = 5.f;
+	float zoom_sensitivity = 1.15; // Interpret as a percentage. 1.1 => 10% change in camera rect size. 1.5 => 50% change
 
 	// Force-directed graph parameters
 

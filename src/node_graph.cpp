@@ -61,6 +61,26 @@ GraphIsFullyConnected(NodeGraph *graph, Arena *temp_arena)
 }
 
 void
+CompleteNode(NodeGraph *graph, int completed_node_index)
+{
+    graph->nodes[completed_node_index].completed = true;
+
+    for(int i=0; i<graph->edges.count; ++i)
+    {
+        Edge &edge = graph->edges[i]; // alias
+
+        if(edge.a == completed_node_index)
+        {
+            graph->nodes[edge.b].reachable = true;
+        }
+        else if(edge.b == completed_node_index)
+        {
+            graph->nodes[edge.a].reachable = true;
+        }
+    }
+}
+
+void
 THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
 {
     GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;
@@ -96,6 +116,10 @@ THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
             break;
         }
     }
+
+    // Set reachable for each node.
+    graph->nodes[graph->start_index].reachable = true;
+
 
 
     *(params.thread_finished) = true;
@@ -394,42 +418,87 @@ TransformNodeGraphPointsToFitInsideRect(NodeGraph *graph, Rect rect)
     return response;
 }
 
-void
-DrawNodeGraph(NodeGraph *graph)
+NodeGraphResponse
+DrawNodeGraph(NodeGraph *graph, float t)
 {
+    NodeGraphResponse response = {};
+
     for(auto edge : graph->edges)
     {
         Vec2f a = graph->nodes[edge.a].pos;
         Vec2f b = graph->nodes[edge.b].pos;
-        DrawLine(a, b, c::white);
+        DrawLine(a, b, c::lt_grey);
     }
 
     for(int i=0; i<graph->nodes.count; ++i)
     {
         auto &node = graph->nodes[i];
-        Rect aligned_rect = AlignRect({node.pos, {10.f,10.f}}, c::align_center);
 
-        if(i == graph->start_index)
-        { // Start node
-            DrawFilledRect(aligned_rect, c::green);
-        }
-        else if(i == graph->end_index)
-        { // End node
-            DrawFilledRect(aligned_rect, c::yellow);
-        }
-        else
+        Rect collision_rect = AlignRect({node.pos, {10.f,10.f}}, c::align_center);
+        if(PointInRect(collision_rect, MousePos()) and !PointInRect(collision_rect, PrevMousePos()))
         {
-            DrawFilledRect  (aligned_rect, c::black);
+            response.newly_hovered = true;
         }
+
+        float t_for_this_node = 0.f;
+        if(node.reachable and !node.completed) t_for_this_node = t;
+        Rect aligned_rect = RectLerp( collision_rect,
+                                      AlignRect({node.pos, {13.f,13.f}}, c::align_center),
+                                      t_for_this_node);
 
         Color outline_color = c::red;
         if(MouseInRect(aligned_rect))
         {
-            outline_color = c::white;
+            response.hovered_node_index = i;
+
+            if(node.completed) outline_color = c::lt_grey; // Hovered and completed
+            else               outline_color = c::white;   // Hovered and NOT completed
+        }
+        else
+        {
+            if(node.completed) outline_color = c::grey; // Completed (not hovered)
+            else
+            { // NOT completed (not hovered)
+                if(node.reachable) outline_color = c::red;
+                else               outline_color = c::lt_grey;
+            }
         }
 
+        if(i == graph->start_index)
+        {
+            response.start_node_pos = node.pos;
+        }
+
+
+        Color fill_color = c::black;
+        if(i == graph->end_index) fill_color = c::green;
+        else if(node.completed)   fill_color = c::black;
+        else if(node.reachable)   fill_color = c::dk_red;
+        else                      fill_color = c::grey;
+        // if(i == response.hovered_node_index)
+        // {
+        //     if(node.completed)      fill_color = c::dk_grey;
+        //     else if(node.reachable) fill_color = c::red;
+        //     else                    fill_color = c::lt_grey;
+        // }
+        // else if(i == graph->start_index)
+        // { // Start node
+        //     fill_color = c::green;
+        // }
+        // else if(i == graph->end_index)
+        // { // End node
+        //     fill_color = c::yellow;
+        // }
+        // else
+        // {
+        //     fill_color = c::black;
+        // }
+
+        DrawFilledRect(  aligned_rect, fill_color);
         DrawUnfilledRect(aligned_rect, outline_color);
     }
+
+    return response;
 }
 
 // @note: This doesn't work if the rect isn't a square.
@@ -479,7 +548,7 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect)
     {
         Vec2f a = transformed_nodes[edge.a].pos;
         Vec2f b = transformed_nodes[edge.b].pos;
-        DrawLine(a, b, c::white);
+        DrawLine(a, b, c::lt_grey);
     }
 
     for(int i=0; i<transformed_nodes.count; ++i)
@@ -504,6 +573,7 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect)
         Color outline_color = c::red;
         if(MouseInRect(aligned_rect))
         {
+            response.hovered_node_index = i;
             outline_color = c::white;
         }
 

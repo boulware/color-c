@@ -16,8 +16,13 @@ InitMainMenu(MainMenu *menu)
 // Updates and draws main menu
 // Returns the game state that should be entered (returns GameState::None if we should stay in menu)
 GameState
-TickMainMenu(MainMenu *menu)
+TickMainMenu(MainMenu *menu, bool entered)
 {
+	if(entered)
+	{
+		MoveCameraToWorldRect(&game->camera, Rect{{0.f,0.f}, game->window_size});
+	}
+
 	if(Pressed(vk::down) or Repeated(vk::down))
 	{
 		++menu->selected_option;

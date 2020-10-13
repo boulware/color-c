@@ -186,3 +186,11 @@ ClampFloatToU32(float f)
 
 	return value;
 }
+
+float
+ParameterToCubic(float t, float T)
+{
+    float t_over_T = t / T;
+    float cubic_t = -2*m::Pow(t_over_T, 3) + 3*m::Pow(t_over_T, 2);
+    return cubic_t;
+}

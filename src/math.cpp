@@ -3,62 +3,74 @@
 
 namespace m
 {
-	template <class Type>
-	Type Min(Type a, Type b) {
-		if(a <= b) return a;
-		else return b;
-	}
+    template <class Type>
+    Type Min(Type a, Type b) {
+        if(a <= b) return a;
+        else return b;
+    }
 
-	template <class Type>
-	Type Max(Type a, Type b) {
-		if(a >= b) return a;
-		else return b;
-	}
+    template <class Type>
+    Type Max(Type a, Type b) {
+        if(a >= b) return a;
+        else return b;
+    }
 
-	template <class Type>
-	Type Clamp(Type value, Type low, Type high) {
-		return Min(Max(value, low), high);
-	}
+    template <class Type>
+    Type Clamp(Type value, Type low, Type high) {
+        return Min(Max(value, low), high);
+    }
 
-	template <class Type>
-	Type Abs(Type value) {
-		if(value >= 0) return value;
-		else return -value;
-	}
+    template <class Type>
+    Type Abs(Type value) {
+        if(value >= 0) return value;
+        else return -value;
+    }
 
-	float Round(float value)
-	{
-		return((float)(int)(value + 0.5f));
-	}
+    float Round(float value)
+    {
+        return((float)(int)(value + 0.5f));
+    }
 
-	template <class Type>
-	Type Pow(Type base, unsigned int power)
-	{
-		Type product = 1;
-		for(int i=0; i<power; i++)
-		{
-			product *= base;
-		}
-		return product;
-	}
+    template <class Type>
+    Type Pow(Type base, int power)
+    {
+        Type product = (Type)1;
+        if(power == 0) {}
+        else if(power > 0)
+        {
+            for(int i=0; i<power; ++i)
+            {
+                product *= base;
+            }
+        }
+        else
+        { // negative power
+            for(int i=0; i<-power; ++i)
+            {
+                product /= base;
+            }
+        }
 
-	template <class Type>
-	int Sign(Type value)
-	{
-		if(value < (Type)0) return -1;
-		else if(value > (Type)0) return +1;
+        return product;
+    }
 
-		return 0;
-	}
+    template <class Type>
+    int Sign(Type value)
+    {
+        if(value < (Type)0) return -1;
+        else if(value > (Type)0) return +1;
 
-	float Sqrt(float a)
-	{
-		return _mm_cvtss_f32(_mm_sqrt_ps(_mm_set_ss(a)));
-	}
+        return 0;
+    }
 
-	float Lerp(float start, float end, float t)
-	{
-		float value = (1.f - t)*start + (t)*end;
-		return value;
-	}
+    float Sqrt(float a)
+    {
+        return _mm_cvtss_f32(_mm_sqrt_ps(_mm_set_ss(a)));
+    }
+
+    float Lerp(float start, float end, float t)
+    {
+        float value = (1.f - t)*start + (t)*end;
+        return value;
+    }
 };

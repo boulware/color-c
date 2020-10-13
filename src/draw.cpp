@@ -50,6 +50,7 @@ SetCameraView(Camera *camera, Vec2f view)
 {
     camera->view = view;
     gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&view);
+    gl->ProgramUniform2fv(game->uv_shader,    0, 1, (GLfloat*)&view);
 }
 
 void
