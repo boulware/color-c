@@ -25,6 +25,11 @@ struct NodeGraph
     int end_index;
 };
 
+struct NodeGraphResponse
+{
+    Vec2f start_node_pos;
+};
+
 struct ForceSimParams
 {
     Arena *temp_arena = nullptr;
@@ -58,7 +63,9 @@ void THREAD_GenerateNodeGraph(void *data, Arena *thread_arena);
 void GenerateNodeGraph(NodeGraph *graph, GenerateNodeGraph_Params params);
 ForceSimState StepNodeGraphForceSimulation(NodeGraph *graph, ForceSimParams params, float dt, int iter_count);
 
-void DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding);
+NodeGraphResponse TransformNodeGraphPointsToFitInsideRect(NodeGraph *graph, Rect rect);
+void DrawNodeGraph(NodeGraph *graph);
+NodeGraphResponse DrawNodeGraphInRect(NodeGraph *graph, Rect rect);
 
 int MaxNodesFromGenerationParams(GenerateNodeGraph_Params params);
 int MaxEdgesFromGenerationParams(GenerateNodeGraph_Params params);

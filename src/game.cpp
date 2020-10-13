@@ -66,8 +66,7 @@ GameInit()
     gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);
 
     //SetCameraPos(0.5f*game->window_size);
-    SetCameraPos({0.f,0.f});
-    SetCameraZoom(1.f);
+    SetCameraPos(&game->camera, {0.f,0.f});
     // game->camera_pos = 0.5f*game->window_size; //{0.f,0.f};
     // gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&game->camera_pos);
     // gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&game->camera_pos);

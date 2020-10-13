@@ -53,4 +53,4 @@ effect Heal all_allies (0,5,0)
 
 17) Properly implement scancodes and related things so I can do things like differentiate between left and right alt (see MSDN MapVirtualKey())
 
-18)
+18) Mouse panning doesn't work properly when zoomed in or out.

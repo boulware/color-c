@@ -41,3 +41,4 @@
 #include "ring_buffer.cpp"
 #include "font_loading.cpp"
 #include "buffer.cpp"
+#include "camera.cpp"

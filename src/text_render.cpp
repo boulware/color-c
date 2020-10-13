@@ -151,15 +151,16 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 Rect
 DrawUiText(TextLayout layout, Vec2f origin, String string)
 {
-    Vec2f initial_cam_pos = game->camera_pos;
-    float initial_cam_zoom = game->camera_zoom;
-    SetCameraPos({0.f,0.f});
-    SetCameraZoom(1.f);
+    Camera initial_camera = game->camera;
+    MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
+    //float initial_cam_zoom = game->camera_zoom;
+    //SetCameraPos({0.f,0.f});
+    //SetCameraZoom(1.f);
 
     Rect text_rect = DrawText(layout, origin, string);
 
-    SetCameraPos(initial_cam_pos);
-    SetCameraZoom(initial_cam_zoom);
+    SetCameraPos(&game->camera, initial_camera.pos);
+    SetCameraView(&game->camera, initial_camera.view);
 
     return text_rect;
 }

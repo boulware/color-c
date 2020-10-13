@@ -3,7 +3,9 @@
 GameState
 TickTestMode(TestMode *test)
 {
-    //SetCameraPos(0.5f*game->window_size);
+    // SetCameraPos({0.f,0.f});
+    //SetCameraView({100.f,100.f});
+    DrawUnfilledRect(Rect{{-45.f,-45.f},{90.f,90.f}}, c::green);
 
     if(Pressed(vk::LMB))
     {

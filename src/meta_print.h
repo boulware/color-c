@@ -5,6 +5,7 @@
 #include "better_text_parsing.h"
 #include "bitmap.h"
 #include "buffer.h"
+#include "camera.h"
 #include "campaign.h"
 #include "color.h"
 #include "const.h"
@@ -78,6 +79,8 @@ String MetaString(const BgraPixel *s);
 String MetaString(const Bitmap *s);
 
 String MetaString(const Buffer *s);
+
+String MetaString(const Camera *s);
 
 String MetaString(const CampaignState *s);
 
@@ -158,6 +161,8 @@ String MetaString(const Node *s);
 String MetaString(const Edge *s);
 
 String MetaString(const NodeGraph *s);
+
+String MetaString(const NodeGraphResponse *s);
 
 String MetaString(const ForceSimParams *s);
 

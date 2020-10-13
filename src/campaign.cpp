@@ -2,6 +2,7 @@
 
 #include "random.h"
 #include "generate_node_graph_params.h"
+#include "camera.h"
 
 // bool
 // GraphIsFullyConnected(Campaign *campaign)
@@ -234,7 +235,7 @@ InitCampaign(Campaign *campaign)
     campaign->map_zoom_timer = {
         .start = 0.f,
         .cur = 0.f,
-        .length_s = 1.f,
+        .length_s = 2.5f,
         .finished = false,
     };
 
@@ -279,6 +280,12 @@ InitCampaign(Campaign *campaign)
 
         platform->AddWorkEntry(campaign->map_generation_work_queue, entry);
     }
+
+    Rect rect = {
+        .pos  = Vec2f{0.f,0.f},
+        .size = Vec2f{1600.f, 900.f}
+    };
+    MoveCameraToWorldRect(&game->camera, rect);
 
     // Log("Thread %d started.", platform->StartJob(&params));
     // Log("Thread %d started.", platform->StartJob(&params));
@@ -353,7 +360,7 @@ TickCampaign(Campaign *campaign)
             //if(campaign->generation_finished[i])
             if(campaign->max_speeds[i] < 0.1f)
             {
-                DrawNodeGraphInRect(&campaign->maps[i], map_rect, {10.f,10.f});
+                DrawNodeGraphInRect(&campaign->maps[i], map_rect);
             }
             else
             {
@@ -362,7 +369,9 @@ TickCampaign(Campaign *campaign)
                 DrawText(layout, RectCenter(map_rect), "Generating Map... ");
             }
 
-            DrawUnfilledRect(map_rect, c::white);
+            Vec2f map_padding = {10.f,10.f};
+            Rect padded_map_rect = {map_rect.pos - map_padding, map_rect.size + 2*map_padding};
+            DrawUnfilledRect(padded_map_rect, c::white);
 
             if(map_generation_finished)
             {
@@ -379,6 +388,23 @@ TickCampaign(Campaign *campaign)
                     campaign->selected_map_index = i;
                     campaign->state = CampaignState::TransitionIntoMap;
                     Reset(&campaign->map_zoom_timer);
+
+                    Rect world_space_rect = {{0.f,0.f}, {400.f,400.f}};
+                    auto graph_response = TransformNodeGraphPointsToFitInsideRect(&campaign->maps[i], map_rect);
+
+                    campaign->start_camera = game->camera;
+                    // campaign->camera_start_pos = game->camera_pos;
+                    // campaign->camera_start_rect = {game->camera_pos - 0.5f*game->camera_view, game->camera_view};
+                    campaign->start_node_pos = graph_response.start_node_pos;
+                    Vec2f center_of_screen_in_world_space = ScreenPointToWorldPoint(game->camera, 0.5f*game->window_size);
+                    Vec2f point_lerp_vector = center_of_screen_in_world_space - campaign->start_node_pos;
+                    Vec2f camera_lerp_vector = -point_lerp_vector;
+
+                    campaign->end_camera.pos = campaign->start_camera.pos + camera_lerp_vector;
+                    campaign->end_camera.view = map_rect.size/2.f;
+
+                    //SetCameraPos(campaign->camera_start_pos);
+                    //MoveCameraToWorldRect(world_space_rect);
                 }
             }
         }
@@ -389,19 +415,39 @@ TickCampaign(Campaign *campaign)
 
         int i = campaign->selected_map_index;
         Rect initial_map_rect = AlignRect({{(1.f/6.f)*(1+2*i)*game->window_size.x, 0.5f*game->window_size.y},
-                                          {400.f,400.f}}, c::align_center);
+                                           {400.f,400.f}}, c::align_center);
         Rect final_map_rect = {{}, {800.f,800.f}};
+        // float t = campaign->map_zoom_timer.cur;
+        // float T = campaign->map_zoom_timer.length_s;
+        // float t_over_T = t / T;
+        // float cubic_t = -2*m::Pow(t_over_T, 3) + 3*m::Pow(t_over_T, 2);
+        // Rect lerped_rect = RectLerp(initial_map_rect, final_map_rect, cubic_t);
+
         float t = campaign->map_zoom_timer.cur;
         float T = campaign->map_zoom_timer.length_s;
         float t_over_T = t / T;
         float cubic_t = -2*m::Pow(t_over_T, 3) + 3*m::Pow(t_over_T, 2);
-        Rect lerped_rect = RectLerp(initial_map_rect, final_map_rect, cubic_t);
 
-        DrawNodeGraphInRect(&campaign->maps[i], lerped_rect, {10.f,10.f});
+        //ZoomCameraIntoPoint(1.03f, campaign->start_node_pos);
+        //SetCameraPos( Lerp(campaign->camera_start_pos, campaign->camera_end_pos, t_over_T) );
+        Camera lerped_cam = LerpCamera(campaign->start_camera, campaign->end_camera, cubic_t);
+        SetCameraPos(&game->camera, lerped_cam.pos);
+        SetCameraView(&game->camera, PadToAspectRatio(lerped_cam.view, AspectRatio(game->window_size)));
+
+        // MoveCameraToWorldRect(&game->camera,
+        //                       Rect{    Lerp(campaign->camera_start_pos, campaign->camera_end_pos, 0.f),
+        //                            RectLerp(campaign->camera_start_rect, campaign->camera_end_rect, 0.f).size} );
+                                        //campaign->camera_start_rect.size});
+
+        DrawNodeGraph(&campaign->maps[i]);
+
+
+
 
         if(campaign->map_zoom_timer.finished)
         {
             campaign->state = CampaignState::InMap;
+            //MoveCameraToWorldRect({{0.f,0.f},{400.f,400.f}});
         }
     }
     else if(campaign->state == CampaignState::InMap)
@@ -410,46 +456,44 @@ TickCampaign(Campaign *campaign)
         float cam_movespeed = 10.f;
         if(Down(vk::S))
         {
-            MoveCamera({0.f, cam_movespeed});
+            MoveCamera(&game->camera, {0.f, cam_movespeed});
         }
         if(Down(vk::W))
         {
-            MoveCamera({0.f, -cam_movespeed});
+            MoveCamera(&game->camera, {0.f, -cam_movespeed});
         }
         if(Down(vk::A))
         {
-            MoveCamera({-cam_movespeed, 0.f});
+            MoveCamera(&game->camera, {-cam_movespeed, 0.f});
         }
         if(Down(vk::D))
         {
-            MoveCamera({cam_movespeed, 0.f});
+            MoveCamera(&game->camera, {cam_movespeed, 0.f});
         }
 
         // Mouse clicking and dragging moves around map
         if(Down(vk::LMB) and MouseMoved())
         {
             Vec2f mouse_move = RelativeMousePos();
-            MoveCamera(-mouse_move);
+            MoveCamera(&game->camera, -mouse_move);
         }
 
         // Mouse scroll zooms in and out
         int mouse_scroll = MouseScroll();
         if(mouse_scroll != 0)
         {
-            float z = 1.f + (mouse_scroll / 10.f);
-            Log("%f", z);
-            ZoomCamera(z);
+            float z = 1.f - (mouse_scroll / c::zoom_sensitivity);
+            SetCameraView(&game->camera, z * game->camera.view);
+            //ZoomCameraIntoPoint(z, MousePos());
         }
 
-        Rect map_rect = {{}, {800.f,800.f}};
-        DrawNodeGraphInRect(&campaign->maps[campaign->selected_map_index], map_rect, {10.f,10.f});
+        Rect map_rect = {{}, {100.f,100.f}};
+        DrawNodeGraph(&campaign->maps[campaign->selected_map_index]);
     }
 
 
-    Vec2f rel_mouse_pos = MousePos();
     //DrawText(c::def_text_layout, {}, "%f, %f", rel_mouse_pos.x, rel_mouse_pos.y);
-    DrawUiText(c::def_text_layout, {}, "%f, %f", game->camera_pos.x, game->camera_pos.y);
-
+    //DrawUiText(c::def_text_layout, {}, "%f, %f", game->camera_pos.x, game->camera_pos.y);
 
     //DrawFilledRect({{}, {5.f,5.f}}, c::green);
 
@@ -574,8 +618,7 @@ TickCampaign(Campaign *campaign)
     GameState new_state = GameState::None;
     if(Pressed(KeyBind::Exit))
     {
-        SetCameraPos({});
-        SetCameraZoom(1.f);
+        SetCameraPos(&game->camera, {});
         new_state = GameState::MainMenu;
     }
 

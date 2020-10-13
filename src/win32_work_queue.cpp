@@ -86,7 +86,7 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
         tried_to_do_something = true;
 
         WorkEntry entry = queue->entries[queue->next_entry_to_read];
-        ++queue->next_entry_to_read;
+        queue->next_entry_to_read = (queue->next_entry_to_read + 1) % ArrayCount(queue->entries);
 
         size_t temp_data_size = 1024;
         Assert(entry.data_byte_count <= temp_data_size);

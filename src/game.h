@@ -19,6 +19,7 @@
 #include "campaign.h"
 #include "test_mode.h"
 #include "generate_node_graph_params.h"
+#include "camera.h"
 
 struct Game
 {
@@ -40,8 +41,7 @@ struct Game
 
 	Vec2f window_size;
 
-	Vec2f camera_pos;
-	float camera_zoom;
+	Camera camera;
 
 	GLuint temp_texture;
 	Vec2i string_bmp_size;

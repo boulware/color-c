@@ -7,6 +7,7 @@
 #include "better_text_parsing.h"
 #include "bitmap.h"
 #include "buffer.h"
+#include "camera.h"
 #include "campaign.h"
 #include "color.h"
 #include "const.h"
@@ -427,6 +428,34 @@ String MetaString(const Buffer *s)
 }
 
 // ---------------FILE START---------------
+// camera.h
+// ------------------------------------------
+
+String MetaString(const Camera *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Camera {\n");
+
+	AppendCString(&string, "  pos: ");
+	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "  view: ");
+	AppendString(&string, MetaString(&s->view));
+	AppendCString(&string, "(Vec2f)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
 // campaign.h
 // ------------------------------------------
 
@@ -500,6 +529,18 @@ String MetaString(const Campaign *s)
 	AppendCString(&string, "  map_zoom_timer: ");
 	AppendString(&string, MetaString(&s->map_zoom_timer));
 	AppendCString(&string, "(Timer)\n");
+
+	AppendCString(&string, "  start_camera: ");
+	AppendString(&string, MetaString(&s->start_camera));
+	AppendCString(&string, "(Camera)\n");
+
+	AppendCString(&string, "  end_camera: ");
+	AppendString(&string, MetaString(&s->end_camera));
+	AppendCString(&string, "(Camera)\n");
+
+	AppendCString(&string, "  start_node_pos: ");
+	AppendString(&string, MetaString(&s->start_node_pos));
+	AppendCString(&string, "(Vec2f)\n");
 
 	AppendCString(&string, "}");
 
@@ -1061,11 +1102,9 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->window_size));
 	AppendCString(&string, "(Vec2f)\n");
 
-	AppendCString(&string, "  camera_pos: ");
-	AppendString(&string, MetaString(&s->camera_pos));
-	AppendCString(&string, "(Vec2f)\n");
-
-	AppendCString(&string, "  camera_zoom: %f (float)\n", s->camera_zoom);
+	AppendCString(&string, "  camera: ");
+	AppendString(&string, MetaString(&s->camera));
+	AppendCString(&string, "(Camera)\n");
 
 	AppendCString(&string, "  temp_texture: %u (GLuint)\n", s->temp_texture);
 
@@ -1798,6 +1837,26 @@ String MetaString(const NodeGraph *s)
 	AppendCString(&string, "  start_index: %d (int)\n", s->start_index);
 
 	AppendCString(&string, "  end_index: %d (int)\n", s->end_index);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const NodeGraphResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "NodeGraphResponse {\n");
+
+	AppendCString(&string, "  start_node_pos: ");
+	AppendString(&string, MetaString(&s->start_node_pos));
+	AppendCString(&string, "(Vec2f)\n");
 
 	AppendCString(&string, "}");
 

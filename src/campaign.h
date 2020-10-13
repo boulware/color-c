@@ -5,6 +5,7 @@
 #include "string.h"
 #include "node_graph.h"
 #include "timer.h"
+#include "camera.h"
 
 enum class CampaignState
 {
@@ -28,6 +29,15 @@ struct Campaign
     GenerateNodeGraph_Params generation_params_template;
     int selected_map_index;
     Timer map_zoom_timer;
+
+    Camera start_camera;
+    Camera end_camera;
+
+    Vec2f start_node_pos;
+    // Vec2f camera_start_pos;
+    // Vec2f camera_end_pos;
+    // Rect camera_start_rect;
+    // Rect camera_end_rect;
     // Node *root;
     // Array<Node> nodes;
     // Array<Edge> edges;

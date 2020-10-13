@@ -16,7 +16,7 @@ DrawTimedBlockData()
 			u64 avg_cycles = TIMED_BLOCK_ARRAY[i].total_cycle_count/TIMED_BLOCK_ARRAY[i].hit_count;
 			max_average_cycles = m::Max(avg_cycles, max_average_cycles);
 
-			Vec2f text_size = DrawText(function_cycles_layout, pos,
+			Vec2f text_size = DrawUiText(function_cycles_layout, pos,
 									   "%s count %llu, cycles %.3e, avg %llu",
 									   TIMED_BLOCK_ARRAY[i].function_name,
 									   TIMED_BLOCK_ARRAY[i].hit_count,
@@ -37,7 +37,8 @@ DrawTimedBlockData()
 			float line_size = LineHeight(function_cycles_layout);
 			DrawFilledRect({{max_right_extent, bar_y},
 						   {max_bar_width*(float)avg_cycles/(float)max_average_cycles, line_size}},
-						   c::green);
+						   c::green,
+						   true);
 			bar_y += line_size;
 		}
 	}

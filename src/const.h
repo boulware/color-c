@@ -225,7 +225,7 @@ namespace c
 	};
 
 	// Campaign
-
+	float zoom_sensitivity = 5.f;
 
 	// Force-directed graph parameters
 

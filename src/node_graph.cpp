@@ -65,7 +65,7 @@ THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
 {
     GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;
 
-    Log("[%u] Started "  __FUNCTION__ "() thread.",  platform->GetCallingThreadId());
+//    Log("[%u] Started "  __FUNCTION__ "() thread.",  platform->GetCallingThreadId());
 
     // START
     if(!params.thread_finished or !params.restart_count or !params.graph) return;
@@ -101,7 +101,7 @@ THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
     *(params.thread_finished) = true;
     // END
 
-    Log("[%u] Finished " __FUNCTION__ "() thread.", platform->GetCallingThreadId());
+//    Log("[%u] Finished " __FUNCTION__ "() thread.", platform->GetCallingThreadId());
 }
 
 int
@@ -307,10 +307,11 @@ StepNodeGraphForceSimulation(NodeGraph *graph, ForceSimParams params, float dt, 
     return sim_state;
 }
 
-// @note: This doesn't work if the rect isn't a square.
-void
-DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
+NodeGraphResponse
+TransformNodeGraphPointsToFitInsideRect(NodeGraph *graph, Rect rect)
 {
+    NodeGraphResponse response = {};
+
     Vec2f min = graph->nodes[0].pos;
     Vec2f max = min;
 
@@ -325,9 +326,131 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
     float x_range = max.x - min.x;
     float y_range = max.y - min.y;
 
-    Rect padded_rect = {};
-    padded_rect.pos = rect.pos + padding;
-    padded_rect.size = rect.size - 2*padding;
+    // Rect padded_rect = {};
+    // padded_rect.pos = rect.pos + padding;
+    // padded_rect.size = rect.size - 2*padding;
+
+    //DrawUnfilledRect(padded_rect, c::grey);
+
+    //Array<Node> transformed_nodes = CreateTempArray<Node>(graph->nodes.count);
+    for(int i=0; i<graph->nodes.count; ++i)
+    {
+        auto &node = graph->nodes[i];
+        if(x_range > y_range)
+        {
+            node.pos.x =   (rect.size.x / (max.x-min.x))*(node.pos.x - min.x) + rect.pos.x;
+            node.pos.y =   (rect.size.y / (max.x-min.x))*(node.pos.y - min.y) + rect.pos.y
+                         + (0.5f*rect.size.y - 0.5f*(rect.size.x / (max.x-min.x))*(max.y-min.y));
+        }
+        else
+        {
+            node.pos.x =   (rect.size.x / (max.y-min.y))*(node.pos.x - min.x) + rect.pos.x
+                         + (0.5f*rect.size.x - 0.5f*(rect.size.x / (max.y-min.y))*(max.x-min.x));
+
+            node.pos.y =   (rect.size.y / (max.y-min.y))*(node.pos.y - min.y) + rect.pos.y;
+        }
+
+        if(i == graph->start_index)
+        {
+            response.start_node_pos = node.pos;
+        }
+    }
+
+    // for(auto edge : graph->edges)
+    // {
+    //     Vec2f a = transformed_nodes[edge.a].pos;
+    //     Vec2f b = transformed_nodes[edge.b].pos;
+    //     DrawLine(a, b, c::white);
+    // }
+
+    // for(int i=0; i<transformed_nodes.count; ++i)
+    // {
+    //     auto &node = transformed_nodes[i];
+    //     Rect aligned_rect = AlignRect({node.pos, {10.f,10.f}}, c::align_center);
+
+    //     if(i == graph->start_index)
+    //     { // Start node
+    //         response.start_node_pos = RectCenter(aligned_rect);
+    //         DrawFilledRect(aligned_rect, c::green);
+    //     }
+    //     else if(i == graph->end_index)
+    //     {
+    //         DrawFilledRect(aligned_rect, c::yellow);
+    //     }
+    //     else
+    //     {
+    //         DrawFilledRect  (aligned_rect, c::black);
+    //     }
+
+    //     Color outline_color = c::red;
+    //     if(MouseInRect(aligned_rect))
+    //     {
+    //         outline_color = c::white;
+    //     }
+
+    //     DrawUnfilledRect(aligned_rect, outline_color);
+    // }
+
+    return response;
+}
+
+void
+DrawNodeGraph(NodeGraph *graph)
+{
+    for(auto edge : graph->edges)
+    {
+        Vec2f a = graph->nodes[edge.a].pos;
+        Vec2f b = graph->nodes[edge.b].pos;
+        DrawLine(a, b, c::white);
+    }
+
+    for(int i=0; i<graph->nodes.count; ++i)
+    {
+        auto &node = graph->nodes[i];
+        Rect aligned_rect = AlignRect({node.pos, {10.f,10.f}}, c::align_center);
+
+        if(i == graph->start_index)
+        { // Start node
+            DrawFilledRect(aligned_rect, c::green);
+        }
+        else if(i == graph->end_index)
+        { // End node
+            DrawFilledRect(aligned_rect, c::yellow);
+        }
+        else
+        {
+            DrawFilledRect  (aligned_rect, c::black);
+        }
+
+        Color outline_color = c::red;
+        if(MouseInRect(aligned_rect))
+        {
+            outline_color = c::white;
+        }
+
+        DrawUnfilledRect(aligned_rect, outline_color);
+    }
+}
+
+// @note: This doesn't work if the rect isn't a square.
+NodeGraphResponse
+DrawNodeGraphInRect(NodeGraph *graph, Rect rect)
+{
+    NodeGraphResponse response = {};
+
+    Vec2f min = graph->nodes[0].pos;
+    Vec2f max = min;
+
+    for(auto node : graph->nodes)
+    {
+        if(node.pos.x < min.x) min.x = node.pos.x;
+        if(node.pos.y < min.y) min.y = node.pos.y;
+        if(node.pos.x > max.x) max.x = node.pos.x;
+        if(node.pos.y > max.y) max.y = node.pos.y;
+    }
+
+    float x_range = max.x - min.x;
+    float y_range = max.y - min.y;
 
     //DrawUnfilledRect(padded_rect, c::grey);
 
@@ -337,16 +460,16 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
         Node transformed_node = {};
         if(x_range > y_range)
         {
-            transformed_node.pos.x = (padded_rect.size.x / (max.x-min.x))*(node.pos.x - min.x) + padded_rect.pos.x;
-            transformed_node.pos.y =   (padded_rect.size.y / (max.x-min.x))*(node.pos.y - min.y) + padded_rect.pos.y
-                                     + (0.5f*padded_rect.size.y - 0.5f*(padded_rect.size.x / (max.x-min.x))*(max.y-min.y));
+            transformed_node.pos.x = (rect.size.x / (max.x-min.x))*(node.pos.x - min.x) + rect.pos.x;
+            transformed_node.pos.y =   (rect.size.y / (max.x-min.x))*(node.pos.y - min.y) + rect.pos.y
+                                     + (0.5f*rect.size.y - 0.5f*(rect.size.x / (max.x-min.x))*(max.y-min.y));
         }
         else
         {
-            transformed_node.pos.x =   (padded_rect.size.x / (max.y-min.y))*(node.pos.x - min.x) + padded_rect.pos.x
-                                     + (0.5f*padded_rect.size.x - 0.5f*(padded_rect.size.x / (max.y-min.y))*(max.x-min.x));
+            transformed_node.pos.x =   (rect.size.x / (max.y-min.y))*(node.pos.x - min.x) + rect.pos.x
+                                     + (0.5f*rect.size.x - 0.5f*(rect.size.x / (max.y-min.y))*(max.x-min.x));
 
-            transformed_node.pos.y =   (padded_rect.size.y / (max.y-min.y))*(node.pos.y - min.y) + padded_rect.pos.y;
+            transformed_node.pos.y =   (rect.size.y / (max.y-min.y))*(node.pos.y - min.y) + rect.pos.y;
         }
 
         transformed_nodes += transformed_node;
@@ -366,6 +489,7 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
 
         if(i == graph->start_index)
         { // Start node
+            response.start_node_pos = RectCenter(aligned_rect);
             DrawFilledRect(aligned_rect, c::green);
         }
         else if(i == graph->end_index)
@@ -385,4 +509,6 @@ DrawNodeGraphInRect(NodeGraph *graph, Rect rect, Vec2f padding)
 
         DrawUnfilledRect(aligned_rect, outline_color);
     }
+
+    return response;
 }
