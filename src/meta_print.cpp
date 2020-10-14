@@ -278,8 +278,12 @@ String MetaString(const BattleEvent *s)
 
 	AppendCString(&string, "BattleEvent {\n");
 
-	AppendCString(&string, "  unit_id: ");
-	AppendString(&string, MetaString(&s->unit_id));
+	AppendCString(&string, "  caster_id: ");
+	AppendString(&string, MetaString(&s->caster_id));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "  target_id: ");
+	AppendString(&string, MetaString(&s->target_id));
 	AppendCString(&string, "(Id<Unit>)\n");
 
 	AppendCString(&string, "  trait_changes: ");
@@ -302,6 +306,10 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "Battle {\n");
 
+	AppendCString(&string, "  arena: ");
+	AppendString(&string, MetaString(&s->arena));
+	AppendCString(&string, "(Arena)\n");
+
 	AppendCString(&string, "  hud: ");
 	AppendString(&string, MetaString(&s->hud));
 	AppendCString(&string, "(Rect)\n");
@@ -320,7 +328,9 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  unit_slots: %p (Vec2f[])\n", s->unit_slots);
 
-	AppendCString(&string, "  intents: %p (Intent[])\n", s->intents);
+	AppendCString(&string, "  intents: ");
+	AppendString(&string, MetaString(&s->intents));
+	AppendCString(&string, "(Array<Intent>)\n");
 
 	AppendCString(&string, "  player_intent: ");
 	AppendString(&string, MetaString(&s->player_intent));

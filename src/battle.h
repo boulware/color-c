@@ -20,12 +20,15 @@ struct Intent
 // (e.g., after an ability would be used, this holds data for trait changes for all units, death, status effects, etc.)
 struct BattleEvent
 {
-	Id<Unit> unit_id;
+	Id<Unit> caster_id;
+	Id<Unit> target_id;
 	TraitSet trait_changes;
 };
 
 struct Battle
 {
+	Arena arena;
+
 	Rect hud;
 
 	Id<Unit> selected_unit_id;
@@ -33,7 +36,7 @@ struct Battle
 
 	UnitSet units; // 0 through max_party_size-1 are ally slots, the remaining max_party_size slots are enemy slots
 	Vec2f unit_slots[c::max_target_count]; // concurrent array to *units
-	Intent intents[c::max_target_count]; // concurrent to *units, but currently wasted space because it has room for friendly intents.
+	Array<Intent> intents; // concurrent to *units, but currently wasted space because it has room for friendly intents.
 
 
 	Intent player_intent;

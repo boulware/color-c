@@ -755,7 +755,7 @@ DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)
 	Ability *ability = GetAbilityFromId(ability_id);
 	if(!ValidUnit(caster) or !ValidAbility(ability)) return -1;
 
-	for(int i=0; i<ability->tiers.count; ++i)
+	for(int i=ability->tiers.count-1; i>=0; --i)
 	{
 		if(caster->cur_traits >= ability->tiers[i].required_traits) return i;
 	}

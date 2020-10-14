@@ -137,6 +137,8 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
         return {};
     }
 
+    if(caster->cur_traits.vigor <= 0) return{};
+
     // Determine which ability tier should be used in the preview
     int tier = DetermineAbilityTier(caster_id, ability_id);
     if(tier < 0) return {}; // The caster can't use the ability, so there is no effect to preview.
@@ -193,7 +195,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
                 }
 
                 // Caster change
-                events += BattleEvent{.unit_id=caster_id, .trait_changes = -trait_changes};
+                events += BattleEvent{.caster_id=caster_id, .target_id=caster_id, .trait_changes = -trait_changes};
             }
             else if(effect.type == EffectType::Steal)
             {
@@ -208,7 +210,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
                 }
 
                 // Caster change
-                events += BattleEvent{.unit_id=caster_id, .trait_changes = -trait_changes};
+                events += BattleEvent{.caster_id=caster_id, .target_id=caster_id, .trait_changes = -trait_changes};
             }
             else if(effect.type == EffectType::Restore)
             {
@@ -225,7 +227,7 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
             //        for the purpose of triggers (e.g., damage triggers, even when damage=0)
             if(trait_changes != TraitSet{})
             {
-                events += BattleEvent{.unit_id=target_id, .trait_changes=trait_changes};
+                events += BattleEvent{.caster_id=caster_id, .target_id=target_id, .trait_changes=trait_changes};
             }
 
         }
@@ -235,13 +237,15 @@ GenerateBattlePreviewEvent(Battle *battle, Intent intent)
 }
 
 TraitSet
-EventTraitChangesForUnit(Array<BattleEvent> events, Id<Unit> unit_id)
+EventTraitChangesForUnit(Array<BattleEvent> events, Id<Unit> target_id)
 {
     TraitSet trait_changes = {};
 
     for(auto event : events)
     {
-        if(unit_id != event.unit_id) continue;
+        Unit *caster = GetUnitFromId(event.caster_id);
+        if(!ValidUnit(caster) or caster->cur_traits.vigor <= 0) continue;
+        if(target_id != event.target_id) continue;
 
         trait_changes += event.trait_changes;
     }
@@ -332,7 +336,7 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
     TextLayout tier_active_text_layout = c::small_text_layout;
     tier_active_text_layout.color = c::white;
 
-    for(int i=0; i<ArrayCount(ability->tiers); i++)
+    for(int i=0; i<ability->tiers.count; i++)
     {
         AbilityTier &tier = ability->tiers[i]; // alias
         //if(!tier.init) continue;
@@ -374,7 +378,7 @@ DrawEnemyIntentThoughtBubble(Battle *battle)
 
         auto caster_id = battle->units.ids[unit_index];
         Unit *caster = GetUnitFromId(caster_id);
-        if(!ValidUnit(caster) or caster->team != Team::enemies) continue;
+        if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
 
         Intent intent = battle->intents[unit_index];
         if(intent.caster_id != caster_id)
@@ -422,7 +426,7 @@ DrawEnemyIntentThoughtBubble(Battle *battle)
                                       ability->name);
             }
 
-            if(response.hovered and (Down(vk::alt) or Down(vk::mouse5)))
+            if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
             {
                 DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);
             }
@@ -446,7 +450,7 @@ GenerateEnemyIntents(Battle *battle)
     {
         Id unit_id = battle->units.ids[i];
         Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit) or unit->team != Team::enemies) continue;
+        if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
 
         u32 chosen_ability_index; // The index of the ability chosen to cast for this enemy
         u32 chosen_target_index; // The index (into battle->units[])
@@ -488,12 +492,16 @@ GenerateEnemyIntents(Battle *battle)
         {
             Ability *chosen_ability = GetAbilityFromId(chosen_ability_id);
             if(!ValidAbility(chosen_ability)) continue;
+            AbilityTier &tier = chosen_ability->tiers[tier_index]; // alias
 
             //AbilityTier &active_tier = chosen_ability->tiers[tier_index];
 
             battle->intents[i].caster_id = unit_id;
             battle->intents[i].ability_id = chosen_ability_id;
-            battle->intents[i].target_set = valid_target_sets[chosen_ability_index];
+            battle->intents[i].target_set = GenerateInferredUnitSet(unit_id,
+                                                                    chosen_target_id,
+                                                                    tier.target_class,
+                                                                    battle->units);
         }
     }
 }
@@ -514,6 +522,12 @@ SetSelectedUnit(Battle *battle, Id<Unit> new_unit_id)
 
 void InitBattle(Battle *battle)
 {
+    // Memory allocation
+    battle->arena = AllocArena();
+    battle->preview_events = CreateArrayFromArena<BattleEvent>(100, &battle->arena);
+    battle->intents =       CreateArrayFromArena<Intent>(8, &battle->arena);
+    for(int i=0; i<8; ++i) battle->intents += {};
+
     // Fill out timers
     battle->preview_damage_timer = {
         .low = 0.3f,
@@ -541,14 +555,15 @@ StartBattle(Battle *battle, UnitSet battle_units)
 
     GenerateEnemyIntents(battle);
 
-    battle->preview_events = CreateTempArray<BattleEvent>(100);
-
     battle->is_player_turn = true;
 }
 
 GameState
 TickBattle(Battle *battle)
 {
+    ClearArray<BattleEvent>(&battle->preview_events);
+    //ClearArray<Intent>(&battle->intents);
+
     { // Restart battle button
 
     }
@@ -846,6 +861,7 @@ TickBattle(Battle *battle)
 
             Unit *selected_unit = GetUnitFromId(battle->selected_unit_id);
             Unit *hovered_unit = GetUnitFromId(hovered_unit_id);
+            //Ability *selected_ability = GetAbilityFromId(battle->selected_ability)
 
             if(hovered_ability_id != c::null_ability_id and ValidUnit(selected_unit) and selected_unit->cur_action_points > 0)
             {
@@ -858,17 +874,17 @@ TickBattle(Battle *battle)
                 // Just leaving this note here to remind me if I notice something strange going on later.
                 battle->selected_unit_id = hovered_unit_id;
             }
-            else if(ValidUnit(selected_unit) and selected_unit->cur_action_points > 0)
+            else if(ValidUnit(hovered_unit) and battle->selected_ability_id != c::null_ability_id and selected_unit->cur_action_points > 0)
             { // Execute the player intent if a valid target is clicked and the selected unit has enough action points.
 
                 // Generate the event associated with the player intent and execute it.
                 auto events = GenerateBattlePreviewEvent(battle, player_intent);
                 for(auto event : events)
                 {
-                    Unit *event_unit = GetUnitFromId(event.unit_id);
-                    if(!ValidUnit(event_unit)) continue;
+                    Unit *event_target_unit = GetUnitFromId(event.target_id);
+                    if(!ValidUnit(event_target_unit)) continue;
 
-                    event_unit->cur_traits += event.trait_changes;
+                    event_target_unit->cur_traits += event.trait_changes;
                 }
 
                 // After executing the player intent, remove AP, clear selected ability,
@@ -961,6 +977,8 @@ TickBattle(Battle *battle)
             // 1) An ability is selected AND a valid target for that ability is hovered => draw inferred target set and outcome if that ability were to be used.
             battle->show_preview = true;
             battle->preview_events = GenerateBattlePreviewEvent(battle, player_intent);
+            target_indication_layout.color = c::red;
+            target_set = player_intent.target_set;
         }
         else
         {
@@ -1016,45 +1034,60 @@ TickBattle(Battle *battle)
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit)) continue;
 
-            // Change the outline color for selected and hovered units
-            Color outline_color = c::dk_grey;
-            if(unit_id == battle->selected_unit_id)
-            {
-                outline_color = c::white;
+            if(unit->cur_traits.vigor == 0)
+            { // Unit is dead
+                TextLayout dead_text_layout = c::def_text_layout;
+                dead_text_layout.color = c::dk_red;
+                dead_text_layout.align = c::align_center;
+
+                Vec2f origin = battle->unit_slots[i];
+                Rect unit_rect = Rect{origin, c::unit_slot_size};
+
+                DrawText(dead_text_layout, RectCenter(unit_rect), "DEAD");
             }
-            else if(unit_id == hovered_unit_id)
+            else
             {
-                outline_color = c::grey;
+                // Change the outline color for selected and hovered units
+                Color outline_color = c::dk_grey;
+                if(unit_id == battle->selected_unit_id)
+                {
+                    outline_color = c::white;
+                }
+                else if(unit_id == hovered_unit_id)
+                {
+                    outline_color = c::grey;
+                }
+
+                Vec2f origin = battle->unit_slots[i];
+
+                // Draw unit slot outline
+                DrawUnfilledRect(origin, c::unit_slot_size, outline_color);
+
+                // Draw unit name
+                TextLayout unit_name_layout = c::def_text_layout;
+                unit_name_layout.font_size = 24;
+                unit_name_layout.align = c::align_topcenter;
+                Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name).size;
+
+                //TraitSet preview_traits = unit->cur_traits;
+
+                TraitSet preview_trait_changes = {};
+                if(battle->show_preview)
+                {
+                    preview_trait_changes = EventTraitChangesForUnit(battle->preview_events, unit_id);
+                }
+
+                // Draw trait bars
+                DrawTraitSetWithPreview(origin + Vec2f{0.f, name_size.y},
+                                        unit->cur_traits,
+                                        unit->max_traits,
+                                        unit->cur_traits + preview_trait_changes,
+                                        battle->preview_damage_timer.cur);
+
+                // AP text
+                DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
+                         "AP: %d", unit->cur_action_points);
             }
-
-            Vec2f origin = battle->unit_slots[i];
-
-            // Draw unit slot outline
-            DrawUnfilledRect(origin, c::unit_slot_size, outline_color);
-
-            // Draw unit name
-            TextLayout unit_name_layout = c::def_text_layout;
-            unit_name_layout.font_size = 24;
-            unit_name_layout.align = c::align_topcenter;
-            Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name).size;
-
-            //TraitSet preview_traits = unit->cur_traits;
-
-            TraitSet preview_trait_changes = {};
-            if(battle->show_preview)
-            {
-                preview_trait_changes = EventTraitChangesForUnit(battle->preview_events, unit_id);
-            }
-
-            // Draw trait bars
-            DrawTraitSetWithPreview(origin + Vec2f{0.f, name_size.y},
-                                    unit->cur_traits,
-                                    unit->max_traits,
-                                    unit->cur_traits + preview_trait_changes,
-                                    battle->preview_damage_timer.cur);
-
-            DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
-                     "AP: %d", unit->cur_action_points);
         }
     }
 
@@ -1071,15 +1104,20 @@ TickBattle(Battle *battle)
 
     if(!battle->is_player_turn)
     {
-        for(auto intent : battle->intents)
+        for(int i=0; i<battle->intents.count; ++i)
         {
+            Id caster_id = battle->units.ids[i];
+            Unit *caster = GetUnitFromId(caster_id);
+            if(!ValidUnit(caster) or caster->cur_traits.vigor <= 0) continue;
+
+            auto &intent = battle->intents[i];
             //Intent intent = battle->intents[i];
             //if(!ValidUnit(intent.caster) or !ValidAbility(intent.ability)) continue;
             Array events = GenerateBattlePreviewEvent(battle, intent);
             //BattleEvent event = GenerateBattlePreviewEvent(battle, intent);
             for(auto event : events)
             {
-                Unit *target = GetUnitFromId(event.unit_id);
+                Unit *target = GetUnitFromId(event.target_id);
                 if(!ValidUnit(target)) continue;
 
                 target->cur_traits += event.trait_changes;
@@ -1105,7 +1143,7 @@ TickBattle(Battle *battle)
         for(Id unit_id : battle->units)
         {
             Unit *unit = GetUnitFromId(unit_id);
-            if(!ValidUnit(unit)) continue;
+            if(!ValidUnit(unit) or unit->cur_traits.vigor <= 0) continue;
 
             if(unit->team == Team::allies and unit->cur_action_points > 0)
             {

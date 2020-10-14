@@ -120,7 +120,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 				}
 
 				ability->tiers[cur_tier].target_class = tc;
-				ability->tiers[cur_tier].effects_[cur_effect_index] = effect;
+				ability->tiers[cur_tier].effects_ += effect;
 				++cur_effect_index;
 			}
 		}

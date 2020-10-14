@@ -3,3 +3,6 @@
 *.ilk
 .vs/
 game.dll
+game.exe
+*.exe
+*.dll
