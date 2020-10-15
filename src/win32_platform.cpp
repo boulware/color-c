@@ -733,7 +733,10 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	}
 
 	GameHook(platform, gl, game);
+
+	s64 start_time = win32_CurrentTime();
 	GameInit();
+	Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
 
 	MSG msg;
 	glEnable(GL_DEPTH_TEST);

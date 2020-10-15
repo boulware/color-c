@@ -3,11 +3,11 @@ traits (10,5,3)
 moveset "Rest" "Strike" "Repair" "Rig Up"
 
 unit "Rogue"
-traits (6,6,2)
-moveset "Rest" "Taunt" "Steal Armor" "Rally"
+traits (20,6,2)
+moveset "Strike" "Taunt" "Steal Armor" "Rally"
 
 unit "Archer"
-traits (4,8,1)
+traits (13,8,1)
 moveset "Rest" "Shoot" "Split Arrow"
 
 unit "Mage"

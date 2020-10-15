@@ -33,12 +33,14 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 extern "C" void
 GameInit()
 {
+TIMED_BLOCK;
+
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
 
-    InitLcgSystemSeed(&random::default_lcg);
+    //InitLcgSystemSeed(&random::default_lcg);
     //TestDistributionAndLog();
-    //InitLcgSetSeed(&random::default_lcg, 13);
+    InitLcgSetSeed(&random::default_lcg, 14);
 
     game->temp_texture = GenerateAndBindTexture();
     gl->Enable(GL_BLEND);
@@ -121,8 +123,8 @@ GameInit()
     //  }
     // }
 
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
+    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
 
@@ -164,9 +166,12 @@ GameInit()
 
     UnitSet battle_units = game->player_party;
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Mage"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     InitMainMenu(&game->mainmenu_state);
     InitBattle(&game->current_battle);
     InitCampaign(&game->campaign);
@@ -339,7 +344,7 @@ GameUpdateAndRender()
     //DrawTextMultiline(c::def_text_layout, {}, "#: %d", game->number_of_arenas_allocated);
 
     // Log timed block data and exit game.
-    #if 0
+    #if 1
     if(game->exit_requested)
     {
        LogToFile("logs/DebugTimings.txt", "-----------------------");

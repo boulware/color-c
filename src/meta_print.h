@@ -123,6 +123,8 @@ String MetaString(const EffectParams_Gift *s);
 
 String MetaString(const EffectParams_Steal *s);
 
+String MetaString(const AiAction *s);
+
 String MetaString(const Game *s);
 
 String MetaString(const GameState *s);

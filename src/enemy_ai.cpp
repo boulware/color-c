@@ -1,5 +1,7 @@
 #include "enemy_ai.h"
 
+#include "array.h"
+
 // struct AiEvent
 // {
 
@@ -11,10 +13,12 @@
 
 // active_unitset contains all units for which actions are being considered.
 // other_unitset contains the remaining units in the battle.
-s64
-DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
+String
+DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO: BigArena?
 {
     TIMED_BLOCK;
+
+    String best_choice_string = AllocStringDataFromArena(1000, arena);
 
     int team_counts[2] = {};
     for(auto unit_id : active_unitset)
@@ -36,13 +40,37 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
 
     Array<Array<u8>> arrays = CreateTempArray<Array<u8>>(4);
 
+    UnitSet all_unitset = CombineUnitSets(&active_unitset, &other_unitset);
+    Array<Unit> all_units = CreateTempArray<Unit>(all_unitset.size);
+
+    // Confirm that all units are valid.
+    for(int i=0; i<all_unitset.size; ++i)
+    {
+        Id unit_id = all_unitset.ids[i];
+        Unit *unit = GetUnitFromId(unit_id);
+        all_units += *unit;
+        if(!ValidUnit(unit))
+        {
+            AppendCString(&best_choice_string, __FUNCTION__ "Not all units were valid. Aborting.");
+            return best_choice_string;
+        }
+    }
+
+    // Array of "actions", which correspond to the values in the permutation (0... 25 or whatever)
+    // This should contain:
+    //     1) a specific Effect (which has an EffectType and an traitset damage/heal amount)
+    //     2) a specific target (as a unit index into current_traitsets)
+    Array<AiAction> actions = CreateTempArray<AiAction>(50);
+
     s64 total_option_count = 0; // Number of possible actions that should be permutated
 
     u8 cur_option_counter = 0;
     s64 permutation_count = m::Factorial(active_unitset.size); // Incomplete value. We'll add a product_of_options
     s64 product_of_options = 1;
-    for(auto caster_id : active_unitset)
+
+    for(int i=0; i<active_unitset.size; ++i)
     {
+        Id caster_id = active_unitset.ids[i];
         Unit *caster = GetUnitFromId(caster_id);
         if(!ValidUnit(caster)) continue;
 
@@ -59,26 +87,83 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
 
             // Determine number of possible options there are for this ability,
             // depending on the target_class and what units are in the battle.
-            #if 1
+
+            AiAction action = {};
+            action.ability = *ability;
+            action.caster_index = i;
+
             if(tier.target_class == TargetClass::self)
             {
                 option_count_for_this_unit += 1;
+
+                action.target_count = 1;
+                action.unit_indices[0] = i;
+
+                actions += action;
             }
             else if(tier.target_class == TargetClass::single_ally)
             {
                 option_count_for_this_unit += team_counts[(size_t)caster->team];
+
+                action.target_count = 1;
+                int actions_added = 0;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(caster->team == all_units[unit_index].team)
+                    {
+                        action.unit_indices[0] = unit_index;
+                        actions += action;
+                        ++actions_added;
+                    }
+                }
+
+                Assert(actions_added == team_counts[(size_t)caster->team]);
             }
             else if(tier.target_class == TargetClass::single_ally_not_self)
             {
                 option_count_for_this_unit += (team_counts[(size_t)caster->team] - 1);
+
+                action.target_count = 1;
+                int actions_added = 0;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(unit_index != i and caster->team == all_units[unit_index].team)
+                    {
+                        action.unit_indices[0] = unit_index;
+                        actions += action;
+                        ++actions_added;
+                    }
+                }
+
+                Assert(actions_added == team_counts[(size_t)caster->team]);
             }
             else if(tier.target_class == TargetClass::all_allies)
             {
                 option_count_for_this_unit += 1;
+
+                //action.target_count = option_count_for_this_unit;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(caster->team == all_units[unit_index].team)
+                        action.unit_indices[action.target_count++] = unit_index;
+                }
+                Assert(action.target_count == team_counts[(size_t)caster->team]);
+
+                actions += action;
             }
             else if(tier.target_class == TargetClass::all_allies_not_self)
             {
                 option_count_for_this_unit += 1;
+
+                //action.target_count = option_count_for_this_unit;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(unit_index != i and caster->team == all_units[unit_index].team)
+                        action.unit_indices[action.target_count++] = unit_index;
+                }
+                Assert(action.target_count == team_counts[(size_t)caster->team]);
+
+                actions += action;
             }
             else if(tier.target_class == TargetClass::single_enemy)
             {
@@ -87,24 +172,84 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
                 else                             opposite_team_index = (size_t)Team::allies;
 
                 option_count_for_this_unit += team_counts[opposite_team_index];
+
+                action.target_count = 1;
+                int actions_added = 0;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(caster->team != all_units[unit_index].team)
+                    {
+                        action.unit_indices[0] = unit_index;
+                        actions += action;
+                        ++actions_added;
+                    }
+                }
+
+                Assert(actions_added == team_counts[(size_t)caster->team]);
             }
             else if(tier.target_class == TargetClass::all_enemies)
             {
+                size_t opposite_team_index;
+                if(caster->team == Team::allies) opposite_team_index = (size_t)Team::enemies;
+                else                             opposite_team_index = (size_t)Team::allies;
+
                 option_count_for_this_unit += 1;
+
+                //action.target_count = option_count_for_this_unit;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(caster->team != all_units[unit_index].team)
+                        action.unit_indices[action.target_count++] = unit_index;
+                }
+                Assert(action.target_count == team_counts[opposite_team_index]);
+
+                actions += action;
             }
             else if(tier.target_class == TargetClass::single_unit)
             {
                 option_count_for_this_unit += (team_counts[0] + team_counts[1]);
+
+                action.target_count = 1;
+                int actions_added = 0;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    action.unit_indices[0] = unit_index;
+                    actions += action;
+                    ++actions_added;
+                }
+
+                Assert(actions_added == (team_counts[0] + team_counts[1]));
             }
             else if(tier.target_class == TargetClass::single_unit_not_self)
             {
                 option_count_for_this_unit += (team_counts[0] + team_counts[1] - 1);
+
+                action.target_count = 1;
+                int actions_added = 0;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    if(i == unit_index) continue; // Skip self
+
+                    action.unit_indices[0] = unit_index;
+                    actions += action;
+                    ++actions_added;
+                }
+
+                Assert(actions_added == (team_counts[0] + team_counts[1] - 1));
             }
             else if(tier.target_class == TargetClass::all_units)
             {
                 option_count_for_this_unit += 1;
+
+                //action.target_count = option_count_for_this_unit;
+                for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
+                {
+                    action.unit_indices[action.target_count++] = unit_index;
+                }
+                Assert(action.target_count == all_units.count);
+
+                actions += action;
             }
-            #endif
         }
 
         Array<u8> sub_array = CreateTempArray<u8>(8);
@@ -120,6 +265,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
     }
 
     permutation_count *= product_of_options;
+    Log("%zu", permutation_count);
 
     int length_of_one_permutation = active_unitset.size; // 1234, 1235, 1236, etc.
     size_t permutation_values_byte_count = length_of_one_permutation * permutation_count;
@@ -128,6 +274,242 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
 
 
     GenerateU8Permutations(arrays, permutation_values, permutation_values_byte_count);
+
+    // Methods we might need:
+    // ...
+    // CalculateAdjustedDamage()
+    //
+
+
+
+    // [current_traitsets] will be parallel to [all_unitset]
+    Array<TraitSet> initial_traitsets = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
+    Array<TraitSet> current_traitsets = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
+    Array<TraitSet> traitset_changes  = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
+    Array<TraitSet> max_traitsets     = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
+    for(int i=0; i<all_unitset.size; ++i)
+    {
+        Id unit_id = all_unitset.ids[i];
+        Unit *unit = GetUnitFromId(unit_id);
+        initial_traitsets += unit->cur_traits;
+        max_traitsets += unit->max_traits;
+    }
+    for(auto e : current_traitsets)
+    {
+        current_traitsets += e;
+        traitset_changes += {};
+    }
+
+
+    Array<TraitSet> ally_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
+    Array<TraitSet> enemy_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
+
+    Array<TraitSet> ally_traitset_changes = CreateTempArray<TraitSet>(c::max_party_size);
+    Array<TraitSet> enemy_traitset_changes = CreateTempArray<TraitSet>(c::max_party_size);
+
+    Array<TraitSet> max_ally_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
+    Array<TraitSet> max_enemy_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
+    for(int i=0; i<active_unitset.size; ++i)
+    {
+        max_ally_traitsets += max_traitsets[i];
+    }
+    for(int i=0; i<other_unitset.size; ++i)
+    {
+        // if(current_traitsets[active_unitset.size + i].vigor < 0)
+        // {
+        //     Log("tick");
+        // }
+        max_enemy_traitsets += max_traitsets[active_unitset.size + i];
+    }
+
+    int permutation_counter = 0;
+    float best_score = -1000.f;
+    int best_permutation_index = -1;
+    int equivalent_line_count = 0;
+    for(int i=0; i<permutation_count; ++i)
+    {
+        ++permutation_counter;
+        traitset_changes.count = 0;
+        for(auto e : current_traitsets) traitset_changes += {};
+
+        for(int j=0; j<length_of_one_permutation; ++j)
+        {
+            size_t action_index = permutation_values[length_of_one_permutation*i + j];
+
+            AiAction &cur_action = actions[action_index]; // alias
+
+            int tier_index = -1;
+            { // Determine ability tier
+                //cur_action.ability;
+                //TraitSet cur_traits = current_traitsets[cur_action.caster_index];
+
+                for(int i=cur_action.ability.tiers.count-1; i>=0; --i)
+                {
+                    if(current_traitsets[cur_action.caster_index] >= cur_action.ability.tiers[i].required_traits)
+                    {
+                        tier_index = i;
+                        break;
+                    }
+                }
+
+                if(tier_index == -1) break;
+            }
+            AbilityTier &cur_ability_tier = cur_action.ability.tiers[tier_index]; // alias
+
+            // Apply each effect to each target
+            for(Effect effect : cur_ability_tier.effects_)
+            {
+                for(int unit_indices_index=0; unit_indices_index<cur_action.target_count; ++unit_indices_index)
+                {
+                    int target_index = cur_action.unit_indices[unit_indices_index];
+
+                    TraitSet trait_changes = {};
+
+                    if(effect.type == EffectType::NoEffect)
+                    {
+                        continue;
+                    }
+                    else if(effect.type == EffectType::Damage)
+                    {
+                        EffectParams_Damage *effect_params = (EffectParams_Damage*)effect.params;
+
+                        trait_changes = CalculateAdjustedDamage(current_traitsets[target_index], effect_params->amount);
+                    }
+                    else if(effect.type == EffectType::DamageIgnoreArmor)
+                    {
+                        EffectParams_DamageIgnoreArmor *effect_params = (EffectParams_DamageIgnoreArmor*)effect.params;
+
+                        TraitSet cur_traits_with_no_armor = current_traitsets[target_index];
+                        cur_traits_with_no_armor.armor = 0;
+                        trait_changes = CalculateAdjustedDamage(cur_traits_with_no_armor, effect_params->amount);
+                    }
+                    else if(effect.type == EffectType::Gift)
+                    {
+                        EffectParams_Gift *effect_params = (EffectParams_Gift*)effect.params;
+                        TraitSet base_gift_amount = effect_params->amount;
+
+                        // Adjust gift amount such that you can only gift as much trait as you actually have.
+                        // e.g., Gifting 5 armor when you only have 3 armor will only give the target +3 armor and the caster -3 armor
+                        for(int i=0; i<c::trait_count; i++)
+                        {
+                            trait_changes[i] = m::Min(current_traitsets[target_index][i], base_gift_amount[i]);
+                        }
+
+                        // Caster change
+                        current_traitsets[cur_action.caster_index] -= trait_changes;
+                        //events += BattleEvent{.caster_id=caster_id, .target_id=caster_id, .trait_changes = -trait_changes};
+                    }
+                    else if(effect.type == EffectType::Steal)
+                    {
+                        EffectParams_Steal *effect_params = (EffectParams_Steal*)effect.params;
+                        TraitSet base_steal_amount = effect_params->amount;
+
+                        // Adjust steal amount such that you can only steal as much trait as the target actually has.
+                        // e.g., Stealing 5 armor from a target with only 3 armor will only give the caster +3 armor and the target -3 armor
+                        for(int i=0; i<c::trait_count; i++)
+                        {
+                            trait_changes[i] = -m::Min(current_traitsets[target_index][i], base_steal_amount[i]);
+                        }
+
+
+                        // Caster change
+                        current_traitsets[cur_action.caster_index] -= trait_changes;
+                        //events += BattleEvent{.caster_id=caster_id, .target_id=caster_id, .trait_changes = -trait_changes};
+                    }
+                    else if(effect.type == EffectType::Restore)
+                    {
+                        EffectParams_Restore *effect_params = (EffectParams_Restore*)effect.params;
+                        trait_changes = effect_params->amount;
+                    }
+                    else
+                    {
+                        if(c::verbose_error_logging) Log("Encountered unimplemented effect type. ((int)EffectType => %d)", int(effect.type));
+                    }
+
+                    // Don't add the event if its trait changes would have no net effect.
+                    // @note: Might change this later, if we want to track these kinds of things
+                    //        for the purpose of triggers (e.g., damage triggers, even when damage=0)
+                    // if(trait_changes != TraitSet{})
+                    // {
+                    //     events += BattleEvent{.caster_id=caster_id, .target_id=target_id, .trait_changes=trait_changes};
+                    // }
+                    //current_traitsets[cur_action.]
+                    current_traitsets[target_index] += trait_changes;
+                    traitset_changes[target_index] = trait_changes;
+                }
+            }
+        }
+
+        ally_traitsets.count = 0;
+        enemy_traitsets.count = 0;
+        ally_traitset_changes.count = 0;
+        enemy_traitset_changes.count = 0;
+        for(int i=0; i<active_unitset.size; ++i)
+        {
+            ally_traitsets += initial_traitsets[i];
+            ally_traitset_changes += traitset_changes[i];
+        }
+        for(int i=0; i<other_unitset.size; ++i)
+        {
+            // if(current_traitsets[active_unitset.size + i].vigor < 0)
+            // {
+            //     Log("tick");
+            // }
+            enemy_traitsets += initial_traitsets[active_unitset.size + i];
+            enemy_traitset_changes += traitset_changes[active_unitset.size + i];
+        }
+        //if(i == 12802)
+        if(    permutation_values[length_of_one_permutation*i + 0] == 6
+           and permutation_values[length_of_one_permutation*i + 1] == 27
+           //and permutation_values[length_of_one_permutation*i + 2] == 30
+           and permutation_values[length_of_one_permutation*i + 3] == 48)
+        {
+            Log("tick");
+        }
+        float score = ScoreBattleState(ally_traitsets, enemy_traitsets,
+                                       ally_traitset_changes, enemy_traitset_changes,
+                                       max_ally_traitsets, max_enemy_traitsets);
+        if(score == best_score)
+            ++equivalent_line_count;
+
+        if(score > best_score)
+        {
+            best_score = score;
+            best_permutation_index = i;
+            equivalent_line_count = 0;
+        }
+
+        // Reset current_traitsets
+        current_traitsets.count = 0;
+        for(auto e : initial_traitsets)
+            current_traitsets += e;
+    }
+
+    u8 *permutation_start = &permutation_values[length_of_one_permutation*best_permutation_index];
+
+    AppendCString(&best_choice_string,
+        "Best score: %.2f [%u %u %u %u] (%d equivalent lines) [permutation index = %zu]\n",
+        best_score,
+        permutation_start[0], permutation_start[1], permutation_start[2], permutation_start[3],
+        equivalent_line_count,
+        best_permutation_index);
+
+    for(int i=0; i<length_of_one_permutation; ++i)
+    {
+        u8 option_index = permutation_start[i];
+        AiAction action = actions[option_index];
+        Unit caster = all_units[action.caster_index];
+        Unit first_target = all_units[action.unit_indices[0]];
+
+        AppendCString(&best_choice_string,
+            "\"%.*s\" uses \"%.*s\" on \"%.*s\" [%d]\n",
+            caster.name.length, caster.name.data,
+            action.ability.name.length, action.ability.name.data,
+            first_target.name.length, first_target.name.data,
+            action.unit_indices[0]);
+    }
+
+    //Log("%d", current_traitsets.count);
     // String permutation_string = {};
     // permutation_string.data = (char *)platform->AllocateMemory(Megabyte(100));
     // permutation_string.max_length = Megabyte(100);
@@ -194,7 +576,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
 
     platform->FreeMemory(permutation_values);
     //platform->FreeMemory(permutation_string.data);
-    return permutation_count;
+    return best_choice_string;
     //Log("permutation count: %zu", permutation_count);
 
     // Array<Unit> allies;
@@ -231,22 +613,32 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset) // @TODO: BigArena?
 // For now, likely SCORE = Sum(ally traits) - Sum(enemy_traits)
 
 float
-ScoreBattleState(Array<TraitSet> ally_traitsets, Array<TraitSet> enemy_traitsets)
+ScoreBattleState(Array<TraitSet> initial_ally_traitsets,
+                 Array<TraitSet> initial_enemy_traitsets,
+                 Array<TraitSet> ally_traitset_changes,
+                 Array<TraitSet> enemy_traitset_changes,
+                 Array<TraitSet> max_ally_traitsets,
+                 Array<TraitSet> max_enemy_traitsets)
 {
     float score = 0.f;
 
-    for(auto this_traits : ally_traitsets)
+    for(int i=0; i<initial_ally_traitsets.count; ++i)
     {
-        score += this_traits.vigor;
-        score += this_traits.focus;
-        score += this_traits.armor;
+        for(int j=0; j<c::trait_count; ++j)
+            score += ((float)(ally_traitset_changes[i][j]) / (float)max_ally_traitsets[i][j]);
     }
 
-    for(auto this_traits : enemy_traitsets)
+    for(int i=0; i<initial_enemy_traitsets.count; ++i)
     {
-        score -= this_traits.vigor;
-        score -= this_traits.focus;
-        score -= this_traits.armor;
+        if(initial_enemy_traitsets[i].vigor + enemy_traitset_changes[i].vigor <= 0)
+        {
+            score += 10.f;
+            continue;
+        }
+
+        for(int j=0; j<c::trait_count; ++j)
+            score -= ((float)(enemy_traitset_changes[i][j])/ (float)max_enemy_traitsets[i][j]);
+
     }
 
     return score;

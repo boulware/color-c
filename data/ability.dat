@@ -1,13 +1,13 @@
 ability "Strike"
 tier 0
 requires (0,0,0)
-effect Damage single_unit (1,0,0)
+effect Damage single_unit (2,0,0)
 tier 1
 requires (5,0,0)
-effect Damage single_unit (2,0,0)
+effect Damage single_unit (4,0,0)
 tier 2
 requires (10,0,0)
-effect DamageIgnoreArmor single_unit (4,0,0)
+effect Damage single_unit (10,0,0)
 
 ability "Rest"
 tier 0
@@ -43,12 +43,12 @@ effect Restore all_allies (0,1,0)
 ability "Steal Armor"
 tier 0
 requires (0,4,0)
-effect Steal single_unit (0,0,1)
+effect Steal single_unit_not_self (0,0,10)
 
 ability "Shoot"
 tier 0
 requires (0,1,0)
-effect Damage single_unit (2,0,0)
+effect Damage single_unit (5,0,0)
 
 ability "Split Arrow"
 tier 0

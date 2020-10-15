@@ -48,6 +48,8 @@ struct Battle
 	OscillatingTimer preview_damage_timer;
 	Timer end_button_clicked_timer;
 	bool ending_player_turn;
+
+	String best_choice_string;
 };
 
 GameState TickBattle(Battle *battle);

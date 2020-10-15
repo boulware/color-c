@@ -357,6 +357,10 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  ending_player_turn: %d (bool)\n", s->ending_player_turn);
 
+	AppendCString(&string, "  best_choice_string: ");
+	AppendString(&string, MetaString(&s->best_choice_string));
+	AppendCString(&string, "(String)\n");
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -1067,6 +1071,32 @@ String MetaString(const EffectParams_Steal *s)
 // ---------------FILE START---------------
 // enemy_ai.h
 // ------------------------------------------
+
+String MetaString(const AiAction *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AiAction {\n");
+
+	AppendCString(&string, "  ability: ");
+	AppendString(&string, MetaString(&s->ability));
+	AppendCString(&string, "(Ability)\n");
+
+	AppendCString(&string, "  caster_index: %u (u8)\n", s->caster_index);
+
+	AppendCString(&string, "  target_count: %u (u8)\n", s->target_count);
+
+	AppendCString(&string, "  unit_indices: %p (u8[])\n", s->unit_indices);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // fixed_array.h
