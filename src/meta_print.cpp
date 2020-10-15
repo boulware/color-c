@@ -15,6 +15,8 @@
 #include "draw.h"
 #include "editor.h"
 #include "effect.h"
+#include "enemy_ai.h"
+#include "fixed_array.h"
 #include "font_loading.h"
 #include "freetype.h"
 #include "freetype_wrapper.h"
@@ -40,6 +42,7 @@
 #include "options_menu.h"
 #include "oscillating_timer.h"
 #include "passive_skill_tree.h"
+#include "permutation.h"
 #include "platform.h"
 #include "random.h"
 #include "ring_buffer.h"
@@ -1060,6 +1063,14 @@ String MetaString(const EffectParams_Steal *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// enemy_ai.h
+// ------------------------------------------
+
+// ---------------FILE START---------------
+// fixed_array.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // font_loading.h
@@ -2125,6 +2136,10 @@ String MetaString(const PassiveSkillTree *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// permutation.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // random.h

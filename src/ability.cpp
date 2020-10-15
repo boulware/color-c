@@ -409,5 +409,7 @@ GenerateAbilityTierText(AbilityTier tier)
 Ability *
 GetAbilityFromId(Id<Ability> id)
 {
+	TIMED_BLOCK;
+
 	return GetEntryFromId(g::ability_table, id);
 }

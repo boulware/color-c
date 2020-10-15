@@ -1075,4 +1075,7 @@ int main()
 	// 		   (int)type_token.length, type_token.start);
 
 	// }
+	debug::timed_block_array_size = __COUNTER__;
 }
+
+TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

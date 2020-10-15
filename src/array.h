@@ -65,5 +65,9 @@ template<typename Type>
 Array<Type>
 CreateTempArray(int max_count);
 
+template<typename Type>
+Array<Type>
+AllocateArrayFromPlatform(int max_count);
+
 
 #endif

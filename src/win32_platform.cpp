@@ -358,7 +358,7 @@ win32_WriteLineToFile(char *filename, char *line)
 							 NULL);
 
 	if(file == INVALID_HANDLE_VALUE) {
-		//Log("Failed to open text file for writing line: %s", filename);
+		win32_WriteLineToFile("logs/critical.log", "Failed to open text file for writing line.");
 		return;
 	}
 

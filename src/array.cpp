@@ -171,3 +171,16 @@ CreateTempArray(int max_count)
 {
 	return CreateArrayFromArena<Type>(max_count, &memory::per_frame_arena);
 }
+
+template<typename Type>
+Array<Type>
+AllocateArrayFromPlatform(int max_count)
+{
+	return Array<Type>{
+		.data = platform->AllocateMemory(sizeof(Type) * max_count),
+		.arena = nullptr,
+		.count = 0,
+		.max_count = max_count,
+		._allocated_count = max_count,
+	};
+}

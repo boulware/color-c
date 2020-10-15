@@ -185,6 +185,23 @@ GameInit()
 
     game->current_state = GameState::Battle;
 
+    // DEPTH 1
+    // int value_count = 3;
+    // int permutation_count = m::Factorial(value_count);
+    // Array<u8> values = CreateTempArray<u8>(value_count);
+    // for(u8 i=0; i<value_count; ++i) values += i;
+
+    // int dst_byte_count = value_count * permutation_count;
+    // u8 *dst = (u8 *)malloc(dst_byte_count);
+    // u8 *p = dst;
+    // GenerateU8Permutations(values, dst, dst_byte_count);
+    // for(int i=0; i<permutation_count; ++i)
+    // {
+    //     Log("%u %u %u", p[0], p[1], p[2]);
+    //     p += 3;
+    // }
+    // free(dst);
+
     // To use this, set OPTIMIZE to true, convert the original function into a function pointer
     // with the name OPTIMIZING_FUNCTION, and declare two functions named with "Slow" and "Fast"
     // appended to the name set in OPTIMIZING_FUNCTION. aowtc: F12 toggles between slow and fast in

@@ -44,3 +44,5 @@
 #include "camera.cpp"
 #include "room.cpp"
 #include "map.cpp"
+#include "enemy_ai.cpp"
+#include "permutation.cpp"

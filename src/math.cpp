@@ -1,6 +1,8 @@
 #include "math.h"
 #include <immintrin.h>
 
+#include "debug.h"
+
 namespace m
 {
     template <class Type>
@@ -71,6 +73,19 @@ namespace m
     float Lerp(float start, float end, float t)
     {
         float value = (1.f - t)*start + (t)*end;
+        return value;
+    }
+
+    s64
+    Factorial(s64 a)
+    {
+        TIMED_BLOCK;
+        s64 value = 1;
+        for(int i=a; i>1; --i)
+        {
+            value *= i;
+        }
+
         return value;
     }
 };

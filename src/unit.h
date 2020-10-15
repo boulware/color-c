@@ -6,7 +6,7 @@
 #include "text_parsing.h"
 #include "ability.h"
 
-enum class Team
+enum class Team : u8
 {
 	allies,
 	enemies

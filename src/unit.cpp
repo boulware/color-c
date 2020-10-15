@@ -751,6 +751,8 @@ TraitSetString(TraitSet traits)
 int
 DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)
 {
+	TIMED_BLOCK;
+
 	Unit *caster = GetUnitFromId(caster_id);
 	Ability *ability = GetAbilityFromId(ability_id);
 	if(!ValidUnit(caster) or !ValidAbility(ability)) return -1;
@@ -774,5 +776,6 @@ GetBreedFromId(Id<Breed> id)
 Unit *
 GetUnitFromId(Id<Unit> id)
 {
+	TIMED_BLOCK;
 	return GetEntryFromId(g::unit_table, id);
 }

@@ -537,6 +537,8 @@ void InitBattle(Battle *battle)
 
     battle->end_button_clicked_timer = {};
     battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
+
+
 }
 
 void
@@ -556,6 +558,21 @@ StartBattle(Battle *battle, UnitSet battle_units)
     GenerateEnemyIntents(battle);
 
     battle->is_player_turn = true;
+
+    // Enemy AI (# of permutations)
+    UnitSet active_unitset = {};
+    UnitSet other_unitset  = {};
+    for(Id<Unit> unit_id : battle->units)
+    {
+        Unit *unit = GetUnitFromId(unit_id);
+        if(!ValidUnit(unit)) continue;
+
+        if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &active_unitset);
+        else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &other_unitset);
+    }
+    s64 permutation_count = DoAiStuff(active_unitset, other_unitset);
+    Log("%zu", permutation_count);
+    //DrawUiText(c::def_text_layout, {}, "Permutations: %zu", permutation_count);
 }
 
 GameState
@@ -1161,6 +1178,21 @@ TickBattle(Battle *battle)
     // //   battle->show_action_preview = true;
     // //   battle->previewed_intent = intent;
     // // }
+
+    // Battle Score
+    Array<TraitSet> ally_traitsets  = CreateTempArray<TraitSet>(4);
+    Array<TraitSet> enemy_traitsets = CreateTempArray<TraitSet>(4);
+    for(Id<Unit> unit_id : battle->units)
+    {
+        Unit *unit = GetUnitFromId(unit_id);
+        if(!ValidUnit(unit)) continue;
+
+        if     (unit->team == Team::allies)  ally_traitsets  += unit->cur_traits;
+        else if(unit->team == Team::enemies) enemy_traitsets += unit->cur_traits;
+    }
+    float battle_state_score = ScoreBattleState(ally_traitsets, enemy_traitsets);
+
+    //DrawUiText(c::def_text_layout, {0.f, )
 
     GameState new_state = GameState::None;
     { // Return to main menu if esc is pressed
