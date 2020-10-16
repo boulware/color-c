@@ -10,6 +10,11 @@ const char *TargetClassToFileString(TargetClass tc)
 	return _TargetClass_filestrings[(int)tc];
 }
 
+const float TargetClassToPotentialMult(TargetClass tc)
+{
+	return _TargetClass_potential_multipliers[(int)tc];
+}
+
 bool
 ParseNextAsTargetClass(Buffer *buffer, TargetClass *target_class)
 {

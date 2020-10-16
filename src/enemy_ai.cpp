@@ -54,12 +54,39 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
     {
         Id unit_id = all_unitset.ids[i];
         Unit *unit = GetUnitFromId(unit_id);
-        all_units += *unit;
         if(!ValidUnit(unit))
         {
-            AppendCString(&best_choice_string, __FUNCTION__ "Not all units were valid. Aborting.");
+            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
             return best_choice_string;
         }
+
+        all_units += *unit;
+    }
+
+    Array<Unit> ally_units = CreateTempArray<Unit>(active_unitset.size);
+    for(int i=0; i<active_unitset.size; ++i)
+    {
+        Unit *unit = GetUnitFromId(active_unitset.ids[i]);
+        if(!ValidUnit(unit))
+        {
+            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
+            return best_choice_string;
+        }
+
+        ally_units += *unit;
+    }
+
+    Array<Unit> enemy_units = CreateTempArray<Unit>(other_unitset.size);
+    for(int i=0; i<other_unitset.size; ++i)
+    {
+        Unit *unit = GetUnitFromId(other_unitset.ids[i]);
+        if(!ValidUnit(unit))
+        {
+            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
+            return best_choice_string;
+        }
+
+        enemy_units += *unit;
     }
 
     // Array of "actions", which correspond to the values in the permutation (0... 25 or whatever)
@@ -141,7 +168,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
                     }
                 }
 
-                Assert(actions_added == team_counts[(size_t)caster->team]);
+                Assert(actions_added == team_counts[(size_t)caster->team] - 1);
             }
             else if(tier.target_class == TargetClass::all_allies)
             {
@@ -167,7 +194,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
                     if(unit_index != i and caster->team == all_units[unit_index].team)
                         action.unit_indices[action.target_count++] = unit_index;
                 }
-                Assert(action.target_count == team_counts[(size_t)caster->team]);
+                Assert(action.target_count == team_counts[(size_t)caster->team] - 1);
 
                 actions += action;
             }
@@ -487,9 +514,10 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
         // {
         //     Log("tick");
         // }
-        float score = ScoreBattleState(ally_traitsets, enemy_traitsets,
-                                       ally_traitset_changes, enemy_traitset_changes,
-                                       max_ally_traitsets, max_enemy_traitsets);
+
+        float score = ScoreBattleState2(ally_units, enemy_units,
+                                        ally_traitset_changes, enemy_traitset_changes);
+
         if(score == best_score)
             ++equivalent_line_count;
 
@@ -633,42 +661,301 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
 // the sum total of traits for allies vs enemies and give a single score based on that.
 // For now, likely SCORE = Sum(ally traits) - Sum(enemy_traits)
 
+float UnitAbilityPotential(Unit unit)
+{
+    if(unit.cur_traits.vigor == 12)
+    {
+        int a = 0;
+    }
+
+    float potential = 0.f;
+
+    if(unit.cur_traits.vigor <= 0) return potential; // Dead units have 0 potential
+
+    int ability_count = 0;
+    for(auto ability_id : unit.ability_ids)
+    {
+        Ability *ability = GetAbilityFromId(ability_id);
+        if(!ValidAbility(ability)) continue;
+
+        ++ability_count;
+
+        int tier_index = -1;
+        for(int i=ability->tiers.count-1; i>=0; --i)
+        {
+            if(unit.cur_traits >= ability->tiers[i].required_traits)
+            {
+                tier_index = i;
+                break;
+            }
+        }
+        if(tier_index == -1) continue;
+
+        AbilityTier &cur_tier = ability->tiers[tier_index]; // alias
+
+        // @TODO: Cache these
+        float cur_tier_potential = 0.f;
+        for(Effect effect : cur_tier.effects_)
+        {
+            switch(effect.type)
+            {
+                case(EffectType::NoEffect): continue; break;
+                case(EffectType::Damage):
+                {
+                    int sum = 0;
+                    for(int i=0; i<c::trait_count; ++i)
+                        sum += ((EffectParams_Damage *)effect.params)->amount[i];
+
+                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
+                } break;
+                case(EffectType::DamageIgnoreArmor):
+                {
+                    int sum = 0;
+                    for(int i=0; i<c::trait_count; ++i)
+                        sum += ((EffectParams_DamageIgnoreArmor *)effect.params)->amount[i];
+
+                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
+                } break;
+                case(EffectType::Restore):
+                {
+                    int sum = 0;
+                    for(int i=0; i<c::trait_count; ++i)
+                        sum += ((EffectParams_Restore *)effect.params)->amount[i];
+
+                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
+                } break;
+                case(EffectType::Gift):
+                {
+                    int sum = 0;
+                    for(int i=0; i<c::trait_count; ++i)
+                        sum += ((EffectParams_Gift *)effect.params)->amount[i];
+
+                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
+                } break;
+                case(EffectType::Steal):
+                {
+                    int sum = 0;
+                    for(int i=0; i<c::trait_count; ++i)
+                        sum += ((EffectParams_Steal *)effect.params)->amount[i];
+
+                    // 2.f * ... because Steal takes from enemy AND adds to you.
+                    cur_tier_potential += 2.f * (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
+                } break;
+            }
+        }
+
+        potential += cur_tier_potential;
+
+        // Tier upgrades
+        if(tier_index + 1 < ability->tiers.count)
+        {
+
+            AbilityTier &next_tier = ability->tiers[tier_index + 1]; // alias
+
+            float next_tier_potential = 0.f;
+            for(Effect effect : next_tier.effects_)
+            {
+                switch(effect.type)
+                {
+                    case(EffectType::NoEffect): continue; break;
+                    case(EffectType::Damage):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Damage *)effect.params)->amount[i];
+
+                        next_tier_potential += (float)sum * TargetClassToPotentialMult(next_tier.target_class);
+                    } break;
+                    case(EffectType::DamageIgnoreArmor):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_DamageIgnoreArmor *)effect.params)->amount[i];
+
+                        next_tier_potential += (float)sum * TargetClassToPotentialMult(next_tier.target_class);
+                    } break;
+                    case(EffectType::Restore):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Restore *)effect.params)->amount[i];
+
+                        next_tier_potential += (float)sum * TargetClassToPotentialMult(next_tier.target_class);
+                    } break;
+                    case(EffectType::Gift):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Gift *)effect.params)->amount[i];
+
+                        next_tier_potential += (float)sum * TargetClassToPotentialMult(next_tier.target_class);
+                    } break;
+                    case(EffectType::Steal):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Steal *)effect.params)->amount[i];
+
+                        // 2.f * ... because Steal takes from enemy AND adds to you.
+                        next_tier_potential += 2.f * (float)sum * TargetClassToPotentialMult(next_tier.target_class);
+                    } break;
+                }
+            }
+
+            int upgrade_points = 0;
+            int total_points = 0;
+            for(int i=0; i<c::trait_count; ++i)
+            {
+                upgrade_points += m::Min(cur_tier.required_traits[i], unit.cur_traits[i] - cur_tier.required_traits[i]);
+                total_points   += (next_tier.required_traits[i] - cur_tier.required_traits[i]);
+            }
+            float upgrade_ratio = m::Min(1.f, (float)upgrade_points / (float)total_points);
+
+            float upgrade_potential = ai::wt_pot_upgrade_1 * upgrade_ratio * (next_tier_potential - cur_tier_potential);
+            if(upgrade_potential < 0.f)
+            {
+                int a = 0;
+            }
+            potential += upgrade_potential;
+        }
+
+        // Tier downgrades
+        if(tier_index - 1 >= 0)
+        {
+
+            AbilityTier &prev_tier = ability->tiers[tier_index - 1]; // alias
+
+            float prev_tier_potential = 0.f;
+            for(Effect effect : prev_tier.effects_)
+            {
+                switch(effect.type)
+                {
+                    case(EffectType::NoEffect): continue; break;
+                    case(EffectType::Damage):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Damage *)effect.params)->amount[i];
+
+                        prev_tier_potential += (float)sum * TargetClassToPotentialMult(prev_tier.target_class);
+                    } break;
+                    case(EffectType::DamageIgnoreArmor):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_DamageIgnoreArmor *)effect.params)->amount[i];
+
+                        prev_tier_potential += (float)sum * TargetClassToPotentialMult(prev_tier.target_class);
+                    } break;
+                    case(EffectType::Restore):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Restore *)effect.params)->amount[i];
+
+                        prev_tier_potential += (float)sum * TargetClassToPotentialMult(prev_tier.target_class);
+                    } break;
+                    case(EffectType::Gift):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Gift *)effect.params)->amount[i];
+
+                        prev_tier_potential += (float)sum * TargetClassToPotentialMult(prev_tier.target_class);
+                    } break;
+                    case(EffectType::Steal):
+                    {
+                        int sum = 0;
+                        for(int i=0; i<c::trait_count; ++i)
+                            sum += ((EffectParams_Steal *)effect.params)->amount[i];
+
+                        // 2.f * ... because Steal takes from enemy AND adds to you.
+                        prev_tier_potential += 2.f * (float)sum * TargetClassToPotentialMult(prev_tier.target_class);
+                    } break;
+                }
+            }
+
+            int downgrade_points = 0;
+            int total_downgrade_points = 0;
+            for(int i=0; i<c::trait_count; ++i)
+            {
+                downgrade_points -= m::Min(cur_tier.required_traits[i], unit.cur_traits[i] - cur_tier.required_traits[i]);
+                total_downgrade_points   += (prev_tier.required_traits[i] - cur_tier.required_traits[i]);
+            }
+            float downgrade_ratio = -m::Min(1.f, (float)downgrade_points / (float)total_downgrade_points);
+
+            float downgrade_potential = ai::wt_pot_upgrade_1 * downgrade_ratio * (prev_tier_potential - cur_tier_potential);
+            if(downgrade_potential < 0.f)
+            {
+                int a = 0;
+            }
+
+            potential -= downgrade_potential;
+        }
+    }
+
+    return potential / ability_count;
+}
+
 float
-ScoreBattleState(Array<TraitSet> initial_ally_traitsets,
-                 Array<TraitSet> initial_enemy_traitsets,
-                 Array<TraitSet> ally_traitset_changes,
-                 Array<TraitSet> enemy_traitset_changes,
-                 Array<TraitSet> max_ally_traitsets,
-                 Array<TraitSet> max_enemy_traitsets)
+ScoreBattleState2(Array<Unit> ally_units,
+                  Array<Unit> enemy_units,
+                  Array<TraitSet> ally_traitset_changes,
+                  Array<TraitSet> enemy_traitset_changes)
 {
     float score = 0.f;
 
-    for(int i=0; i<initial_ally_traitsets.count; ++i)
+    // Allies
+    for(int i=0; i<ally_units.count; ++i)
     {
+        // Trait changes
+        TraitSet initial_traits = ally_units[i].cur_traits;
         for(int j=0; j<c::trait_count; ++j)
         {
-            if(initial_ally_traitsets[i][j] <= 0) continue;
-            score += ai::wt_rel_change * ((float)(ally_traitset_changes[i][j]) / (float)initial_ally_traitsets[i][j]);
+            if(initial_traits[j] <= 0) continue; // Trait is empty (0) -- don't consider it in scoring.
+            score += ai::wt_rel_change * ((float)(ally_traitset_changes[i][j]) / (float)initial_traits[j]);
             score += ai::wt_abs_change * (ally_traitset_changes[i][j]);
         }
+
+        // Ability potential changes
+        Unit after_change_unit = ally_units[i];
+        after_change_unit.cur_traits += ally_traitset_changes[i];
+
+        float potential_before_change = UnitAbilityPotential(ally_units[i]);
+        float potential_after_change = UnitAbilityPotential(after_change_unit);
+        float d_potential = potential_after_change - potential_before_change;
+
+        score += ai::wt_ability_potential * d_potential;
     }
 
-    for(int i=0; i<initial_enemy_traitsets.count; ++i)
+    // Trait changes to enemies
+    for(int i=0; i<enemy_units.count; ++i)
     {
-        if(initial_enemy_traitsets[i].vigor + enemy_traitset_changes[i].vigor <= 0)
-        {
-            score += 10.f;
-            continue;
-        }
+        TraitSet initial_traits = enemy_units[i].cur_traits;
+        // if(initial_traits.vigor + enemy_traitset_changes[i].vigor <= 0)
+        // {
+        //     score += 10.f;
+        //     continue;
+        // }
 
         for(int j=0; j<c::trait_count; ++j)
         {
-            if(initial_enemy_traitsets[i][j] <= 0) continue;
-            score -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i][j])/ (float)initial_enemy_traitsets[i][j]);
+            if(initial_traits[j] <= 0) continue; // Trait is empty (0) -- don't consider it in scoring.
+            score -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i][j])/ (float)initial_traits[j]);
             score -= ai::wt_abs_change * (enemy_traitset_changes[i][j]);
         }
 
+        // Ability potential changes
+        Unit after_change_unit = enemy_units[i];
+        after_change_unit.cur_traits += enemy_traitset_changes[i];
+
+        float potential_before_change = UnitAbilityPotential(enemy_units[i]);
+        float potential_after_change = UnitAbilityPotential(after_change_unit);
+        float d_potential = potential_after_change - potential_before_change;
+
+        score -= ai::wt_ability_potential * d_potential;
     }
+
 
     return score;
 }

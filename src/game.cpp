@@ -38,10 +38,10 @@ TIMED_BLOCK;
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
 
-    #if 1
+    #if 0
     InitLcgSystemSeed(&random::default_lcg);
     #else
-    InitLcgSetSeed(&random::default_lcg, 1279165084);
+    InitLcgSetSeed(&random::default_lcg, 1024687828);
     #endif
 
     //TestDistributionAndLog();

@@ -767,6 +767,20 @@ DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)
 	return -1;
 }
 
+// Assumes outer context has already checked that *caster and *ability are valid.
+int
+DetermineAbilityTier(Unit *caster, Ability *ability)
+{
+	for(int i=ability->tiers.count-1; i>=0; --i)
+	{
+		if(caster->cur_traits >= ability->tiers[i].required_traits) return i;
+	}
+
+	// The caster doesn't have the required traits to use the ability at all.
+	// We return a negative value to indicate this case.
+	return -1;
+}
+
 Breed *
 GetBreedFromId(Id<Breed> id)
 {

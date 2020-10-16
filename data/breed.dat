@@ -1,5 +1,5 @@
 unit "Warrior"
-traits (10,5,3)
+traits (7,5,3)
 moveset "Rest" "Strike" "Repair" "Rig Up"
 
 unit "Rogue"
@@ -31,5 +31,5 @@ traits (8,2,2)
 moveset "Strike" "Steal Armor"
 
 unit "Dragon"
-traits (30,10,10)
+traits (25,10,10)
 moveset "Swipe" "Breathe Fire"
