@@ -20,6 +20,12 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
 
     String best_choice_string = AllocStringDataFromArena(1000, arena);
 
+    if(active_unitset.size == 0)
+    {
+        AppendCString(&best_choice_string, __FUNCTION__ "(): No units in active_unitset. Skipping.");
+        return best_choice_string;
+    }
+
     int team_counts[2] = {};
     for(auto unit_id : active_unitset)
     {
@@ -264,8 +270,14 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
         product_of_options *= option_count_for_this_unit;
     }
 
+    if(total_option_count == 0)
+    {
+        AppendCString(&best_choice_string, __FUNCTION__ "(): total_option_count = 0. Skipping.");
+        return best_choice_string;
+    }
+
     permutation_count *= product_of_options;
-    Log("%zu", permutation_count);
+    Log("permutation count: %zu", permutation_count);
 
     int length_of_one_permutation = active_unitset.size; // 1234, 1235, 1236, etc.
     size_t permutation_values_byte_count = length_of_one_permutation * permutation_count;
@@ -283,18 +295,19 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
 
 
     // [current_traitsets] will be parallel to [all_unitset]
-    Array<TraitSet> initial_traitsets = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
-    Array<TraitSet> current_traitsets = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
-    Array<TraitSet> traitset_changes  = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
-    Array<TraitSet> max_traitsets     = CreateTempArray<TraitSet>(active_unitset.size + other_unitset.size);
-    for(int i=0; i<all_unitset.size; ++i)
+    int total_unit_count = active_unitset.size + other_unitset.size;
+    Array<TraitSet> initial_traitsets = CreateTempArray<TraitSet>(total_unit_count);
+    Array<TraitSet> current_traitsets = CreateTempArray<TraitSet>(total_unit_count);
+    Array<TraitSet> traitset_changes  = CreateTempArray<TraitSet>(total_unit_count);
+    Array<TraitSet> max_traitsets     = CreateTempArray<TraitSet>(total_unit_count);
+    for(int i=0; i<total_unit_count; ++i)
     {
         Id unit_id = all_unitset.ids[i];
         Unit *unit = GetUnitFromId(unit_id);
         initial_traitsets += unit->cur_traits;
         max_traitsets += unit->max_traits;
     }
-    for(auto e : current_traitsets)
+    for(auto e : initial_traitsets)
     {
         current_traitsets += e;
         traitset_changes += {};
@@ -331,6 +344,14 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
         ++permutation_counter;
         traitset_changes.count = 0;
         for(auto e : current_traitsets) traitset_changes += {};
+
+        if(    permutation_values[length_of_one_permutation*i + 0] == 6
+           and permutation_values[length_of_one_permutation*i + 1] == 27
+           //and permutation_values[length_of_one_permutation*i + 2] == 30
+           and permutation_values[length_of_one_permutation*i + 3] == 48)
+        {
+            //Log("tick");
+        }
 
         for(int j=0; j<length_of_one_permutation; ++j)
         {
@@ -435,7 +456,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
                     // }
                     //current_traitsets[cur_action.]
                     current_traitsets[target_index] += trait_changes;
-                    traitset_changes[target_index] = trait_changes;
+                    traitset_changes[target_index] += trait_changes;
                 }
             }
         }
@@ -459,13 +480,13 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
             enemy_traitset_changes += traitset_changes[active_unitset.size + i];
         }
         //if(i == 12802)
-        if(    permutation_values[length_of_one_permutation*i + 0] == 6
-           and permutation_values[length_of_one_permutation*i + 1] == 27
-           //and permutation_values[length_of_one_permutation*i + 2] == 30
-           and permutation_values[length_of_one_permutation*i + 3] == 48)
-        {
-            Log("tick");
-        }
+        // if(    permutation_values[length_of_one_permutation*i + 0] == 6
+        //    and permutation_values[length_of_one_permutation*i + 1] == 27
+        //    //and permutation_values[length_of_one_permutation*i + 2] == 30
+        //    and permutation_values[length_of_one_permutation*i + 3] == 48)
+        // {
+        //     Log("tick");
+        // }
         float score = ScoreBattleState(ally_traitsets, enemy_traitsets,
                                        ally_traitset_changes, enemy_traitset_changes,
                                        max_ally_traitsets, max_enemy_traitsets);
@@ -488,7 +509,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
     u8 *permutation_start = &permutation_values[length_of_one_permutation*best_permutation_index];
 
     AppendCString(&best_choice_string,
-        "Best score: %.2f [%u %u %u %u] (%d equivalent lines) [permutation index = %zu]\n",
+        "Best score: %.2f [%u %u %u %u] (%d equivalent lines) [permutation index = %d]\n",
         best_score,
         permutation_start[0], permutation_start[1], permutation_start[2], permutation_start[3],
         equivalent_line_count,
@@ -625,7 +646,11 @@ ScoreBattleState(Array<TraitSet> initial_ally_traitsets,
     for(int i=0; i<initial_ally_traitsets.count; ++i)
     {
         for(int j=0; j<c::trait_count; ++j)
-            score += ((float)(ally_traitset_changes[i][j]) / (float)max_ally_traitsets[i][j]);
+        {
+            if(initial_ally_traitsets[i][j] <= 0) continue;
+            score += ai::wt_rel_change * ((float)(ally_traitset_changes[i][j]) / (float)initial_ally_traitsets[i][j]);
+            score += ai::wt_abs_change * (ally_traitset_changes[i][j]);
+        }
     }
 
     for(int i=0; i<initial_enemy_traitsets.count; ++i)
@@ -637,7 +662,11 @@ ScoreBattleState(Array<TraitSet> initial_ally_traitsets,
         }
 
         for(int j=0; j<c::trait_count; ++j)
-            score -= ((float)(enemy_traitset_changes[i][j])/ (float)max_enemy_traitsets[i][j]);
+        {
+            if(initial_enemy_traitsets[i][j] <= 0) continue;
+            score -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i][j])/ (float)initial_enemy_traitsets[i][j]);
+            score -= ai::wt_abs_change * (enemy_traitset_changes[i][j]);
+        }
 
     }
 

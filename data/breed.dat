@@ -24,7 +24,7 @@ moveset "Strike" "Meditate" "Vitalize"
 
 unit "Wolf"
 traits (4,4,0)
-moveset "Strike" "Rally" "Taunt"
+moveset "Strike" "Taunt"
 
 unit "Slime"
 traits (8,2,2)
@@ -32,8 +32,4 @@ moveset "Strike" "Steal Armor"
 
 unit "Dragon"
 traits (30,10,10)
-moveset "Swipe" "Taunt" "Rest" "Breathe Fire"
-
-unit "Test"
-traits (1,1,1)
-moveset "Strike"
+moveset "Swipe" "Breathe Fire"

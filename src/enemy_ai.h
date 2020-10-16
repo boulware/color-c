@@ -1,6 +1,13 @@
 #ifndef ENEMY_AI_H
 #define ENEMY_AI_H
 
+namespace ai
+{
+    // Heuristic weights
+    float wt_rel_change = 1.f;
+    float wt_abs_change = 0.1f;
+}
+
 // "actions", which correspond to the values in the permutation (0... 25 or whatever)
 // This should contain:
 //     1) a specific Ability (which has tiers, and each tier has a set of effects)

@@ -38,9 +38,13 @@ TIMED_BLOCK;
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
 
-    //InitLcgSystemSeed(&random::default_lcg);
+    #if 1
+    InitLcgSystemSeed(&random::default_lcg);
+    #else
+    InitLcgSetSeed(&random::default_lcg, 1279165084);
+    #endif
+
     //TestDistributionAndLog();
-    InitLcgSetSeed(&random::default_lcg, 14);
 
     game->temp_texture = GenerateAndBindTexture();
     gl->Enable(GL_BLEND);
@@ -165,8 +169,15 @@ TIMED_BLOCK;
     game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
     UnitSet battle_units = game->player_party;
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
+    for(int i=0; i<4; ++i)
+    {
+        int random_index = RandomU32(6, g::breed_table.entry_count-1);
+        Id breed_id = g::breed_table.entries[random_index].id;
+        AddUnitToUnitSet(CreateUnit(breed_id, Team::enemies), &battle_units);
+    }
+
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Mage"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);

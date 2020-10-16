@@ -1150,6 +1150,7 @@ TickBattle(Battle *battle)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit)) continue;
+            if(unit->cur_traits.vigor <= 0) continue;
 
             if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &active_unitset);
             else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &other_unitset);

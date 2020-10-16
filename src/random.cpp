@@ -8,14 +8,14 @@ void Seed(u32 seed_value)
 void
 InitLcgSetSeed(LCG *lcg, u32 seed)
 {
-	//lcg->m = 0xFFFFFFFF;
-	lcg->m = 2147483647;
+	lcg->m = 0xFFFFFFFF;
+	//lcg->m = 2147483647;
 	lcg->a = 1583458089;
 	lcg->c = 12345;
 	lcg->seed = seed;
 
 	// Do some iterations to get out of the start range
-	for(int i=0; i<100; i++) RandomU32(0,0);
+	for(int i=0; i<100; i++) RandomU32(0,1);
 }
 
 u64
@@ -27,9 +27,10 @@ InitLcgSystemSeed(LCG *lcg)
 	lcg->a = 1583458089;
 	lcg->c = 12345;
 	lcg->seed = __rdtsc();
+	Log("System seed: %zu", lcg->seed);
 
 	// Do some iterations to get out of the start range
-	for(int i=0; i<100; i++) RandomU32(0,0);
+	for(int i=0; i<100; i++) RandomU32(0,1);
 
 	return lcg->seed;
 }
