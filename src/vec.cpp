@@ -94,6 +94,17 @@ Distance(Vec2f a, Vec2f b)
     return Length(a-b);
 }
 
+Vec2f
+Rotate(Vec2f v, float degrees)
+{
+    float rad = degrees * (c::pi / 180.f);
+
+    return {
+        .x = v.x * m::Cos(rad) - v.y * m::Sin(rad),
+        .y = v.x * m::Sin(rad) + v.y * m::Cos(rad)
+    };
+}
+
 // Vec3f
 Vec3f
 operator+(Vec3f a, Vec3f b)

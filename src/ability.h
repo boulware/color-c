@@ -33,10 +33,13 @@ struct Ability
 
 	String name;
 	Array<AbilityTier> tiers;
+    Array<float> tier_potentials;
 };
 
+bool ValidAbility(const Ability *ability);
 Ability *GetAbilityFromId(Id<Ability> id);
 
+void AllocateAndGenerateAbilityTierPotentials(Ability *ability);
 bool ParseNextAsAbilityData(Buffer *buffer, Ability *ability);
 bool LoadAbilityFile(const char *filename, Table<Ability> *table);
 char *GenerateAbilityTierText(AbilityTier tier);

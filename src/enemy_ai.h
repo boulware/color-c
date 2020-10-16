@@ -4,15 +4,27 @@
 namespace ai
 {
     // Trait change weights
-    float wt_rel_change = 1.f;
+    float wt_vigor = 2.0f;
+    float wt_focus = 0.0f;
+    float wt_armor = 1.0f;
+
+    float wt_rel_change = 0.7f;
     float wt_abs_change = 0.1f;
 
     // Ability potential weights
-    float wt_ability_potential = 1.f;
-    float wt_pot_upgrade_1 = 1.f;   // Weight for increasing traits that will help achieve the closest tier upgrade.
-    float wt_pot_upgrade_2 = 0.1f;  // ''                                                      next to closest tier upgrade.
-    float wt_pot_upgrade_3 = 0.01f; // ''                                                      next2 next2 closest tier upgrade.
+    float wt_ability_potential = 1.5f;
+    float wt_progression = 0.2f;
 }
+
+struct BattleScore
+{
+    float total;
+
+    float rel_change;
+    float abs_change;
+    float ally_potential;
+    float enemy_potential;
+};
 
 // "actions", which correspond to the values in the permutation (0... 25 or whatever)
 // This should contain:
@@ -34,10 +46,10 @@ float ScoreBattleState(Array<TraitSet> ally_traitsets,
                        Array<TraitSet> max_ally_traitsets,
                        Array<TraitSet> max_enemy_traitsets);
 
-float
+BattleScore
 ScoreBattleState2(Array<Unit> ally_units,
-                 Array<Unit> enemy_units,
-                 Array<TraitSet> ally_traitset_changes,
-                 Array<TraitSet> enemy_traitset_changes);
+                  Array<Unit> enemy_units,
+                  Array<TraitSet> ally_traitset_changes,
+                  Array<TraitSet> enemy_traitset_changes);
 
 #endif

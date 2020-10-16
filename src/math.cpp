@@ -70,6 +70,16 @@ namespace m
         return _mm_cvtss_f32(_mm_sqrt_ps(_mm_set_ss(a)));
     }
 
+    float Sin(float a)
+    {
+        return _mm_cvtss_f32(_mm_sin_ps(_mm_set_ss(a)));
+    }
+
+    float Cos(float a)
+    {
+        return _mm_cvtss_f32(_mm_cos_ps(_mm_set_ss(a)));
+    }
+
     float Lerp(float start, float end, float t)
     {
         float value = (1.f - t)*start + (t)*end;

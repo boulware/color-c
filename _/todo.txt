@@ -61,4 +61,8 @@ effect Heal all_allies (0,5,0)
 
 21) For preview damage that does more than the target's current trait value (e.g., an ability deals 10 vigor damage, but the target only has 5 vigor), we should probably show the full damage (10) rather than the reduced damage (5) because when you're doing something like healing to tank the damage, it's hard to read what's going on because the damage value changes with your health (e.g., you're at 5 vigor, it shows -5, you heal 2 damage thinking that it will save you because you will then have 7 vigor vs 5 damage, but then the damage value changes to 7)
 
-22) Cache the values of UnitAbilityPotential() for the tier potential value.
+//22) Cache the values of UnitAbilityPotential() for the tier potential value.
+
+23) Meditate (for example) can be "clicked" on an enemy and it will just do nothing but use up AP? Probably the case with all self-targeting things if i had to guess.
+
+24) Develop a better way to compare two scores.

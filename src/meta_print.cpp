@@ -1,6 +1,7 @@
 #include "meta_print.h"
 
 #include "ability.h"
+#include "ai_explorer.h"
 #include "align.h"
 #include "array.h"
 #include "battle.h"
@@ -115,6 +116,30 @@ String MetaString(const Ability *s)
 	AppendCString(&string, "  tiers: ");
 	AppendString(&string, MetaString(&s->tiers));
 	AppendCString(&string, "(Array<AbilityTier>)\n");
+
+	AppendCString(&string, "  tier_potentials: ");
+	AppendString(&string, MetaString(&s->tier_potentials));
+	AppendCString(&string, "(Array<float>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// ai_explorer.h
+// ------------------------------------------
+
+String MetaString(const AiExplorer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "AiExplorer {\n");
 
 	AppendCString(&string, "}");
 
@@ -1072,6 +1097,32 @@ String MetaString(const EffectParams_Steal *s)
 // enemy_ai.h
 // ------------------------------------------
 
+String MetaString(const BattleScore *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BattleScore {\n");
+
+	AppendCString(&string, "  total: %f (float)\n", s->total);
+
+	AppendCString(&string, "  rel_change: %f (float)\n", s->rel_change);
+
+	AppendCString(&string, "  abs_change: %f (float)\n", s->abs_change);
+
+	AppendCString(&string, "  ally_potential: %f (float)\n", s->ally_potential);
+
+	AppendCString(&string, "  enemy_potential: %f (float)\n", s->enemy_potential);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 String MetaString(const AiAction *s)
 {
 	TIMED_BLOCK;
@@ -1203,6 +1254,10 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->campaign));
 	AppendCString(&string, "(Campaign)\n");
 
+	AppendCString(&string, "  ai_explorer: ");
+	AppendString(&string, MetaString(&s->ai_explorer));
+	AppendCString(&string, "(AiExplorer)\n");
+
 	AppendCString(&string, "  test_mode: ");
 	AppendString(&string, MetaString(&s->test_mode));
 	AppendCString(&string, "(TestMode)\n");
@@ -1270,6 +1325,9 @@ String MetaString(const GameState *s)
 		} break;
 		case(GameState::Options): {
 			AppendCString(&string, "Options");
+		} break;
+		case(GameState::AiExplorer): {
+			AppendCString(&string, "AiExplorer");
 		} break;
 		case(GameState::Test): {
 			AppendCString(&string, "Test");
@@ -2506,13 +2564,7 @@ String MetaString(const TestMode *s)
 	AppendString(&string, MetaString(&s->a1));
 	AppendCString(&string, "(Vec2f)\n");
 
-	AppendCString(&string, "  b0: ");
-	AppendString(&string, MetaString(&s->b0));
-	AppendCString(&string, "(Vec2f)\n");
-
-	AppendCString(&string, "  b1: ");
-	AppendString(&string, MetaString(&s->b1));
-	AppendCString(&string, "(Vec2f)\n");
+	AppendCString(&string, "  n: %d (int)\n", s->n);
 
 	AppendCString(&string, "}");
 

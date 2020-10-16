@@ -20,6 +20,7 @@
 #include "test_mode.h"
 #include "generate_node_graph_params.h"
 #include "camera.h"
+#include "ai_explorer.h"
 
 struct Game
 {
@@ -54,6 +55,7 @@ struct Game
 	OptionsMenu options_menu;
 	MainMenu mainmenu_state;
 	Campaign campaign;
+	AiExplorer ai_explorer;
 	TestMode test_mode;
 
 	Sprite pointer_cursor;

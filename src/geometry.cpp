@@ -21,3 +21,9 @@ bool LineSegmentsInnerIntersect(Vec2f a0, Vec2f a1, Vec2f b0, Vec2f b1, float ed
 
     return true;
 }
+
+Vec2f
+TriangleCenter(Vec2f a, Vec2f b, Vec2f c)
+{
+    return (1.f/3.f) * (a + b + c);
+}

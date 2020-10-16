@@ -48,4 +48,6 @@ struct EffectParams_Steal
 	TraitSet amount;
 };
 
+float EffectPotential(Effect effect, TargetClass target_class);
+
 #endif

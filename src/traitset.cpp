@@ -108,3 +108,19 @@ ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set)
 		return false;
 	}
 }
+
+float
+TraitSetLinearSpace(TraitSet current, TraitSet start, TraitSet end)
+{
+	float vigor_range = end.vigor - start.vigor;
+	float focus_range = end.focus - start.focus;
+	float armor_range = end.armor - start.armor;
+
+	float sum_range = vigor_range + focus_range + armor_range;
+
+	int vigor_score = m::Clamp(current.vigor - start.vigor, 0, end.vigor - start.vigor);
+	int focus_score = m::Clamp(current.focus - start.focus, 0, end.focus - start.focus);
+	int armor_score = m::Clamp(current.armor - start.armor, 0, end.armor - start.armor);
+
+	return m::Clamp((float)(vigor_score + focus_score + armor_score) / sum_range, 0.f, 1.f);
+}

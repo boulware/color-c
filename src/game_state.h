@@ -10,7 +10,8 @@ enum class GameState
     Campaign,
 	Editor,
 	Options,
-    Test
+    AiExplorer,
+    Test,
 };
 
 #endif

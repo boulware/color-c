@@ -9,6 +9,7 @@ InitMainMenu(MainMenu *menu)
     menu->option_strings += StringFromCString("Campaign");
     menu->option_strings += StringFromCString("Editor");
     menu->option_strings += StringFromCString("Options");
+    menu->option_strings += StringFromCString("AI Explorer");
     menu->option_strings += StringFromCString("Test");
     menu->option_strings += StringFromCString("Quit");
 }
@@ -55,9 +56,13 @@ TickMainMenu(MainMenu *menu, bool entered)
 		}
 		else if(menu->selected_option == 4)
 		{
-			new_state = GameState::Test;
+			new_state = GameState::AiExplorer;
 		}
 		else if(menu->selected_option == 5)
+		{
+			new_state = GameState::Test;
+		}
+		else if(menu->selected_option == 6)
 		{ // Quit
 			new_state = GameState::Quit;
 		}

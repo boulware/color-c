@@ -33,7 +33,7 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 extern "C" void
 GameInit()
 {
-TIMED_BLOCK;
+    TIMED_BLOCK;
 
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
@@ -41,7 +41,7 @@ TIMED_BLOCK;
     #if 0
     InitLcgSystemSeed(&random::default_lcg);
     #else
-    InitLcgSetSeed(&random::default_lcg, 1024687828);
+    InitLcgSetSeed(&random::default_lcg, 42685076);
     #endif
 
     //TestDistributionAndLog();
@@ -169,14 +169,14 @@ TIMED_BLOCK;
     game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
     UnitSet battle_units = game->player_party;
-    for(int i=0; i<4; ++i)
-    {
-        int random_index = RandomU32(6, g::breed_table.entry_count-1);
-        Id breed_id = g::breed_table.entries[random_index].id;
-        AddUnitToUnitSet(CreateUnit(breed_id, Team::enemies), &battle_units);
-    }
+    // for(int i=0; i<4; ++i)
+    // {
+    //     int random_index = RandomU32(6, g::breed_table.entry_count-1);
+    //     Id breed_id = g::breed_table.entries[random_index].id;
+    //     AddUnitToUnitSet(CreateUnit(breed_id, Team::enemies), &battle_units);
+    // }
 
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Mage"), Team::enemies), &battle_units);
@@ -199,7 +199,21 @@ TIMED_BLOCK;
     game->draw_debug_text = false;
     game->test_float = 0.f;
 
-    game->current_state = GameState::Battle;
+    game->current_state = GameState::Test;
+
+    // Test TraitSetLinearSpace()
+    // for(int i=0; i<100; ++i)
+    // {
+    //     TraitSet start   = {(s32)RandomU32(0,5), (s32)RandomU32(0,5), (s32)RandomU32(0,5)};
+    //     TraitSet current = {(s32)RandomU32(0,10), (s32)RandomU32(0,10), (s32)RandomU32(0,10)};
+    //     TraitSet end     = {start.vigor + (s32)RandomU32(0,5), start.focus + (s32)RandomU32(0,5), start.armor + (s32)RandomU32(0,5)};
+    //     float result = TraitSetLinearSpace(current, start, end);
+    //     Log("(%d,%d,%d)V ... (%d,%d,%d)F ... (%d,%d,%d)A = %.2f",
+    //         start.vigor, current.vigor, end.vigor,
+    //         start.focus, current.focus, end.focus,
+    //         start.armor, current.armor, end.armor,
+    //         result);
+    // }
 
     // DEPTH 1
     // int value_count = 3;
@@ -333,6 +347,10 @@ GameUpdateAndRender()
     else if(game->current_state == GameState::Campaign)
     {
         new_state = TickCampaign(&game->campaign);
+    }
+    else if(game->current_state == GameState::AiExplorer)
+    {
+        new_state = TickAiExplorer(&game->ai_explorer);
     }
     else if(game->current_state == GameState::Test)
     {

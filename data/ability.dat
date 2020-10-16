@@ -1,112 +1,123 @@
 ability "Strike"
-tier 0
+tier 1
 requires (0,0,0)
 effect Damage single_unit (2,0,0)
-tier 1
-requires (5,0,0)
-effect Damage single_unit (4,0,0)
 tier 2
-requires (10,0,0)
+requires (5,5,0)
+effect Damage single_unit (4,0,0)
+tier 3
+requires (10,6,0)
 effect Damage single_unit (10,0,0)
 
 ability "Rest"
-tier 0
+tier 1
 requires (0,0,0)
 effect Restore self (2,0,0)
 
 ability "Meditate"
-tier 0
+tier 1
 requires (0,0,0)
 effect Restore self (0,2,0)
 
+ability "Sleep"
+tier 1
+requires (0,4,0)
+effect Restore self (2,2,0)
+tier 2
+requires (0,8,0)
+effect Restore self (5,5,0)
+tier 3
+requires (0,12,0)
+effect Restore self (10,10,0)
+
 ability "Repair"
-tier 0
+tier 1
 requires (0,0,0)
 effect Restore self (0,0,2)
 
 ability "Rig Up"
-tier 0
+tier 1
 requires (0,0,1)
 effect Gift single_ally (0,0,1)
-tier 1
+tier 2
 requires (0,0,5)
 effect Restore single_ally (0,0,1)
-tier 2
+tier 3
 requires (0,0,10)
 effect Restore all_allies_not_self (0,0,1)
 
 ability "Rally"
-tier 0
+tier 1
 requires (0,1,0)
 effect Restore all_allies (0,1,0)
 
 ability "Steal Armor"
-tier 0
+tier 1
 requires (0,4,0)
 effect Steal single_unit_not_self (0,0,2)
-tier 1
+tier 2
 requires (0,8,0)
 effect Steal single_unit_not_self (0,0,4)
 
 ability "Shoot"
-tier 0
+tier 1
 requires (0,1,0)
 effect Damage single_unit (5,0,0)
 
 ability "Split Arrow"
-tier 0
+tier 1
 requires (0,4,0)
 effect Damage all_enemies (1,0,0)
 
 ability "Taunt"
-tier 0
+tier 1
 requires (0,4,0)
 effect Damage single_unit (0,2,0)
-tier 1
+tier 2
 requires (0,8,0)
 effect Damage single_unit (0,4,0)
-tier 2
+tier 3
 requires (0,12,0)
 effect Damage all_enemies (0,6,0)
 
 ability "Confuse"
-tier 0
+tier 1
 requires (0,6,0)
 effect Damage all_enemies (0,2,0)
 
 ability "Corrosion"
-tier 0
+tier 1
 requires (0,6,0)
 effect Damage single_unit (1,0,1)
 
 ability "Vitalize"
-tier 0
+tier 1
 requires (0,5,0)
 effect Restore single_unit (4,0,0)
 
 ability "Rewind"
-tier 0
+tier 1
 requires (0,5,0)
 effect Damage single_unit (0,1,0)
 
 ability "Swipe"
-tier 0
+tier 1
 requires (10,0,0)
 effect Damage all_enemies (3,0,0)
-tier 1
+tier 2
 requires (20,0,0)
 effect Damage all_enemies (6,0,0)
-tier 2
+tier 3
 requires (30,0,0)
 effect Damage all_enemies (12,0,0)
 
 ability "Breathe Fire"
-tier 0
+tier 1
 requires (0,0,0)
 effect Damage single_unit (2,0,0)
-tier 1
+tier 2
 requires (10,5,0)
 effect Damage single_unit (6,0,0)
-tier 2
+tier 3
 requires (20,5,0)
 effect Damage single_unit (12,0,0)

@@ -363,7 +363,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
     }
 
     int permutation_counter = 0;
-    float best_score = -1000.f;
+    BattleScore best_score = {.total = -1000.f};
     int best_permutation_index = -1;
     int equivalent_line_count = 0;
     for(int i=0; i<permutation_count; ++i)
@@ -372,12 +372,12 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
         traitset_changes.count = 0;
         for(auto e : current_traitsets) traitset_changes += {};
 
-        if(    permutation_values[length_of_one_permutation*i + 0] == 6
-           and permutation_values[length_of_one_permutation*i + 1] == 27
-           //and permutation_values[length_of_one_permutation*i + 2] == 30
-           and permutation_values[length_of_one_permutation*i + 3] == 48)
+        if(    permutation_values[length_of_one_permutation*i + 0] == 5
+           and permutation_values[length_of_one_permutation*i + 1] == 24
+           //and permutation_values[length_of_one_permutation*i + 2] == 41
+           and permutation_values[length_of_one_permutation*i + 3] == 46)
         {
-            //Log("tick");
+            Log("tick");
         }
 
         for(int j=0; j<length_of_one_permutation; ++j)
@@ -515,13 +515,13 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
         //     Log("tick");
         // }
 
-        float score = ScoreBattleState2(ally_units, enemy_units,
-                                        ally_traitset_changes, enemy_traitset_changes);
+        BattleScore score = ScoreBattleState2(ally_units, enemy_units,
+                                              ally_traitset_changes, enemy_traitset_changes);
 
-        if(score == best_score)
+        if(score.total == best_score.total)
             ++equivalent_line_count;
 
-        if(score > best_score)
+        if(score.total > best_score.total)
         {
             best_score = score;
             best_permutation_index = i;
@@ -537,8 +537,9 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
     u8 *permutation_start = &permutation_values[length_of_one_permutation*best_permutation_index];
 
     AppendCString(&best_choice_string,
-        "Best score: %.2f [%u %u %u %u] (%d equivalent lines) [permutation index = %d]\n",
-        best_score,
+        "Best score: %.2f (rel: %f, abs: %f, ally pot: %f, enemy pot: %f)\n permutation: [%u %u %u %u] (%d equivalent lines) [index = %d]\n",
+        best_score.total,
+        best_score.rel_change, best_score.abs_change, best_score.ally_potential, best_score.enemy_potential,
         permutation_start[0], permutation_start[1], permutation_start[2], permutation_start[3],
         equivalent_line_count,
         best_permutation_index);
@@ -663,14 +664,27 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO:
 
 float UnitAbilityPotential(Unit unit)
 {
-    if(unit.cur_traits.vigor == 12)
-    {
-        int a = 0;
-    }
+    if(unit.cur_traits.vigor <= 0) return 0.f;
 
     float potential = 0.f;
 
-    if(unit.cur_traits.vigor <= 0) return potential; // Dead units have 0 potential
+    //TIMED_BLOCK;
+    int ability_count = 0;
+    for(auto ability_id : unit.ability_ids)
+    {
+        Ability *ability = GetAbilityFromId(ability_id);
+        if(!ValidAbility(ability)) continue;
+
+        ++ability_count;
+        potential += CalculateAbilityPotentialWithCurrentTraits(ability, unit.cur_traits);
+    }
+
+    return potential / ability_count;
+
+    #if 0
+    if(unit.cur_traits.vigor <= 0) return 0.f; // Dead units have 0 potential
+
+    float potential = 0.f;
 
     int ability_count = 0;
     for(auto ability_id : unit.ability_ids)
@@ -691,58 +705,9 @@ float UnitAbilityPotential(Unit unit)
         }
         if(tier_index == -1) continue;
 
-        AbilityTier &cur_tier = ability->tiers[tier_index]; // alias
+        //AbilityTier &cur_tier = ability->tiers[tier_index]; // alias
 
-        // @TODO: Cache these
-        float cur_tier_potential = 0.f;
-        for(Effect effect : cur_tier.effects_)
-        {
-            switch(effect.type)
-            {
-                case(EffectType::NoEffect): continue; break;
-                case(EffectType::Damage):
-                {
-                    int sum = 0;
-                    for(int i=0; i<c::trait_count; ++i)
-                        sum += ((EffectParams_Damage *)effect.params)->amount[i];
 
-                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
-                } break;
-                case(EffectType::DamageIgnoreArmor):
-                {
-                    int sum = 0;
-                    for(int i=0; i<c::trait_count; ++i)
-                        sum += ((EffectParams_DamageIgnoreArmor *)effect.params)->amount[i];
-
-                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
-                } break;
-                case(EffectType::Restore):
-                {
-                    int sum = 0;
-                    for(int i=0; i<c::trait_count; ++i)
-                        sum += ((EffectParams_Restore *)effect.params)->amount[i];
-
-                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
-                } break;
-                case(EffectType::Gift):
-                {
-                    int sum = 0;
-                    for(int i=0; i<c::trait_count; ++i)
-                        sum += ((EffectParams_Gift *)effect.params)->amount[i];
-
-                    cur_tier_potential += (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
-                } break;
-                case(EffectType::Steal):
-                {
-                    int sum = 0;
-                    for(int i=0; i<c::trait_count; ++i)
-                        sum += ((EffectParams_Steal *)effect.params)->amount[i];
-
-                    // 2.f * ... because Steal takes from enemy AND adds to you.
-                    cur_tier_potential += 2.f * (float)sum * TargetClassToPotentialMult(cur_tier.target_class);
-                } break;
-            }
-        }
 
         potential += cur_tier_potential;
 
@@ -895,28 +860,26 @@ float UnitAbilityPotential(Unit unit)
     }
 
     return potential / ability_count;
+    #endif
+
 }
 
-float
+
+
+BattleScore
 ScoreBattleState2(Array<Unit> ally_units,
                   Array<Unit> enemy_units,
                   Array<TraitSet> ally_traitset_changes,
                   Array<TraitSet> enemy_traitset_changes)
 {
-    float score = 0.f;
+    TIMED_BLOCK;
+
+    BattleScore score = {};
+    //float score = 0.f;
 
     // Allies
     for(int i=0; i<ally_units.count; ++i)
     {
-        // Trait changes
-        TraitSet initial_traits = ally_units[i].cur_traits;
-        for(int j=0; j<c::trait_count; ++j)
-        {
-            if(initial_traits[j] <= 0) continue; // Trait is empty (0) -- don't consider it in scoring.
-            score += ai::wt_rel_change * ((float)(ally_traitset_changes[i][j]) / (float)initial_traits[j]);
-            score += ai::wt_abs_change * (ally_traitset_changes[i][j]);
-        }
-
         // Ability potential changes
         Unit after_change_unit = ally_units[i];
         after_change_unit.cur_traits += ally_traitset_changes[i];
@@ -925,26 +888,39 @@ ScoreBattleState2(Array<Unit> ally_units,
         float potential_after_change = UnitAbilityPotential(after_change_unit);
         float d_potential = potential_after_change - potential_before_change;
 
-        score += ai::wt_ability_potential * d_potential;
+        score.ally_potential += ai::wt_ability_potential * d_potential;
+
+        // Trait changes
+        TraitSet initial_traits = ally_units[i].cur_traits;
+
+        // Vigor
+        if(initial_traits.vigor > 0)
+        {
+            score.rel_change += ai::wt_vigor * ai::wt_rel_change * ((float)(ally_traitset_changes[i].vigor) / (float)initial_traits.vigor);
+            score.abs_change += ai::wt_vigor * ai::wt_abs_change * (ally_traitset_changes[i].vigor);
+        }
+        else
+        {
+            continue; // Unit is dead
+        }
+        // Focus (no effect aowtc)
+        if(initial_traits.focus > 0)
+        {
+            score.rel_change += ai::wt_focus * ai::wt_rel_change * ((float)(ally_traitset_changes[i].focus) / (float)initial_traits.focus);
+            score.abs_change += ai::wt_focus * ai::wt_abs_change * (ally_traitset_changes[i].focus);
+        }
+
+        // Armor
+        if(initial_traits.armor > 0)
+        {
+            score.rel_change += ai::wt_armor * ai::wt_rel_change * ((float)(ally_traitset_changes[i].armor) / (float)initial_traits.armor);
+            score.abs_change += ai::wt_armor * ai::wt_abs_change * (ally_traitset_changes[i].armor);
+        }
     }
 
     // Trait changes to enemies
     for(int i=0; i<enemy_units.count; ++i)
     {
-        TraitSet initial_traits = enemy_units[i].cur_traits;
-        // if(initial_traits.vigor + enemy_traitset_changes[i].vigor <= 0)
-        // {
-        //     score += 10.f;
-        //     continue;
-        // }
-
-        for(int j=0; j<c::trait_count; ++j)
-        {
-            if(initial_traits[j] <= 0) continue; // Trait is empty (0) -- don't consider it in scoring.
-            score -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i][j])/ (float)initial_traits[j]);
-            score -= ai::wt_abs_change * (enemy_traitset_changes[i][j]);
-        }
-
         // Ability potential changes
         Unit after_change_unit = enemy_units[i];
         after_change_unit.cur_traits += enemy_traitset_changes[i];
@@ -953,9 +929,35 @@ ScoreBattleState2(Array<Unit> ally_units,
         float potential_after_change = UnitAbilityPotential(after_change_unit);
         float d_potential = potential_after_change - potential_before_change;
 
-        score -= ai::wt_ability_potential * d_potential;
+        score.enemy_potential -= ai::wt_ability_potential * d_potential;
+
+        // Trait changes
+        TraitSet initial_traits = enemy_units[i].cur_traits;
+
+        // Vigor
+        if(initial_traits.vigor > 0)
+        {
+            score.rel_change -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i].vigor) / (float)initial_traits.vigor);
+            score.abs_change -= ai::wt_abs_change * (enemy_traitset_changes[i].vigor);
+        }
+        else continue; // Unit is dead
+
+        // Focus (no effect aowtc)
+        if(initial_traits.focus > 0)
+        {
+
+        }
+
+        // Armor
+        if(initial_traits.armor > 0)
+        {
+            score.rel_change -= ai::wt_rel_change * ((float)(enemy_traitset_changes[i].armor) / (float)initial_traits.armor);
+            score.abs_change -= ai::wt_abs_change * (enemy_traitset_changes[i].armor);
+        }
+
     }
 
 
+    score.total = score.rel_change + score.abs_change + score.ally_potential + score.enemy_potential;
     return score;
 }

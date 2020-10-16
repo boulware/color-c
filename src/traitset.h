@@ -32,5 +32,6 @@ s32 *begin(TraitSet &trait_set);
 s32 *end(TraitSet &trait_set);
 
 bool ParseNextAsTraitSet(Buffer *buffer, TraitSet *trait_set);
+float TraitSetLinearSpace(TraitSet current, TraitSet start, TraitSet end);
 
 #endif

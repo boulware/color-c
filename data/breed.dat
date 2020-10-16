@@ -8,7 +8,7 @@ moveset "Strike" "Taunt" "Steal Armor" "Rally"
 
 unit "Archer"
 traits (13,8,1)
-moveset "Rest" "Shoot" "Split Arrow"
+moveset "Rest" "Shoot" "Split Arrow" "Taunt"
 
 unit "Mage"
 traits (3,12,1)
@@ -23,13 +23,13 @@ traits (4,10,4)
 moveset "Strike" "Meditate" "Vitalize"
 
 unit "Wolf"
-traits (4,4,0)
-moveset "Strike" "Taunt"
+traits (12,4,2)
+moveset "Strike" "Rally" "Taunt"
 
 unit "Slime"
-traits (8,2,2)
+traits (8,6,2)
 moveset "Strike" "Steal Armor"
 
 unit "Dragon"
 traits (25,10,10)
-moveset "Swipe" "Breathe Fire"
+moveset "Swipe" "Breathe Fire" "Sleep"

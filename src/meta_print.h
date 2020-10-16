@@ -1,4 +1,5 @@
 #include "ability.h"
+#include "ai_explorer.h"
 #include "align.h"
 #include "array.h"
 #include "battle.h"
@@ -64,6 +65,8 @@ String MetaString(const AbilityTier *s);
 
 String MetaString(const Ability *s);
 
+String MetaString(const AiExplorer *s);
+
 String MetaString(const AlignX *s);
 
 String MetaString(const AlignY *s);
@@ -122,6 +125,8 @@ String MetaString(const EffectParams_Restore *s);
 String MetaString(const EffectParams_Gift *s);
 
 String MetaString(const EffectParams_Steal *s);
+
+String MetaString(const BattleScore *s);
 
 String MetaString(const AiAction *s);
 

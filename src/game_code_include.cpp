@@ -46,3 +46,5 @@
 #include "map.cpp"
 #include "enemy_ai.cpp"
 #include "permutation.cpp"
+#include "effect.cpp"
+#include "ai_explorer.cpp"

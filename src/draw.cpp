@@ -1,6 +1,7 @@
 #include "draw.h"
 
 #include "camera.h"
+#include "geometry.h"
 
 void
 ActivateColorShader(Color color)
@@ -174,6 +175,51 @@ DrawLine(Vec2f start, Vec2f end, Color color=c::white)
 
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_LINES, 0, 2);
+}
+
+void
+DrawDirectedLine(Vec2f start_pos, Vec2f end_pos, Vec2f start_vel, Color color, float arrow_size, String label = {}, int segments = 100)
+{
+    if(segments <= 0) return;
+
+    ActivateColorShader(color);
+
+    Vec2f end_vel = 2*(end_pos - start_pos) - start_vel;
+
+    Vec2f cur_pos = start_pos;
+    Array<Vec2f> points = CreateTempArray<Vec2f>(segments);
+    points += cur_pos;
+    for(int i=0; i<segments; ++i)
+    {
+        float t = (float)i / (float(segments - 1));
+        Vec2f velocity = Lerp(start_vel, end_vel, t);
+        cur_pos += velocity / (segments);
+        points += cur_pos;
+    }
+
+    gl->BufferData(GL_ARRAY_BUFFER, points.count * sizeof(Vec2f), points.data, GL_DYNAMIC_DRAW);
+    gl->DrawArrays(GL_LINE_STRIP, 0, points.count);
+
+    // Arrowhead
+    Vec2f arrow_verts[3] = {
+        end_pos,
+        end_pos - arrow_size*Normalize(Rotate(end_vel,  30.f)),
+        end_pos - arrow_size*Normalize(Rotate(end_vel, -30.f))
+    };
+
+    ActivateColorShader(c::dk_red);
+    gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
+    gl->DrawArrays(GL_TRIANGLES, 0, 3);
+
+    ActivateColorShader(color);
+    gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
+    gl->DrawArrays(GL_LINE_LOOP, 0, 3);
+
+    Vec2f label_pos = TriangleCenter(arrow_verts[0], arrow_verts[1], arrow_verts[2]);
+    TextLayout layout = c::def_text_layout;
+    layout.align = c::align_center;
+    //layout.font_size = 24;
+    DrawText(layout, label_pos, label);
 }
 
 // A healthbar in this context is a rectangle, which scales in size proportionally to a value

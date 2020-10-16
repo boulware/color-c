@@ -15,6 +15,7 @@ namespace c
 {
 	// Misc
 	char *empty_string = "[EMPTY STRING]";
+	float pi = 3.1415926535898;
 
 	// Threading
 	u32 mutex_timeout_ms = 1;

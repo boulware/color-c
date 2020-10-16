@@ -1,5 +1,11 @@
 #include "ability.h"
 
+bool
+ValidAbility(const Ability *ability)
+{
+    return(ability and ability->init);
+}
+
 // This function should be free to modify [ability] even if the parse fails,
 // so anything using this should explicitly check the return value to make sure
 // that [ability] is properly filled out (return true) -- and if it's not
@@ -9,7 +15,8 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 {
 	if(!buffer or !ability) return false;
 
-	ability->tiers = CreatePermanentArray<AbilityTier>(c::max_ability_tier_count);
+	ability->tiers = CreatePermanentArray<AbilityTier>(c::max_ability_tier_count + 1);
+	ability->tiers += {}; // "Empty" tier (what you get when a unit can't even use the lowest ability tier)
 
 	bool valid_ability_data = true;
 	char *initial = buffer->p;
@@ -23,7 +30,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 	if(!is_valid_name) valid_ability_data = false;
 
 	bool end_of_ability_data = false;
-	int cur_tier = -1;
+	int cur_tier = 0;
 	size_t cur_effect_index = 0;
 	while(valid_ability_data and !end_of_ability_data)
 	{
@@ -56,7 +63,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 			ability->tiers += {};
 			ability->tiers[cur_tier].effects_ = CreatePermanentArray<Effect>(5);
 		}
-		else if(cur_tier >= 0)
+		else if(cur_tier >= 1)
 		{
 			if(TokenMatchesString(token, "requires"))
 			{
@@ -169,6 +176,7 @@ LoadAbilityFile(const char *filename, Table<Ability> *table)
 
 		if(ParseNextAsAbilityData(&file, ability))
 		{
+			AllocateAndGenerateAbilityTierPotentials(ability);
 			ability->init = true;
 			++ability_count_loaded;
 		}
@@ -182,6 +190,61 @@ LoadAbilityFile(const char *filename, Table<Ability> *table)
 	//Log("Loaded %zu abilities from file: %s", ability_count_loaded, filename);
 	FreeBuffer(&file);
 	return true;
+}
+
+void
+AllocateAndGenerateAbilityTierPotentials(Ability *ability)
+{
+	if(!ability) return;
+
+	ability->tier_potentials = CreatePermanentArray<float>(ability->tiers.count);
+
+	for(int i=0; i<ability->tiers.count; ++i)
+	{
+		AbilityTier cur_tier = ability->tiers[i]; // alias
+
+        float tier_potential = 0.f;
+        for(Effect effect : cur_tier.effects_)
+        {
+        	tier_potential += EffectPotential(effect, cur_tier.target_class);
+        }
+
+        ability->tier_potentials += tier_potential;
+    }
+}
+
+float
+CalculateAbilityPotentialWithCurrentTraits(Ability *ability, TraitSet cur_traits)
+{
+    int cur_tier_index = 0;
+    for(int i=ability->tiers.count-1; i>=0; --i)
+    {
+        if(cur_traits >= ability->tiers[i].required_traits)
+        {
+            cur_tier_index = i;
+            break;
+        }
+    }
+
+    int next_tier_index = m::Min(ability->tiers.count-1, cur_tier_index + 1);
+
+    TraitSet  cur_tier_reqs = ability->tiers[cur_tier_index].required_traits;
+    TraitSet next_tier_reqs = ability->tiers[next_tier_index].required_traits;
+
+    float t = TraitSetLinearSpace(cur_traits, cur_tier_reqs, next_tier_reqs);
+
+    float progression_potential =
+    	ai::wt_progression *
+        m::Lerp(ability->tier_potentials[cur_tier_index],
+    	        ability->tier_potentials[next_tier_index],
+    	        t);
+
+    float cur_potential =
+        ai::wt_ability_potential *
+        ability->tier_potentials[cur_tier_index];
+
+    float total_potential = progression_potential + cur_potential;
+    return total_potential;
 }
 
 char *

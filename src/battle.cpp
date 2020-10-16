@@ -66,12 +66,6 @@ ValidUnit(const Unit *unit)
 }
 
 bool
-ValidAbility(const Ability *ability)
-{
-    return(ability and ability->init);
-}
-
-bool
 ValidBreed(const Breed *breed)
 {
     return(breed and breed->init);
@@ -336,7 +330,8 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
     TextLayout tier_active_text_layout = c::small_text_layout;
     tier_active_text_layout.color = c::white;
 
-    for(int i=0; i<ability->tiers.count; i++)
+    // i=1 because we skip the lowest tier (which is the "empty" tier)
+    for(int i=1; i<ability->tiers.count; i++)
     {
         AbilityTier &tier = ability->tiers[i]; // alias
         //if(!tier.init) continue;
@@ -398,7 +393,7 @@ DrawEnemyIntentThoughtBubble(Battle *battle)
             int tier = DetermineAbilityTier(caster_id, ability_id);
 
             ButtonResponse response = {};
-            if(tier < 0)
+            if(tier <= 0)
             {
                 response = DrawButton(c::enemy_cannot_use_button_layout,
                                       {pen, c::enemy_intent_button_size},
@@ -570,7 +565,7 @@ StartBattle(Battle *battle, UnitSet battle_units)
         if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &active_unitset);
         else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &other_unitset);
     }
-    battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
+    //battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
 }
 
 GameState
