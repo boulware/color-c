@@ -4,12 +4,276 @@
 		"selected_items":
 		[
 			[
-				"permut",
+				"abilityicon",
+				"ability_icon_button_layout"
+			],
+			[
+				"Aci",
+				"ActivateColorShader"
+			],
+			[
+				"Active",
+				"ActivateColorShader"
+			],
+			[
+				"current",
+				"current_state"
+			],
+			[
+				"cur_pot",
+				"cur_potential"
+			],
+			[
+				"enemy",
+				"enemy_traitset_changes"
+			],
+			[
+				"best_",
+				"best_score"
+			],
+			[
+				"pote",
+				"ability_potential"
+			],
+			[
+				"abs",
+				"abs_change"
+			],
+			[
+				"rel",
+				"rel_change"
+			],
+			[
+				"best",
+				"best_score"
+			],
+			[
+				"abilit_",
+				"ability_id"
+			],
+			[
+				"tier_pote",
+				"tier_potentials"
+			],
+			[
+				"next_",
+				"next_tier_index"
+			],
+			[
+				"requir",
+				"required_traits"
+			],
+			[
+				"cur_tier",
+				"cur_tier_reqs"
+			],
+			[
+				"cur_",
+				"cur_tier_index"
+			],
+			[
+				"armor",
+				"armor_score"
+			],
+			[
+				"focus",
+				"focus_score"
+			],
+			[
+				"aro",
+				"armor_range"
+			],
+			[
+				"Alloc",
+				"AllocateAndGenerateAbilityTierPotentials"
+			],
+			[
+				"upgrade",
+				"upgrade_potential"
+			],
+			[
+				"down",
+				"downgrade_points"
+			],
+			[
+				"prev_",
+				"prev_tier_potential"
+			],
+			[
+				"upgade",
+				"upgrade_ratio"
+			],
+			[
+				"total",
+				"total_points"
+			],
+			[
+				"next",
+				"next_tier"
+			],
+			[
+				"upgrad",
+				"upgrade_points"
+			],
+			[
+				"cur_pote",
+				"cur_tier_potential"
+			],
+			[
+				"cur",
+				"cur_tier_potential"
+			],
+			[
+				"ability",
+				"ability_count"
+			],
+			[
+				"potent",
+				"potential_before_change"
+			],
+			[
+				"potential_e",
+				"potential_after_change"
+			],
+			[
+				"ally_",
+				"ally_units"
+			],
+			[
+				"ally_trait",
+				"ally_traitset_changes"
+			],
+			[
+				"Valid",
+				"ValidAbility"
+			],
+			[
+				"init",
+				"initial_enemy_traitsets"
+			],
+			[
+				"random",
+				"random_index"
+			],
+			[
+				"breed",
+				"breed_table"
+			],
+			[
+				"initia",
+				"initial_ally_traitsets"
+			],
+			[
+				"enemytraitset",
+				"enemy_traitset_changes"
+			],
+			[
+				"enemy_trait",
+				"enemy_traitset_changes"
+			],
+			[
+				"traitset",
+				"traitset_changes"
+			],
+			[
+				"trait",
+				"traitset_changes"
+			],
+			[
+				"ally_tr",
+				"ally_traitset_changes"
+			],
+			[
+				"enemyrtai",
+				"enemy_traitset_changes"
+			],
+			[
+				"allytrait",
+				"ally_traitset_changes"
+			],
+			[
+				"win32_time",
+				"win32_TimeElapsedMs"
+			],
+			[
+				"permutat",
 				"permutation_count"
 			],
 			[
+				"Create",
+				"CreateUnitByName"
+			],
+			[
+				"unit_",
+				"unit_indices"
+			],
+			[
+				"equi",
+				"equivalent_line_count"
+			],
+			[
+				"unit_ind",
+				"unit_indices_index"
+			],
+			[
+				"length",
+				"length_of_one_permutation"
+			],
+			[
+				"permut",
+				"permutation_start"
+			],
+			[
 				"permu",
-				"permutation_string"
+				"permutation_start"
+			],
+			[
+				"lent",
+				"length_of_one_permutation"
+			],
+			[
+				"active",
+				"active_unitset"
+			],
+			[
+				"cur_trait",
+				"current_traitsets"
+			],
+			[
+				"max",
+				"max_party_size"
+			],
+			[
+				"triat",
+				"trait_changes"
+			],
+			[
+				"curre",
+				"current_traitsets"
+			],
+			[
+				"target",
+				"target_index"
+			],
+			[
+				"cur_tra",
+				"current_traitsets"
+			],
+			[
+				"Determine",
+				"DetermineAbilityTier"
+			],
+			[
+				"targetc",
+				"target_count"
+			],
+			[
+				"all_",
+				"all_units_are_valid"
+			],
+			[
+				"unitset",
+				"other_unitset"
 			],
 			[
 				"Temp",
@@ -22,10 +286,6 @@
 			[
 				"sub",
 				"sub_array2"
-			],
-			[
-				"permutat",
-				"permutation_string"
 			],
 			[
 				"permutation_",
@@ -50,10 +310,6 @@
 			[
 				"size_",
 				"size_of_dst"
-			],
-			[
-				"current",
-				"current_permutation"
 			],
 			[
 				"permutation",
@@ -104,10 +360,6 @@
 				"size_t"
 			],
 			[
-				"Create",
-				"CreateTempArray"
-			],
-			[
 				"null",
 				"null_ability_id"
 			],
@@ -118,10 +370,6 @@
 			[
 				"event_tar",
 				"event_target_unit"
-			],
-			[
-				"Valid",
-				"ValidUnit"
 			],
 			[
 				"unit_slot",
@@ -266,329 +514,53 @@
 			[
 				"initla",
 				"initial_cam_pos"
-			],
-			[
-				"SetCa",
-				"SetCameraPos"
-			],
-			[
-				"pos",
-				"pos_attr"
-			],
-			[
-				"node",
-				"node_color"
-			],
-			[
-				"start_",
-				"start_index"
-			],
-			[
-				"Work",
-				"WorkQueuePendingJobCount"
-			],
-			[
-				"mapge",
-				"map_generation_work_queue"
-			],
-			[
-				"generat",
-				"generation_finished"
-			],
-			[
-				"resta",
-				"restart_count_layout"
-			],
-			[
-				"force",
-				"force_params"
-			],
-			[
-				"Gneer",
-				"GenerateNodeGraph_Params"
-			],
-			[
-				"Gener",
-				"GenerateNodeGraph_Params"
-			],
-			[
-				"Edge",
-				"EdgeAlreadyExists"
-			],
-			[
-				"map_gen",
-				"map_generation_work_queue"
-			],
-			[
-				"Genre",
-				"GenerateNodeGraph_Params"
-			],
-			[
-				"mute",
-				"mutex_handle"
-			],
-			[
-				"Semaphore",
-				"ReleaseSemaphore"
-			],
-			[
-				"next_entr",
-				"next_entry_to_read"
-			],
-			[
-				"entry",
-				"entry_data_buffer"
-			],
-			[
-				"next_in",
-				"next_index_to_read"
-			],
-			[
-				"RingBu",
-				"RingBufferBytesRemaining"
-			],
-			[
-				"next",
-				"next_entry_to_write"
-			],
-			[
-				"Next",
-				"NextEntryToAdd"
-			],
-			[
-				"NextEntry",
-				"NextEntryToDo"
-			],
-			[
-				"Inter",
-				"InterlockedIncrement"
-			],
-			[
-				"original",
-				"original_next_entry_to_add"
-			],
-			[
-				"new_next",
-				"new_next_entry_to_add"
-			],
-			[
-				"origin",
-				"original_next_entry_to_add"
-			],
-			[
-				"NextE",
-				"NextEntryToAdd"
-			],
-			[
-				"or",
-				"original_next_entry_to_do"
-			],
-			[
-				"Token",
-				"TokenMatchesString"
-			],
-			[
-				"tmp",
-				"temp_arena"
-			],
-			[
-				"Crate",
-				"CreateArrayFromArena"
-			],
-			[
-				"per",
-				"per_frame_arena"
-			],
-			[
-				"Arena",
-				"AllocArena"
-			],
-			[
-				"padd",
-				"padded_rect"
-			],
-			[
-				"generate",
-				"generate_node_graph_params"
-			],
-			[
-				"function",
-				"function_params"
-			],
-			[
-				"funct",
-				"function_params"
-			],
-			[
-				"Draw",
-				"DrawUnfilledRect"
-			],
-			[
-				"ForceSim",
-				"ForceSimState"
-			],
-			[
-				"aligne",
-				"align_center"
-			],
-			[
-				"grph",
-				"graph_fully_connected"
-			],
-			[
-				"fully",
-				"graph_fully_connected"
-			],
-			[
-				"indi",
-				"indices_to_search"
-			],
-			[
-				"connec",
-				"connected_edges"
-			],
-			[
-				"generation",
-				"generation_finished"
-			],
-			[
-				"gener",
-				"generation_finished"
-			],
-			[
-				"Rand",
-				"RandomU32"
-			],
-			[
-				"fdg",
-				"fdg_edge_length"
-			],
-			[
-				"nodes",
-				"nodes"
-			],
-			[
-				"main",
-				"main_path_node_count"
-			],
-			[
-				"edges",
-				"edges"
-			],
-			[
-				"align",
-				"aligned_rect"
-			],
-			[
-				"edg",
-				"edge_indices"
-			],
-			[
-				"color",
-				"color_shader"
-			],
-			[
-				"iters",
-				"iters_per_tick"
-			],
-			[
-				"Mouse",
-				"MouseInRect"
-			],
-			[
-				"test",
-				"test_node"
-			],
-			[
-				"format",
-				"formatted_string"
-			],
-			[
-				"real_",
-				"real_out_file"
-			],
-			[
-				"taregt",
-				"target_string"
-			],
-			[
-				"KeyBind",
-				"KeyBindToVirtualKey"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/permutation.cpp",
-			"settings":
-			{
-				"buffer_size": 7133,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 131 files for \"Log(\"\n\nC:\\color-c\\src\\ability.cpp:\n   51  \t\t\t{\n   52  \t\t\t\tvalid_ability_data = false;\n   53: \t\t\t\tif(c::verbose_error_logging) Log(__FUNCTION__\"() encountered invalid ability tier number. Got %d, expected %d\", parsed_tier, cur_tier);\n   54  \t\t\t}\n   55  \n   ..\n   68  \t\t\t\t{\n   69  \t\t\t\t\tvalid_ability_data = false;\n   70: \t\t\t\t\tif(c::verbose_error_logging) Log(__FUNCTION__\"() encountered more effects than max_effect_count.\");\n   71  \t\t\t\t}\n   72  \n   ..\n  141  \t\tbuffer->p = initial;\n  142  \t\tsize_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));\n  143: \t\tLog(\"Encountered invalid ability data in buffer at address: %p (\\\"%.*s\\\")\",\n  144  \t\t\tbuffer->p, number_of_bytes_to_print, buffer->p);\n  145  \n  ...\n  180  \t}\n  181  \n  182: \t//Log(\"Loaded %zu abilities from file: %s\", ability_count_loaded, filename);\n  183  \tFreeBuffer(&file);\n  184  \treturn true;\n\nC:\\color-c\\src\\array.cpp:\n   94  // \tif(index < 0 or index >= array->count)\n   95  // \t{\n   96: // \t\t//VerboseLog(__FUNCTION__\"() got invalid index for Array<%s>\", mStringify(Type));\n   97  // \t\tAssert(false);\n   98  // \t\treturn array->data[0];\n\nC:\\color-c\\src\\battle.cpp:\n   13      if(ability_index < 0 or ability_index > c::moveset_max_size)\n   14      {\n   15:         Log(\"(\" __FUNCTION__ \") received invalid ability_index\");\n   16          return Rect{};\n   17      }\n   ..\n  220              else\n  221              {\n  222:                 if(c::verbose_error_logging) Log(\"Encountered unimplemented effect type. ((int)EffectType => %d)\", int(effect.type));\n  223              }\n  224  \n\nC:\\color-c\\src\\bitmap.cpp:\n  104  \tif(!CompareBytesN(header.signature, \"BM\", 2))\n  105  \t{\n  106: \t\tLog(\"Invalid file format signature in bitmap file (\\\"%s\\\")\", filename);\n  107  \t\tgoto FINAL;\n  108  \t}\n  109  \tif(header.bits_per_pixel != 32)\n  110  \t{\n  111: \t\tLog(\"Unsupported bmp file format (format: bpp %u, compression %u) (file: \\\"%s\\\")\",\n  112  \t\t\theader.bits_per_pixel, header.compression, filename);\n  113  \t\tgoto FINAL;\n\nC:\\color-c\\src\\buffer.cpp:\n   28      if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   29      {\n   30:         Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   31          return 0;\n   32      }\n\nC:\\color-c\\src\\campaign.cpp:\n  299      MoveCameraToWorldRect(&game->camera, rect);\n  300  \n  301:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  302:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  303:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  304:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  305:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  306:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  307:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  308:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  309      // GenerateNodeGraph(&campaign->map, params);\n  310      // campaign->nodes = CreatePermanentArray<Node>(10);\n\nC:\\color-c\\src\\editor.cpp:\n   80  \tif(!editor->init)\n   81  \t{\n   82: \t\tLog(\"Editor was not initialized. Skipping \" __FUNCTION__);\n   83  \t\treturn GameState::None;\n   84  \t}\n\nC:\\color-c\\src\\enemy_ai.cpp:\n  182          //AppendChar(&permutation_string, '\\0');\n  183  \n  184:         Log(\"%.*s\", permutation_string.length, permutation_string.data);\n  185          p += permutation_length;\n  186      }\n  ...\n  191      //platform->FreeMemory(permutation_string.data);\n  192      return permutation_count;\n  193:     //Log(\"permutation count: %zu\", permutation_count);\n  194  \n  195      // Array<Unit> allies;\n\nC:\\color-c\\src\\freetype_wrapper.cpp:\n    9  \t}\n   10  \telse {\n   11: \t\tLog(\"Failed to initialize FreeType.\");\n   12  \t\treturn false;\n   13  \t}\n   ..\n   18  {\n   19  \tbool success = !FT_Done_Library(*lib);\n   20: \tif(!success) Log(\"Failed to close FreeType.\");\n   21  \n   22  \treturn success;\n   ..\n   29  \tFT_Error error = FT_New_Face(lib, filename, 0, &face);\n   30  \n   31: \tif(error) Log(\"Failed to load font (file: \\\"%s\\\")\", filename);\n   32  \n   33  \treturn face;\n\nC:\\color-c\\src\\game.cpp:\n   38  \n   39      InitLcgSystemSeed(&random::default_lcg);\n   40:     //TestDistributionAndLog();\n   41      //InitLcgSetSeed(&random::default_lcg, 13);\n   42  \n   ..\n  198      // for(int i=0; i<permutation_count; ++i)\n  199      // {\n  200:     //     Log(\"%u %u %u\", p[0], p[1], p[2]);\n  201      //     p += 3;\n  202      // }\n\nC:\\color-c\\src\\image.cpp:\n   77  \tif(!header_ok)\n   78  \t{\n   79: \t\tLog(\"LoadPngFromFile() was given a file with an invalid PNG file header.\");\n   80  \t\tsuccess = false;\n   81  \t\tgoto FINAL;\n   ..\n   93  \tif(!CompareBytesN(chunk.type, \"IHDR\", 4))\n   94  \t{\n   95: \t\tLog(\"First PNG chunk was not IHDR (file: \\\"%s\\\")\", filename);\n   96  \t\tsuccess = false;\n   97  \t\tgoto FINAL;\n   ..\n  105  \t\tihdr.interlace_method != 0)\n  106  \t{\n  107: \t\tLog(\"PNG decoder doesn't support format (format: color_type %u, compression %u, filter %u, interlace %u) (file: \\\"%s\\\")\",\n  108  \t\t\tihdr.color_type, ihdr.compression_method, ihdr.filter_method, ihdr.interlace_method, filename);\n  109  \t\tsuccess = false;\n  ...\n  122  \t\t\t// width*height pixels, 4 bytes per pixel, 1 filter byte per row\n  123  \t\t\tu32 expected_byte_count = 4 * ihdr.width * ihdr.height + ihdr.height;\n  124: \t\t\tLog(\"IDAT size: %u (expected: %u)\", chunk.length, expected_byte_count);\n  125  \t\t\tu8 *pixels = (u8*)chunk.data + 1; // Skip filter byte\n  126  \t\t}\n  ...\n  131  \t\telse\n  132  \t\t{\n  133: \t\t\tLog(\"Skipping unsupported chunk type (%.4s) in PNG file \\\"%s\\\"\", chunk.type, filename);\n  134  \t\t}\n  135  \n\nC:\\color-c\\src\\imgui.cpp:\n   10  \tif(imgui::active_container == nullptr)\n   11  \t{\n   12: \t\tLog(\"imgui::active_container not set when it was expected to be.\");\n   13  \t\tis_valid = false;\n   14  \t}\n   ..\n   17  \tif(!ValidFont(imgui::active_container->button_layout.label_layout.font))\n   18  \t{\n   19: \t\tLog(\"imgui::active_container->button_layout has no font loaded when it was expected to have one.\");\n   20  \t\tis_valid = false;\n   21  \t}\n   ..\n   24  \tif(!ValidFont(imgui::active_container->text_entry_layout.text_layout.font))\n   25  \t{\n   26: \t\tLog(\"imgui::active_container->text_layout has no font loaded when it was expected to have one.\");\n   27  \t\tis_valid = false;\n   28  \t}\n\nC:\\color-c\\src\\keybinds.cpp:\n   35  \t\tif(keybind_index < 0)\n   36  \t\t{\n   37: \t\t\tLog(__FUNCSIG__\"(): invalid syntax in file \\\"%s\\\"\", filename);\n   38  \t\t}\n   39  \n\nC:\\color-c\\src\\log.cpp:\n   21  \n   22  void\n   23: THREAD_Log(void *data, Arena *thread_arena)\n   24  {\n   25  \tLog_params params = *(Log_params *)data;\n   ..\n   40  \n   41  void\n   42: InitLog(LogState *log_state) {\n   43  \tplatform->WriteLineToFile(\"logs/log.txt\", \"-------------------\");\n   44  \t//log_state->queue = (WorkQueue *)AllocPerma(sizeof(WorkQueue));\n   ..\n   82  }\n   83  \n   84: void Log(char *string, ...)\n   85  {\n   86  \tva_list args;\n   ..\n  111  \t// \tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  112  \t// \t_push_to_log_strings(formatted_str);\n  113: \t// \tLog(\"%s\", formatted_str);\n  114: \t// \tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  115  \t// \treturn;\n  116  \t// }\n  ...\n  142  \t\tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  143  \t\t_push_to_log_strings(formatted_str);\n  144: \t\tLog(\"%s\", formatted_str);\n  145: \t\tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  146  \t\treturn;\n  147  \t}\n  ...\n  164  \t\tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  165  \t\t_push_to_log_strings(formatted_str);\n  166: \t\tLog(\"%s\", formatted_str);\n  167: \t\tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  168  \t\treturn;\n  169  \t}\n  170  \n  171: \tLog(formatted_str);\n  172  }\n  173  \n  174: void TickLog()\n  175  {\n  176: \tLog(\"tick\");\n  177  }\n  178  \n\nC:\\color-c\\src\\log.h:\n   19  \n   20  void PushLogEntry(char *filename, char *string, ...);\n   21: void Log(char *string, ...);\n   22  \n   23  #endif\n\nC:\\color-c\\src\\memory.cpp:\n   60  \tif(size > memory::arena_size)\n   61  \t{\n   62: \t\tLog(\"ScratchString() tried to allocate a string larger than an arena. Ignoring request.\");\n   63  \t\treturn nullptr;\n   64  \t}\n   ..\n   67  \t{\n   68  #if 0\n   69: \t\tLog(\"memory::per_frame_arena tried to allocate past its end. It's not large enough. \\\n   70  To avoid overflow, we're resetting the pointer back to the beginning, but this will\\\n   71  cause other scratch data to be overwritten before the frame ends.\");\n   ..\n   85  \tif(byte_count > memory::arena_size)\n   86  \t{\n   87: \t\tLog(__FUNCTION__\" tried to allocate a memory block larger than an arena. Ignoring request.\");\n   88  \t\treturn nullptr;\n   89  \t}\n   ..\n   91  \tif(ArenaBytesRemaining(*arena) < byte_count)\n   92  \t{\n   93: \t\tLog(\"CRITICAL ERROR: \" __FUNCTION__ \"() tried to allocate past end of permanent storage. We'll fall back on malloc() \"\n   94  \t\t\t\"here in the release build just to be a bit error-resistant, but this is a serious error \"\n   95  \t\t\t\"and we might see memory leaks as a result.\");\n\nC:\\color-c\\src\\meta_text_parsing.cpp:\n   73  \tif(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   74  \t{\n   75: \t\t//Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   76  \t\treturn 0;\n   77  \t}\n   ..\n   91  \tif(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   92  \t{\n   93: \t\t//Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   94  \t\treturn 0;\n   95  \t}\n   ..\n  137  \tif(!IsDigit(c))\n  138  \t{\n  139: \t\t//Log(\"CharToInt() received non-digit character.\");\n  140  \t\treturn 0;\n  141  \t}\n  ...\n  258  \t\telse\n  259  \t\t{\n  260: \t\t\t//Log(\"ParseNextAsS32() found illegal character (%c)\", *buffer->p);\n  261  \t\t\tif(start_of_token_found and at_least_one_digit_found)\n  262  \t\t\t{\n  ...\n  505  \telse\n  506  \t{\n  507: \t\t//Log(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  508  \t\treturn false;\n  509  \t}\n  ...\n  580  \tif(formatted_length > max_formatted_string_length)\n  581  \t{\n  582: \t\t// Log(__FUNCTION__ \" received a string longer (after applying formatting) \"\n  583  \t\t// \t\"than c::max_formatted_string_length (%d). \"\n  584  \t\t// \t\"The string is still formatted, but clipped to max formatted string length.\",\n\nC:\\color-c\\src\\node_graph.cpp:\n   86      GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;\n   87  \n   88: //    Log(\"[%u] Started \"  __FUNCTION__ \"() thread.\",  platform->GetCallingThreadId());\n   89  \n   90      // START\n   ..\n  126      // END\n  127  \n  128: //    Log(\"[%u] Finished \" __FUNCTION__ \"() thread.\", platform->GetCallingThreadId());\n  129  }\n  130  \n\nC:\\color-c\\src\\opengl.cpp:\n   12  \tif(load_file_result == false)\n   13  \t{\n   14: \t\tLog(\"Couldn't load shader source file (file didn't exist or source was larger than MAX_SHADER_SOURCE_LENGTH [%d]): %s\", MAX_SHADER_SOURCE_LENGTH, filename);\n   15  \t\treturn 0;\n   16  \t}\n   ..\n   26  \t{\n   27  \t\tchar compile_info_log[MAX_GL_INFO_LOG_LENGTH];\n   28: \t\tgl->GetShaderInfoLog(shader, sizeof(compile_info_log), nullptr, compile_info_log);\n   29: \t\tLog(\"Failed to compile shader source file (%s):\\n%s\", filename, compile_info_log);\n   30  \t\tgl->DeleteShader(shader);\n   31  \t\treturn 0;\n   ..\n   33  \telse\n   34  \t{\n   35: \t\t//Log(\"Successfully compiled shader source file: %s\", filename);\n   36  \t}\n   37  \n   ..\n   53  \t{\n   54  \t\tchar link_fail_info[MAX_GL_INFO_LOG_LENGTH];\n   55: \t\tgl->GetProgramInfoLog(program, sizeof(link_fail_info), nullptr, link_fail_info);\n   56: \t\tLog(\"Failed to link shader program:\\n%s\", link_fail_info);\n   57  \t\treturn 0;\n   58  \t}\n   59  \n   60: \t//Log(\"Successfully linked shader program.\");\n   61  \treturn program;\n   62  }\n   ..\n   69  \tif(vs != 0 and fs != 0)\n   70  \t{\n   71: \t\t//Log(\"Successfully generated shader program.\");\n   72  \t\treturn LinkShaders(vs, fs);\n   73  \t}\n   74  \telse\n   75  \t{\n   76: \t\tLog(\"Failed to generate shader program.\");\n   77  \t\tif(vs == 0) gl->DeleteShader(vs);\n   78  \t\tif(fs == 0) gl->DeleteShader(fs);\n   ..\n   85  {\n   86  \tGLenum error = gl->GetError();\n   87: \tLog(\"Current GL Error Code: %u\", error);\n   88  }\n\nC:\\color-c\\src\\opengl.h:\n  116  typedef void \t\tfnsig_glShaderSource(GLuint, GLsizei, GLchar**, GLint*);\n  117  typedef void\t\tfnsig_glCompileShader(GLuint);\n  118: typedef void\t\tfnsig_glGetShaderInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);\n  119  typedef void \t\tfnsig_glGetShaderiv(GLuint, GLenum, GLint*);\n  120  typedef GLuint \t\tfnsig_glCreateProgram();\n  121  typedef void \t\tfnsig_glLinkProgram(GLuint);\n  122  typedef void \t\tfnsig_glGetProgramiv(GLuint, GLenum, GLint*);\n  123: typedef void \t\tfnsig_glGetProgramInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);\n  124  typedef void \t\tfnsig_glAttachShader(GLuint, GLuint);\n  125  typedef void \t\tfnsig_glUseProgram(GLuint);\n  ...\n  370  \twhile(p < end) {\n  371  \t\tif(*(void(**)(void))p == nullptr) {\n  372: \t\t\tLog(\"An OpenGL bind failed.\");\n  373  \t\t\treturn false;\n  374  \t\t}\n\nC:\\color-c\\src\\permutation.cpp:\n   60      if(arrays.count > 4)\n   61      {\n   62:         Log(__FUNCTION__ \"got an array with more than 4 sub-arrays. Permutations of more than 4 elements aren't supported.\");\n   63          return false;\n   64      }\n   ..\n  150      if(arrays.count > 4)\n  151      {\n  152:         Log(__FUNCTION__ \"got an array with more than 4 sub-arrays. Permutations of more than 4 elements aren't supported.\");\n  153          return false;\n  154      }\n\nC:\\color-c\\src\\random.cpp:\n   49  \tu32 result = (lcg.seed % (max-min+1)) + min;\n   50  \n   51: \t//Log(\"U32: %u\", result);\n   52  \treturn result;\n   53  }\n   ..\n   73  \n   74  void\n   75: TestDistributionAndLog()\n   76  {\n   77  \tu32 trials = 1000000;\n   ..\n   86  \t}\n   87  \n   88: \tfor(int i=0; i<range; i++) Log(\"%u: %u\", i, buckets[i]);\n   89  }\n\nC:\\color-c\\src\\string.cpp:\n   49  \tif(pos < 0 or pos > string->length)\n   50  \t{\n   51: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid pos for string (pos=%d)\", pos);\n   52  \t\treturn false;\n   53  \t}\n   ..\n   96  \tif(start < 0 or start > string->length or end < 0 or end > string->length)\n   97  \t{\n   98: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid indices for string (start=%d, end=%d)\", start, end);\n   99  \t\treturn false;\n  100  \t}\n  ...\n  274  \telse\n  275  \t{\n  276: \t\t//Log(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  277  \t\treturn false;\n  278  \t}\n\nC:\\color-c\\src\\table.cpp:\n   56  \t{\n   57  \t\t// @unsure: does the mStringify macro happen before or after templatization?\n   58: \t\tLog(\"[%s] Table couldn't create a requested entry because it was full.\", mStringify(Type));\n   59  \t\treturn Id<Type>{.index = 0, .generation = 0};\n   60  \t}\n\nC:\\color-c\\src\\text_parsing.cpp:\n   43  \tif(!IsDigit(c))\n   44  \t{\n   45: \t\tLog(\"CharToInt() received non-digit character.\");\n   46  \t\treturn 0;\n   47  \t}\n   ..\n  164  \t\telse\n  165  \t\t{\n  166: \t\t\t//Log(\"ParseNextAsS32() found illegal character (%c)\", *buffer->p);\n  167  \t\t\tif(start_of_token_found and at_least_one_digit_found)\n  168  \t\t\t{\n  ...\n  431  \telse\n  432  \t{\n  433: \t\tLog(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  434  \t\treturn false;\n  435  \t}\n\nC:\\color-c\\src\\text_render.cpp:\n  533  //          pen.y += scale*(face->height);\n  534  //          pen.x = origin.x;\n  535: //          //Log(\"newline\");\n  536  //          continue;\n  537  //      }\n\nC:\\color-c\\src\\unit.cpp:\n  113  \t\tbuffer->p = initial;\n  114  \t\tsize_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));\n  115: \t\tLog(\"Encountered invalid unit data in buffer at address: %p (\\\"%.*s\\\")\",\n  116  \t\t\tbuffer->p, number_of_bytes_to_print, buffer->p);\n  117  \n  ...\n  156  \tif(c::verbose_success_logging)\n  157  \t{\n  158: \t\tLog(\"Loaded %zu unit breeds from file: %s\", unit_count_loaded, filename);\n  159  \t}\n  160  \tFreeBuffer(&file);\n  ...\n  248  // \t}\n  249  \n  250: // \tLog(\"Invalid TargetClass encountered (%d)\", int(tc));\n  251  // \treturn false;\n  252  // }\n  ...\n  336  \t}\n  337  \n  338: \tLog(\"Invalid TargetClass encountered (%d)\", int(tc));\n  339  \treturn false;\n  340  }\n  ...\n  588  \telse if(c::verbose_error_logging)\n  589  \t{\n  590: \t\tLog(\"Invalid case encountered in function \" __FUNCTION__ \" (current:%d, max:%d, preview:%d)\",\n  591  \t\t\tcurrent, max, preview);\n  592  \n\nC:\\color-c\\src\\utf32string.cpp:\n   44  \tif(pos < 0 or pos > string->length)\n   45  \t{\n   46: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid pos for string (pos=%d)\", pos);\n   47  \t\treturn false;\n   48  \t}\n   ..\n   90  \tif(start < 0 or start > string->length or end < 0 or end > string->length)\n   91  \t{\n   92: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid indices for string (start=%d, end=%d)\", start, end);\n   93  \t\treturn false;\n   94  \t}\n\nC:\\color-c\\src\\util.cpp:\n  130  \tif(formatted_length > c::max_formatted_string_length)\n  131  \t{\n  132: \t\tLog(__FUNCTION__ \" received a string longer (after applying formatting) \"\n  133  \t\t\t\"than c::max_formatted_string_length (%d). \"\n  134  \t\t\t\"The string is still formatted, but clipped to max formatted string length.\",\n\nC:\\color-c\\src\\win32_platform.cpp:\n   76  \t\t\tif(game == nullptr) return 0;\n   77  \n   78: \t\t\t//Log(\"0x%0*x\", 2, (u8)wParam);\n   79  \n   80  \t\t\tif(lParam & (1<<30))\n   ..\n  106  \t\t\tif(game == nullptr) return 0;\n  107  \n  108: \t\t\t//Log(\"0x%0*x\", 2, (u8)wParam);\n  109  \n  110  \t\t\tif(lParam & (1<<30))\n  ...\n  212  \t\t};\n  213  \t\tcase WM_CHAR: {\n  214: \t\t\t//Log(\"%u\", wParam);\n  215  \t\t\tif(pos_in_translated_stream < ArrayCount(utf32_translated_stream0))\n  216  \t\t\t{\n  ...\n  219  \t\t\telse\n  220  \t\t\t{\n  221: \t\t\t\tLog(\"utf32-translated stream in win32 platform layer reached maximum size.\");\n  222  \t\t\t}\n  223  \t\t} break;\n  ...\n  336  \tif(file == INVALID_HANDLE_VALUE)\n  337  \t{\n  338: \t\tLog(\"Failed to open file to find its size: %s\", filename);\n  339  \t\treturn false;\n  340  \t}\n  ...\n  342  \tDWORD filesize_high;\n  343  \tDWORD filesize_low = GetFileSize(file, &filesize_high);\n  344: \tif(filesize_high != 0) Log(\"FileSizeHigh != 0 (%u)\", filesize_high);\n  345  \tCloseHandle(file);\n  346  \n  ...\n  359  \n  360  \tif(file == INVALID_HANDLE_VALUE) {\n  361: \t\t//Log(\"Failed to open text file for writing line: %s\", filename);\n  362  \t\treturn;\n  363  \t}\n  ...\n  389  \tif(file == INVALID_HANDLE_VALUE)\n  390  \t{\n  391: \t\tLog(\"Failed to open file for reading: %s\", filename);\n  392  \t\treturn false;\n  393  \t}\n  ...\n  416  \tif(file == INVALID_HANDLE_VALUE)\n  417  \t{\n  418: \t\tLog(\"Failed to open file for reading: %s\", filename);\n  419  \t\treturn false;\n  420  \t}\n  ...\n  425  \tif(number_of_bytes_read > buffer_length-1)\n  426  \t{\n  427: \t\t//Log(\"win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data\");\n  428  \t\tbuffer[buffer_length-1] = '\\0';\n  429  \t\tCloseHandle(file);\n  ...\n  519  \tpfd.cDepthBits = 24;\n  520  \tint pfd_index = ChoosePixelFormat(wc.hdc, &pfd);\n  521: \tif(pfd_index == 0) Log(\"ChoosePixelFormat() failed.\");\n  522  \tSetPixelFormat(wc.hdc, pfd_index, &pfd);\n  523  \twc.rc = wglCreateContext(wc.hdc);\n  ...\n  713      // ----------------------------------------------------------------------------\n  714  \n  715: \tInitLog(&game->log_state);\n  716  \n  717  \tCreateWindowAndOpenGlContext(hInstance, nCmdShow);\n  ...\n  724  \tif(game_module == NULL)\n  725  \t{\n  726: \t\tLog(\"Failed to load library game.dll\");\n  727  \t}\n  728  \telse\n\n107 matches across 30 files\n\n\nSearching 131 files for \"Log(\"\n\nC:\\color-c\\src\\ability.cpp:\n   51  \t\t\t{\n   52  \t\t\t\tvalid_ability_data = false;\n   53: \t\t\t\tif(c::verbose_error_logging) Log(__FUNCTION__\"() encountered invalid ability tier number. Got %d, expected %d\", parsed_tier, cur_tier);\n   54  \t\t\t}\n   55  \n   ..\n   68  \t\t\t\t{\n   69  \t\t\t\t\tvalid_ability_data = false;\n   70: \t\t\t\t\tif(c::verbose_error_logging) Log(__FUNCTION__\"() encountered more effects than max_effect_count.\");\n   71  \t\t\t\t}\n   72  \n   ..\n  141  \t\tbuffer->p = initial;\n  142  \t\tsize_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));\n  143: \t\tLog(\"Encountered invalid ability data in buffer at address: %p (\\\"%.*s\\\")\",\n  144  \t\t\tbuffer->p, number_of_bytes_to_print, buffer->p);\n  145  \n  ...\n  180  \t}\n  181  \n  182: \t//Log(\"Loaded %zu abilities from file: %s\", ability_count_loaded, filename);\n  183  \tFreeBuffer(&file);\n  184  \treturn true;\n\nC:\\color-c\\src\\array.cpp:\n   94  // \tif(index < 0 or index >= array->count)\n   95  // \t{\n   96: // \t\t//VerboseLog(__FUNCTION__\"() got invalid index for Array<%s>\", mStringify(Type));\n   97  // \t\tAssert(false);\n   98  // \t\treturn array->data[0];\n\nC:\\color-c\\src\\battle.cpp:\n   13      if(ability_index < 0 or ability_index > c::moveset_max_size)\n   14      {\n   15:         Log(\"(\" __FUNCTION__ \") received invalid ability_index\");\n   16          return Rect{};\n   17      }\n   ..\n  220              else\n  221              {\n  222:                 if(c::verbose_error_logging) Log(\"Encountered unimplemented effect type. ((int)EffectType => %d)\", int(effect.type));\n  223              }\n  224  \n\nC:\\color-c\\src\\bitmap.cpp:\n  104  \tif(!CompareBytesN(header.signature, \"BM\", 2))\n  105  \t{\n  106: \t\tLog(\"Invalid file format signature in bitmap file (\\\"%s\\\")\", filename);\n  107  \t\tgoto FINAL;\n  108  \t}\n  109  \tif(header.bits_per_pixel != 32)\n  110  \t{\n  111: \t\tLog(\"Unsupported bmp file format (format: bpp %u, compression %u) (file: \\\"%s\\\")\",\n  112  \t\t\theader.bits_per_pixel, header.compression, filename);\n  113  \t\tgoto FINAL;\n\nC:\\color-c\\src\\buffer.cpp:\n   28      if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   29      {\n   30:         Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   31          return 0;\n   32      }\n\nC:\\color-c\\src\\campaign.cpp:\n  299      MoveCameraToWorldRect(&game->camera, rect);\n  300  \n  301:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  302:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  303:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  304:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  305:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  306:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  307:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  308:     // Log(\"Thread %d started.\", platform->StartJob(&params));\n  309      // GenerateNodeGraph(&campaign->map, params);\n  310      // campaign->nodes = CreatePermanentArray<Node>(10);\n\nC:\\color-c\\src\\editor.cpp:\n   80  \tif(!editor->init)\n   81  \t{\n   82: \t\tLog(\"Editor was not initialized. Skipping \" __FUNCTION__);\n   83  \t\treturn GameState::None;\n   84  \t}\n\nC:\\color-c\\src\\enemy_ai.cpp:\n  182          //AppendChar(&permutation_string, '\\0');\n  183  \n  184:         Log(\"%.*s\", permutation_string.length, permutation_string.data);\n  185          p += permutation_length;\n  186      }\n  ...\n  191      //platform->FreeMemory(permutation_string.data);\n  192      return permutation_count;\n  193:     //Log(\"permutation count: %zu\", permutation_count);\n  194  \n  195      // Array<Unit> allies;\n\nC:\\color-c\\src\\freetype_wrapper.cpp:\n    9  \t}\n   10  \telse {\n   11: \t\tLog(\"Failed to initialize FreeType.\");\n   12  \t\treturn false;\n   13  \t}\n   ..\n   18  {\n   19  \tbool success = !FT_Done_Library(*lib);\n   20: \tif(!success) Log(\"Failed to close FreeType.\");\n   21  \n   22  \treturn success;\n   ..\n   29  \tFT_Error error = FT_New_Face(lib, filename, 0, &face);\n   30  \n   31: \tif(error) Log(\"Failed to load font (file: \\\"%s\\\")\", filename);\n   32  \n   33  \treturn face;\n\nC:\\color-c\\src\\game.cpp:\n   38  \n   39      InitLcgSystemSeed(&random::default_lcg);\n   40:     //TestDistributionAndLog();\n   41      //InitLcgSetSeed(&random::default_lcg, 13);\n   42  \n   ..\n  198      // for(int i=0; i<permutation_count; ++i)\n  199      // {\n  200:     //     Log(\"%u %u %u\", p[0], p[1], p[2]);\n  201      //     p += 3;\n  202      // }\n\nC:\\color-c\\src\\image.cpp:\n   77  \tif(!header_ok)\n   78  \t{\n   79: \t\tLog(\"LoadPngFromFile() was given a file with an invalid PNG file header.\");\n   80  \t\tsuccess = false;\n   81  \t\tgoto FINAL;\n   ..\n   93  \tif(!CompareBytesN(chunk.type, \"IHDR\", 4))\n   94  \t{\n   95: \t\tLog(\"First PNG chunk was not IHDR (file: \\\"%s\\\")\", filename);\n   96  \t\tsuccess = false;\n   97  \t\tgoto FINAL;\n   ..\n  105  \t\tihdr.interlace_method != 0)\n  106  \t{\n  107: \t\tLog(\"PNG decoder doesn't support format (format: color_type %u, compression %u, filter %u, interlace %u) (file: \\\"%s\\\")\",\n  108  \t\t\tihdr.color_type, ihdr.compression_method, ihdr.filter_method, ihdr.interlace_method, filename);\n  109  \t\tsuccess = false;\n  ...\n  122  \t\t\t// width*height pixels, 4 bytes per pixel, 1 filter byte per row\n  123  \t\t\tu32 expected_byte_count = 4 * ihdr.width * ihdr.height + ihdr.height;\n  124: \t\t\tLog(\"IDAT size: %u (expected: %u)\", chunk.length, expected_byte_count);\n  125  \t\t\tu8 *pixels = (u8*)chunk.data + 1; // Skip filter byte\n  126  \t\t}\n  ...\n  131  \t\telse\n  132  \t\t{\n  133: \t\t\tLog(\"Skipping unsupported chunk type (%.4s) in PNG file \\\"%s\\\"\", chunk.type, filename);\n  134  \t\t}\n  135  \n\nC:\\color-c\\src\\imgui.cpp:\n   10  \tif(imgui::active_container == nullptr)\n   11  \t{\n   12: \t\tLog(\"imgui::active_container not set when it was expected to be.\");\n   13  \t\tis_valid = false;\n   14  \t}\n   ..\n   17  \tif(!ValidFont(imgui::active_container->button_layout.label_layout.font))\n   18  \t{\n   19: \t\tLog(\"imgui::active_container->button_layout has no font loaded when it was expected to have one.\");\n   20  \t\tis_valid = false;\n   21  \t}\n   ..\n   24  \tif(!ValidFont(imgui::active_container->text_entry_layout.text_layout.font))\n   25  \t{\n   26: \t\tLog(\"imgui::active_container->text_layout has no font loaded when it was expected to have one.\");\n   27  \t\tis_valid = false;\n   28  \t}\n\nC:\\color-c\\src\\keybinds.cpp:\n   35  \t\tif(keybind_index < 0)\n   36  \t\t{\n   37: \t\t\tLog(__FUNCSIG__\"(): invalid syntax in file \\\"%s\\\"\", filename);\n   38  \t\t}\n   39  \n\nC:\\color-c\\src\\log.cpp:\n   21  \n   22  void\n   23: THREAD_Log(void *data, Arena *thread_arena)\n   24  {\n   25  \tLog_params params = *(Log_params *)data;\n   ..\n   40  \n   41  void\n   42: InitLog(LogState *log_state) {\n   43  \tplatform->WriteLineToFile(\"logs/log.txt\", \"-------------------\");\n   44  \t//log_state->queue = (WorkQueue *)AllocPerma(sizeof(WorkQueue));\n   ..\n   82  }\n   83  \n   84: void Log(char *string, ...)\n   85  {\n   86  \tva_list args;\n   ..\n  111  \t// \tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  112  \t// \t_push_to_log_strings(formatted_str);\n  113: \t// \tLog(\"%s\", formatted_str);\n  114: \t// \tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  115  \t// \treturn;\n  116  \t// }\n  ...\n  142  \t\tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  143  \t\t_push_to_log_strings(formatted_str);\n  144: \t\tLog(\"%s\", formatted_str);\n  145: \t\tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  146  \t\treturn;\n  147  \t}\n  ...\n  164  \t\tformatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsprintf wouldn't have null-appended if the buffer was too small.\n  165  \t\t_push_to_log_strings(formatted_str);\n  166: \t\tLog(\"%s\", formatted_str);\n  167: \t\tLog(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  168  \t\treturn;\n  169  \t}\n  170  \n  171: \tLog(formatted_str);\n  172  }\n  173  \n  174: void TickLog()\n  175  {\n  176: \tLog(\"tick\");\n  177  }\n  178  \n\nC:\\color-c\\src\\log.h:\n   19  \n   20  void PushLogEntry(char *filename, char *string, ...);\n   21: void Log(char *string, ...);\n   22  \n   23  #endif\n\nC:\\color-c\\src\\memory.cpp:\n   60  \tif(size > memory::arena_size)\n   61  \t{\n   62: \t\tLog(\"ScratchString() tried to allocate a string larger than an arena. Ignoring request.\");\n   63  \t\treturn nullptr;\n   64  \t}\n   ..\n   67  \t{\n   68  #if 0\n   69: \t\tLog(\"memory::per_frame_arena tried to allocate past its end. It's not large enough. \\\n   70  To avoid overflow, we're resetting the pointer back to the beginning, but this will\\\n   71  cause other scratch data to be overwritten before the frame ends.\");\n   ..\n   85  \tif(byte_count > memory::arena_size)\n   86  \t{\n   87: \t\tLog(__FUNCTION__\" tried to allocate a memory block larger than an arena. Ignoring request.\");\n   88  \t\treturn nullptr;\n   89  \t}\n   ..\n   91  \tif(ArenaBytesRemaining(*arena) < byte_count)\n   92  \t{\n   93: \t\tLog(\"CRITICAL ERROR: \" __FUNCTION__ \"() tried to allocate past end of permanent storage. We'll fall back on malloc() \"\n   94  \t\t\t\"here in the release build just to be a bit error-resistant, but this is a serious error \"\n   95  \t\t\t\"and we might see memory leaks as a result.\");\n\nC:\\color-c\\src\\meta_text_parsing.cpp:\n   73  \tif(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   74  \t{\n   75: \t\t//Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   76  \t\treturn 0;\n   77  \t}\n   ..\n   91  \tif(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)\n   92  \t{\n   93: \t\t//Log(\"Buffer *p (&data=%p) points to location outside buffer\", buffer.data);\n   94  \t\treturn 0;\n   95  \t}\n   ..\n  137  \tif(!IsDigit(c))\n  138  \t{\n  139: \t\t//Log(\"CharToInt() received non-digit character.\");\n  140  \t\treturn 0;\n  141  \t}\n  ...\n  258  \t\telse\n  259  \t\t{\n  260: \t\t\t//Log(\"ParseNextAsS32() found illegal character (%c)\", *buffer->p);\n  261  \t\t\tif(start_of_token_found and at_least_one_digit_found)\n  262  \t\t\t{\n  ...\n  505  \telse\n  506  \t{\n  507: \t\t//Log(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  508  \t\treturn false;\n  509  \t}\n  ...\n  580  \tif(formatted_length > max_formatted_string_length)\n  581  \t{\n  582: \t\t// Log(__FUNCTION__ \" received a string longer (after applying formatting) \"\n  583  \t\t// \t\"than c::max_formatted_string_length (%d). \"\n  584  \t\t// \t\"The string is still formatted, but clipped to max formatted string length.\",\n\nC:\\color-c\\src\\node_graph.cpp:\n   86      GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;\n   87  \n   88: //    Log(\"[%u] Started \"  __FUNCTION__ \"() thread.\",  platform->GetCallingThreadId());\n   89  \n   90      // START\n   ..\n  126      // END\n  127  \n  128: //    Log(\"[%u] Finished \" __FUNCTION__ \"() thread.\", platform->GetCallingThreadId());\n  129  }\n  130  \n\nC:\\color-c\\src\\opengl.cpp:\n   12  \tif(load_file_result == false)\n   13  \t{\n   14: \t\tLog(\"Couldn't load shader source file (file didn't exist or source was larger than MAX_SHADER_SOURCE_LENGTH [%d]): %s\", MAX_SHADER_SOURCE_LENGTH, filename);\n   15  \t\treturn 0;\n   16  \t}\n   ..\n   26  \t{\n   27  \t\tchar compile_info_log[MAX_GL_INFO_LOG_LENGTH];\n   28: \t\tgl->GetShaderInfoLog(shader, sizeof(compile_info_log), nullptr, compile_info_log);\n   29: \t\tLog(\"Failed to compile shader source file (%s):\\n%s\", filename, compile_info_log);\n   30  \t\tgl->DeleteShader(shader);\n   31  \t\treturn 0;\n   ..\n   33  \telse\n   34  \t{\n   35: \t\t//Log(\"Successfully compiled shader source file: %s\", filename);\n   36  \t}\n   37  \n   ..\n   53  \t{\n   54  \t\tchar link_fail_info[MAX_GL_INFO_LOG_LENGTH];\n   55: \t\tgl->GetProgramInfoLog(program, sizeof(link_fail_info), nullptr, link_fail_info);\n   56: \t\tLog(\"Failed to link shader program:\\n%s\", link_fail_info);\n   57  \t\treturn 0;\n   58  \t}\n   59  \n   60: \t//Log(\"Successfully linked shader program.\");\n   61  \treturn program;\n   62  }\n   ..\n   69  \tif(vs != 0 and fs != 0)\n   70  \t{\n   71: \t\t//Log(\"Successfully generated shader program.\");\n   72  \t\treturn LinkShaders(vs, fs);\n   73  \t}\n   74  \telse\n   75  \t{\n   76: \t\tLog(\"Failed to generate shader program.\");\n   77  \t\tif(vs == 0) gl->DeleteShader(vs);\n   78  \t\tif(fs == 0) gl->DeleteShader(fs);\n   ..\n   85  {\n   86  \tGLenum error = gl->GetError();\n   87: \tLog(\"Current GL Error Code: %u\", error);\n   88  }\n\nC:\\color-c\\src\\opengl.h:\n  116  typedef void \t\tfnsig_glShaderSource(GLuint, GLsizei, GLchar**, GLint*);\n  117  typedef void\t\tfnsig_glCompileShader(GLuint);\n  118: typedef void\t\tfnsig_glGetShaderInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);\n  119  typedef void \t\tfnsig_glGetShaderiv(GLuint, GLenum, GLint*);\n  120  typedef GLuint \t\tfnsig_glCreateProgram();\n  121  typedef void \t\tfnsig_glLinkProgram(GLuint);\n  122  typedef void \t\tfnsig_glGetProgramiv(GLuint, GLenum, GLint*);\n  123: typedef void \t\tfnsig_glGetProgramInfoLog(GLuint, GLsizei, GLsizei*, GLchar*);\n  124  typedef void \t\tfnsig_glAttachShader(GLuint, GLuint);\n  125  typedef void \t\tfnsig_glUseProgram(GLuint);\n  ...\n  370  \twhile(p < end) {\n  371  \t\tif(*(void(**)(void))p == nullptr) {\n  372: \t\t\tLog(\"An OpenGL bind failed.\");\n  373  \t\t\treturn false;\n  374  \t\t}\n\nC:\\color-c\\src\\permutation.cpp:\n   60      if(arrays.count > 4)\n   61      {\n   62:         Log(__FUNCTION__ \"got an array with more than 4 sub-arrays. Permutations of more than 4 elements aren't supported.\");\n   63          return false;\n   64      }\n   ..\n  150      if(arrays.count > 4)\n  151      {\n  152:         Log(__FUNCTION__ \"got an array with more than 4 sub-arrays. Permutations of more than 4 elements aren't supported.\");\n  153          return false;\n  154      }\n\nC:\\color-c\\src\\random.cpp:\n   49  \tu32 result = (lcg.seed % (max-min+1)) + min;\n   50  \n   51: \t//Log(\"U32: %u\", result);\n   52  \treturn result;\n   53  }\n   ..\n   73  \n   74  void\n   75: TestDistributionAndLog()\n   76  {\n   77  \tu32 trials = 1000000;\n   ..\n   86  \t}\n   87  \n   88: \tfor(int i=0; i<range; i++) Log(\"%u: %u\", i, buckets[i]);\n   89  }\n\nC:\\color-c\\src\\string.cpp:\n   49  \tif(pos < 0 or pos > string->length)\n   50  \t{\n   51: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid pos for string (pos=%d)\", pos);\n   52  \t\treturn false;\n   53  \t}\n   ..\n   96  \tif(start < 0 or start > string->length or end < 0 or end > string->length)\n   97  \t{\n   98: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid indices for string (start=%d, end=%d)\", start, end);\n   99  \t\treturn false;\n  100  \t}\n  ...\n  274  \telse\n  275  \t{\n  276: \t\t//Log(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  277  \t\treturn false;\n  278  \t}\n\nC:\\color-c\\src\\table.cpp:\n   56  \t{\n   57  \t\t// @unsure: does the mStringify macro happen before or after templatization?\n   58: \t\tLog(\"[%s] Table couldn't create a requested entry because it was full.\", mStringify(Type));\n   59  \t\treturn Id<Type>{.index = 0, .generation = 0};\n   60  \t}\n\nC:\\color-c\\src\\text_parsing.cpp:\n   43  \tif(!IsDigit(c))\n   44  \t{\n   45: \t\tLog(\"CharToInt() received non-digit character.\");\n   46  \t\treturn 0;\n   47  \t}\n   ..\n  164  \t\telse\n  165  \t\t{\n  166: \t\t\t//Log(\"ParseNextAsS32() found illegal character (%c)\", *buffer->p);\n  167  \t\t\tif(start_of_token_found and at_least_one_digit_found)\n  168  \t\t\t{\n  ...\n  431  \telse\n  432  \t{\n  433: \t\tLog(\"Encountered invalid utf-8 starting byte, or sequence of remaining bytes was not long enough.\", char_code);\n  434  \t\treturn false;\n  435  \t}\n\nC:\\color-c\\src\\text_render.cpp:\n  533  //          pen.y += scale*(face->height);\n  534  //          pen.x = origin.x;\n  535: //          //Log(\"newline\");\n  536  //          continue;\n  537  //      }\n\nC:\\color-c\\src\\unit.cpp:\n  113  \t\tbuffer->p = initial;\n  114  \t\tsize_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));\n  115: \t\tLog(\"Encountered invalid unit data in buffer at address: %p (\\\"%.*s\\\")\",\n  116  \t\t\tbuffer->p, number_of_bytes_to_print, buffer->p);\n  117  \n  ...\n  156  \tif(c::verbose_success_logging)\n  157  \t{\n  158: \t\tLog(\"Loaded %zu unit breeds from file: %s\", unit_count_loaded, filename);\n  159  \t}\n  160  \tFreeBuffer(&file);\n  ...\n  248  // \t}\n  249  \n  250: // \tLog(\"Invalid TargetClass encountered (%d)\", int(tc));\n  251  // \treturn false;\n  252  // }\n  ...\n  336  \t}\n  337  \n  338: \tLog(\"Invalid TargetClass encountered (%d)\", int(tc));\n  339  \treturn false;\n  340  }\n  ...\n  588  \telse if(c::verbose_error_logging)\n  589  \t{\n  590: \t\tLog(\"Invalid case encountered in function \" __FUNCTION__ \" (current:%d, max:%d, preview:%d)\",\n  591  \t\t\tcurrent, max, preview);\n  592  \n\nC:\\color-c\\src\\utf32string.cpp:\n   44  \tif(pos < 0 or pos > string->length)\n   45  \t{\n   46: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid pos for string (pos=%d)\", pos);\n   47  \t\treturn false;\n   48  \t}\n   ..\n   90  \tif(start < 0 or start > string->length or end < 0 or end > string->length)\n   91  \t{\n   92: \t\tif(c::verbose_error_logging) Log(__FUNCTION__ \"() received invalid indices for string (start=%d, end=%d)\", start, end);\n   93  \t\treturn false;\n   94  \t}\n\nC:\\color-c\\src\\util.cpp:\n  130  \tif(formatted_length > c::max_formatted_string_length)\n  131  \t{\n  132: \t\tLog(__FUNCTION__ \" received a string longer (after applying formatting) \"\n  133  \t\t\t\"than c::max_formatted_string_length (%d). \"\n  134  \t\t\t\"The string is still formatted, but clipped to max formatted string length.\",\n\nC:\\color-c\\src\\win32_platform.cpp:\n   76  \t\t\tif(game == nullptr) return 0;\n   77  \n   78: \t\t\t//Log(\"0x%0*x\", 2, (u8)wParam);\n   79  \n   80  \t\t\tif(lParam & (1<<30))\n   ..\n  106  \t\t\tif(game == nullptr) return 0;\n  107  \n  108: \t\t\t//Log(\"0x%0*x\", 2, (u8)wParam);\n  109  \n  110  \t\t\tif(lParam & (1<<30))\n  ...\n  212  \t\t};\n  213  \t\tcase WM_CHAR: {\n  214: \t\t\t//Log(\"%u\", wParam);\n  215  \t\t\tif(pos_in_translated_stream < ArrayCount(utf32_translated_stream0))\n  216  \t\t\t{\n  ...\n  219  \t\t\telse\n  220  \t\t\t{\n  221: \t\t\t\tLog(\"utf32-translated stream in win32 platform layer reached maximum size.\");\n  222  \t\t\t}\n  223  \t\t} break;\n  ...\n  336  \tif(file == INVALID_HANDLE_VALUE)\n  337  \t{\n  338: \t\tLog(\"Failed to open file to find its size: %s\", filename);\n  339  \t\treturn false;\n  340  \t}\n  ...\n  342  \tDWORD filesize_high;\n  343  \tDWORD filesize_low = GetFileSize(file, &filesize_high);\n  344: \tif(filesize_high != 0) Log(\"FileSizeHigh != 0 (%u)\", filesize_high);\n  345  \tCloseHandle(file);\n  346  \n  ...\n  359  \n  360  \tif(file == INVALID_HANDLE_VALUE) {\n  361: \t\t//Log(\"Failed to open text file for writing line: %s\", filename);\n  362  \t\treturn;\n  363  \t}\n  ...\n  389  \tif(file == INVALID_HANDLE_VALUE)\n  390  \t{\n  391: \t\tLog(\"Failed to open file for reading: %s\", filename);\n  392  \t\treturn false;\n  393  \t}\n  ...\n  416  \tif(file == INVALID_HANDLE_VALUE)\n  417  \t{\n  418: \t\tLog(\"Failed to open file for reading: %s\", filename);\n  419  \t\treturn false;\n  420  \t}\n  ...\n  425  \tif(number_of_bytes_read > buffer_length-1)\n  426  \t{\n  427: \t\t//Log(\"win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data\");\n  428  \t\tbuffer[buffer_length-1] = '\\0';\n  429  \t\tCloseHandle(file);\n  ...\n  519  \tpfd.cDepthBits = 24;\n  520  \tint pfd_index = ChoosePixelFormat(wc.hdc, &pfd);\n  521: \tif(pfd_index == 0) Log(\"ChoosePixelFormat() failed.\");\n  522  \tSetPixelFormat(wc.hdc, pfd_index, &pfd);\n  523  \twc.rc = wglCreateContext(wc.hdc);\n  ...\n  713      // ----------------------------------------------------------------------------\n  714  \n  715: \tInitLog(&game->log_state);\n  716  \n  717  \tCreateWindowAndOpenGlContext(hInstance, nCmdShow);\n  ...\n  724  \tif(game_module == NULL)\n  725  \t{\n  726: \t\tLog(\"Failed to load library game.dll\");\n  727  \t}\n  728  \telse\n\n107 matches across 30 files\n\n\nSearching 131 files for \"InitLog\"\n\nC:\\color-c\\src\\log.cpp:\n   40  \n   41  void\n   42: InitLog(LogState *log_state) {\n   43  \tplatform->WriteLineToFile(\"logs/log.txt\", \"-------------------\");\n   44  \t//log_state->queue = (WorkQueue *)AllocPerma(sizeof(WorkQueue));\n\nC:\\color-c\\src\\win32_platform.cpp:\n  713      // ----------------------------------------------------------------------------\n  714  \n  715: \tInitLog(&game->log_state);\n  716  \n  717  \tCreateWindowAndOpenGlContext(hInstance, nCmdShow);\n\n2 matches across 2 files\n",
-			"settings":
-			{
-				"buffer_size": 40305,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "logs/critical.log",
-			"settings":
-			{
-				"buffer_size": 1256373,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "src/battle.cpp",
 			"settings":
 			{
-				"buffer_size": 47891,
+				"buffer_size": 50374,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/log.cpp",
+			"file": "src/draw.cpp",
 			"settings":
 			{
-				"buffer_size": 5398,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/game.cpp",
-			"settings":
-			{
-				"buffer_size": 13231,
+				"buffer_size": 7913,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/win32_platform.cpp",
+			"file": "src/const.h",
 			"settings":
 			{
-				"buffer_size": 23576,
+				"buffer_size": 15020,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "logs/log.txt",
+			"file": "src/imgui.h",
 			"settings":
 			{
-				"buffer_size": 6476004,
-				"encoding": "Western (Windows 1252)",
-				"line_ending": "Unix"
+				"buffer_size": 1864,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/vec.cpp",
+			"settings":
+			{
+				"buffer_size": 7851,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -732,48 +704,72 @@
 	],
 	"file_history":
 	[
-		"/C/color-c/src/enemy_ai.h",
-		"/C/color-c/src/enemy_ai.cpp",
 		"/C/color-c/src/test_mode.cpp",
+		"/C/color-c/src/ai_explorer.cpp",
+		"/C/color-c/src/const.h",
 		"/C/color-c/src/game.cpp",
-		"/C/color-c/src/array.h",
-		"/C/color-c/src/platform.h",
-		"/C/color-c/src/game_code_include.cpp",
+		"/C/color-c/src/geometry.cpp",
+		"/C/color-c/src/draw.h",
 		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/geometry.h",
+		"/C/color-c/src/platform_include.cpp",
+		"/C/color-c/src/game_code_include.cpp",
+		"/C/color-c/src/vec.cpp",
+		"/C/color-c/build/b.bat",
+		"/C/color-c/src/test_mode.h",
+		"/C/color-c/src/array.cpp",
+		"/C/color-c/src/array.h",
+		"/C/color-c/src/color_vertex.glsl",
+		"/C/color-c/src/draw.cpp",
+		"/C/color-c/src/string.h",
+		"/C/color-c/src/math.cpp",
+		"/C/color-c/src/string.cpp",
+		"/C/color-c/src/main_menu.cpp",
+		"/C/color-c/src/ai_explorer.h",
+		"/C/color-c/src/game.h",
+		"/C/color-c/src/battle.cpp",
+		"/C/color-c/src/enemy_ai.cpp",
+		"/C/color-c/_/todo.txt",
+		"/C/color-c/src/game_state.h",
+		"/C/color-c/src/enemy_ai.h",
+		"/C/color-c/data/breed.dat",
+		"/C/color-c/data/ability.dat",
+		"/C/color-c/src/ability.cpp",
+		"/C/color-c/src/main_menu.h",
+		"/C/color-c/src/traitset.cpp",
+		"/C/color-c/src/ability.h",
+		"/C/color-c/src/traitset.h",
+		"/C/color-c/logs/DebugTimings.txt",
+		"/C/color-c/src/unit.h",
+		"/C/color-c/src/effect.cpp",
+		"/C/color-c/src/effect.h",
+		"/C/color-c/src/target_class.h",
+		"/C/color-c/src/target_class.cpp",
+		"/C/color-c/src/table.cpp",
+		"/C/color-c/src/unit.cpp",
+		"/C/color-c/src/macros.h",
+		"/C/color-c/src/random.cpp",
+		"/C/color-c/src/table.h",
+		"/C/color-c/logs/critical.log",
+		"/C/color-c/src/win32_platform.cpp",
+		"/C/color-c/src/platform.h",
+		"/C/color-c/src/battle.h",
+		"/C/color-c/src/scratch.cpp",
+		"/C/color-c/src/permutation.cpp",
+		"/C/color-c/src/log.cpp",
 		"/C/color-c/src/memory.cpp",
 		"/C/color-c/src/win32_work_queue.cpp",
 		"/C/color-c/src/win32_work_queue.h",
 		"/C/color-c/src/work_entry.h",
-		"/C/color-c/src/battle.cpp",
-		"/C/color-c/src/win32_platform.cpp",
-		"/C/color-c/src/array.cpp",
 		"/C/color-c/src/permutation.h",
-		"/C/color-c/src/string.cpp",
-		"/C/color-c/src/macros.h",
-		"/C/color-c/src/string.h",
-		"/C/color-c/src/math.cpp",
-		"/C/color-c/src/unit.h",
-		"/C/color-c/src/battle.h",
 		"/C/color-c/src/fixed_array.h",
-		"/C/color-c/src/unit.cpp",
 		"/C/color-c/src/meta.cpp",
-		"/C/color-c/src/ability.cpp",
-		"/C/color-c/src/table.cpp",
-		"/C/color-c/src/table.h",
-		"/C/color-c/src/ability.h",
-		"/C/color-c/src/traitset.h",
-		"/C/color-c/src/target_class.h",
-		"/C/color-c/data/ability.dat",
-		"/C/color-c/data/breed.dat",
-		"/C/color-c/_/todo.txt",
 		"/C/color-c/src/memory.h",
 		"/C/color-c/src/room.h",
 		"/C/color-c/src/map.cpp",
-		"/C/color-c/src/draw.cpp",
 		"/C/color-c/src/uv_vertex.glsl",
 		"/C/color-c/src/text_render.h",
 		"/C/color-c/src/font_loading.cpp",
-		"/C/color-c/build/b.bat",
 		"/C/color-c/build/game.i",
 		"/C/color-c/src/input.h",
 		"/C/color-c/src/campaign.cpp",
@@ -781,18 +777,12 @@
 		"/C/color-c/src/text_render.cpp",
 		"/C/color-c/src/campaign.h",
 		"/C/color-c/src/imgui.h",
-		"/C/color-c/src/color_vertex.glsl",
-		"/C/color-c/src/const.h",
 		"/C/color-c/src/map.h",
 		"/C/color-c/src/room.cpp",
-		"/C/color-c/src/draw.h",
 		"/C/color-c/src/node_graph.cpp",
-		"/C/color-c/src/game.h",
 		"/C/color-c/src/util.cpp",
 		"/C/color-c/src/math.h",
-		"/C/color-c/src/main_menu.cpp",
 		"/C/color-c/src/timer.cpp",
-		"/C/color-c/src/vec.cpp",
 		"/C/color-c/src/camera.cpp",
 		"/C/color-c/src/oscillating_timer.cpp",
 		"/C/color-c/src/oscillating_timer.h",
@@ -804,20 +794,16 @@
 		"/C/color-c/build/freetype-2.9.1/docs/reference/ft2-header_file_macros.html",
 		"/C/color-c/src/vec.h",
 		"/C/color-c/src/win32_platform.h",
-		"/C/color-c/src/log.cpp",
 		"/C/color-c/src/opengl.cpp",
 		"/C/color-c/src/timer.h",
-		"/C/color-c/logs/critical.log",
 		"/C/color-c/src/align.cpp",
 		"/C/color-c/.gitignore",
 		"/C/color-c/src/ring_buffer.h",
 		"/C/color-c/src/generate_node_graph_params.h",
-		"/C/color-c/src/platform_include.cpp",
 		"/C/color-c/src/editor.h",
 		"/C/color-c/src/text_parsing.cpp",
 		"/C/color-c/src/log.h",
 		"/C/color-c/src/better_text_parsing.cpp",
-		"/C/color-c/src/effect.h",
 		"/C/color-c/src/text_parsing.h",
 		"/C/color-c/src/buffer.h",
 		"/C/color-c/src/buffer.cpp",
@@ -828,7 +814,6 @@
 		"/C/color-c/src/util.h",
 		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
 		"/C/color-c/logs/log2.txt",
-		"/C/color-c/logs/DebugTimings.txt",
 		"/D/work/programming/color-c/src/log.cpp",
 		"/D/work/programming/color-c/logs/log.txt",
 		"/D/work/programming/color-c/TEST.txt",
@@ -846,24 +831,11 @@
 		"/D/work/programming/color-c/build/b.bat",
 		"/D/work/programming/color-c/src/array.cpp",
 		"/D/work/programming/color-c/src/node_graph.cpp",
-		"/D/work/programming/color-c/src/game.cpp",
-		"/D/work/programming/color-c/src/meta.cpp",
-		"/D/work/programming/color-c/src/random.h",
-		"/D/work/programming/color-c/src/random.cpp",
-		"/D/work/programming/color-c/src/win32_platform.cpp",
-		"/D/work/programming/color-c/src/memory.cpp",
-		"/D/work/programming/color-c/src/generate_node_graph_params.h",
-		"/D/work/programming/color-c/src/campaign.h",
-		"/D/work/programming/color-c/src/node_graph.h",
-		"/D/work/programming/color-c/src/array.h",
-		"/D/work/programming/color-c/src/scratch.cpp",
-		"/D/work/programming/color-c/src/game_code_include.cpp",
-		"/D/work/programming/color-c/src/freetype_wrapper.cpp",
-		"/D/work/programming/color-c/src/freetype_wrapper.h"
+		"/D/work/programming/color-c/src/game.cpp"
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
@@ -892,6 +864,80 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"align_topleft",
+			"align_left",
+			"hover_ui_draw_depth",
+			"caster",
+			"end_turn_button_rect",
+			"DoAi",
+			"DrawDirectedLine2",
+			"DrawLine",
+			"state =",
+			"viud",
+			"UnitAbilityPotential",
+			"armor",
+			"thought",
+			"DrawAbilityInfo",
+			"CalculateAbilityPotentialWithCurrentTraits",
+			"vigor",
+			"BattleScore",
+			"2(",
+			"best_score",
+			"Score",
+			"AbilityInfo",
+			"total_option_count",
+			"ScoreBattleState2",
+			"DoAi",
+			"ability.",
+			"Score",
+			"struct TraitSet",
+			"TraitSet",
+			"tiers +=",
+			"vigor",
+			".vigor",
+			"current",
+			"vigor",
+			"DoAi",
+			"cur_tier.",
+			"ValidAbility",
+			"break;",
+			"CreatePermanentArray",
+			"DetermineAbilityTier",
+			"Assert(",
+			"ScoreBattleState",
+			"c::",
+			"Log(\"",
+			"tick",
+			"best_permutation_index",
+			"DoAi",
+			"initial_trait",
+			"ScoreBattleState",
+			"traitset_changes",
+			"ScoreBattleState",
+			"current_traitsets",
+			"ScoreBattleState",
+			"DoAiStuff",
+			"player_turn = true",
+			"ally_traitsets",
+			"Score",
+			"target_count",
+			"actions",
+			"current_traitsets",
+			"cur_traitsets",
+			"cur_",
+			"CalculateAdjustedDamage",
+			"apply",
+			"CalculateAdjustedDamage",
+			"max",
+			"= 8",
+			"8",
+			"max",
+			"units",
+			"Copy",
+			"CombineUnitSet",
+			"armor",
+			"Apply",
+			"armor",
 			"InitLog",
 			"Log(",
 			"Log",
@@ -945,81 +991,7 @@
 			".x",
 			"next_entry_to_read",
 			"MoveCameraToWorldRect",
-			"game->current_state",
-			"game->current_",
-			"Started",
-			"started",
-			"start",
-			"padded_rect",
-			"frame",
-			"SetCamera",
-			"DrawText",
-			"far",
-			"near",
-			"far",
-			"SetDrawDepth",
-			"SetCameraPos",
-			"DrawButton",
-			"(*queue)",
-			"restart_count",
-			"invalid_state",
-			"sim_state",
-			"GenerateNodeGraph_Params",
-			"AllocateMemory",
-			"StartJob",
-			"DrawText",
-			"NextToken",
-			"Log(",
-			"GetAbilityFromId",
-			"FreeBuffer",
-			"TempFormatString",
-			"\"\n",
-			"TempFormatString",
-			"Round",
-			"color-c",
-			"\\",
-			"WriteLineTo",
-			"test_int",
-			"RingBuffer",
-			"1024",
-			");\n",
-			"ClearArena",
-			"WorkQueue",
-			"WriteLineToFile",
-			"log(",
-			"Introspect",
-			"CreateWorkQu",
-			"const",
-			"DrawText",
-			"u32",
-			"seed",
-			"seed: ",
-			"AllocArena",
-			"GraphIsFullyConnected",
-			"campaign->map.",
-			"game",
-			"indices[1]",
-			"indices[0]",
-			"campaign",
-			"indices[1]",
-			"indices[0]",
-			"CreateTempArray",
-			"Node",
-			"campaign",
-			"param",
-			"#include \"node_graph.h\"",
-			".indices[1]",
-			".indices[0]",
-			"campaign",
-			"SetCa",
-			"SetCamer",
-			"Camera",
-			"SetCamera",
-			"camera_offset",
-			"DrawText",
-			"red",
-			"Connected",
-			", edge_percent"
+			"game->current_state"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1027,6 +999,20 @@
 		"regex": false,
 		"replace_history":
 		[
+			"unit",
+			"focus",
+			"armor",
+			"ability->",
+			"armor",
+			"focus",
+			".focus",
+			"end",
+			"start",
+			"focus",
+			"armor",
+			"focus",
+			"",
+			"ai::",
 			"p",
 			"battle->intents",
 			"graph.",
@@ -1140,21 +1126,7 @@
 			"",
 			"else if(tc == TargetClass::",
 			"imgui::button_padding",
-			"imgui::active_container->",
-			"AbilityIsSelected",
-			"IsSelectedAbility(nullptr)",
-			"SelectedAbility",
-			"target->",
-			"source->",
-			"DrawText",
-			"pos",
-			"Sprite",
-			".texture",
-			"sprite",
-			"input::global_input->",
-			"BgraPixel",
-			"header.",
-			"ihdr"
+			"imgui::active_container->"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1165,1088 +1137,67 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/permutation.cpp",
+					"file": "src/battle.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7133,
+						"buffer_size": 50374,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								508,
-								508
+								45277,
+								45277
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 40305,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										151,
-										155
-									],
-									[
-										378,
-										382
-									],
-									[
-										609,
-										613
-									],
-									[
-										786,
-										790
-									],
-									[
-										1020,
-										1024
-									],
-									[
-										1283,
-										1287
-									],
-									[
-										1487,
-										1491
-									],
-									[
-										1706,
-										1710
-									],
-									[
-										1868,
-										1872
-									],
-									[
-										2174,
-										2178
-									],
-									[
-										2395,
-										2399
-									],
-									[
-										2465,
-										2469
-									],
-									[
-										2535,
-										2539
-									],
-									[
-										2605,
-										2609
-									],
-									[
-										2675,
-										2679
-									],
-									[
-										2745,
-										2749
-									],
-									[
-										2815,
-										2819
-									],
-									[
-										2885,
-										2889
-									],
-									[
-										3135,
-										3139
-									],
-									[
-										3346,
-										3350
-									],
-									[
-										3580,
-										3584
-									],
-									[
-										3744,
-										3748
-									],
-									[
-										3899,
-										3903
-									],
-									[
-										4060,
-										4064
-									],
-									[
-										4260,
-										4264
-									],
-									[
-										4423,
-										4427
-									],
-									[
-										4569,
-										4573
-									],
-									[
-										4767,
-										4771
-									],
-									[
-										4938,
-										4942
-									],
-									[
-										5363,
-										5367
-									],
-									[
-										5551,
-										5555
-									],
-									[
-										5751,
-										5755
-									],
-									[
-										5962,
-										5966
-									],
-									[
-										6208,
-										6212
-									],
-									[
-										6425,
-										6429
-									],
-									[
-										6566,
-										6570
-									],
-									[
-										6698,
-										6702
-									],
-									[
-										6907,
-										6911
-									],
-									[
-										7149,
-										7153
-									],
-									[
-										7187,
-										7191
-									],
-									[
-										7513,
-										7517
-									],
-									[
-										7548,
-										7552
-									],
-									[
-										7868,
-										7872
-									],
-									[
-										7903,
-										7907
-									],
-									[
-										8060,
-										8064
-									],
-									[
-										8113,
-										8117
-									],
-									[
-										8136,
-										8140
-									],
-									[
-										8270,
-										8274
-									],
-									[
-										8401,
-										8405
-									],
-									[
-										8565,
-										8569
-									],
-									[
-										8888,
-										8892
-									],
-									[
-										9095,
-										9099
-									],
-									[
-										9511,
-										9515
-									],
-									[
-										9722,
-										9726
-									],
-									[
-										9878,
-										9882
-									],
-									[
-										10000,
-										10004
-									],
-									[
-										10182,
-										10186
-									],
-									[
-										10414,
-										10418
-									],
-									[
-										10770,
-										10774
-									],
-									[
-										10925,
-										10929
-									],
-									[
-										11108,
-										11112
-									],
-									[
-										11392,
-										11396
-									],
-									[
-										11467,
-										11471
-									],
-									[
-										11644,
-										11648
-									],
-									[
-										11822,
-										11826
-									],
-									[
-										11894,
-										11898
-									],
-									[
-										12000,
-										12004
-									],
-									[
-										12136,
-										12140
-									],
-									[
-										12262,
-										12266
-									],
-									[
-										12453,
-										12457
-									],
-									[
-										12702,
-										12706
-									],
-									[
-										13022,
-										13026
-									],
-									[
-										13259,
-										13263
-									],
-									[
-										13418,
-										13422
-									],
-									[
-										13644,
-										13648
-									],
-									[
-										13903,
-										13907
-									],
-									[
-										14011,
-										14015
-									],
-									[
-										14115,
-										14119
-									],
-									[
-										14274,
-										14278
-									],
-									[
-										14514,
-										14518
-									],
-									[
-										14678,
-										14682
-									],
-									[
-										14955,
-										14959
-									],
-									[
-										15189,
-										15193
-									],
-									[
-										15311,
-										15315
-									],
-									[
-										15491,
-										15495
-									],
-									[
-										15777,
-										15781
-									],
-									[
-										15998,
-										16002
-									],
-									[
-										16202,
-										16206
-									],
-									[
-										16351,
-										16355
-									],
-									[
-										16474,
-										16478
-									],
-									[
-										16626,
-										16630
-									],
-									[
-										16887,
-										16891
-									],
-									[
-										17127,
-										17131
-									],
-									[
-										17358,
-										17362
-									],
-									[
-										17671,
-										17675
-									],
-									[
-										17806,
-										17810
-									],
-									[
-										17930,
-										17934
-									],
-									[
-										18083,
-										18087
-									],
-									[
-										18257,
-										18261
-									],
-									[
-										18479,
-										18483
-									],
-									[
-										18628,
-										18632
-									],
-									[
-										18785,
-										18789
-									],
-									[
-										18938,
-										18942
-									],
-									[
-										19103,
-										19107
-									],
-									[
-										19404,
-										19408
-									],
-									[
-										19648,
-										19652
-									],
-									[
-										19795,
-										19799
-									],
-									[
-										20040,
-										20044
-									],
-									[
-										20267,
-										20271
-									],
-									[
-										20498,
-										20502
-									],
-									[
-										20675,
-										20679
-									],
-									[
-										20909,
-										20913
-									],
-									[
-										21172,
-										21176
-									],
-									[
-										21376,
-										21380
-									],
-									[
-										21595,
-										21599
-									],
-									[
-										21757,
-										21761
-									],
-									[
-										22063,
-										22067
-									],
-									[
-										22284,
-										22288
-									],
-									[
-										22354,
-										22358
-									],
-									[
-										22424,
-										22428
-									],
-									[
-										22494,
-										22498
-									],
-									[
-										22564,
-										22568
-									],
-									[
-										22634,
-										22638
-									],
-									[
-										22704,
-										22708
-									],
-									[
-										22774,
-										22778
-									],
-									[
-										23024,
-										23028
-									],
-									[
-										23235,
-										23239
-									],
-									[
-										23469,
-										23473
-									],
-									[
-										23633,
-										23637
-									],
-									[
-										23788,
-										23792
-									],
-									[
-										23949,
-										23953
-									],
-									[
-										24149,
-										24153
-									],
-									[
-										24312,
-										24316
-									],
-									[
-										24458,
-										24462
-									],
-									[
-										24656,
-										24660
-									],
-									[
-										24827,
-										24831
-									],
-									[
-										25252,
-										25256
-									],
-									[
-										25440,
-										25444
-									],
-									[
-										25640,
-										25644
-									],
-									[
-										25851,
-										25855
-									],
-									[
-										26097,
-										26101
-									],
-									[
-										26314,
-										26318
-									],
-									[
-										26455,
-										26459
-									],
-									[
-										26587,
-										26591
-									],
-									[
-										26796,
-										26800
-									],
-									[
-										27038,
-										27042
-									],
-									[
-										27076,
-										27080
-									],
-									[
-										27402,
-										27406
-									],
-									[
-										27437,
-										27441
-									],
-									[
-										27757,
-										27761
-									],
-									[
-										27792,
-										27796
-									],
-									[
-										27949,
-										27953
-									],
-									[
-										28002,
-										28006
-									],
-									[
-										28025,
-										28029
-									],
-									[
-										28159,
-										28163
-									],
-									[
-										28290,
-										28294
-									],
-									[
-										28454,
-										28458
-									],
-									[
-										28777,
-										28781
-									],
-									[
-										28984,
-										28988
-									],
-									[
-										29400,
-										29404
-									],
-									[
-										29611,
-										29615
-									],
-									[
-										29767,
-										29771
-									],
-									[
-										29889,
-										29893
-									],
-									[
-										30071,
-										30075
-									],
-									[
-										30303,
-										30307
-									],
-									[
-										30659,
-										30663
-									],
-									[
-										30814,
-										30818
-									],
-									[
-										30997,
-										31001
-									],
-									[
-										31281,
-										31285
-									],
-									[
-										31356,
-										31360
-									],
-									[
-										31533,
-										31537
-									],
-									[
-										31711,
-										31715
-									],
-									[
-										31783,
-										31787
-									],
-									[
-										31889,
-										31893
-									],
-									[
-										32025,
-										32029
-									],
-									[
-										32151,
-										32155
-									],
-									[
-										32342,
-										32346
-									],
-									[
-										32591,
-										32595
-									],
-									[
-										32911,
-										32915
-									],
-									[
-										33148,
-										33152
-									],
-									[
-										33307,
-										33311
-									],
-									[
-										33533,
-										33537
-									],
-									[
-										33792,
-										33796
-									],
-									[
-										33900,
-										33904
-									],
-									[
-										34004,
-										34008
-									],
-									[
-										34163,
-										34167
-									],
-									[
-										34403,
-										34407
-									],
-									[
-										34567,
-										34571
-									],
-									[
-										34844,
-										34848
-									],
-									[
-										35078,
-										35082
-									],
-									[
-										35200,
-										35204
-									],
-									[
-										35380,
-										35384
-									],
-									[
-										35666,
-										35670
-									],
-									[
-										35887,
-										35891
-									],
-									[
-										36091,
-										36095
-									],
-									[
-										36240,
-										36244
-									],
-									[
-										36363,
-										36367
-									],
-									[
-										36515,
-										36519
-									],
-									[
-										36776,
-										36780
-									],
-									[
-										37016,
-										37020
-									],
-									[
-										37247,
-										37251
-									],
-									[
-										37560,
-										37564
-									],
-									[
-										37695,
-										37699
-									],
-									[
-										37819,
-										37823
-									],
-									[
-										37972,
-										37976
-									],
-									[
-										38146,
-										38150
-									],
-									[
-										38368,
-										38372
-									],
-									[
-										38517,
-										38521
-									],
-									[
-										38674,
-										38678
-									],
-									[
-										38827,
-										38831
-									],
-									[
-										38992,
-										38996
-									],
-									[
-										39293,
-										39297
-									],
-									[
-										39537,
-										39541
-									],
-									[
-										39684,
-										39688
-									],
-									[
-										39864,
-										39871
-									],
-									[
-										40185,
-										40192
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								39778,
-								39778
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 3,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 15847.0,
+						"translation.y": 8742.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "logs/critical.log",
+					"buffer": 1,
+					"file": "src/draw.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1256373,
+						"buffer_size": 7913,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1256373,
-								1256373
+								7687,
+								7687
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 312116.0,
+						"translation.y": 3037.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/battle.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 47891,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								20868,
-								20868
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 7008.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/log.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5398,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								474,
-								474
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 468.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/game.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13231,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								723,
-								723
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "src/win32_platform.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 23576,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7953,
-								7953
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 4362.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
 					"type": "text"
 				}
 			]
@@ -2256,59 +1207,91 @@
 			"sheets":
 			[
 				{
-					"buffer": 7,
-					"file": "logs/log.txt",
+					"buffer": 2,
+					"file": "src/const.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6476004,
+						"buffer_size": 15020,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6476004,
-								6476004
+								13121,
+								13121
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3547600.0,
+						"translation.y": 5649.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "logs/critical.log",
+					"buffer": 3,
+					"file": "src/imgui.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1256373,
+						"buffer_size": 1864,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1256373,
-								1256373
+								291,
+								291
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 312017.0,
+						"translation.y": 42.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/vec.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7851,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7851,
+								7851
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5186.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -2316,7 +1299,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -2342,7 +1325,7 @@
 		"cols":
 		[
 			0.0,
-			0.515625,
+			0.539375,
 			1.0
 		],
 		"rows":
@@ -2364,7 +1347,7 @@
 	"project": "color-c.sublime-project",
 	"replace":
 	{
-		"height": 70.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -2374,24 +1357,264 @@
 		"selected_items":
 		[
 			[
+				"vec",
+				"src\\vec.cpp"
+			],
+			[
+				"onst",
+				"src\\const.h"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"batt",
+				"src\\battle.cpp"
+			],
+			[
 				"game",
 				"src\\game.cpp"
+			],
+			[
+				"log",
+				"logs\\log.txt"
+			],
+			[
+				"drawh",
+				"src\\draw.h"
+			],
+			[
+				"plaf",
+				"src\\platform_include.cpp"
+			],
+			[
+				"inc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"str",
+				"src\\string.cpp"
+			],
+			[
+				"geomr",
+				"src\\geometry.cpp"
+			],
+			[
+				"ai",
+				"src\\ai_explorer.cpp"
+			],
+			[
+				"math",
+				"src\\math.cpp"
+			],
+			[
+				"bb",
+				"build\\b.bat"
+			],
+			[
+				"color",
+				"src\\color_vertex.glsl"
+			],
+			[
+				"arrayc",
+				"src\\array.cpp"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"test",
+				"src\\test_mode.cpp"
+			],
+			[
+				"main",
+				"src\\main_menu.cpp"
+			],
+			[
+				"bat",
+				"src\\battle.cpp"
+			],
+			[
+				"aiex",
+				"src\\ai_explorer.h"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"game state",
+				"src\\game_state.h"
+			],
+			[
+				"tod",
+				"_\\todo.txt"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"breed",
+				"data\\breed.dat"
+			],
+			[
+				"abilitd",
+				"data\\ability.dat"
+			],
+			[
+				"abilty",
+				"data\\ability.dat"
+			],
+			[
+				"enemyai",
+				"src\\enemy_ai.h"
+			],
+			[
+				"abilitydat",
+				"data\\ability.dat"
+			],
+			[
+				"abilt",
+				"src\\ability.h"
+			],
+			[
+				"abilityd",
+				"data\\ability.dat"
+			],
+			[
+				"abilityh",
+				"src\\ability.h"
+			],
+			[
+				"b",
+				"build\\b.bat"
+			],
+			[
+				"Traitset",
+				"src\\traitset.h"
+			],
+			[
+				"unit",
+				"src\\unit.h"
+			],
+			[
+				"todo",
+				"_\\todo.txt"
+			],
+			[
+				"timin",
+				"logs\\DebugTimings.txt"
+			],
+			[
+				"effect",
+				"src\\effect.h"
+			],
+			[
+				"abili",
+				"src\\ability.cpp"
+			],
+			[
+				"ab h",
+				"src\\ability.h"
+			],
+			[
+				"abi",
+				"data\\ability.dat"
+			],
+			[
+				"bre",
+				"data\\breed.dat"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"bree",
+				"data\\breed.dat"
+			],
+			[
+				"macr",
+				"src\\macros.h"
+			],
+			[
+				"tragetclas",
+				"src\\target_class.h"
+			],
+			[
+				"ability",
+				"src\\ability.h"
+			],
+			[
+				"unith",
+				"src\\unit.h"
+			],
+			[
+				"abil",
+				"data\\ability.dat"
+			],
+			[
+				"abiltd",
+				"data\\ability.dat"
 			],
 			[
 				"crit",
 				"logs\\critical.log"
 			],
 			[
-				"win",
+				"table",
+				"src\\table.cpp"
+			],
+			[
+				"cri",
+				"logs\\critical.log"
+			],
+			[
+				"win32",
 				"src\\win32_platform.cpp"
 			],
 			[
-				"log",
-				"src\\log.cpp"
+				"",
+				"src\\win32_platform.cpp"
 			],
 			[
-				"bat",
-				"src\\battle.cpp"
+				"platfo",
+				"src\\platform.h"
+			],
+			[
+				"timing",
+				"logs\\DebugTimings.txt"
+			],
+			[
+				"ab",
+				"data\\ability.dat"
+			],
+			[
+				"ablih",
+				"src\\ability.h"
+			],
+			[
+				"scrat",
+				"src\\scratch.cpp"
+			],
+			[
+				"abiltyd",
+				"data\\ability.dat"
+			],
+			[
+				"array",
+				"src\\array.cpp"
+			],
+			[
+				"target",
+				"src\\target_class.h"
+			],
+			[
+				"win",
+				"src\\win32_platform.cpp"
 			],
 			[
 				"work",
@@ -2402,28 +1625,8 @@
 				"src\\string.h"
 			],
 			[
-				"macr",
-				"src\\macros.h"
-			],
-			[
-				"str",
-				"src\\string.cpp"
-			],
-			[
 				"mem",
 				"src\\memory.cpp"
-			],
-			[
-				"array",
-				"src\\array.h"
-			],
-			[
-				"gamec",
-				"src\\game.cpp"
-			],
-			[
-				"test",
-				"src\\test_mode.cpp"
 			],
 			[
 				"include",
@@ -2438,35 +1641,11 @@
 				"src\\meta.cpp"
 			],
 			[
-				"math",
-				"src\\math.cpp"
-			],
-			[
 				"battl",
 				"src\\battle.h"
 			],
 			[
-				"ability",
-				"src\\ability.h"
-			],
-			[
-				"batt",
-				"src\\battle.cpp"
-			],
-			[
 				"abiltiyd",
-				"data\\ability.dat"
-			],
-			[
-				"inc",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"unit",
-				"src\\unit.h"
-			],
-			[
-				"abilityd",
 				"data\\ability.dat"
 			],
 			[
@@ -2478,32 +1657,12 @@
 				"src\\memory.h"
 			],
 			[
-				"breed",
-				"data\\breed.dat"
-			],
-			[
 				"battelh",
 				"src\\battle.h"
 			],
 			[
-				"unith",
-				"src\\unit.h"
-			],
-			[
-				"todo",
-				"_\\todo.txt"
-			],
-			[
 				"unitc",
 				"src\\unit.cpp"
-			],
-			[
-				"abilt",
-				"data\\ability.dat"
-			],
-			[
-				"abi",
-				"src\\ability.h"
 			],
 			[
 				"breedd",
@@ -2520,18 +1679,6 @@
 			[
 				"gamei",
 				"build\\game.i"
-			],
-			[
-				"bb",
-				"build\\b.bat"
-			],
-			[
-				"ab",
-				"src\\ability.cpp"
-			],
-			[
-				"win32",
-				"src\\win32_platform.cpp"
 			],
 			[
 				"node",
@@ -2558,10 +1705,6 @@
 				"src\\map.cpp"
 			],
 			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
 				"textren",
 				"src\\text_render.h"
 			],
@@ -2574,24 +1717,8 @@
 				"src\\uv_vertex.glsl"
 			],
 			[
-				"color",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"onst",
-				"src\\const.h"
-			],
-			[
 				"cons",
 				"src\\const.h"
-			],
-			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"tod",
-				"_\\todo.txt"
 			],
 			[
 				"util",
@@ -2610,20 +1737,12 @@
 				"src\\oscillating_timer.h"
 			],
 			[
-				"vec",
-				"src\\vec.cpp"
-			],
-			[
 				"camera",
 				"src\\camera.h"
 			],
 			[
 				"input",
 				"src\\input.cpp"
-			],
-			[
-				"gameh",
-				"src\\game.h"
 			],
 			[
 				"nodegra",
@@ -2730,14 +1849,6 @@
 				"src\\target_class.h"
 			],
 			[
-				"abiltyd",
-				"data\\ability.dat"
-			],
-			[
-				"abil",
-				"src\\ability.cpp"
-			],
-			[
 				"textpar",
 				"src\\text_parsing.cpp"
 			],
@@ -2750,140 +1861,12 @@
 				"src\\bitmap.h"
 			],
 			[
-				"table",
-				"src\\table.cpp"
-			],
-			[
 				"metac",
 				"src\\meta.cpp"
 			],
 			[
 				"log2",
 				"logs\\log2.txt"
-			],
-			[
-				"criti",
-				"logs\\critical.log"
-			],
-			[
-				"ringbu",
-				"src\\ring_buffer.h"
-			],
-			[
-				"mac",
-				"src\\macros.h"
-			],
-			[
-				"work_e",
-				"src\\work_entry.h"
-			],
-			[
-				"logc",
-				"src\\log.cpp"
-			],
-			[
-				"memr",
-				"src\\memory.cpp"
-			],
-			[
-				"platfor",
-				"src\\platform.h"
-			],
-			[
-				"freetype",
-				"src\\freetype_wrapper.h"
-			],
-			[
-				"gamecin",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"win32i",
-				"build\\win32_platform.i"
-			],
-			[
-				"win32pla",
-				"build\\win32_platform.i"
-			],
-			[
-				".i",
-				"build\\game.i"
-			],
-			[
-				"geom",
-				"src\\geometry.cpp"
-			],
-			[
-				"main",
-				"src\\main_menu.cpp"
-			],
-			[
-				"gamest",
-				"src\\game_state.h"
-			],
-			[
-				"gamecode",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"arrayc",
-				"src\\array.cpp"
-			],
-			[
-				"rand",
-				"src\\random.cpp"
-			],
-			[
-				"random",
-				"src\\random.cpp"
-			],
-			[
-				"colorfra",
-				"src\\color_fragment.glsl"
-			],
-			[
-				"color_v",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"uv_fr",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"cmap",
-				"src\\campaign.h"
-			],
-			[
-				"campa",
-				"src\\campaign.cpp"
-			],
-			[
-				"inluc",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"metacp",
-				"src\\meta.cpp"
-			],
-			[
-				"metapr",
-				"src\\meta_print.h"
-			],
-			[
-				"keybn",
-				"src\\keybinds.h"
-			],
-			[
-				"debug",
-				"src\\debug.cpp"
-			],
-			[
-				"render",
-				"src\\text_render.cpp"
-			],
-			[
-				"gamse",
-				"src\\game_state.h"
 			]
 		],
 		"width": 0.0

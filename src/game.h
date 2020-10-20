@@ -37,9 +37,23 @@ struct Game
 
 	InputState input;
 
-	GLuint color_shader, uv_shader;
+	GLuint prepass_fbo;
+	GLuint prepass_texture;
+
+	// Color shader
+	GLuint color_shader;
 	GLuint color_vao, color_vbo;
+
+	// UV shader
+	GLuint uv_shader;
 	GLuint uv_vao, uv_vbo;
+
+	// Gaussian blur
+	GLuint blur_shader;
+	GLuint blur_dst_texture;
+
+	// Outline shader
+	GLuint outline_shader;
 
 	Vec2f window_size;
 

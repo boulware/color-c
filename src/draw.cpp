@@ -178,23 +178,27 @@ DrawLine(Vec2f start, Vec2f end, Color color=c::white)
 }
 
 void
-DrawDirectedLine(Vec2f start_pos, Vec2f end_pos, Vec2f start_vel, Color color, float arrow_size, String label = {}, int segments = 100)
+DrawDirectedLine2(DirectedLineLayout layout,
+                  Vec2f start_pos, Vec2f end_pos,
+                  Vec2f start_vel, Vec2f end_vel,
+                  String label)
 {
-    if(segments <= 0) return;
+    if(layout.segment_count <= 0) return;
+    ActivateColorShader(layout.color);
+    Vec2f average_vel = (end_pos - start_pos);
 
-    ActivateColorShader(color);
+    // p(t) = At^3 + Bt^2 + Ct + D,
+    // for p(t), A, B, C, D vectors
+    Vec2f A = start_vel + end_vel - 2*average_vel;
+    Vec2f B = -end_vel - 2*start_vel + 3*average_vel;
+    Vec2f C = start_vel;
+    Vec2f D = start_pos;
 
-    Vec2f end_vel = 2*(end_pos - start_pos) - start_vel;
-
-    Vec2f cur_pos = start_pos;
-    Array<Vec2f> points = CreateTempArray<Vec2f>(segments);
-    points += cur_pos;
-    for(int i=0; i<segments; ++i)
+    Array<Vec2f> points = CreateTempArray<Vec2f>(layout.segment_count);
+    for(int i=0; i<layout.segment_count; i++)
     {
-        float t = (float)i / (float(segments - 1));
-        Vec2f velocity = Lerp(start_vel, end_vel, t);
-        cur_pos += velocity / (segments);
-        points += cur_pos;
+        float t = (float)i / (float(layout.segment_count - 1));
+        points += (t*t*t)*A + (t*t)*B + (t)*C + D;
     }
 
     gl->BufferData(GL_ARRAY_BUFFER, points.count * sizeof(Vec2f), points.data, GL_DYNAMIC_DRAW);
@@ -203,23 +207,23 @@ DrawDirectedLine(Vec2f start_pos, Vec2f end_pos, Vec2f start_vel, Color color, f
     // Arrowhead
     Vec2f arrow_verts[3] = {
         end_pos,
-        end_pos - arrow_size*Normalize(Rotate(end_vel,  30.f)),
-        end_pos - arrow_size*Normalize(Rotate(end_vel, -30.f))
+        end_pos - layout.arrow_size*Normalize(Rotate(end_vel,  layout.arrow_angle)),
+        end_pos - layout.arrow_size*Normalize(Rotate(end_vel, -layout.arrow_angle))
     };
 
     ActivateColorShader(c::dk_red);
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_TRIANGLES, 0, 3);
 
-    ActivateColorShader(color);
+    ActivateColorShader(layout.color);
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_LINE_LOOP, 0, 3);
 
     Vec2f label_pos = TriangleCenter(arrow_verts[0], arrow_verts[1], arrow_verts[2]);
-    TextLayout layout = c::def_text_layout;
-    layout.align = c::align_center;
+    TextLayout label_layout = c::def_text_layout;
+    label_layout.align = c::align_center;
     //layout.font_size = 24;
-    DrawText(layout, label_pos, label);
+    DrawText(label_layout, label_pos, label);
 }
 
 // A healthbar in this context is a rectangle, which scales in size proportionally to a value
@@ -253,7 +257,9 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
         DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
         TextLayout hovered_layout = layout.label_layout;
         hovered_layout.color = layout.label_hover_color;
-        DrawText(hovered_layout, RectCenter(aligned_button_rect), label);
+        Vec2f text_size = SizeText(hovered_layout, label);
+        Vec2f text_pos = AlignSizeInRect(text_size, aligned_button_rect, layout.label_layout.align);
+        DrawText(hovered_layout, text_pos, label);
 
         response.hovered = true;
         if(Pressed(vk::LMB)) response.pressed = true;
@@ -262,7 +268,9 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
     {
         // Button is NOT being hovered
         DrawUnfilledRect(aligned_button_rect, layout.button_color);
-        DrawText(layout.label_layout, RectCenter(aligned_button_rect), label);
+        Vec2f text_size = SizeText(layout.label_layout, label);
+        Vec2f text_pos = AlignSizeInRect(text_size, aligned_button_rect, layout.label_layout.align);
+        DrawText(layout.label_layout, text_pos, label);
     }
 
     return response;

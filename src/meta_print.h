@@ -100,6 +100,8 @@ String MetaString(const TimedBlockEntry *s);
 
 String MetaString(const TimedBlock *s);
 
+String MetaString(const DirectedLineLayout *s);
+
 String MetaString(const EditorMode *s);
 
 String MetaString(const InputElementType *s);

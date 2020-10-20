@@ -11,6 +11,7 @@ struct Buffer
 };
 
 Buffer BufferFromCString(const char *string);
+Buffer BufferFromString(String string);
 void FreeBuffer(Buffer *buffer);
 size_t BufferBytesRemaining(Buffer buffer);
 

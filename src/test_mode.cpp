@@ -3,9 +3,17 @@
 GameState
 TickTestMode(TestMode *test)
 {
+    TextLayout big_text = c::def_text_layout;
+    big_text.font_size = 128.f;
+    DrawText(big_text, {}, "This is a test!");
+
     String line_label = StringFromCString("4");
 
-    DrawDirectedLine(test->a0, test->a1, 350.f*Vec2f{1.f, -1.f}, c::red, 40.f, line_label);
+    DirectedLineLayout line_layout = {.color = c::red};
+    DrawDirectedLine2(line_layout,
+                     test->a0, test->a1,
+                     300.f*Vec2f{1.f, -1.f}, 300.f*Vec2f{1.f, 1.f},
+                     line_label);
 
     DrawFilledRect(AlignRect({test->a0, {3.f,3.f}}, c::align_center), c::green);
     DrawFilledRect(AlignRect({test->a1, {3.f,3.f}}, c::align_center), c::red);
@@ -22,7 +30,7 @@ TickTestMode(TestMode *test)
     int scroll = MouseScroll();
     test->n += scroll;
 
-    DrawUiText(c::def_text_layout, {}, "n = %d", test->n);
+    //DrawUiText(c::def_text_layout, {}, "n = %d", test->n);
 
     // if(Pressed(vk::RMB))
     // {

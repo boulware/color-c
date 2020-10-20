@@ -628,6 +628,10 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
 	mBindBaseOpenGLFunction(PolygonMode);
 	mBindExtendedOpenGLFunction(MapNamedBuffer);
 	mBindExtendedOpenGLFunction(UnmapNamedBuffer);
+	mBindBaseOpenGLFunction(GetString);
+	mBindExtendedOpenGLFunction(ReadnPixels);
+	mBindExtendedOpenGLFunction(MemoryBarrier);
+	mBindExtendedOpenGLFunction(DebugMessageCallback);
 
 	mBindExtendedOpenGLFunction(ProgramUniform1i);
 	mBindExtendedOpenGLFunction(ProgramUniform1iv);
@@ -683,6 +687,16 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
 	mBindExtendedOpenGLFunction(BlendEquation);
 	mBindBaseOpenGLFunction(BlendFunc);
 
+	// Compute shader
+	mBindExtendedOpenGLFunction(DispatchCompute);
+    mBindExtendedOpenGLFunction(DispatchComputeIndirect);
+    mBindExtendedOpenGLFunction(BindImageTexture);
+
+    mBindExtendedOpenGLFunction(GetTextureImage);
+    mBindExtendedOpenGLFunction(GetIntegeri_v);
+    mBindExtendedOpenGLFunction(NamedFramebufferTexture);
+    mBindExtendedOpenGLFunction(FramebufferTexture);
+
 	#undef mBindBaseOpenGLFunction
 	#undef mBindExtendedOpenGLFunction
 
@@ -734,9 +748,9 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 
 	GameHook(platform, gl, game);
 
-	s64 start_time = win32_CurrentTime();
+	//s64 start_time = win32_CurrentTime();
 	GameInit();
-	Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
+	//Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
 
 	MSG msg;
 	glEnable(GL_DEPTH_TEST);
@@ -841,6 +855,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 			game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
 
 			SwapBuffers(wc.hdc);
+			RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);
 		}
 
 		if(game->exit_requested) QUIT_GAME = true;

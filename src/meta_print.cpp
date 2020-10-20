@@ -692,6 +692,32 @@ String MetaString(const TimedBlock *s)
 // draw.h
 // ------------------------------------------
 
+String MetaString(const DirectedLineLayout *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "DirectedLineLayout {\n");
+
+	AppendCString(&string, "  segment_count: %d (int)\n", s->segment_count);
+
+	AppendCString(&string, "  color: ");
+	AppendString(&string, MetaString(&s->color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  arrow_size: %f (float)\n", s->arrow_size);
+
+	AppendCString(&string, "  arrow_angle: %f (float)\n", s->arrow_angle);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 // ---------------FILE START---------------
 // editor.h
 // ------------------------------------------
@@ -1204,17 +1230,27 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->input));
 	AppendCString(&string, "(InputState)\n");
 
-	AppendCString(&string, "  color_shader: %u (GLuint)\n", s->color_shader);
+	AppendCString(&string, "  prepass_fbo: %u (GLuint)\n", s->prepass_fbo);
 
-	AppendCString(&string, "  uv_shader: %u (GLuint)\n", s->uv_shader);
+	AppendCString(&string, "  prepass_texture: %u (GLuint)\n", s->prepass_texture);
+
+	AppendCString(&string, "  color_shader: %u (GLuint)\n", s->color_shader);
 
 	AppendCString(&string, "  color_vao: %u (GLuint)\n", s->color_vao);
 
 	AppendCString(&string, "  color_vbo: %u (GLuint)\n", s->color_vbo);
 
+	AppendCString(&string, "  uv_shader: %u (GLuint)\n", s->uv_shader);
+
 	AppendCString(&string, "  uv_vao: %u (GLuint)\n", s->uv_vao);
 
 	AppendCString(&string, "  uv_vbo: %u (GLuint)\n", s->uv_vbo);
+
+	AppendCString(&string, "  blur_shader: %u (GLuint)\n", s->blur_shader);
+
+	AppendCString(&string, "  blur_dst_texture: %u (GLuint)\n", s->blur_dst_texture);
+
+	AppendCString(&string, "  outline_shader: %u (GLuint)\n", s->outline_shader);
 
 	AppendCString(&string, "  window_size: ");
 	AppendString(&string, MetaString(&s->window_size));

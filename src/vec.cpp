@@ -311,6 +311,12 @@ RectTopLeft(Rect rect)
 }
 
 Vec2f
+RectTopCenter(Rect rect)
+{
+    return rect.pos + Vec2f{0.5f*rect.size.x, 0.f};
+}
+
+Vec2f
 RectTopRight(Rect rect)
 {
     return rect.pos + Vec2f{rect.size.x, 0.f};

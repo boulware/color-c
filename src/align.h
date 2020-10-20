@@ -26,5 +26,6 @@ struct Align
 bool operator==(Align a, Align b);
 
 Rect AlignRect(Rect rect, Align align);
+Vec2f AlignSizeInRect(Vec2f child_size, Rect parent, Align align);
 
 #endif

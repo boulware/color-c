@@ -108,6 +108,7 @@ DrawText(TextLayout layout, Vec2f origin, String string)
 
     //StringBuffer buffer = CreateStringBuffer(string.data);
     u32 utf32_char;
+    Buffer buffer = BufferFromString(string);
     Vec2f text_size = SizeText(layout, string);
 
     origin = AlignRect({origin, text_size}, layout.align).pos;
@@ -117,7 +118,25 @@ DrawText(TextLayout layout, Vec2f origin, String string)
     {
         u32 utf32_char;
         Utf8ToUtf32(string, i, &utf32_char);
-        if(utf32_char == '\n')
+
+        if(utf32_char == '`')
+        { // beginning of color code
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Token color_name = NextToken(&buffer);
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Color color = layout.color;
+
+            if(     TokenMatchesString(color_name, "reset")) color = layout.color;
+            else if(TokenMatchesString(color_name, "red")) color = c::red;
+            else if(TokenMatchesString(color_name, "green")) color = c::green;
+            else if(TokenMatchesString(color_name, "blue")) color = c::blue;
+            else if(TokenMatchesString(color_name, "lt_blue")) color = c::lt_blue;
+            else if(TokenMatchesString(color_name, "yellow")) color = c::yellow;
+            else if(TokenMatchesString(color_name, "gold")) color = c::gold;
+
+            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+        }
+        else if(utf32_char == '\n')
         {
             break;
         }
@@ -246,16 +265,33 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
 
     ActivateUvShader(layout.color);
 
+    Buffer buffer = BufferFromString(string);
     Vec2f text_size = SizeText(layout, string);
 
     origin = AlignRect({origin, text_size}, layout.align).pos;
     Vec2f pen = origin;
 
-    for(int i=0; i<string.length; i++)
+    u32 utf32_char;
+    while(NextAsUtf32Char(&buffer, &utf32_char))
     {
-        u32 utf32_char;
-        Utf8ToUtf32(string, i, &utf32_char);
-        if(utf32_char == '\n')
+        if(utf32_char == '`')
+        { // beginning of color code
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Token color_name = NextToken(&buffer);
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Color color = layout.color;
+
+            if(     TokenMatchesString(color_name, "reset")) color = layout.color;
+            else if(TokenMatchesString(color_name, "red")) color = c::red;
+            else if(TokenMatchesString(color_name, "green")) color = c::green;
+            else if(TokenMatchesString(color_name, "blue")) color = c::blue;
+            else if(TokenMatchesString(color_name, "lt_blue")) color = c::lt_blue;
+            else if(TokenMatchesString(color_name, "yellow")) color = c::yellow;
+            else if(TokenMatchesString(color_name, "gold")) color = c::gold;
+
+            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+        }
+        else if(utf32_char == '\n')
         {
             pen.x = origin.x;
             pen.y += LineHeight(layout);
@@ -293,13 +329,20 @@ SizeText(TextLayout layout, String string, int char_count)
     }
 
     // Iterate over each char, gets its x-advance, and add it to the size.
-    for(int i=0; i<char_count; i++)
+    u32 utf32_char;
+    Buffer buffer = BufferFromString(string);
+    while(NextAsUtf32Char(&buffer, &utf32_char))
     {
-        u32 utf32_char;
-        Utf8ToUtf32(string, i, &utf32_char);
         if(utf32_char == '\n')
         {
             break;
+        }
+        else if(utf32_char == '`')
+        { // Skip color codes
+            while(NextAsUtf32Char(&buffer, &utf32_char))
+            {
+                if(utf32_char == '`') break;
+            }
         }
         else
         {

@@ -5,6 +5,15 @@
 #include "imgui.h"
 #include "camera.h"
 
+struct DirectedLineLayout
+{
+    int segment_count = 100;
+
+    Color color = c::white;
+    float arrow_size = 35.f;
+    float arrow_angle = 25.f;
+};
+
 void ActivateColorShader(Color color);
 void ActivateUvShader(Color color);
 
@@ -15,6 +24,10 @@ void DrawFilledRect(Rect rect, Color color, bool ui=false);
 void DrawFilledRect(Vec2f pos, Vec2f size, Color color, bool ui=false);
 
 void DrawLine(Vec2f start, Vec2f end, Color color);
+void DrawDirectedLine2(DirectedLineLayout layout,
+                       Vec2f start_pos, Vec2f end_pos,
+                       Vec2f start_vel, Vec2f end_vel,
+                       String label = {});
 
 ButtonResponse DrawButton(ButtonLayout layout, Rect rect, String label);
 ButtonResponse DrawButton(ButtonLayout layout, Rect rect, const char *c_string);

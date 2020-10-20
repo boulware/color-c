@@ -576,15 +576,15 @@ void fprintf(Buffer *buffer, const char *fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	//dst = TempFormatString(fmt, args);
-	int formatted_length = vsprintf(formatted_string, fmt, args);
-	if(formatted_length > max_formatted_string_length)
+	int formatted_length = vsnprintf(formatted_string, max_formatted_string_length, fmt, args);
+	if(formatted_length >= max_formatted_string_length-1)
 	{
 		// Log(__FUNCTION__ " received a string longer (after applying formatting) "
 		// 	"than c::max_formatted_string_length (%d). "
 		// 	"The string is still formatted, but clipped to max formatted string length.",
 		// 	max_formatted_string_length);
 
-		formatted_string[max_formatted_string_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
+		formatted_string[max_formatted_string_length-1] = '\0'; // vsnprintf doesn't null append if the string is too long.
 	}
 	va_end(args);
 

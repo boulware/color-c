@@ -25,7 +25,7 @@ namespace c
 	const Color red 	= {1.f,0.f,0.f,1.f};
 	const Color green 	= {0.f,1.f,0.f,1.f};
 	const Color blue 	= {0.f,0.f,1.f,1.f};
-	const Color lt_blue = {0.25f,0.25f,1.f,1.f};
+	const Color lt_blue = {0.3f,0.3f,1.f,1.f};
 	const Color black 	= {0.f,0.f,0.f,1.f};
 	const Color white 	= {1.f,1.f,1.f,1.f};
 
@@ -34,18 +34,22 @@ namespace c
 	const Color lt_grey = {0.5f,0.5f,0.5f,1.f};
 
 	const Color yellow	= {1.f,1.f,0.f,1.f};
-	const Color gold 	= {0.8f,0.8f,0.f,1.f};
 	const Color orange	= {1.f,0.4f,0.f,1.f};
 
+	const Color bronze = {128/255.f, 67/255.f, 7/255.f, 1.f};
+	const Color silver = {215/255.f, 215/255.f, 215/255.f, 1.f};
+	const Color gold   = {0.8f,0.8f,0.f,1.f};
+
 	// Alignments
-	const Align align_topleft = {AlignX::left, AlignY::top};
-	const Align align_topright = {AlignX::right, AlignY::top};
-	const Align align_center = {AlignX::center, AlignY::center};
-	const Align align_bottomleft = {AlignX::left, AlignY::bottom};
-	const Align align_topcenter = {AlignX::center, AlignY::top};
-	const Align align_leftcenter = {AlignX::left, AlignY::center};
-	const Align align_rightcenter = {AlignX::right, AlignY::center};
+	const Align align_topleft      = {AlignX::left, AlignY::top};
+	const Align align_topright     = {AlignX::right, AlignY::top};
+	const Align align_center       = {AlignX::center, AlignY::center};
+	const Align align_bottomleft   = {AlignX::left, AlignY::bottom};
+	const Align align_topcenter    = {AlignX::center, AlignY::top};
+	const Align align_leftcenter   = {AlignX::left, AlignY::center};
+	const Align align_rightcenter  = {AlignX::right, AlignY::center};
 	const Align align_bottomcenter = {AlignX::center, AlignY::bottom};
+	const Align align_bottomright  = {AlignX::right, AlignY::bottom};
 
 	const int max_formatted_string_length = 1024;
 
@@ -107,6 +111,7 @@ namespace c
 	const float hover_ui_draw_depth = 80.f;
 	const float hud_draw_depth = 100.0f;
 	const float field_draw_depth = 150.0f;
+	const float ability_card_draw_depth = 300.f;
 
 	// UI
 	const TextLayout def_text_layout = {
@@ -398,7 +403,7 @@ namespace c
 	const float trait_change_preview_h_offset = 5.f;
 
 	// End turn button
-	const Vec2f end_turn_button_offset = {20.f, 100.f};
+	const Vec2f end_turn_button_offset = {20.f, 20.f};
 	const Vec2f end_turn_button_size = {150.f, 50.f};
 	const Rect end_turn_button_rect = {end_turn_button_offset, end_turn_button_size};
 	const ButtonLayout end_button_normal_layout = {
@@ -440,6 +445,36 @@ namespace c
 		.button_hover_color = c::dk_grey,
 		.label_hover_color = c::dk_grey,
 		.align = c::align_topleft
+	};
+
+	// Ability "icons" (above head)
+	const Vec2f ability_icon_offset = {0.5f*unit_slot_size.x, -50.f};
+	const Vec2f ability_icon_size = {150.f, 40.f};
+	const ButtonLayout cannot_use_ability_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::grey,
+			.font_size = 16,
+			.align = c::align_topleft,
+			.draw_debug = false
+		},
+		.button_color = c::grey,
+		.button_hover_color = c::lt_grey,
+		.label_hover_color = c::lt_grey,
+		.align = c::align_bottomcenter
+	};
+	const ButtonLayout can_use_ability_button_layout = {
+		.label_layout = {
+			.font = &text_render::default_font,
+			.color = c::white,
+			.font_size = 16,
+			.align = c::align_topleft,
+			.draw_debug = false
+		},
+		.button_color = c::white,
+		.button_hover_color = c::yellow,
+		.label_hover_color = c::yellow,
+		.align = c::align_bottomcenter
 	};
 
 	// Enemy intents

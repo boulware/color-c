@@ -1,11 +1,23 @@
 #include "buffer.h"
 
-Buffer BufferFromCString(const char *string)
+Buffer
+BufferFromCString(const char *string)
 {
     Buffer buffer;
     buffer.data = (char*)string;
     buffer.p = buffer.data;
     buffer.byte_count = StringLength(string);
+
+    return buffer;
+}
+
+Buffer
+BufferFromString(String string)
+{
+    Buffer buffer;
+    buffer.data = string.data;
+    buffer.p = buffer.data;
+    buffer.byte_count = string.length;
 
     return buffer;
 }

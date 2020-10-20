@@ -126,15 +126,15 @@ TempFormatString(const char *fmt, va_list args)
 {
 	char *formatted_string = ScratchString(c::max_formatted_string_length);
 
-	int formatted_length = vsprintf(formatted_string, fmt, args);
-	if(formatted_length > c::max_formatted_string_length)
+	int formatted_length = vsnprintf(formatted_string, c::max_formatted_string_length, fmt, args);
+	if(formatted_length >= c::max_formatted_string_length - 1)
 	{
 		Log(__FUNCTION__ " received a string longer (after applying formatting) "
 			"than c::max_formatted_string_length (%d). "
 			"The string is still formatted, but clipped to max formatted string length.",
 			c::max_formatted_string_length);
 
-		formatted_string[c::max_formatted_string_length-1] = '\0'; // vsprintf doesn't null append if the string is too long.
+		formatted_string[c::max_formatted_string_length-1] = '\0'; // vsnprintf doesn't null append if the string is too long.
 	}
 
 	return formatted_string;

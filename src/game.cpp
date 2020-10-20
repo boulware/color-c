@@ -30,10 +30,17 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
     game = game_;
 }
 
+
+
 extern "C" void
 GameInit()
 {
-    TIMED_BLOCK;
+
+// During init, enable debug output
+    gl->Enable              ( GL_DEBUG_OUTPUT );
+    gl->DebugMessageCallback( GlDebugMessageCallback, 0 );
+
+    game->current_state = GameState::Battle;
 
     memory::per_frame_arena = AllocArena();
     memory::permanent_arena = AllocArena();
@@ -68,14 +75,33 @@ GameInit()
     gl->BindFragDataLocation(game->uv_shader, 0, "frag_color");
     gl->ProgramUniform1i(game->uv_shader, 1, 0); // sampling texture index; default 0 index
 
+    game->blur_shader = GenerateComputeShaderFromFile("src/shader/gaussian_blur.cs.glsl");
+    // game->gaussian_blur_shader = GenerateShaderProgramFromFiles(0, "src/shader/gaussian_blur.fs.glsl");
+    // gl->BindFragDataLocation(game->gaussian_blur_shader, 0, "frag_color");
+
+    game->outline_shader = GenerateComputeShaderFromFile("src/shader/outline.cs.glsl");
+    gl->ProgramUniform1i(game->outline_shader, 0, 0);
+    gl->ProgramUniform1i(game->outline_shader, 1, 1);
+
+    gl->ActiveTexture(GL_TEXTURE1);
+    gl->GenTextures(1, &game->blur_dst_texture);
+    gl->BindTexture(GL_TEXTURE_2D, game->blur_dst_texture);
+    gl->TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F,
+                   (int)game->window_size.x, (int)game->window_size.y, 0,
+                   GL_RGBA, GL_FLOAT, nullptr);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    gl->BindImageTexture(1, game->blur_dst_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+
+    gl->ProgramUniform1i(game->blur_shader, 0, 0);
+    gl->ProgramUniform1i(game->blur_shader, 1, 1);
+
     gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&game->window_size);
     gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);
 
-    //SetCameraPos(0.5f*game->window_size);
     SetCameraPos(&game->camera, {0.f,0.f});
-    // game->camera_pos = 0.5f*game->window_size; //{0.f,0.f};
-    // gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&game->camera_pos);
-    // gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&game->camera_pos);
 
     // Set up UV VAO/VBO
     gl->GenVertexArrays(1, &game->uv_vao);
@@ -100,6 +126,36 @@ GameInit()
 
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1);
     gl->Enable(GL_BLEND);
+
+
+    { // Set up prepass FBO
+        gl->GenFramebuffers(1, &game->prepass_fbo);
+        gl->BindFramebuffer(GL_FRAMEBUFFER, game->prepass_fbo);
+
+        gl->ActiveTexture(GL_TEXTURE0);
+        gl->GenTextures(1, &game->prepass_texture);
+        gl->BindTexture(GL_TEXTURE_2D, game->prepass_texture);
+        gl->TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA,
+                       (int)game->window_size.x, (int)game->window_size.y,
+                       0, GL_RGBA, GL_FLOAT, nullptr);
+        gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        gl->TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        gl->FramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                 GL_TEXTURE_2D, game->prepass_texture, 0);
+
+        GLuint prepass_depth_rbo;
+        gl->GenRenderbuffers(1, &prepass_depth_rbo);
+        gl->BindRenderbuffer(GL_RENDERBUFFER, prepass_depth_rbo);
+        gl->RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, (int)game->window_size.x, (int)game->window_size.y);
+        gl->FramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, prepass_depth_rbo);
+
+        GLenum color_attachments[] = {GL_COLOR_ATTACHMENT0};
+        gl->DrawBuffers(sizeof(color_attachments)/sizeof(GLenum), color_attachments);
+
+        GLenum fb_status = gl->CheckFramebufferStatus(GL_FRAMEBUFFER);
+        //Log("Prepass FBO status: %u (GL_FRAMEBUFFER_COMPLETE = %d)", fb_status, 0x8CD5);
+    }
+
 
 
     // Ability table
@@ -197,9 +253,27 @@ GameInit()
     //debug::timed_block_array_size = __COUNTER__;
     debug::cycles_per_second = platform->PerformanceCounterFrequency();
     game->draw_debug_text = false;
-    game->test_float = 0.f;
+    game->test_float = 1.f;
 
-    game->current_state = GameState::Test;
+    // int work_grp_cnt[3];
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+
+    // Log("max global (total) work group counts x:%i y:%i z:%i\n",
+    //     work_grp_cnt[0], work_grp_cnt[1], work_grp_cnt[2]);
+
+    // int work_grp_size[3];
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
+    // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
+
+    // Log("max local (in one shader) work group sizes x:%i y:%i z:%i\n",
+    //      work_grp_size[0], work_grp_size[1], work_grp_size[2]);
+
+    // int work_grp_inv;
+    // gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
+    // Log("max local work group invocations %i\n", work_grp_inv);
 
     // Test TraitSetLinearSpace()
     // for(int i=0; i<100; ++i)
@@ -249,9 +323,19 @@ GameInit()
 extern "C" void
 GameUpdateAndRender()
 {
+    //Log("vvvvvvvvvvvvvvvvvvvvvvvvvvv\nFRAME START\n^^^^^^^^^^^^^^^^^^^^^^^^");
+
     //TIMED_BLOCK;
     debug::timed_block_array_size = __COUNTER__;
     ClearArena(&memory::per_frame_arena);
+
+    gl->UseProgram(game->color_shader);
+    gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, game->prepass_fbo);
+    gl->ActiveTexture(GL_TEXTURE0);
+    //gl->ClearColor(0.2f, 0.4f, 0.6f, 0.8f);
+    gl->ClearColor(0.0f, 0.f, 0.f, 1.f);
+    gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //opengl->UseProgram(game->prepass_shader);
 
     //DrawText(c::def_text_layout, {}, "%d", game->
 
@@ -370,8 +454,6 @@ GameUpdateAndRender()
         DrawTimedBlockData();
     }
 
-    //DrawTextMultiline(c::def_text_layout, {}, "#: %d", game->number_of_arenas_allocated);
-
     // Log timed block data and exit game.
     #if 1
     if(game->exit_requested)
@@ -403,6 +485,62 @@ GameUpdateAndRender()
         }
     }
     #endif
+
+    gl->BindFramebuffer(GL_FRAMEBUFFER, game->prepass_fbo);
+    // gl->FramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+    //                          GL_TEXTURE_2D, game->blur_dst_texture, 0);
+    // Outline
+    gl->UseProgram(game->outline_shader);
+    gl->ActiveTexture(GL_TEXTURE0);
+        gl->BindTexture(GL_TEXTURE_2D, game->prepass_texture);
+    gl->ActiveTexture(GL_TEXTURE1);
+        gl->BindTexture(GL_TEXTURE_2D, game->blur_dst_texture);
+    // gl->DispatchCompute((GLuint)game->window_size.x, (GLuint)game->window_size.y, 1);
+//LogGlError();
+
+
+    gl->MemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+// LogGlError();
+    // size_t pixel_count = (int)game->window_size.x * (int)game->window_size.y;
+    // size_t byte_count = pixel_count * 4 * 4;
+
+    // void *pixel_data = platform->AllocateMemory(byte_count);
+    // gl->GetTextureImage(game->blur_dst_texture, 0, GL_RGBA, GL_FLOAT, byte_count, pixel_data);
+    //  LogGlError();
+
+    // for(int i=0; i<byte_count; ++i)
+    // {
+    //     u8 byte = ((u8*)pixel_data)[i];
+    //     if(byte != 0) Log("byte: %u", byte);
+    // }
+    //Log("data: %f", ((float*)pixel_data)[0]);
+    // gl->ReadnPixels(20, 20, 10, 10,
+    //                 GL_RGBA, GL_FLOAT,
+    //                 1000, blur_data);
+    //platform->FreeMemory(pixel_data);
+    // LogGlError();
+
+    // GLenum fb_status;
+    // fb_status = gl->CheckFramebufferStatus(GL_FRAMEBUFFER);
+    // Log("Prepass FBO status: %u (GL_FRAMEBUFFER_COMPLETE = %d)", fb_status, 0x8CD5);
+    gl->ActiveTexture(GL_TEXTURE1);
+    gl->BindTexture(GL_TEXTURE_2D, game->blur_dst_texture);
+    gl->BindFramebuffer(GL_READ_FRAMEBUFFER, game->prepass_fbo);
+    // gl->FramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+    //                          GL_TEXTURE_2D, game->blur_dst_texture, 0);
+
+
+    // Blit intermediate FBO to screen.
+    gl->BindFramebuffer(GL_READ_FRAMEBUFFER, game->prepass_fbo);
+    gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    gl->BlitFramebuffer(0, 0, game->window_size.x, game->window_size.y,
+                        0, 0, game->window_size.x, game->window_size.y,
+                        GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    gl->BindFramebuffer(GL_READ_FRAMEBUFFER, game->prepass_fbo);
+    gl->NamedFramebufferTexture(game->prepass_fbo, GL_COLOR_ATTACHMENT0,
+                                game->prepass_texture, 0);
 }
 
 TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

@@ -4,6 +4,24 @@
 #define MAX_SHADER_SOURCE_LENGTH 5000
 #define MAX_GL_INFO_LOG_LENGTH 5000
 
+void
+GlDebugMessageCallback(GLenum source,
+                       GLenum type,
+                       GLuint id,
+                       GLenum severity,
+                       GLsizei length,
+                       const GLchar* message,
+                       const void* userParam)
+{
+    if(severity == GL_DEBUG_SEVERITY_HIGH_ARB or
+       severity == GL_DEBUG_SEVERITY_HIGH)
+    {
+        Log("GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+            ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message);
+    }
+}
+
 GLuint
 CompileShaderFromSourceFile(char *filename, GLenum type)
 {
@@ -42,8 +60,8 @@ GLuint
 LinkShaders(GLuint vert_shader, GLuint frag_shader)
 {
 	GLuint program = gl->CreateProgram();
-	gl->AttachShader(program, vert_shader);
-	gl->AttachShader(program, frag_shader);
+	if(vert_shader != 0) gl->AttachShader(program, vert_shader);
+	if(frag_shader != 0) gl->AttachShader(program, frag_shader);
 	gl->BindFragDataLocation(program, 0, "out_color");
 	gl->LinkProgram(program);
 
@@ -62,11 +80,33 @@ LinkShaders(GLuint vert_shader, GLuint frag_shader)
 }
 
 GLuint
+LinkComputeShader(GLuint compute_shader)
+{
+	GLuint program = gl->CreateProgram();
+	if(compute_shader != 0) gl->AttachShader(program, compute_shader);
+	gl->LinkProgram(program);
+
+	GLint link_status;
+	gl->GetProgramiv(program, GL_LINK_STATUS, &link_status);
+	if(link_status == false)
+	{
+		char link_fail_info[MAX_GL_INFO_LOG_LENGTH];
+		gl->GetProgramInfoLog(program, sizeof(link_fail_info), nullptr, link_fail_info);
+		Log("Failed to link shader program:\n%s", link_fail_info);
+		return 0;
+	}
+
+	return program;
+}
+
+GLuint
 GenerateShaderProgramFromFiles(char *vs_filename, char *fs_filename)
 {
-	GLuint vs = CompileShaderFromSourceFile(vs_filename, GL_VERTEX_SHADER);
-	GLuint fs = CompileShaderFromSourceFile(fs_filename, GL_FRAGMENT_SHADER);
-	if(vs != 0 and fs != 0)
+	GLuint vs = 0;
+	GLuint fs = 0;
+	if(vs_filename) vs = CompileShaderFromSourceFile(vs_filename, GL_VERTEX_SHADER);
+	if(fs_filename) fs = CompileShaderFromSourceFile(fs_filename, GL_FRAGMENT_SHADER);
+	if(vs != 0 or fs != 0)
 	{
 		//Log("Successfully generated shader program.");
 		return LinkShaders(vs, fs);
@@ -74,8 +114,25 @@ GenerateShaderProgramFromFiles(char *vs_filename, char *fs_filename)
 	else
 	{
 		Log("Failed to generate shader program.");
-		if(vs == 0) gl->DeleteShader(vs);
-		if(fs == 0) gl->DeleteShader(fs);
+		if(vs != 0) gl->DeleteShader(vs);
+		if(fs != 0) gl->DeleteShader(fs);
+		return 0;
+	}
+}
+
+GLuint
+GenerateComputeShaderFromFile(char *cs_filename)
+{
+	GLuint cs = CompileShaderFromSourceFile(cs_filename, GL_COMPUTE_SHADER);
+	if(cs != 0)
+	{
+		//Log("Successfully generated shader program.");
+		return LinkComputeShader(cs);
+	}
+	else
+	{
+		Log("Failed to generate compute shader program.");
+		if(cs != 0) gl->DeleteShader(cs);
 		return 0;
 	}
 }
@@ -84,5 +141,13 @@ void
 LogGlError()
 {
 	GLenum error = gl->GetError();
+	if(error == 0) return;
 	Log("Current GL Error Code: %u", error);
+}
+
+void
+LogGlVersion()
+{
+    const u8 *gl_version = gl->GetString(GL_VERSION);
+    Log("OpenGL Version: \"%s\"", gl_version);
 }

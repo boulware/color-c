@@ -311,8 +311,8 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
     DrawUnfilledRect(infobox_aligned_rect, c::white);
 
     TextLayout layout = c::def_text_layout;
-    layout.align = c::align_topleft;
-    Vec2f name_text_size = DrawText(layout, RectTopLeft(infobox_aligned_rect), ability->name).size;
+    layout.align = c::align_topcenter;
+    Vec2f name_text_size = DrawText(layout, RectTopCenter(infobox_aligned_rect), ability->name).size;
     //pen.y += name_size.y;
 
 
@@ -366,7 +366,6 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
 void
 DrawEnemyIntentThoughtBubble(Battle *battle)
 {
-
     for(int unit_index=0; unit_index<battle->units.size; ++unit_index)
     {
         SetDrawDepth(c::field_draw_depth);
@@ -1037,9 +1036,10 @@ TickBattle(Battle *battle)
     }
 
     { // Draw units
-        SetDrawDepth(c::field_draw_depth);
         for(int i=0; i<battle->units.size; ++i)
         {
+            SetDrawDepth(c::field_draw_depth);
+
             Id<Unit> unit_id = battle->units.ids[i];
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit)) continue;
@@ -1098,6 +1098,121 @@ TickBattle(Battle *battle)
                 DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
                          "AP: %d", unit->cur_action_points);
             }
+
+            // Ability "buttons"/icons for allied units (enemy ones are drawn slightly differently
+            // in order to show intent)
+            if(unit->team == Team::allies)
+            {
+                Vec2f pen = battle->unit_slots[i] + c::ability_icon_offset;
+                // Iterate abilities backwards because we draw the icons from top to bottom
+                // and we want them to be in the same order as they appear in the HUD.
+                for(int ability_index=ArrayCount(unit->ability_ids)-1; ability_index>=0; --ability_index)
+                {
+                    Id ability_id = unit->ability_ids[ability_index];
+                    Ability *ability = GetAbilityFromId(ability_id);
+                    if(!ValidAbility(ability)) continue;
+
+                    int tier = DetermineAbilityTier(unit_id, ability_id);
+
+                    ButtonResponse response = {};
+                    ButtonLayout ability_icon_button_layout = {};
+                    if(tier <= 0) ability_icon_button_layout = c::cannot_use_ability_button_layout;
+                    else          ability_icon_button_layout = c::can_use_ability_button_layout;
+
+                    SetDrawDepth(c::field_draw_depth);
+                    response = DrawButton(ability_icon_button_layout,
+                                          {pen, c::ability_icon_size},
+                                          ability->name);
+
+                    Vec2f padding = {4.f,4.f};
+                    Rect padded_button_rect = {
+                        .pos = response.rect.pos + padding,
+                        .size = response.rect.size - 2*padding
+                    };
+
+
+                    // Tier string. e.g., "Tier: 2/3"
+                    Color tier_color = c::grey;
+                    int max_tier = ability->tiers.count - 1;
+                    if(tier == max_tier)          tier_color = c::gold;
+                    else if(tier == max_tier - 1) tier_color = c::silver;
+                    else if(tier == max_tier - 2) tier_color = c::bronze;
+
+                    String tier_string = AllocStringDataFromArena(20, &memory::per_frame_arena);
+                    AppendCString(&tier_string, "%d/%d", tier, max_tier);
+                    TextLayout text_layout = ability_icon_button_layout.label_layout;
+                    text_layout.align = c::align_bottomleft;
+                    text_layout.color = tier_color;
+                    Vec2f tier_string_size = SizeText(text_layout, tier_string);
+                    Vec2f tier_string_pos = AlignSizeInRect(tier_string_size, padded_button_rect, text_layout.align);
+                    DrawText(text_layout, tier_string_pos, tier_string);
+
+                    // Required trait change to level up ability.
+                    if(tier != max_tier)
+                    {
+                        int next_tier = tier + 1;
+
+                        TraitSet cur_traits = unit->cur_traits;//ability->tiers[tier].required_traits;
+                        TraitSet next_required = ability->tiers[next_tier].required_traits;
+
+                        TraitSet required_diff = next_required - cur_traits;
+                        for(int &value : required_diff)
+                            value = m::Max(0, value);
+
+                        // Vigor
+                        String trait_change_string = AllocStringDataFromArena(30, &memory::per_frame_arena);
+
+                        bool first_trait = true;
+                        if(required_diff.vigor > 0)
+                        {
+                            if(first_trait) {
+                                first_trait = false;
+                                AppendCString(&trait_change_string, "`green`+");
+                            }
+                            else {
+                                AppendCString(&trait_change_string, "");
+                            }
+                            AppendCString(&trait_change_string, "`red`%dV", required_diff.vigor);
+                        }
+                        if(required_diff.focus > 0)
+                        {
+                            if(first_trait) {
+                                first_trait = false;
+                                AppendCString(&trait_change_string, "`green`+");
+                            }
+                            else {
+                                AppendCString(&trait_change_string, "");
+                            }
+                            AppendCString(&trait_change_string, "`lt_blue`%dF", required_diff.focus);
+                        }
+                        if(required_diff.armor > 0)
+                        {
+                            if(first_trait) {
+                                first_trait = false;
+                                AppendCString(&trait_change_string, "`green`+");
+                            }
+                            else {
+                                AppendCString(&trait_change_string, "");
+                            }
+                            AppendCString(&trait_change_string, "`gold`%dA", required_diff.armor);
+                        }
+
+                        TextLayout trait_change_text_layout = c::small_text_layout;
+                        trait_change_text_layout.font_size = 32;
+                        trait_change_text_layout.align = c::align_rightcenter;
+                        DrawTextMultiline(trait_change_text_layout, RectRightCenter(padded_button_rect), trait_change_string);
+                    }
+
+                    // Draw ability card if hovered and alt/LMB is down
+                    if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
+                    {
+                        SetDrawDepth(c::ability_card_draw_depth);
+                        DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);
+                    }
+
+                    pen.y -= (1 + response.rect.size.y); // 1 + so the button outlines don't overlap
+                }
+            }
         }
     }
 
@@ -1150,7 +1265,7 @@ TickBattle(Battle *battle)
             if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &active_unitset);
             else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &other_unitset);
         }
-        battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
+        //battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
 
         for(Id unit_id : battle->units)
         {

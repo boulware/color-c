@@ -66,3 +66,5 @@ effect Heal all_allies (0,5,0)
 23) Meditate (for example) can be "clicked" on an enemy and it will just do nothing but use up AP? Probably the case with all self-targeting things if i had to guess.
 
 24) Develop a better way to compare two scores.
+
+25) Make iteration on UI stuff faster -- because it's a very difficult design part of the game, and we need to do lots of changes fast to see what will work as an effective way to communicate relevant information to the player. Visual editor? Better API?
