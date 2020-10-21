@@ -38,7 +38,7 @@ struct AiAction
     u8 unit_indices[c::max_target_count];
 };
 
-String DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena);
+String DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Id<Arena> arena_id);
 float ScoreBattleState(Array<TraitSet> ally_traitsets,
                        Array<TraitSet> enemy_traitsets,
                        Array<TraitSet> ally_traitset_changes,

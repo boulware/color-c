@@ -1,8 +1,8 @@
 #version 430
 
 // UNIFORM
-layout(location=0)          uniform sampler2D in_screen;
-layout(location=1, rgba32f) uniform image2D out_screen;
+layout(binding=0)          uniform sampler2D in_screen;
+layout(binding=1, rgba32f) uniform image2D out_screen;
 layout(location=2) uniform float blur;
 
 // IN
@@ -27,13 +27,21 @@ void main()
     }
     else imageStore(out_screen, src_coords, vec4(0.0, 0.0, 0.0, 1.0));
     #else
-    vec4 dst_pixel = 0.2 * src_pixel;
-    for(float a=0; a<2*pi; a += 0.5*pi)
+
+    vec2 uv_origin = vec2(float(src_coords.x)/1599.0 ,
+                          float(src_coords.y)/899.0);
+
+    vec4 dst_pixel = 0.1 * src_pixel;
+    float increment = 0.05*pi;
+    float max = 2*pi;
+    float step_count = increment/max;
+    float blend_amount = 0.9 / step_count / 1000;
+    for(float a=0; a<max; a += increment)
     {
-        vec2 uv = vec2(float(src_coords.x + 5.0*cos(a))/1599.0 ,
-                       float(src_coords.y + 5.0*sin(a))/899.0);
+        vec2 uv = vec2(float(src_coords.x + blur*cos(a))/1599.0 ,
+                       float(src_coords.y + blur*sin(a))/899.0);
         vec4 other_pixel = texture(in_screen, uv);
-        dst_pixel += 0.1 * other_pixel;
+        dst_pixel += blend_amount * other_pixel;
     }
     imageStore(out_screen, src_coords, dst_pixel);
     //imageStore(out_screen, dst_coords, src_pixel);

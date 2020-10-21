@@ -35,6 +35,7 @@
 #include "map.h"
 #include "math.h"
 #include "memory.h"
+#include "memory_draw.h"
 #include "meta.h"
 #include "node_graph.h"
 #include "opengl.h"
@@ -99,6 +100,10 @@ String MetaString(const Color *s);
 String MetaString(const TimedBlockEntry *s);
 
 String MetaString(const TimedBlock *s);
+
+String MetaString(const Texture *s);
+
+String MetaString(const Framebuffer *s);
 
 String MetaString(const DirectedLineLayout *s);
 

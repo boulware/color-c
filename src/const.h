@@ -98,6 +98,7 @@ namespace c
 	Id<Ability> null_ability_id = {0,0};
 	Id<Breed> null_breed_id = {0,0};
 	Id<Unit> null_unit_id = {0,0};
+	Id<Arena> null_arena_id = {0,0};
 
 	// Debug
 	const float error_flash_speed = 0.017f;

@@ -17,16 +17,16 @@ EdgeAlreadyExists(NodeGraph *graph, Edge edge)
 }
 
 bool
-GraphIsFullyConnected(NodeGraph *graph, Arena *temp_arena)
+GraphIsFullyConnected(NodeGraph *graph, Id<Arena> temp_arena_id)
 {
     //Node &root =  graph->nodes[0];
 
-    ClearArena(temp_arena);
-    Array<int> indices_to_search = CreateArrayFromArena<int>(20, temp_arena);
+    ClearArena(temp_arena_id);
+    Array<int> indices_to_search = CreateArrayFromArena<int>(20, temp_arena_id);
     indices_to_search += 0; // add "root"
 
-    Array<int> searched_indices = CreateArrayFromArena<int>(20, temp_arena);
-    Array<Edge> connected_edges = CreateArrayFromArena<Edge>(10, temp_arena);
+    Array<int> searched_indices = CreateArrayFromArena<int>(20, temp_arena_id);
+    Array<Edge> connected_edges = CreateArrayFromArena<Edge>(10, temp_arena_id);
     //for(int i=0; i<graph->edges.count; ++i)
     while(indices_to_search.count > 0)
     {
@@ -81,7 +81,7 @@ CompleteNode(NodeGraph *graph, int completed_node_index)
 }
 
 void
-THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
+THREAD_GenerateNodeGraph(void *data, Id<Arena> thread_arena_id)
 {
     GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;
 
@@ -97,13 +97,13 @@ THREAD_GenerateNodeGraph(void *data, Arena *thread_arena)
     ForceSimState state = {};
     while(!state.finished)
     {
-        ClearArena(thread_arena);
+        ClearArena(thread_arena_id);
         ForceSimParams force_params = {};
-        force_params.temp_arena = thread_arena;
+        force_params.temp_arena = thread_arena_id;
         state = StepNodeGraphForceSimulation(graph, force_params, 1.f/500.f, 500);
         *(params.max_speed) = state.max_speed;
 
-        ClearArena(thread_arena);
+        ClearArena(thread_arena_id);
         if(state.invalid_state)
         {
             ++(*params.restart_count);
@@ -323,7 +323,7 @@ StepNodeGraphForceSimulation(NodeGraph *graph, ForceSimParams params, float dt, 
     }
 
     float average_speed = speed_sum / graph->nodes.count;
-    if(average_speed < 0.001f)
+    if(average_speed < 0.001f) // TEMPORARILY CHANGED
     {
         sim_state.finished = true;
     }

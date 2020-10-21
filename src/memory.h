@@ -1,6 +1,8 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
+#include "table.h"
+
 Introspect
 struct Arena
 {
@@ -9,26 +11,27 @@ struct Arena
 	void *current;
 
     int allocs_since_reset;
+    char debug_name[64];
 };
 
 namespace memory
 {
 	const size_t arena_size = 1024*1024;
-	Arena per_frame_arena;
-	Arena permanent_arena;
+	Id<Arena> permanent_arena_id;
+	Id<Arena> per_frame_arena_id;
 };
 
-//int number_of_arenas_allocated = 0;
 
-Arena *g_per_frame_arena = &memory::per_frame_arena;
-Arena *g_permanent_arena = &memory::permanent_arena;
+// Temporary to get around that RemedyBG does not support watching namespaced variables
+Id<Arena> *g_per_frame_arena_id = &memory::per_frame_arena_id;
+Id<Arena> *g_permanent_arena_id = &memory::permanent_arena_id;
 
-Arena AllocArena();
-void FreeArena(Arena *arena);
-void ClearArena(Arena *arena);
-size_t ArenaBytesRemaining(Arena arena);
+Id<Arena> AllocArena(char *debug_name);
+void FreeArena(Id<Arena> arena_id);
+void ClearArena(Id<Arena> arena_id);
+size_t ArenaBytesRemaining(Id<Arena> arena_id);
 char *ScratchString(int size);
-void *AllocFromArena(Arena *arena, size_t byte_count, bool zero=false);
+void *AllocFromArena(Id<Arena> arena_id, size_t byte_count, bool zero=false);
 void *AllocTemp(size_t byte_count);
 void *AllocPerma(size_t byte_count);
 

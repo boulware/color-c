@@ -328,6 +328,8 @@ typedef void        fnsig_glDispatchCompute(GLuint num_groups_x, GLuint num_grou
 typedef void        fnsig_glDispatchComputeIndirect(GLintptr indirect);
 
 typedef void        fnsig_glFramebufferTexture (GLenum target, GLenum attachment, GLuint texture, GLint level);
+typedef void        fnsig_glBindTextureUnit (GLuint unit, GLuint texture);
+
 
 
 #define mOpenGLFunction(name) fnsig_gl##name *name
@@ -470,6 +472,7 @@ struct OpenGL {
     mOpenGLFunction(GetIntegeri_v);
     mOpenGLFunction(NamedFramebufferTexture);
     mOpenGLFunction(FramebufferTexture);
+    mOpenGLFunction(BindTextureUnit);
 };
 
 void LogGlError();

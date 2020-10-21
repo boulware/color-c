@@ -4,7 +4,7 @@
 
 void StartEditor(Editor *editor)
 {
-	editor->arena = AllocArena();
+	editor->arena_id = AllocArena("Editor");
 	editor->mode = EditorMode::None;
 
 	const char *field_names[] = {"Search", "Name", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor", "Vigor", "Focus", "Armor"};
@@ -12,7 +12,7 @@ void StartEditor(Editor *editor)
 	{
 		editor->input_elements[i] = {
 			.type = InputElementType::None,
-			.label = StringFromCString(field_names[i], &editor->arena),
+			.label = StringFromCString(field_names[i], editor->arena_id),
 			.pos = ability_field_positions[i]
 		};
 	}

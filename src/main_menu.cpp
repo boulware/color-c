@@ -5,13 +5,13 @@ InitMainMenu(MainMenu *menu)
 {
 	menu->selected_option = 0;
     menu->option_strings = CreatePermanentArray<String>(6);
-    menu->option_strings += StringFromCString("Battle");
-    menu->option_strings += StringFromCString("Campaign");
-    menu->option_strings += StringFromCString("Editor");
-    menu->option_strings += StringFromCString("Options");
-    menu->option_strings += StringFromCString("AI Explorer");
-    menu->option_strings += StringFromCString("Test");
-    menu->option_strings += StringFromCString("Quit");
+    menu->option_strings += "Battle";
+    menu->option_strings += "Campaign";
+    menu->option_strings += "Editor";
+    menu->option_strings += "Options";
+    menu->option_strings += "AI Explorer";
+    menu->option_strings += "Test";
+    menu->option_strings += "Quit";
 }
 
 // Updates and draws main menu

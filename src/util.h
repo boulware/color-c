@@ -11,6 +11,8 @@ void CopyStringN_unsafe(char *dst, const char *src, size_t n);
 char *TempFormatString(const char *fmt, va_list args);
 bool CompareBytesN(const void *a, const void *b, size_t count);
 
+void CopyCString(char *dst, const char *src, size_t n_max);
+
 template <typename Type>
 bool InRange(Type value, Type min, Type max);
 

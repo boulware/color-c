@@ -19,7 +19,10 @@ template<typename Type>
 bool
 ValidArray(Array<Type> array)
 {
-	return(array.data != nullptr and array.arena != nullptr);
+	Arena *arena = GetArenaFromId(array.arena_id);
+	if(!arena or !array.data) return false;
+
+	return true;
 }
 
 template<typename Type>
@@ -109,7 +112,7 @@ ResizeArray(Array<Type> *array, int new_max_count)
 
 	if(new_max_count > array->_allocated_count)
 	{
-		void *new_data = AllocFromArena(array->arena, sizeof(Type)*new_max_count);
+		void *new_data = AllocFromArena(array->arena_id, sizeof(Type)*new_max_count);
 		CopyMemoryBlock(new_data, array->data, sizeof(Type)*array->count);
 		array->data = (Type*)new_data;
 		array->_allocated_count = new_max_count;
@@ -147,11 +150,19 @@ ClearArray(Array<Type> *array)
 
 template<typename Type>
 Array<Type>
-CreateArrayFromArena(int max_count, Arena *arena)
+CreateArrayFromArena(int max_count, Id<Arena> arena_id)
 {
+	Arena *arena = GetArenaFromId(arena_id);
+	if(!arena)
+	{
+		Log(__FUNCTION__ "() tried to allocate an array from an invalid arena.");
+		Assert(false);
+		return {};
+	}
+
 	return Array<Type>{
-		.data = (Type*)AllocFromArena(arena, sizeof(Type)*max_count),
-		.arena = arena,
+		.data = (Type*)AllocFromArena(arena_id, sizeof(Type)*max_count),
+		.arena_id = arena_id,
 		.count = 0,
 		.max_count = max_count,
 		._allocated_count = max_count
@@ -162,14 +173,14 @@ template<typename Type>
 Array<Type>
 CreatePermanentArray(int max_count)
 {
-	return CreateArrayFromArena<Type>(max_count, &memory::permanent_arena);
+	return CreateArrayFromArena<Type>(max_count, memory::permanent_arena_id);
 }
 
 template<typename Type>
 Array<Type>
 CreateTempArray(int max_count)
 {
-	return CreateArrayFromArena<Type>(max_count, &memory::per_frame_arena);
+	return CreateArrayFromArena<Type>(max_count, memory::per_frame_arena_id);
 }
 
 template<typename Type>

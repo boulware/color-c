@@ -24,7 +24,7 @@
 #include "oscillating_timer.cpp"
 #include "random.cpp"
 #include "traitset.cpp"
-//#include "ability.cpp"
+#include "ability.cpp"
 #include "target_class.cpp"
 #include "editor.cpp"
 #include "string.cpp"
@@ -48,3 +48,4 @@
 #include "permutation.cpp"
 #include "effect.cpp"
 #include "ai_explorer.cpp"
+#include "memory_draw.cpp"

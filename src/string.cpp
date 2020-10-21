@@ -156,24 +156,31 @@ AppendString(String *dst, String src)
 }
 
 String
-AllocStringDataFromArena(int max_length, Arena *arena)
+AllocStringDataFromArena(int max_length, Id<Arena> arena_id)
 {
+	// Arena *arena = ArenaFromId(arena_id);
+	// if(!arena)
+	// {
+	// 	Log(__FUNCTION__ "() tried to allocate from an invalid arena.");
+	// 	return String{};
+	// }
+
 	String string = {
 		.length = 0,
 		.max_length = max_length,
-		.data = (char*)AllocFromArena(arena, sizeof(char)*max_length)
+		.data = (char*)AllocFromArena(arena_id, sizeof(char)*max_length)
 	};
 
 	return string;
 }
 
 String
-StringFromCString(const char *c_string, Arena *arena)
+StringFromCString(const char *c_string, Id<Arena> arena_id)
 {
 	String string = {};
 	string.length = StringLength(c_string);
 	string.max_length = string.length;
-	string.data = (char*)AllocFromArena(arena, sizeof(char)*string.length);
+	string.data = (char*)AllocFromArena(arena_id, sizeof(char)*string.length);
 	for(int i=0; i<string.length; i++)
 	{
 		CharAt(&string, i) = c_string[i];
@@ -282,12 +289,12 @@ Utf8ToUtf32(String string, int index, u32 *utf32_char)
 }
 
 String
-CopyString(String src, Arena *arena)
+CopyString(String src, Id<Arena> arena_id)
 {
 	String copied_string = {};
 	copied_string.length = src.length;
 	copied_string.max_length = src.max_length;
-	copied_string.data = (char*)AllocFromArena(arena, src.max_length);
+	copied_string.data = (char*)AllocFromArena(arena_id, src.max_length);
 	for(int i=0; i<src.length; i++)
 	{
 		CharAt(&copied_string, i) = CharAt(&src, i);
@@ -298,9 +305,9 @@ CopyString(String src, Arena *arena)
 
 // Default argument for arena is memory::per_frame_arena
 String
-LowerCase(String string, Arena *arena)
+LowerCase(String string, Id<Arena> arena_id)
 {
-	String lowered_string = CopyString(string, arena);
+	String lowered_string = CopyString(string, arena_id);
 	for(int i=0; i<lowered_string.length; i++)
 	{
 		char &c = CharAt(&lowered_string, i);
@@ -334,4 +341,74 @@ CompareStrings(String a, String b)
 	}
 
 	return matches;
+}
+
+
+// Overloading Array<String> templated methods
+String *
+Append(Array<String> *array, String value)
+{
+	Assert(array->data != nullptr);
+
+	if(array->count >= array->max_count)
+	{
+		ResizeArray(array, 2*array->max_count);
+	}
+
+	String *entry = &array->data[array->count++];
+	*entry = CopyString(value, array->arena_id);
+	//*entry = value;
+	return entry;
+}
+
+String *
+operator+=(Array<String> &array, String value)
+{
+	return Append(&array, value);
+}
+
+String *
+operator+=(Array<String> &array, const char *c_string)
+{
+	Assert(array.data != nullptr);
+
+	if(array.count >= array.max_count)
+	{
+		ResizeArray(&array, 2*array.max_count);
+	}
+
+	String *entry = &array.data[array.count++];
+	*entry = StringFromCString(c_string, array.arena_id);
+	//*entry = value;
+	return entry;
+}
+
+template <typename Type>
+Id<Type>
+GetIndexFromName(Table<Type> table, String search_string)
+{
+	Id<Type> table_id = NullIndex<Type>();
+
+	for(auto &entry : table)
+	{
+		// This looks somewhat dangerous, but the templation will catch issues at
+		// compile time, because Types that don't have a name member won't compile.
+		if(CompareStrings(entry.data.name, search_string))
+		{
+			table_id = entry.id;
+			break;
+		}
+	}
+
+	return table_id;
+}
+
+template <typename Type>
+Type *
+GetEntryFromName(Table<Type> table, String name)
+{
+	int index = GetIndexFromName(table, name);
+	if(index == -1) return nullptr;
+
+	return
 }

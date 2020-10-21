@@ -161,7 +161,7 @@ TokenMatchesString(Token token, const char *target)
 bool
 TokenMatchesStringIgnoreCase(Token token, const char *target)
 {
-	String token_string = StringFromToken(token, &memory::per_frame_arena);
+	String token_string = StringFromToken(token, memory::per_frame_arena_id);
 	String target_string = StringFromCString(target);
 
 	return(CompareStrings(LowerCase(token_string), LowerCase(target_string)));

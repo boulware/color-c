@@ -5,6 +5,20 @@
 #include "imgui.h"
 #include "camera.h"
 
+struct Texture
+{
+    u32 id;
+    int width, height;
+};
+
+struct Framebuffer
+{
+    u32 id;
+    int width, height;
+    Texture texture;
+    u32 depth_rbo;
+};
+
 struct DirectedLineLayout
 {
     int segment_count = 100;

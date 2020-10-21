@@ -27,7 +27,7 @@ struct BattleEvent
 
 struct Battle
 {
-	Arena arena;
+	Id<Arena> arena_id;
 
 	Rect hud;
 

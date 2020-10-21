@@ -517,9 +517,9 @@ SetSelectedUnit(Battle *battle, Id<Unit> new_unit_id)
 void InitBattle(Battle *battle)
 {
     // Memory allocation
-    battle->arena = AllocArena();
-    battle->preview_events = CreateArrayFromArena<BattleEvent>(100, &battle->arena);
-    battle->intents =       CreateArrayFromArena<Intent>(8, &battle->arena);
+    battle->arena_id = AllocArena("Battle");
+    battle->preview_events = CreateArrayFromArena<BattleEvent>(100, battle->arena_id);
+    battle->intents =        CreateArrayFromArena<Intent>(8, battle->arena_id);
     for(int i=0; i<8; ++i) battle->intents += {};
 
     // Fill out timers
@@ -1138,7 +1138,7 @@ TickBattle(Battle *battle)
                     else if(tier == max_tier - 1) tier_color = c::silver;
                     else if(tier == max_tier - 2) tier_color = c::bronze;
 
-                    String tier_string = AllocStringDataFromArena(20, &memory::per_frame_arena);
+                    String tier_string = AllocStringDataFromArena(20, memory::per_frame_arena_id);
                     AppendCString(&tier_string, "%d/%d", tier, max_tier);
                     TextLayout text_layout = ability_icon_button_layout.label_layout;
                     text_layout.align = c::align_bottomleft;
@@ -1160,7 +1160,7 @@ TickBattle(Battle *battle)
                             value = m::Max(0, value);
 
                         // Vigor
-                        String trait_change_string = AllocStringDataFromArena(30, &memory::per_frame_arena);
+                        String trait_change_string = AllocStringDataFromArena(30, memory::per_frame_arena_id);
 
                         bool first_trait = true;
                         if(required_diff.vigor > 0)

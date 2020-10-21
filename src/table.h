@@ -69,14 +69,6 @@ GetEntryFromRawIndex(Table<Type> table, int index);
 
 template <typename Type>
 Id<Type>
-GetIndexFromName(Table<Type> table, String search_string);
-
-template <typename Type>
-Type *
-GetEntryFromName(Table<Type> table, String name);
-
-template <typename Type>
-Id<Type>
 NullIndex();
 
 template <typename Type>

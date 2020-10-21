@@ -102,7 +102,7 @@ ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 	if(valid_unit_data)
 	{
 		*breed = temp_breed;
-		breed->name = StringFromToken(name_token, &memory::permanent_arena);
+		breed->name = StringFromToken(name_token, memory::permanent_arena_id);
 		// CopyString()
 		// CopyString(breed->name, name_token.start, m::Min(sizeof(breed->name), name_token.length+1));
 
@@ -173,7 +173,7 @@ CreateUnit(Id<Breed> breed_id, Team team)
 	Unit *unit = GetUnitFromId(unit_id);
 	if(!unit) return c::null_unit_id;
 
-	unit->name = CopyString(breed->name, &memory::permanent_arena);
+	unit->name = CopyString(breed->name, memory::permanent_arena_id);
 	unit->team = team;
 	unit->max_traits = breed->max_traits;
 	unit->cur_traits = breed->max_traits;

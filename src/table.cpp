@@ -82,36 +82,6 @@ GetEntryFromRawIndex(Table<Type> table, int index)
 
 template <typename Type>
 Id<Type>
-GetIndexFromName(Table<Type> table, String search_string)
-{
-	Id<Type> table_id = NullIndex<Type>();
-
-	for(auto &entry : table)
-	{
-		// This looks somewhat dangerous, but the templation will catch issues at
-		// compile time, because Types that don't have a name member won't compile.
-		if(CompareStrings(entry.data.name, search_string))
-		{
-			table_id = entry.id;
-			break;
-		}
-	}
-
-	return table_id;
-}
-
-template <typename Type>
-Type *
-GetEntryFromName(Table<Type> table, String name)
-{
-	int index = GetIndexFromName(table, name);
-	if(index == -1) return nullptr;
-
-	return
-}
-
-template <typename Type>
-Id<Type>
 NullIndex()
 {
 	return Id<Type>{-1,-1};
@@ -138,8 +108,8 @@ DeleteEntry(Table<Type> *table, Id<Type> id)
 	auto &entry = table->entries[id.index];
 	if(entry.id != id) return; // Outdated or invalid id, so don't delete the entry at this index.
 
-	entry.active = false; // Setting an entry to active is equivalent to deleting it, since any
-	                      // access with the current id will just return a nullptr, and once this
+	entry.active = false; // Setting an entry to inactive is equivalent to deleting it, since any
+	                      // access with the current id will just return a nullptr
 }
 
 // template <typename Type>

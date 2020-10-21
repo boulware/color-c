@@ -71,7 +71,7 @@ u32 DigitToUtf32Char(u32 digit);
 
 //bool TokenMatchesString(Token token, const char *string);
 
-String StringFromToken(Token token, Arena *arena = &memory::per_frame_arena);
+String StringFromToken(Token token, Id<Arena> arena_id = memory::per_frame_arena_id);
 
 bool TokenMatchesString(Token token, const char *string);
 

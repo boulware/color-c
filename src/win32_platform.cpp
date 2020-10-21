@@ -696,6 +696,7 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
     mBindExtendedOpenGLFunction(GetIntegeri_v);
     mBindExtendedOpenGLFunction(NamedFramebufferTexture);
     mBindExtendedOpenGLFunction(FramebufferTexture);
+    mBindExtendedOpenGLFunction(BindTextureUnit);
 
 	#undef mBindBaseOpenGLFunction
 	#undef mBindExtendedOpenGLFunction
@@ -716,8 +717,12 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	game = new Game{};
 
 	WIN32_BIND_PLATFORM_FUNCTIONS(platform);
-	memory::permanent_arena = AllocArena();
-	memory::per_frame_arena = AllocArena();
+
+	Table<Arena> arena_table = AllocTable<Arena>(100);
+	game->arena_table = &arena_table;
+
+	memory::per_frame_arena_id = AllocArena("Per Frame");
+	memory::permanent_arena_id = AllocArena("Permanent");
 
 	g_work_queue_system.queues = CreatePermanentArray<WorkQueue>(8);
 	g_work_queue_system.init   = true;
@@ -732,7 +737,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	WIN32_BIND_OPENGL_EXTENSIONS(gl);
 
 	void (*GameHook)(Platform*, OpenGL*, Game*);
-	void (*GameInit)();
+	void (*GameInit)(Id<Arena>, Id<Arena>);
 	void (*GameUpdateAndRender)();
 	HMODULE game_module = LoadLibraryA("game.dll");
 	if(game_module == NULL)
@@ -742,14 +747,14 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 	else
 	{
 		GameHook = (void(*)(Platform*, OpenGL*, Game*))GetProcAddress(game_module, "GameHook");
-		GameInit = (void(*)())GetProcAddress(game_module, "GameInit");
+		GameInit = (void(*)(Id<Arena>, Id<Arena>))GetProcAddress(game_module, "GameInit");
 		GameUpdateAndRender = (void(*)())GetProcAddress(game_module, "GameUpdateAndRender");
 	}
 
 	GameHook(platform, gl, game);
 
 	//s64 start_time = win32_CurrentTime();
-	GameInit();
+	GameInit(memory::per_frame_arena_id, memory::permanent_arena_id);
 	//Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
 
 	MSG msg;

@@ -1,8 +1,8 @@
 #version 430
 
 // UNIFORM
-layout(location=0)          uniform sampler2D in_screen;
-layout(location=1, rgba32f) uniform image2D out_screen;
+layout(binding=0)          uniform sampler2D in_screen;
+layout(binding=1, rgba32f) uniform image2D out_screen;
 
 // IN
 layout(local_size_x=1, local_size_y=1) in;
@@ -69,7 +69,10 @@ void main()
 
     float D = sqrt(pow(d_x,2) + pow(d_y,2)) / 10.0;
 
-    imageStore(out_screen, src_coords, vec4(D, 0.0, 0.0, 1.0));
+    if(D >= 0.2)
+        imageStore(out_screen, src_coords, vec4(1.0, 0.0, 0.0, 1.0));
+    else
+        imageStore(out_screen, src_coords, src_pixel);
     //imageStore(out_screen, src_coords, vec4(0.0,1.0,0.0,1.0));
 
     // if()

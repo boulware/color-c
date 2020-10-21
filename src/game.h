@@ -24,6 +24,8 @@
 
 struct Game
 {
+    Table<Arena> *arena_table = nullptr;
+
 	bool exit_requested;
 
 	GameState current_state;
@@ -37,8 +39,10 @@ struct Game
 
 	InputState input;
 
-	GLuint prepass_fbo;
-	GLuint prepass_texture;
+
+	Texture temp_screen_texture;
+
+	Framebuffer prepass_framebuffer;
 
 	// Color shader
 	GLuint color_shader;
@@ -48,11 +52,8 @@ struct Game
 	GLuint uv_shader;
 	GLuint uv_vao, uv_vbo;
 
-	// Gaussian blur
+	// Computer shader visual effects
 	GLuint blur_shader;
-	GLuint blur_dst_texture;
-
-	// Outline shader
 	GLuint outline_shader;
 
 	Vec2f window_size;

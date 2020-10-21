@@ -139,7 +139,7 @@ ParseNextAsAbilityData(Buffer *buffer, Ability *ability)
 
 	if(valid_ability_data)
 	{
-		ability->name = StringFromToken(name_token, &memory::permanent_arena);
+		ability->name = StringFromToken(name_token, memory::permanent_arena_id);
 
 		return true;
 	}

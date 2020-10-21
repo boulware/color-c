@@ -5,7 +5,7 @@ NoIntrospect
 struct WorkEntry
 {
     // Filled out by work requester
-    void (*callback)(void *, Arena *);
+    void (*callback)(void *, Id<Arena>);
     void *data;
     size_t data_byte_count;
 };

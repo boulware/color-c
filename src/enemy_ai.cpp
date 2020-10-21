@@ -14,11 +14,11 @@
 // active_unitset contains all units for which actions are being considered.
 // other_unitset contains the remaining units in the battle.
 String
-DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Arena *arena) // @TODO: BigArena?
+DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Id<Arena> arena_id) // @TODO: BigArena?
 {
     TIMED_BLOCK;
 
-    String best_choice_string = AllocStringDataFromArena(1000, arena);
+    String best_choice_string = AllocStringDataFromArena(1000, arena_id);
 
     if(active_unitset.size == 0)
     {

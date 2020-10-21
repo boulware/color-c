@@ -37,6 +37,7 @@
 #include "map.h"
 #include "math.h"
 #include "memory.h"
+#include "memory_draw.h"
 #include "meta.h"
 #include "node_graph.h"
 #include "opengl.h"
@@ -250,7 +251,9 @@ String MetaString(const Array<Type> *s)
 
 	AppendCString(&string, "  data: %p (Type *)\n", s->data);
 
-	AppendCString(&string, "  arena: %p (Arena *)\n", s->arena);
+	AppendCString(&string, "  arena_id: ");
+	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(Id<Arena>)\n");
 
 	AppendCString(&string, "  count: %d (int)\n", s->count);
 
@@ -334,9 +337,9 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "Battle {\n");
 
-	AppendCString(&string, "  arena: ");
-	AppendString(&string, MetaString(&s->arena));
-	AppendCString(&string, "(Arena)\n");
+	AppendCString(&string, "  arena_id: ");
+	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(Id<Arena>)\n");
 
 	AppendCString(&string, "  hud: ");
 	AppendString(&string, MetaString(&s->hud));
@@ -550,9 +553,9 @@ String MetaString(const Campaign *s)
 	AppendString(&string, MetaString(&s->state));
 	AppendCString(&string, "(CampaignState)\n");
 
-	AppendCString(&string, "  arena: ");
-	AppendString(&string, MetaString(&s->arena));
-	AppendCString(&string, "(Arena)\n");
+	AppendCString(&string, "  arena_id: ");
+	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(Id<Arena>)\n");
 
 	AppendCString(&string, "  map_generation_work_queue: %p (WorkQueue *)\n", s->map_generation_work_queue);
 
@@ -691,6 +694,56 @@ String MetaString(const TimedBlock *s)
 // ---------------FILE START---------------
 // draw.h
 // ------------------------------------------
+
+String MetaString(const Texture *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Texture {\n");
+
+	AppendCString(&string, "  id: %u (u32)\n", s->id);
+
+	AppendCString(&string, "  width: %d (int)\n", s->width);
+
+	AppendCString(&string, "  height: %d (int)\n", s->height);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const Framebuffer *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Framebuffer {\n");
+
+	AppendCString(&string, "  id: %u (u32)\n", s->id);
+
+	AppendCString(&string, "  width: %d (int)\n", s->width);
+
+	AppendCString(&string, "  height: %d (int)\n", s->height);
+
+	AppendCString(&string, "  texture: ");
+	AppendString(&string, MetaString(&s->texture));
+	AppendCString(&string, "(Texture)\n");
+
+	AppendCString(&string, "  depth_rbo: %u (u32)\n", s->depth_rbo);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 String MetaString(const DirectedLineLayout *s)
 {
@@ -906,9 +959,9 @@ String MetaString(const Editor *s)
 
 	AppendCString(&string, "  init: %d (bool)\n", s->init);
 
-	AppendCString(&string, "  arena: ");
-	AppendString(&string, MetaString(&s->arena));
-	AppendCString(&string, "(Arena)\n");
+	AppendCString(&string, "  arena_id: ");
+	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(Id<Arena>)\n");
 
 	AppendCString(&string, "  mode: ");
 	AppendString(&string, MetaString(&s->mode));
@@ -1206,6 +1259,8 @@ String MetaString(const Game *s)
 
 	AppendCString(&string, "Game {\n");
 
+	AppendCString(&string, "  arena_table: %p (Table<Arena> *)\n", s->arena_table);
+
 	AppendCString(&string, "  exit_requested: %d (bool)\n", s->exit_requested);
 
 	AppendCString(&string, "  current_state: ");
@@ -1230,9 +1285,13 @@ String MetaString(const Game *s)
 	AppendString(&string, MetaString(&s->input));
 	AppendCString(&string, "(InputState)\n");
 
-	AppendCString(&string, "  prepass_fbo: %u (GLuint)\n", s->prepass_fbo);
+	AppendCString(&string, "  temp_screen_texture: ");
+	AppendString(&string, MetaString(&s->temp_screen_texture));
+	AppendCString(&string, "(Texture)\n");
 
-	AppendCString(&string, "  prepass_texture: %u (GLuint)\n", s->prepass_texture);
+	AppendCString(&string, "  prepass_framebuffer: ");
+	AppendString(&string, MetaString(&s->prepass_framebuffer));
+	AppendCString(&string, "(Framebuffer)\n");
 
 	AppendCString(&string, "  color_shader: %u (GLuint)\n", s->color_shader);
 
@@ -1247,8 +1306,6 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  uv_vbo: %u (GLuint)\n", s->uv_vbo);
 
 	AppendCString(&string, "  blur_shader: %u (GLuint)\n", s->blur_shader);
-
-	AppendCString(&string, "  blur_dst_texture: %u (GLuint)\n", s->blur_dst_texture);
 
 	AppendCString(&string, "  outline_shader: %u (GLuint)\n", s->outline_shader);
 
@@ -1947,10 +2004,16 @@ String MetaString(const Arena *s)
 
 	AppendCString(&string, "  allocs_since_reset: %d (int)\n", s->allocs_since_reset);
 
+	AppendCString(&string, "  debug_name: %p (char[])\n", s->debug_name);
+
 	AppendCString(&string, "}");
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// memory_draw.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // meta.h
@@ -2071,7 +2134,9 @@ String MetaString(const ForceSimParams *s)
 
 	AppendCString(&string, "ForceSimParams {\n");
 
-	AppendCString(&string, "  temp_arena: %p (Arena *)\n", s->temp_arena);
+	AppendCString(&string, "  temp_arena: ");
+	AppendString(&string, MetaString(&s->temp_arena));
+	AppendCString(&string, "(Id<Arena>)\n");
 
 	AppendCString(&string, "  edge_free_length: %f (float)\n", s->edge_free_length);
 

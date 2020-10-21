@@ -20,7 +20,7 @@ struct Log_params
 };
 
 void
-THREAD_Log(void *data, Arena *thread_arena)
+THREAD_Log(void *data, Id<Arena> thread_arena_id)
 {
     Log_params params = *(Log_params *)data;
 

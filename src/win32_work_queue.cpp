@@ -23,8 +23,8 @@ win32_AddWorkEntry(WorkQueue *queue, WorkEntry entry)
     { // signaled
         if(RingBufferBytesRemaining(&queue->entry_data_buffer) >= entry.data_byte_count)
         {
-             WriteBytesToRingBuffer(&queue->entry_data_buffer, entry.data, entry.data_byte_count);
-             entry.data = nullptr; // Not strictly necessary, but maybe will catch some bugs if we try to access this later.
+            WriteBytesToRingBuffer(&queue->entry_data_buffer, entry.data, entry.data_byte_count);
+            entry.data = nullptr; // Not strictly necessary, but maybe will catch some bugs if we try to access this later.
 
             queue->entries[queue->next_entry_to_write] = entry;
             u32 new_next_entry_to_write = (queue->next_entry_to_write + 1) % ArrayCount(queue->entries);
@@ -105,9 +105,13 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
             LogToFile("logs/critical.log", "Tried to release mutex without ownership");
         }
 
-        Arena thread_arena = AllocArena();
-        entry.callback(temp_data, &thread_arena);
-        FreeArena(&thread_arena);
+        char thread_arena_debug_name[64];
+        snprintf(thread_arena_debug_name, 64, "Temp Thread [%zu] (%s)", queue->job_started_count, queue->name);
+        thread_arena_debug_name[63] = '\0';
+
+        Id<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
+        entry.callback(temp_data, thread_arena_id);
+        FreeArena(thread_arena_id);
         free(temp_data);
 
         InterlockedIncrement(&queue->job_completion_count);
@@ -159,7 +163,7 @@ win32_CreateWorkQueue(WorkQueue **queue_ptr, int thread_count, char *name)
     //ZeroMemoryBlock(queue->name, ArrayCount(queue->name));
     if(name)
     {
-        CopyString(queue->name, name, ArrayCount(queue->name));
+        CopyCString(queue->name, name, ArrayCount(queue->name));
     }
 
     // Set up ring buffer to store entry data.

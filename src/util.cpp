@@ -109,7 +109,7 @@ CopyStringN_unsafe(char *dst, const char *src, size_t n)
 
 // You must guarantee that *src has at least n bytes allocated before calling this
 void
-CopyString(char *dst, const char *src, size_t n_max)
+CopyCString(char *dst, const char *src, size_t n_max)
 {
 	size_t i;
 	for(i=0; i<n_max; ++i)

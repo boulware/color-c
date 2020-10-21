@@ -119,12 +119,12 @@ CopyFromCString(Utf32String *utf32_string, const char *c_string)
 }
 
 Utf32String
-Utf32StringFromCString(Arena *arena, const char *c_string)
+Utf32StringFromCString(Id<Arena> arena_id, const char *c_string)
 {
 	Utf32String string = {};
 	string.length = StringLength(c_string);
 	string.max_length = string.length;
-	string.data = (u32*)AllocFromArena(arena, sizeof(u32)*string.length);
+	string.data = (u32*)AllocFromArena(arena_id, sizeof(u32)*string.length);
 
 	return string;
 }

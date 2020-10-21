@@ -230,20 +230,20 @@ InitCampaign(Campaign *campaign)
 
     campaign->state = CampaignState::MapSelection;
 
-    campaign->arena = AllocArena();
+    campaign->arena_id = AllocArena("Campaign");
 
     // Maps
     int max_nodes = MaxNodesFromGenerationParams(campaign->generation_params_template);
     int max_edges = MaxEdgesFromGenerationParams(campaign->generation_params_template);
     for(int i=0; i<ArrayCount(campaign->maps); ++i)
     {
-        campaign->maps[i].nodes = CreateArrayFromArena<Node>(max_nodes, &campaign->arena);
-        campaign->maps[i].edges = CreateArrayFromArena<Edge>(max_edges, &campaign->arena);
+        campaign->maps[i].nodes = CreateArrayFromArena<Node>(max_nodes, campaign->arena_id);
+        campaign->maps[i].edges = CreateArrayFromArena<Edge>(max_edges, campaign->arena_id);
     }
     campaign->selected_map_index = -1;
 
     // Rooms
-    campaign->rooms = CreateArrayFromArena<Room>(max_nodes, &campaign->arena);
+    campaign->rooms = CreateArrayFromArena<Room>(max_nodes, campaign->arena_id);
 
     campaign->map_zoom_timer = {
         .start = 0.f,
