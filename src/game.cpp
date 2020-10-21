@@ -29,14 +29,15 @@ GameHook(Platform *platform_, OpenGL *gl_, Game *game_)
 }
 
 extern "C" void
-GameInit(Id<Arena> per_frame_arena_id, Id<Arena> permanent_arena_id)
+GameInit(GameInitData init_data)
 {
     // During init, enable debug output
     gl->Enable              ( GL_DEBUG_OUTPUT );
     gl->DebugMessageCallback( GlDebugMessageCallback, 0 );
 
-    memory::per_frame_arena_id = per_frame_arena_id;
-    memory::permanent_arena_id = permanent_arena_id;
+    memory::arena_pool_mutex_handle = init_data.arena_pool_mutex_handle;
+    memory::per_frame_arena_id = init_data.per_frame_arena_id;
+    memory::permanent_arena_id = init_data.permanent_arena_id;
 
     game->current_state = GameState::Battle;
 
@@ -445,11 +446,9 @@ GameUpdateAndRender()
     frametime_layout.align = c::align_topright;
     pos.y += DrawUiText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
 
-
-    for(int i=0; i<game->arena_table->entry_count; ++i)
+    for(int i=0; i<game->arena_pool->entry_count; ++i)
     {
-        TableEntry<Arena> *entry = (game->arena_table->entries + i);
-        if(!entry->active) continue;
+        PoolEntry<Arena> *entry = (game->arena_pool->entries + i);
 
         Arena arena = entry->data;
         DrawArena(arena, {10.f,10.f + i*20.f});

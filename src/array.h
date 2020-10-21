@@ -5,7 +5,7 @@ template<typename Type>
 struct Array
 {
 	Type *data;           // Pointer to first element.
-	Id<Arena> arena_id;  // Pointer to arena to use for allocation.
+	PoolId<Arena> arena_id;  // Pointer to arena to use for allocation.
 	int count;     // Current number of entries.
 	int max_count; // Max number of entries allowed. (This can be less than _allocated_count if an array is resized to a smaller value)
     int _allocated_count; // Internal member, used to track how much is actually allocated.
@@ -55,7 +55,7 @@ AppendArrayToArray(Array<Type> *root_array, Array<Type> appended_array);
 
 template<typename Type>
 Array<Type>
-CreateArrayFromArena(int max_count, Id<Arena> arena_id);
+CreateArrayFromArena(int max_count, PoolId<Arena> arena_id);
 
 template<typename Type>
 Array<Type>

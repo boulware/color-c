@@ -106,12 +106,13 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
         }
 
         char thread_arena_debug_name[64];
-        snprintf(thread_arena_debug_name, 64, "Temp Thread [%zu] (%s)", queue->job_started_count, queue->name);
+        snprintf(thread_arena_debug_name, 64, "Temp Thread [%zu] [%s]", queue->job_started_count, queue->name);
         thread_arena_debug_name[63] = '\0';
 
-        Id<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
+        PoolId<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
         entry.callback(temp_data, thread_arena_id);
         FreeArena(thread_arena_id);
+
         free(temp_data);
 
         InterlockedIncrement(&queue->job_completion_count);

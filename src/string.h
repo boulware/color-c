@@ -4,6 +4,8 @@
 // This is a comment
 //#define Introspect
 #include "memory.h"
+#include "table.h"
+#include "pool.h"
 
 Introspect
 struct String
@@ -39,18 +41,18 @@ bool DeleteRange(String *string, int start, int end);
 
 bool AppendCString(String *string, const char *c_string, ...);
 
-String StringFromCString(const char *c_string, Id<Arena> arena_id = memory::per_frame_arena_id);
+String StringFromCString(const char *c_string, PoolId<Arena> arena_id = memory::per_frame_arena_id);
 bool SubstringInString(String substring, String string);
 
 void CopyFromCString(String *string, const char *c_string);
 
-String CopyString(String src, Id<Arena> arena_id = memory::per_frame_arena_id);
+String CopyString(String src, PoolId<Arena> arena_id = memory::per_frame_arena_id);
 
 int Utf8ToUtf32(String string, int index, u32 *utf32_char);
 
-String LowerCase(String string, Id<Arena> arena_id = memory::per_frame_arena_id);
+String LowerCase(String string, PoolId<Arena> arena_id = memory::per_frame_arena_id);
 
-String AllocStringDataFromArena(int max_length, Id<Arena> arena_id);
+String AllocStringDataFromArena(int max_length, PoolId<Arena> arena_id);
 
 String AsString(const String *s);
 

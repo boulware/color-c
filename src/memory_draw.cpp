@@ -11,7 +11,7 @@ DrawArena(Arena arena, Vec2f pos)
     float filled_ratio = (float)cur_bytes / total_bytes;
 
     Rect rect = {pos, {600.f, 20.f}};
-    DrawFilledRect(pos, rect.size, c::black, true);
+    DrawFilledRect(pos, rect.size, c::dk_red, true);
     DrawFilledRect(pos, {filled_ratio * rect.size.x, rect.size.y}, c::green, true);
     DrawUnfilledRect(pos, {600.f, 20.f}, c::white, true);
 

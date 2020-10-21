@@ -63,179 +63,179 @@ static size_t pos_in_translated_stream = 0;
 LRESULT CALLBACK
 WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
-	{
-		case WM_CLOSE: {
-			DestroyWindow(hwnd);
-		} break;
-		case WM_DESTROY: {
-			QUIT_GAME = true;
-			PostQuitMessage(0);
-		} break;
-		case WM_KEYDOWN: {
-			if(game == nullptr) return 0;
+    switch(uMsg)
+    {
+        case WM_CLOSE: {
+            DestroyWindow(hwnd);
+        } break;
+        case WM_DESTROY: {
+            QUIT_GAME = true;
+            PostQuitMessage(0);
+        } break;
+        case WM_KEYDOWN: {
+            if(game == nullptr) return 0;
 
-			//Log("0x%0*x", 2, (u8)wParam);
+            //Log("0x%0*x", 2, (u8)wParam);
 
-			if(lParam & (1<<30))
-			{ // WM_KEYDOWN caused by key autorepeat
-				game->input.repeated_keys[(u8)wParam] = 1;
-				platform_input.repeated_keys[(u8)wParam] = 1;
-			}
-			else
-			{
-				if(ANYKEY_ACTIVE == true)
-				{
-					game->input.any_key = (u8)wParam;
-					ANYKEY_ACTIVE = false;
-				}
+            if(lParam & (1<<30))
+            { // WM_KEYDOWN caused by key autorepeat
+                game->input.repeated_keys[(u8)wParam] = 1;
+                platform_input.repeated_keys[(u8)wParam] = 1;
+            }
+            else
+            {
+                if(ANYKEY_ACTIVE == true)
+                {
+                    game->input.any_key = (u8)wParam;
+                    ANYKEY_ACTIVE = false;
+                }
 
-				// if(lParam & KF_ALTDOWN)
-				// {
-				// 	game->input.pressed_keys[]
-				// }
+                // if(lParam & KF_ALTDOWN)
+                // {
+                //  game->input.pressed_keys[]
+                // }
 
-				game->input.pressed_keys[(u8)wParam] = 1;
-				platform_input.pressed_keys[(u8)wParam] = 1;
-			}
+                game->input.pressed_keys[(u8)wParam] = 1;
+                platform_input.pressed_keys[(u8)wParam] = 1;
+            }
 
-			return 0;
-		} break;
-		case WM_SYSKEYDOWN:
-		{
-			if(game == nullptr) return 0;
+            return 0;
+        } break;
+        case WM_SYSKEYDOWN:
+        {
+            if(game == nullptr) return 0;
 
-			//Log("0x%0*x", 2, (u8)wParam);
+            //Log("0x%0*x", 2, (u8)wParam);
 
-			if(lParam & (1<<30))
-			{ // WM_KEYDOWN caused by key autorepeat
-				game->input.repeated_keys[(u8)wParam] = 1;
-				platform_input.repeated_keys[(u8)wParam] = 1;
-			}
-			else
-			{
-				if(ANYKEY_ACTIVE == true)
-				{
-					game->input.any_key = (u8)wParam;
-					ANYKEY_ACTIVE = false;
-				}
+            if(lParam & (1<<30))
+            { // WM_KEYDOWN caused by key autorepeat
+                game->input.repeated_keys[(u8)wParam] = 1;
+                platform_input.repeated_keys[(u8)wParam] = 1;
+            }
+            else
+            {
+                if(ANYKEY_ACTIVE == true)
+                {
+                    game->input.any_key = (u8)wParam;
+                    ANYKEY_ACTIVE = false;
+                }
 
-				game->input.pressed_keys[(u8)wParam] = 1;
-				platform_input.pressed_keys[(u8)wParam] = 1;
-			}
+                game->input.pressed_keys[(u8)wParam] = 1;
+                platform_input.pressed_keys[(u8)wParam] = 1;
+            }
 
-			return DefWindowProc(hwnd, uMsg, wParam, lParam);
-		} break;
-		case WM_KEYUP: {
-			if(game == nullptr) return 0;
+            return DefWindowProc(hwnd, uMsg, wParam, lParam);
+        } break;
+        case WM_KEYUP: {
+            if(game == nullptr) return 0;
 
-			game->input.released_keys[(u8)wParam] = 1;
-			platform_input.released_keys[(u8)wParam] = 1;
-			return 0;
-		} break;
-		case WM_LBUTTONDOWN: {
-			if(game == nullptr) return 0;
+            game->input.released_keys[(u8)wParam] = 1;
+            platform_input.released_keys[(u8)wParam] = 1;
+            return 0;
+        } break;
+        case WM_LBUTTONDOWN: {
+            if(game == nullptr) return 0;
 
-			game->input.pressed_keys[vk::LMB] = 1;
-			platform_input.pressed_keys[vk::LMB] = 1;
-			return 0;
-		} break;
-		case WM_LBUTTONUP: {
-			if(game == nullptr) return 0;
+            game->input.pressed_keys[vk::LMB] = 1;
+            platform_input.pressed_keys[vk::LMB] = 1;
+            return 0;
+        } break;
+        case WM_LBUTTONUP: {
+            if(game == nullptr) return 0;
 
-			game->input.released_keys[vk::LMB] = 1;
-			platform_input.released_keys[vk::LMB] = 1;
-			return 0;
-		} break;
-		case WM_RBUTTONDOWN: {
-			if(game == nullptr) return 0;
+            game->input.released_keys[vk::LMB] = 1;
+            platform_input.released_keys[vk::LMB] = 1;
+            return 0;
+        } break;
+        case WM_RBUTTONDOWN: {
+            if(game == nullptr) return 0;
 
-			game->input.pressed_keys[vk::RMB] = 1;
-			platform_input.pressed_keys[vk::RMB] = 1;
-			return 0;
-		} break;
-		case WM_RBUTTONUP: {
-			if(game == nullptr) return 0;
+            game->input.pressed_keys[vk::RMB] = 1;
+            platform_input.pressed_keys[vk::RMB] = 1;
+            return 0;
+        } break;
+        case WM_RBUTTONUP: {
+            if(game == nullptr) return 0;
 
-			game->input.released_keys[vk::RMB] = 1;
-			platform_input.released_keys[vk::RMB] = 1;
-			return 0;
-		} break;
-		case WM_MBUTTONDOWN: {
-			if(game == nullptr) return 0;
+            game->input.released_keys[vk::RMB] = 1;
+            platform_input.released_keys[vk::RMB] = 1;
+            return 0;
+        } break;
+        case WM_MBUTTONDOWN: {
+            if(game == nullptr) return 0;
 
-			game->input.pressed_keys[vk::MMB] = 1;
-			platform_input.pressed_keys[vk::MMB] = 1;
-			return 0;
-		} break;
-		case WM_MBUTTONUP: {
-			if(game == nullptr) return 0;
+            game->input.pressed_keys[vk::MMB] = 1;
+            platform_input.pressed_keys[vk::MMB] = 1;
+            return 0;
+        } break;
+        case WM_MBUTTONUP: {
+            if(game == nullptr) return 0;
 
-			game->input.released_keys[vk::MMB] = 1;
-			platform_input.released_keys[vk::MMB] = 1;
-			return 0;
-		} break;
-		case WM_XBUTTONDOWN: {
-			if(game == nullptr) return 0;
+            game->input.released_keys[vk::MMB] = 1;
+            platform_input.released_keys[vk::MMB] = 1;
+            return 0;
+        } break;
+        case WM_XBUTTONDOWN: {
+            if(game == nullptr) return 0;
 
-			if(HIWORD(wParam) & 0x1)
-			{
-				game->input.pressed_keys[vk::Mouse4] = 1;
-				platform_input.pressed_keys[vk::Mouse4] = 1;
-			}
-			else if(HIWORD(wParam) & 0x2)
-			{
-				game->input.pressed_keys[vk::Mouse5] = 1;
-				platform_input.pressed_keys[vk::Mouse5] = 1;
-			}
-			return 0;
-		} break;
-		case WM_XBUTTONUP: {
-			if(game == nullptr) return 0;
+            if(HIWORD(wParam) & 0x1)
+            {
+                game->input.pressed_keys[vk::Mouse4] = 1;
+                platform_input.pressed_keys[vk::Mouse4] = 1;
+            }
+            else if(HIWORD(wParam) & 0x2)
+            {
+                game->input.pressed_keys[vk::Mouse5] = 1;
+                platform_input.pressed_keys[vk::Mouse5] = 1;
+            }
+            return 0;
+        } break;
+        case WM_XBUTTONUP: {
+            if(game == nullptr) return 0;
 
-			if(HIWORD(wParam) & 0x1)
-			{
-				game->input.released_keys[vk::Mouse4] = 1;
-				platform_input.released_keys[vk::Mouse4] = 1;
-			}
-			else if(HIWORD(wParam) & 0x2)
-			{
-				game->input.released_keys[vk::Mouse5] = 1;
-				platform_input.released_keys[vk::Mouse5] = 1;
-			}
-			return 0;
-		} break;
-		case WM_MOUSEWHEEL: {
-			game->input.mouse_scroll += GET_WHEEL_DELTA_WPARAM(wParam)/WHEEL_DELTA;
-			platform_input.mouse_scroll += GET_WHEEL_DELTA_WPARAM(wParam)/WHEEL_DELTA;
-			return 0;
-		};
-		case WM_CHAR: {
-			//Log("%u", wParam);
-			if(pos_in_translated_stream < ArrayCount(utf32_translated_stream0))
-			{
-				current_translated_stream[pos_in_translated_stream++] = wParam;
-			}
-			else
-			{
-				Log("utf32-translated stream in win32 platform layer reached maximum size.");
-			}
-		} break;
-		case WM_INPUTLANGCHANGE: {
-			return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-		}
-		case WM_INPUTLANGCHANGEREQUEST: {
-			return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-		}
-		case WM_SETCURSOR: {
-			return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-		}
-		default: {
-			return DefWindowProcA(hwnd, uMsg, wParam, lParam);
-		} break;
-	}
+            if(HIWORD(wParam) & 0x1)
+            {
+                game->input.released_keys[vk::Mouse4] = 1;
+                platform_input.released_keys[vk::Mouse4] = 1;
+            }
+            else if(HIWORD(wParam) & 0x2)
+            {
+                game->input.released_keys[vk::Mouse5] = 1;
+                platform_input.released_keys[vk::Mouse5] = 1;
+            }
+            return 0;
+        } break;
+        case WM_MOUSEWHEEL: {
+            game->input.mouse_scroll += GET_WHEEL_DELTA_WPARAM(wParam)/WHEEL_DELTA;
+            platform_input.mouse_scroll += GET_WHEEL_DELTA_WPARAM(wParam)/WHEEL_DELTA;
+            return 0;
+        };
+        case WM_CHAR: {
+            //Log("%u", wParam);
+            if(pos_in_translated_stream < ArrayCount(utf32_translated_stream0))
+            {
+                current_translated_stream[pos_in_translated_stream++] = wParam;
+            }
+            else
+            {
+                Log("utf32-translated stream in win32 platform layer reached maximum size.");
+            }
+        } break;
+        case WM_INPUTLANGCHANGE: {
+            return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+        }
+        case WM_INPUTLANGCHANGEREQUEST: {
+            return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+        }
+        case WM_SETCURSOR: {
+            return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+        }
+        default: {
+            return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+        } break;
+    }
 
-	return 0;
+    return 0;
 }
 
 
@@ -244,197 +244,211 @@ s64 performance_frequency;
 s64
 win32_PerformanceFrequencyAsS64()
 {
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	return freq.QuadPart;
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+    return freq.QuadPart;
 }
 
 s64
 win32_PerformanceCounterFrequency()
 {
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	return freq.QuadPart;
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+    return freq.QuadPart;
 }
 
 s64
 win32_CurrentTime()
 {
-	LARGE_INTEGER count;
-	QueryPerformanceCounter(&count);
-	return count.QuadPart;
+    LARGE_INTEGER count;
+    QueryPerformanceCounter(&count);
+    return count.QuadPart;
 }
 
 u32
 win32_GetCallingThreadId()
 {
-	return GetCurrentThreadId();
+    return GetCurrentThreadId();
 }
 
 float
 win32_TimeElapsedMs(s64 start, s64 end)
 {
-	return (float)(end-start)/performance_frequency*1000.f;
+    return (float)(end-start)/performance_frequency*1000.f;
 }
 
 void *
 win32_AllocateMemory(size_t size)
 {
-	return VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    return VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
 
 // Returns true on success, false otherwise.
 bool
 win32_FreeMemory(void *p)
 {
-	return VirtualFree(p, 0, MEM_RELEASE);
+    return VirtualFree(p, 0, MEM_RELEASE);
+}
+
+void
+win32_BlockAndTakeMutex(void *mutex_handle)
+{
+    HANDLE win32_mutex_handle = (HANDLE)mutex_handle;
+    WaitForSingleObjectEx(win32_mutex_handle, INFINITE, FALSE);
+}
+
+void
+win32_ReleaseMutex(void *mutex_handle)
+{
+    HANDLE win32_mutex_handle = (HANDLE)mutex_handle;
+    ReleaseMutex(win32_mutex_handle);
 }
 
 void
 win32_ShowCursor()
 {
-	ShowCursor(TRUE);
+    ShowCursor(TRUE);
 }
 
 void
 win32_HideCursor()
 {
-	ShowCursor(FALSE);
+    ShowCursor(FALSE);
 }
 
 void
 win32_GetMousePos(int *x, int *y)
 {
-	POINT point;
-	GetCursorPos(&point);
-	ScreenToClient(wc.hwnd, &point);
+    POINT point;
+    GetCursorPos(&point);
+    ScreenToClient(wc.hwnd, &point);
 
-	*x = point.x;
-	*y = point.y;
+    *x = point.x;
+    *y = point.y;
 }
 
 void
 win32_GetMousePosF(float *x, float *y)
 {
-	Vec2i mouse_pos_i;
-	win32_GetMousePos(&mouse_pos_i.x, &mouse_pos_i.y);
-	*x = (float)mouse_pos_i.x;
-	*y = (float)mouse_pos_i.y;
+    Vec2i mouse_pos_i;
+    win32_GetMousePos(&mouse_pos_i.x, &mouse_pos_i.y);
+    *x = (float)mouse_pos_i.x;
+    *y = (float)mouse_pos_i.y;
 }
 
 bool
 win32_GetFileSize(const char *filename, size_t *size_in_bytes)
 {
-	HANDLE file = CreateFile(filename,
-							 FILE_READ_DATA,
-							 0,
-							 NULL,
-							 OPEN_EXISTING,
-							 FILE_ATTRIBUTE_NORMAL,
-							 NULL);
+    HANDLE file = CreateFile(filename,
+                             FILE_READ_DATA,
+                             0,
+                             NULL,
+                             OPEN_EXISTING,
+                             FILE_ATTRIBUTE_NORMAL,
+                             NULL);
 
-	if(file == INVALID_HANDLE_VALUE)
-	{
-		Log("Failed to open file to find its size: %s", filename);
-		return false;
-	}
+    if(file == INVALID_HANDLE_VALUE)
+    {
+        Log("Failed to open file to find its size: %s", filename);
+        return false;
+    }
 
-	DWORD filesize_high;
-	DWORD filesize_low = GetFileSize(file, &filesize_high);
-	if(filesize_high != 0) Log("FileSizeHigh != 0 (%u)", filesize_high);
-	CloseHandle(file);
+    DWORD filesize_high;
+    DWORD filesize_low = GetFileSize(file, &filesize_high);
+    if(filesize_high != 0) Log("FileSizeHigh != 0 (%u)", filesize_high);
+    CloseHandle(file);
 
-	*size_in_bytes = filesize_low;
-	return true;
+    *size_in_bytes = filesize_low;
+    return true;
 }
 
 void
 win32_WriteLineToFile(char *filename, char *line)
 {
-	HANDLE file = CreateFile(filename,
-							 FILE_APPEND_DATA, FILE_SHARE_READ,
-							 NULL,
-							 OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL,
-							 NULL);
+    HANDLE file = CreateFile(filename,
+                             FILE_APPEND_DATA, FILE_SHARE_READ,
+                             NULL,
+                             OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL,
+                             NULL);
 
-	if(file == INVALID_HANDLE_VALUE) {
-		win32_WriteLineToFile("logs/critical.log", "Failed to open text file for writing line.");
-		return;
-	}
+    if(file == INVALID_HANDLE_VALUE) {
+        win32_WriteLineToFile("logs/critical.log", "Failed to open text file for writing line.");
+        return;
+    }
 
-	DWORD byte_count_written;
-	WriteFile(file, line, strlen(line), &byte_count_written, NULL);
-	char newline = '\n';
-	WriteFile(file, &newline, 1, nullptr, NULL);
+    DWORD byte_count_written;
+    WriteFile(file, line, strlen(line), &byte_count_written, NULL);
+    char newline = '\n';
+    WriteFile(file, &newline, 1, nullptr, NULL);
 
-	CloseHandle(file);
+    CloseHandle(file);
 }
 
 bool
 win32_LoadFileIntoSizedBufferAndNullTerminate(const char *filename, Buffer *buffer)
 {
-	if(!win32_GetFileSize(filename, &buffer->byte_count))
-	{
-		return false;
-	}
+    if(!win32_GetFileSize(filename, &buffer->byte_count))
+    {
+        return false;
+    }
 
-	HANDLE file = CreateFile(filename,
-							 GENERIC_READ,
-							 0,
-							 NULL,
-							 OPEN_EXISTING,
-							 FILE_ATTRIBUTE_NORMAL,
-							 NULL);
+    HANDLE file = CreateFile(filename,
+                             GENERIC_READ,
+                             0,
+                             NULL,
+                             OPEN_EXISTING,
+                             FILE_ATTRIBUTE_NORMAL,
+                             NULL);
 
-	if(file == INVALID_HANDLE_VALUE)
-	{
-		Log("Failed to open file for reading: %s", filename);
-		return false;
-	}
+    if(file == INVALID_HANDLE_VALUE)
+    {
+        Log("Failed to open file for reading: %s", filename);
+        return false;
+    }
 
-	buffer->data = (char*)malloc(buffer->byte_count+1); // +1 for null terminator
-	buffer->p = buffer->data;
-	ReadFile(file, buffer->data, buffer->byte_count, nullptr, nullptr);
-	CloseHandle(file);
+    buffer->data = (char*)malloc(buffer->byte_count+1); // +1 for null terminator
+    buffer->p = buffer->data;
+    ReadFile(file, buffer->data, buffer->byte_count, nullptr, nullptr);
+    CloseHandle(file);
 
-	buffer->data[buffer->byte_count] = 0; // null-terminate
+    buffer->data[buffer->byte_count] = 0; // null-terminate
 
-	return true;
+    return true;
 }
 
 bool
 win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, u32 buffer_length)
 {
-	HANDLE file = CreateFile(filename,
-							 FILE_READ_DATA,
-							 0,
-							 NULL,
-							 OPEN_EXISTING,
-							 FILE_ATTRIBUTE_NORMAL,
-							 NULL);
+    HANDLE file = CreateFile(filename,
+                             FILE_READ_DATA,
+                             0,
+                             NULL,
+                             OPEN_EXISTING,
+                             FILE_ATTRIBUTE_NORMAL,
+                             NULL);
 
-	if(file == INVALID_HANDLE_VALUE)
-	{
-		Log("Failed to open file for reading: %s", filename);
-		return false;
-	}
+    if(file == INVALID_HANDLE_VALUE)
+    {
+        Log("Failed to open file for reading: %s", filename);
+        return false;
+    }
 
-	DWORD number_of_bytes_read;
-	ReadFile(file, buffer, buffer_length, &number_of_bytes_read, NULL);
+    DWORD number_of_bytes_read;
+    ReadFile(file, buffer, buffer_length, &number_of_bytes_read, NULL);
 
-	if(number_of_bytes_read > buffer_length-1)
-	{
-		//Log("win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data");
-		buffer[buffer_length-1] = '\0';
-		CloseHandle(file);
-		return false;
-	}
-	else
-	{
-		buffer[number_of_bytes_read] = '\0';
-		CloseHandle(file);
-		return true;
-	}
+    if(number_of_bytes_read > buffer_length-1)
+    {
+        //Log("win32_LoadFileIntoMemoryAndNullTerminate(): Fixed buffer not long enough to recieve null-terminated data");
+        buffer[buffer_length-1] = '\0';
+        CloseHandle(file);
+        return false;
+    }
+    else
+    {
+        buffer[number_of_bytes_read] = '\0';
+        CloseHandle(file);
+        return true;
+    }
 }
 
 
@@ -442,253 +456,256 @@ win32_LoadFileIntoFixedBufferAndNullTerminate(const char *filename, u8 *buffer, 
 void
 win32_AnyKey()
 {
-	game->input.any_key = 0;
-	ANYKEY_ACTIVE = true;
+    game->input.any_key = 0;
+    ANYKEY_ACTIVE = true;
 }
 
 void
 WIN32_DELETE_OPENGL_WINDOW(HWND hwnd)
 {
-	//HGLRC hRc = wglGetCurrentContext();
-	wglDeleteContext(wc.rc);
-	DestroyWindow(wc.hwnd);
-	QUIT_GAME = true;
+    //HGLRC hRc = wglGetCurrentContext();
+    wglDeleteContext(wc.rc);
+    DestroyWindow(wc.hwnd);
+    QUIT_GAME = true;
 }
 
 void
 win32_ExitGame()
 {
-	WIN32_DELETE_OPENGL_WINDOW(wc.hwnd);
+    WIN32_DELETE_OPENGL_WINDOW(wc.hwnd);
 }
 
 int
 win32_MyInterlockedIncrement(int volatile *v)
 {
-	return InterlockedIncrement((LONG volatile *)v);
+    return InterlockedIncrement((LONG volatile *)v);
 }
 
 void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
 {
-	const char *window_class_name = "Trait WC";
-	WNDCLASSEX window_class = {};
-	window_class.cbSize = sizeof(WNDCLASSEX);
-	window_class.style = CS_OWNDC;
-	window_class.lpfnWndProc = WindowProc;
-	window_class.hInstance = hInstance;
-	window_class.lpszClassName = window_class_name;
-	window_class.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    const char *window_class_name = "Trait WC";
+    WNDCLASSEX window_class = {};
+    window_class.cbSize = sizeof(WNDCLASSEX);
+    window_class.style = CS_OWNDC;
+    window_class.lpfnWndProc = WindowProc;
+    window_class.hInstance = hInstance;
+    window_class.lpszClassName = window_class_name;
+    window_class.hCursor = LoadCursorA(NULL, IDC_ARROW);
 
-	RegisterClassEx(&window_class);
+    RegisterClassEx(&window_class);
 
-	RECT window_rect = {};
-	DWORD window_style = 0;
-	if(c::fullscreen)
-	{
-		window_style = WS_POPUP;
-		game->window_size = {(float)c::fullscreen_window_width, (float)c::fullscreen_window_height};
-		window_rect = {0,0,c::fullscreen_window_width,c::fullscreen_window_height};
-	}
-	else
-	{
-		window_style = WS_OVERLAPPEDWINDOW;
-		game->window_size = {(float)c::windowed_window_width, (float)c::windowed_window_height};
-		window_rect = {0,0,c::windowed_window_width,c::windowed_window_height};
-	}
+    RECT window_rect = {};
+    DWORD window_style = 0;
+    if(c::fullscreen)
+    {
+        window_style = WS_POPUP;
+        game->window_size = {(float)c::fullscreen_window_width, (float)c::fullscreen_window_height};
+        window_rect = {0,0,c::fullscreen_window_width,c::fullscreen_window_height};
+    }
+    else
+    {
+        window_style = WS_OVERLAPPEDWINDOW;
+        game->window_size = {(float)c::windowed_window_width, (float)c::windowed_window_height};
+        window_rect = {0,0,c::windowed_window_width,c::windowed_window_height};
+    }
 
-	AdjustWindowRectEx(&window_rect, window_style, FALSE, NULL);
-	wc.hwnd = CreateWindowEx(0,
-							 window_class_name,
-							 "Trait",
-							 window_style,
-							 0,
-							 0,
-							 window_rect.right - window_rect.left,
-							 window_rect.bottom - window_rect.top,
-							 NULL, NULL, hInstance, NULL);
+    AdjustWindowRectEx(&window_rect, window_style, FALSE, NULL);
+    wc.hwnd = CreateWindowEx(0,
+                             window_class_name,
+                             "Trait",
+                             window_style,
+                             0,
+                             0,
+                             window_rect.right - window_rect.left,
+                             window_rect.bottom - window_rect.top,
+                             NULL, NULL, hInstance, NULL);
 
-	RECT test;
-	GetWindowRect(wc.hwnd, &test);
+    RECT test;
+    GetWindowRect(wc.hwnd, &test);
 
-	wc.hdc = GetDC(wc.hwnd);
-	PIXELFORMATDESCRIPTOR pfd = {};
-	pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	pfd.iPixelType = PFD_TYPE_RGBA;
-	pfd.cColorBits = 32;
-	pfd.cDepthBits = 24;
-	int pfd_index = ChoosePixelFormat(wc.hdc, &pfd);
-	if(pfd_index == 0) Log("ChoosePixelFormat() failed.");
-	SetPixelFormat(wc.hdc, pfd_index, &pfd);
-	wc.rc = wglCreateContext(wc.hdc);
-	wglMakeCurrent(wc.hdc, wc.rc);
+    wc.hdc = GetDC(wc.hwnd);
+    PIXELFORMATDESCRIPTOR pfd = {};
+    pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+    pfd.nVersion = 1;
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cDepthBits = 24;
+    int pfd_index = ChoosePixelFormat(wc.hdc, &pfd);
+    if(pfd_index == 0) Log("ChoosePixelFormat() failed.");
+    SetPixelFormat(wc.hdc, pfd_index, &pfd);
+    wc.rc = wglCreateContext(wc.hdc);
+    wglMakeCurrent(wc.hdc, wc.rc);
 
-	ShowWindow(wc.hwnd, nCmdShow);
-	UpdateWindow(wc.hwnd);
+    ShowWindow(wc.hwnd, nCmdShow);
+    UpdateWindow(wc.hwnd);
 }
 
 void WIN32_BIND_PLATFORM_FUNCTIONS(Platform *platform)
 {
-	#define mBindPlatformFunction(name) platform->name = win32_##name
+    #define mBindPlatformFunction(name) platform->name = win32_##name
 
-	mBindPlatformFunction(GetMousePos);
-	mBindPlatformFunction(GetFileSize);
-	mBindPlatformFunction(WriteLineToFile);
-	mBindPlatformFunction(LoadFileIntoFixedBufferAndNullTerminate);
-	mBindPlatformFunction(LoadFileIntoSizedBufferAndNullTerminate);
-	mBindPlatformFunction(ShowCursor);
-	mBindPlatformFunction(HideCursor);
-	//mBindPlatformFunction(ExitGame);
-	mBindPlatformFunction(AllocateMemory);
-	mBindPlatformFunction(PerformanceCounterFrequency);
-	mBindPlatformFunction(AnyKey);
-	//mBindPlatformFunction(StartJob);
-	mBindPlatformFunction(GetCallingThreadId);
-	mBindPlatformFunction(MyInterlockedIncrement);
-	mBindPlatformFunction(CreateWorkQueue);
-	mBindPlatformFunction(AddWorkEntry);
-	mBindPlatformFunction(QueueReleaseSemaphore);
-	mBindPlatformFunction(FreeMemory);
-	mBindPlatformFunction(WorkQueuePendingJobCount);
+    mBindPlatformFunction(GetMousePos);
+    mBindPlatformFunction(GetFileSize);
+    mBindPlatformFunction(WriteLineToFile);
+    mBindPlatformFunction(LoadFileIntoFixedBufferAndNullTerminate);
+    mBindPlatformFunction(LoadFileIntoSizedBufferAndNullTerminate);
+    mBindPlatformFunction(ShowCursor);
+    mBindPlatformFunction(HideCursor);
+    //mBindPlatformFunction(ExitGame);
+    mBindPlatformFunction(AllocateMemory);
+    mBindPlatformFunction(PerformanceCounterFrequency);
+    mBindPlatformFunction(AnyKey);
+    //mBindPlatformFunction(StartJob);
+    mBindPlatformFunction(GetCallingThreadId);
+    mBindPlatformFunction(MyInterlockedIncrement);
+    mBindPlatformFunction(CreateWorkQueue);
+    mBindPlatformFunction(AddWorkEntry);
+    mBindPlatformFunction(QueueReleaseSemaphore);
+    mBindPlatformFunction(FreeMemory);
+    mBindPlatformFunction(WorkQueuePendingJobCount);
 
-	platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
+    mBindPlatformFunction(BlockAndTakeMutex);
+    mBindPlatformFunction(ReleaseMutex);
 
-	#undef mBindPlatformFunction
+    platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
+
+    #undef mBindPlatformFunction
 }
 
 void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
-	#define mBindBaseOpenGLFunction(name) opengl->name = gl##name
-	#define mBindExtendedOpenGLFunction(name) opengl->name = (fnsig_gl##name*)wglGetProcAddress("gl"#name)
+    #define mBindBaseOpenGLFunction(name) opengl->name = gl##name
+    #define mBindExtendedOpenGLFunction(name) opengl->name = (fnsig_gl##name*)wglGetProcAddress("gl"#name)
 
-	mBindBaseOpenGLFunction(GetError);
-	mBindExtendedOpenGLFunction(BindBuffer);
-	mBindExtendedOpenGLFunction(GenBuffers);
-	mBindExtendedOpenGLFunction(DeleteBuffers);
-	mBindExtendedOpenGLFunction(BufferData);
-	mBindExtendedOpenGLFunction(NamedBufferData);
-	mBindExtendedOpenGLFunction(CreateShader);
-	mBindExtendedOpenGLFunction(ShaderSource);
-	mBindExtendedOpenGLFunction(CompileShader);
-	mBindExtendedOpenGLFunction(GetShaderInfoLog);
-	mBindExtendedOpenGLFunction(GetShaderiv);
-	mBindExtendedOpenGLFunction(CreateProgram);
-	mBindExtendedOpenGLFunction(LinkProgram);
-	mBindExtendedOpenGLFunction(GetProgramiv);
-	mBindExtendedOpenGLFunction(GetProgramInfoLog);
-	mBindExtendedOpenGLFunction(AttachShader);
-	mBindExtendedOpenGLFunction(UseProgram);
-	mBindExtendedOpenGLFunction(GetAttribLocation);
-	mBindExtendedOpenGLFunction(VertexAttribPointer);
-	mBindExtendedOpenGLFunction(DrawArrays);
-	mBindExtendedOpenGLFunction(EnableVertexAttribArray);
-	mBindExtendedOpenGLFunction(DisableVertexAttribArray);
-	mBindExtendedOpenGLFunction(EnableVertexArrayAttrib);
-	mBindExtendedOpenGLFunction(BindFragDataLocation);
-	mBindExtendedOpenGLFunction(GetUniformLocation);
-	mBindExtendedOpenGLFunction(Uniform1f);
-	mBindExtendedOpenGLFunction(Uniform2f);
-	mBindExtendedOpenGLFunction(Uniform3f);
-	mBindExtendedOpenGLFunction(Uniform4f);
-	mBindExtendedOpenGLFunction(Uniform3fv);
-	mBindExtendedOpenGLFunction(Uniform4fv);
-	mBindExtendedOpenGLFunction(Uniform1ui);
- 	mBindExtendedOpenGLFunction(GenTextures);
- 	mBindExtendedOpenGLFunction(BindTexture);
- 	mBindBaseOpenGLFunction(TexParameteri);
- 	mBindBaseOpenGLFunction(TexImage2D);
- 	mBindExtendedOpenGLFunction(ActiveTexture);
- 	mBindExtendedOpenGLFunction(Uniform1i);
- 	mBindBaseOpenGLFunction(GetIntegerv);
- 	mBindExtendedOpenGLFunction(IsBuffer);
- 	mBindExtendedOpenGLFunction(GenVertexArrays);
- 	mBindExtendedOpenGLFunction(BindVertexArray);
- 	mBindExtendedOpenGLFunction(DeleteVertexArrays);
- 	mBindExtendedOpenGLFunction(DeleteTextures);
-	mBindBaseOpenGLFunction(ClearColor);
-	mBindBaseOpenGLFunction(Clear);
-	mBindBaseOpenGLFunction(Enable);
-	mBindBaseOpenGLFunction(Disable);
-	mBindExtendedOpenGLFunction(DrawElements);
-	mBindExtendedOpenGLFunction(GenFramebuffers);
-	mBindExtendedOpenGLFunction(BindFramebuffer);
-	mBindExtendedOpenGLFunction(GenRenderbuffers);
-	mBindExtendedOpenGLFunction(BindRenderbuffer);
-	mBindExtendedOpenGLFunction(RenderbufferStorage);
-	mBindExtendedOpenGLFunction(FramebufferRenderbuffer);
-	mBindExtendedOpenGLFunction(CheckFramebufferStatus);
-	mBindExtendedOpenGLFunction(DeleteShader);
-	mBindExtendedOpenGLFunction(BlitFramebuffer);
-	mBindExtendedOpenGLFunction(FramebufferTexture2D);
-	mBindExtendedOpenGLFunction(DrawBuffers);
-	mBindExtendedOpenGLFunction(GetTextureImage);
-	mBindExtendedOpenGLFunction(GetTextureSubImage);
-	mBindBaseOpenGLFunction(Finish);
-	mBindBaseOpenGLFunction(Flush);
-	mBindBaseOpenGLFunction(PixelStorei);
-	mBindBaseOpenGLFunction(PolygonMode);
-	mBindExtendedOpenGLFunction(MapNamedBuffer);
-	mBindExtendedOpenGLFunction(UnmapNamedBuffer);
-	mBindBaseOpenGLFunction(GetString);
-	mBindExtendedOpenGLFunction(ReadnPixels);
-	mBindExtendedOpenGLFunction(MemoryBarrier);
-	mBindExtendedOpenGLFunction(DebugMessageCallback);
+    mBindBaseOpenGLFunction(GetError);
+    mBindExtendedOpenGLFunction(BindBuffer);
+    mBindExtendedOpenGLFunction(GenBuffers);
+    mBindExtendedOpenGLFunction(DeleteBuffers);
+    mBindExtendedOpenGLFunction(BufferData);
+    mBindExtendedOpenGLFunction(NamedBufferData);
+    mBindExtendedOpenGLFunction(CreateShader);
+    mBindExtendedOpenGLFunction(ShaderSource);
+    mBindExtendedOpenGLFunction(CompileShader);
+    mBindExtendedOpenGLFunction(GetShaderInfoLog);
+    mBindExtendedOpenGLFunction(GetShaderiv);
+    mBindExtendedOpenGLFunction(CreateProgram);
+    mBindExtendedOpenGLFunction(LinkProgram);
+    mBindExtendedOpenGLFunction(GetProgramiv);
+    mBindExtendedOpenGLFunction(GetProgramInfoLog);
+    mBindExtendedOpenGLFunction(AttachShader);
+    mBindExtendedOpenGLFunction(UseProgram);
+    mBindExtendedOpenGLFunction(GetAttribLocation);
+    mBindExtendedOpenGLFunction(VertexAttribPointer);
+    mBindExtendedOpenGLFunction(DrawArrays);
+    mBindExtendedOpenGLFunction(EnableVertexAttribArray);
+    mBindExtendedOpenGLFunction(DisableVertexAttribArray);
+    mBindExtendedOpenGLFunction(EnableVertexArrayAttrib);
+    mBindExtendedOpenGLFunction(BindFragDataLocation);
+    mBindExtendedOpenGLFunction(GetUniformLocation);
+    mBindExtendedOpenGLFunction(Uniform1f);
+    mBindExtendedOpenGLFunction(Uniform2f);
+    mBindExtendedOpenGLFunction(Uniform3f);
+    mBindExtendedOpenGLFunction(Uniform4f);
+    mBindExtendedOpenGLFunction(Uniform3fv);
+    mBindExtendedOpenGLFunction(Uniform4fv);
+    mBindExtendedOpenGLFunction(Uniform1ui);
+    mBindExtendedOpenGLFunction(GenTextures);
+    mBindExtendedOpenGLFunction(BindTexture);
+    mBindBaseOpenGLFunction(TexParameteri);
+    mBindBaseOpenGLFunction(TexImage2D);
+    mBindExtendedOpenGLFunction(ActiveTexture);
+    mBindExtendedOpenGLFunction(Uniform1i);
+    mBindBaseOpenGLFunction(GetIntegerv);
+    mBindExtendedOpenGLFunction(IsBuffer);
+    mBindExtendedOpenGLFunction(GenVertexArrays);
+    mBindExtendedOpenGLFunction(BindVertexArray);
+    mBindExtendedOpenGLFunction(DeleteVertexArrays);
+    mBindExtendedOpenGLFunction(DeleteTextures);
+    mBindBaseOpenGLFunction(ClearColor);
+    mBindBaseOpenGLFunction(Clear);
+    mBindBaseOpenGLFunction(Enable);
+    mBindBaseOpenGLFunction(Disable);
+    mBindExtendedOpenGLFunction(DrawElements);
+    mBindExtendedOpenGLFunction(GenFramebuffers);
+    mBindExtendedOpenGLFunction(BindFramebuffer);
+    mBindExtendedOpenGLFunction(GenRenderbuffers);
+    mBindExtendedOpenGLFunction(BindRenderbuffer);
+    mBindExtendedOpenGLFunction(RenderbufferStorage);
+    mBindExtendedOpenGLFunction(FramebufferRenderbuffer);
+    mBindExtendedOpenGLFunction(CheckFramebufferStatus);
+    mBindExtendedOpenGLFunction(DeleteShader);
+    mBindExtendedOpenGLFunction(BlitFramebuffer);
+    mBindExtendedOpenGLFunction(FramebufferTexture2D);
+    mBindExtendedOpenGLFunction(DrawBuffers);
+    mBindExtendedOpenGLFunction(GetTextureImage);
+    mBindExtendedOpenGLFunction(GetTextureSubImage);
+    mBindBaseOpenGLFunction(Finish);
+    mBindBaseOpenGLFunction(Flush);
+    mBindBaseOpenGLFunction(PixelStorei);
+    mBindBaseOpenGLFunction(PolygonMode);
+    mBindExtendedOpenGLFunction(MapNamedBuffer);
+    mBindExtendedOpenGLFunction(UnmapNamedBuffer);
+    mBindBaseOpenGLFunction(GetString);
+    mBindExtendedOpenGLFunction(ReadnPixels);
+    mBindExtendedOpenGLFunction(MemoryBarrier);
+    mBindExtendedOpenGLFunction(DebugMessageCallback);
 
-	mBindExtendedOpenGLFunction(ProgramUniform1i);
-	mBindExtendedOpenGLFunction(ProgramUniform1iv);
-	mBindExtendedOpenGLFunction(ProgramUniform1f);
-	mBindExtendedOpenGLFunction(ProgramUniform1fv);
-	mBindExtendedOpenGLFunction(ProgramUniform1d);
-	mBindExtendedOpenGLFunction(ProgramUniform1dv);
-	mBindExtendedOpenGLFunction(ProgramUniform1ui);
-	mBindExtendedOpenGLFunction(ProgramUniform1uiv);
-	mBindExtendedOpenGLFunction(ProgramUniform2i);
-	mBindExtendedOpenGLFunction(ProgramUniform2iv);
-	mBindExtendedOpenGLFunction(ProgramUniform2f);
-	mBindExtendedOpenGLFunction(ProgramUniform2fv);
-	mBindExtendedOpenGLFunction(ProgramUniform2d);
-	mBindExtendedOpenGLFunction(ProgramUniform2dv);
-	mBindExtendedOpenGLFunction(ProgramUniform2ui);
-	mBindExtendedOpenGLFunction(ProgramUniform2uiv);
-	mBindExtendedOpenGLFunction(ProgramUniform3i);
-	mBindExtendedOpenGLFunction(ProgramUniform3iv);
-	mBindExtendedOpenGLFunction(ProgramUniform3f);
-	mBindExtendedOpenGLFunction(ProgramUniform3fv);
-	mBindExtendedOpenGLFunction(ProgramUniform3d);
-	mBindExtendedOpenGLFunction(ProgramUniform3dv);
-	mBindExtendedOpenGLFunction(ProgramUniform3ui);
-	mBindExtendedOpenGLFunction(ProgramUniform3uiv);
-	mBindExtendedOpenGLFunction(ProgramUniform4i);
-	mBindExtendedOpenGLFunction(ProgramUniform4iv);
-	mBindExtendedOpenGLFunction(ProgramUniform4f);
-	mBindExtendedOpenGLFunction(ProgramUniform4fv);
-	mBindExtendedOpenGLFunction(ProgramUniform4d);
-	mBindExtendedOpenGLFunction(ProgramUniform4dv);
-	mBindExtendedOpenGLFunction(ProgramUniform4ui);
-	mBindExtendedOpenGLFunction(ProgramUniform4uiv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2x3fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3x2fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2x4fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4x2fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3x4fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4x3fv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2x3dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3x2dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix2x4dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4x2dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix3x4dv);
-	mBindExtendedOpenGLFunction(ProgramUniformMatrix4x3dv);
+    mBindExtendedOpenGLFunction(ProgramUniform1i);
+    mBindExtendedOpenGLFunction(ProgramUniform1iv);
+    mBindExtendedOpenGLFunction(ProgramUniform1f);
+    mBindExtendedOpenGLFunction(ProgramUniform1fv);
+    mBindExtendedOpenGLFunction(ProgramUniform1d);
+    mBindExtendedOpenGLFunction(ProgramUniform1dv);
+    mBindExtendedOpenGLFunction(ProgramUniform1ui);
+    mBindExtendedOpenGLFunction(ProgramUniform1uiv);
+    mBindExtendedOpenGLFunction(ProgramUniform2i);
+    mBindExtendedOpenGLFunction(ProgramUniform2iv);
+    mBindExtendedOpenGLFunction(ProgramUniform2f);
+    mBindExtendedOpenGLFunction(ProgramUniform2fv);
+    mBindExtendedOpenGLFunction(ProgramUniform2d);
+    mBindExtendedOpenGLFunction(ProgramUniform2dv);
+    mBindExtendedOpenGLFunction(ProgramUniform2ui);
+    mBindExtendedOpenGLFunction(ProgramUniform2uiv);
+    mBindExtendedOpenGLFunction(ProgramUniform3i);
+    mBindExtendedOpenGLFunction(ProgramUniform3iv);
+    mBindExtendedOpenGLFunction(ProgramUniform3f);
+    mBindExtendedOpenGLFunction(ProgramUniform3fv);
+    mBindExtendedOpenGLFunction(ProgramUniform3d);
+    mBindExtendedOpenGLFunction(ProgramUniform3dv);
+    mBindExtendedOpenGLFunction(ProgramUniform3ui);
+    mBindExtendedOpenGLFunction(ProgramUniform3uiv);
+    mBindExtendedOpenGLFunction(ProgramUniform4i);
+    mBindExtendedOpenGLFunction(ProgramUniform4iv);
+    mBindExtendedOpenGLFunction(ProgramUniform4f);
+    mBindExtendedOpenGLFunction(ProgramUniform4fv);
+    mBindExtendedOpenGLFunction(ProgramUniform4d);
+    mBindExtendedOpenGLFunction(ProgramUniform4dv);
+    mBindExtendedOpenGLFunction(ProgramUniform4ui);
+    mBindExtendedOpenGLFunction(ProgramUniform4uiv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2x3fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3x2fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2x4fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4x2fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3x4fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4x3fv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2x3dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3x2dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix2x4dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4x2dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix3x4dv);
+    mBindExtendedOpenGLFunction(ProgramUniformMatrix4x3dv);
 
-	mBindExtendedOpenGLFunction(BlendEquation);
-	mBindBaseOpenGLFunction(BlendFunc);
+    mBindExtendedOpenGLFunction(BlendEquation);
+    mBindBaseOpenGLFunction(BlendFunc);
 
-	// Compute shader
-	mBindExtendedOpenGLFunction(DispatchCompute);
+    // Compute shader
+    mBindExtendedOpenGLFunction(DispatchCompute);
     mBindExtendedOpenGLFunction(DispatchComputeIndirect);
     mBindExtendedOpenGLFunction(BindImageTexture);
 
@@ -698,72 +715,79 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
     mBindExtendedOpenGLFunction(FramebufferTexture);
     mBindExtendedOpenGLFunction(BindTextureUnit);
 
-	#undef mBindBaseOpenGLFunction
-	#undef mBindExtendedOpenGLFunction
+    #undef mBindBaseOpenGLFunction
+    #undef mBindExtendedOpenGLFunction
 
-	CheckOpenGLBinds(opengl);
+    CheckOpenGLBinds(opengl);
 }
 
 int WINAPI
 wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	//TIMED_BLOCK;
-	debug::timed_block_array_size = __COUNTER__;
+    //TIMED_BLOCK;
+    debug::timed_block_array_size = __COUNTER__;
 
-	performance_frequency = win32_PerformanceFrequencyAsS64();
+    performance_frequency = win32_PerformanceFrequencyAsS64();
 
-	platform = new Platform{};
-	gl = new OpenGL{};
-	game = new Game{};
+    platform = new Platform{};
+    gl = new OpenGL{};
+    game = new Game{};
 
-	WIN32_BIND_PLATFORM_FUNCTIONS(platform);
+    WIN32_BIND_PLATFORM_FUNCTIONS(platform);
 
-	Table<Arena> arena_table = AllocTable<Arena>(100);
-	game->arena_table = &arena_table;
+    Pool<Arena> arena_pool = AllocPool<Arena>(100);
+    game->arena_pool = &arena_pool;
 
-	memory::per_frame_arena_id = AllocArena("Per Frame");
-	memory::permanent_arena_id = AllocArena("Permanent");
+    HANDLE arena_pool_mutex = CreateMutex(NULL, FALSE, NULL);
+    memory::per_frame_arena_id = AllocArena("Per Frame");
+    memory::permanent_arena_id = AllocArena("Permanent");
 
-	g_work_queue_system.queues = CreatePermanentArray<WorkQueue>(8);
-	g_work_queue_system.init   = true;
+    GameInitData game_init_data = {
+        .per_frame_arena_id = memory::per_frame_arena_id,
+        .permanent_arena_id = memory::permanent_arena_id,
+        .arena_pool_mutex_handle  = (void *)arena_pool_mutex,
+    };
+
+    g_work_queue_system.queues = CreatePermanentArray<WorkQueue>(8);
+    g_work_queue_system.init   = true;
 
     // ----------------------------------------------------------------------------
     // Barrier for creating work queues. Below this point, it should be good to go.
     // ----------------------------------------------------------------------------
 
-	InitLog(&game->log_state);
+    InitLog(&game->log_state);
 
-	CreateWindowAndOpenGlContext(hInstance, nCmdShow);
-	WIN32_BIND_OPENGL_EXTENSIONS(gl);
+    CreateWindowAndOpenGlContext(hInstance, nCmdShow);
+    WIN32_BIND_OPENGL_EXTENSIONS(gl);
 
-	void (*GameHook)(Platform*, OpenGL*, Game*);
-	void (*GameInit)(Id<Arena>, Id<Arena>);
-	void (*GameUpdateAndRender)();
-	HMODULE game_module = LoadLibraryA("game.dll");
-	if(game_module == NULL)
-	{
-		Log("Failed to load library game.dll");
-	}
-	else
-	{
-		GameHook = (void(*)(Platform*, OpenGL*, Game*))GetProcAddress(game_module, "GameHook");
-		GameInit = (void(*)(Id<Arena>, Id<Arena>))GetProcAddress(game_module, "GameInit");
-		GameUpdateAndRender = (void(*)())GetProcAddress(game_module, "GameUpdateAndRender");
-	}
+    void (*GameHook)(Platform*, OpenGL*, Game*);
+    void (*GameInit)(GameInitData);
+    void (*GameUpdateAndRender)();
+    HMODULE game_module = LoadLibraryA("game.dll");
+    if(game_module == NULL)
+    {
+        Log("Failed to load library game.dll");
+    }
+    else
+    {
+        GameHook = (void(*)(Platform*, OpenGL*, Game*))GetProcAddress(game_module, "GameHook");
+        GameInit = (void(*)(GameInitData))GetProcAddress(game_module, "GameInit");
+        GameUpdateAndRender = (void(*)())GetProcAddress(game_module, "GameUpdateAndRender");
+    }
 
-	GameHook(platform, gl, game);
+    GameHook(platform, gl, game);
 
-	//s64 start_time = win32_CurrentTime();
-	GameInit(memory::per_frame_arena_id, memory::permanent_arena_id);
-	//Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
+    //s64 start_time = win32_CurrentTime();
+    GameInit(game_init_data);
+    //Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
 
-	MSG msg;
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+    MSG msg;
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
 
-	//platform->SwapIntervalEXT(0);
-	input::global_input = &platform_input;
+    //platform->SwapIntervalEXT(0);
+    input::global_input = &platform_input;
 
     FT_Library ft_lib;
     if(InitFreetype(&ft_lib))
@@ -773,105 +797,105 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
         CloseFreetype(&ft_lib);
     }
 
-	while(!QUIT_GAME)
-	{
-		while(PeekMessage(&msg, wc.hwnd, NULL, NULL, PM_REMOVE) != 0)
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+    while(!QUIT_GAME)
+    {
+        while(PeekMessage(&msg, wc.hwnd, NULL, NULL, PM_REMOVE) != 0)
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
 
-		if(Pressed(vk::F9))
-		{
-			FRAMESTEP = !FRAMESTEP;
-		}
+        if(Pressed(vk::F9))
+        {
+            FRAMESTEP = !FRAMESTEP;
+        }
 
 
-		if(!FRAMESTEP or Pressed(vk::F5) or Repeated(vk::F5))
-		{
-			s64 before_update = win32_CurrentTime();
+        if(!FRAMESTEP or Pressed(vk::F5) or Repeated(vk::F5))
+        {
+            s64 before_update = win32_CurrentTime();
 
-			// START update
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            // START update
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
  //    HANDLE mutex_handle;
 
-	// volatile u32 next_entry_to_read;
-	// volatile u32 next_entry_to_write;
-	// HANDLE semaphore_handle;
+    // volatile u32 next_entry_to_read;
+    // volatile u32 next_entry_to_write;
+    // HANDLE semaphore_handle;
 
-	// volatile RingBuffer entry_data_buffer;
-	// WorkEntry entries[1024];
+    // volatile RingBuffer entry_data_buffer;
+    // WorkEntry entries[1024];
 
-			#if 0
-			if(g_work_queue_system.init)
-			{
-				Vec2f pen = {};
-				for(auto &queue : g_work_queue_system.queues)
-				{
-					Rect text_rect = DrawText(c::def_text_layout, pen, "%s: %zu running, %zu completed",
-											  queue.name,
-											  win32_WorkQueuePendingJobCount(&queue),
-											  queue.job_completion_count);
+            #if 0
+            if(g_work_queue_system.init)
+            {
+                Vec2f pen = {};
+                for(auto &queue : g_work_queue_system.queues)
+                {
+                    Rect text_rect = DrawText(c::def_text_layout, pen, "%s: %zu running, %zu completed",
+                                              queue.name,
+                                              win32_WorkQueuePendingJobCount(&queue),
+                                              queue.job_completion_count);
 
-					pen.y += text_rect.size.y;
-				}
-			}
-			#endif
-			//DrawText(c::def_text_layout, {0.f, 100.f}, "next_entry_to_read: %u", game->log_state.queue->next_entry_to_read);
+                    pen.y += text_rect.size.y;
+                }
+            }
+            #endif
+            //DrawText(c::def_text_layout, {0.f, 100.f}, "next_entry_to_read: %u", game->log_state.queue->next_entry_to_read);
 
-			GetKeyboardState((BYTE*)&game->input.down_keys);
-			game->input.prev_mouse_pos = game->input.mouse_pos;
-			win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);
+            GetKeyboardState((BYTE*)&game->input.down_keys);
+            game->input.prev_mouse_pos = game->input.mouse_pos;
+            win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);
 
-			// Null-terminate the translated stream and give the game input its address.
-			current_translated_stream[pos_in_translated_stream] = 0;
-			game->input.utf32_translated_stream = current_translated_stream;
-			pos_in_translated_stream = 0;
+            // Null-terminate the translated stream and give the game input its address.
+            current_translated_stream[pos_in_translated_stream] = 0;
+            game->input.utf32_translated_stream = current_translated_stream;
+            pos_in_translated_stream = 0;
 
-			// Swap to the other stream in the platform layer, so we don't change the
-			// translated stream while the frame is being updated.
-			if(current_translated_stream == utf32_translated_stream0)
-			{
-				current_translated_stream = utf32_translated_stream1;
-			}
-			else if(current_translated_stream == utf32_translated_stream1)
-			{
-				current_translated_stream = utf32_translated_stream0;
-			}
-			else
-			{
-				Assert(false);
-			}
+            // Swap to the other stream in the platform layer, so we don't change the
+            // translated stream while the frame is being updated.
+            if(current_translated_stream == utf32_translated_stream0)
+            {
+                current_translated_stream = utf32_translated_stream1;
+            }
+            else if(current_translated_stream == utf32_translated_stream1)
+            {
+                current_translated_stream = utf32_translated_stream0;
+            }
+            else
+            {
+                Assert(false);
+            }
 
-			GameUpdateAndRender();
+            GameUpdateAndRender();
 
-			// Clear pressed/released for next frame.
-			// memset(&game->input.pressed_keys, 0, 256);
-			// memset(&game->input.released_keys, 0, 256);
-			// memset(&game->input.repeated_keys, 0, 256);
-			// game->input.mouse_scroll = 0;
-			ResetInputState(&game->input);
+            // Clear pressed/released for next frame.
+            // memset(&game->input.pressed_keys, 0, 256);
+            // memset(&game->input.released_keys, 0, 256);
+            // memset(&game->input.repeated_keys, 0, 256);
+            // game->input.mouse_scroll = 0;
+            ResetInputState(&game->input);
 
-			// END update
+            // END update
 
-			s64 after_update = win32_CurrentTime();
-			float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
-			game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
+            s64 after_update = win32_CurrentTime();
+            float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
+            game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
 
-			SwapBuffers(wc.hdc);
-			RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);
-		}
+            SwapBuffers(wc.hdc);
+            RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);
+        }
 
-		if(game->exit_requested) QUIT_GAME = true;
+        if(game->exit_requested) QUIT_GAME = true;
 
-		ResetInputState(&platform_input);
-	}
+        ResetInputState(&platform_input);
+    }
 
-	win32_ExitGame();
-	FreeLibrary(game_module);
+    win32_ExitGame();
+    FreeLibrary(game_module);
 
-	ExitProcess(0);
+    ExitProcess(0);
 }
 
 TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

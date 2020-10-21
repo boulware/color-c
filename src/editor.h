@@ -81,7 +81,7 @@ Introspect
 struct Editor
 {
 	bool init;
-	Id<Arena> arena_id;
+	PoolId<Arena> arena_id;
 
 	EditorMode mode;
 

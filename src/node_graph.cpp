@@ -17,7 +17,7 @@ EdgeAlreadyExists(NodeGraph *graph, Edge edge)
 }
 
 bool
-GraphIsFullyConnected(NodeGraph *graph, Id<Arena> temp_arena_id)
+GraphIsFullyConnected(NodeGraph *graph, PoolId<Arena> temp_arena_id)
 {
     //Node &root =  graph->nodes[0];
 
@@ -81,7 +81,7 @@ CompleteNode(NodeGraph *graph, int completed_node_index)
 }
 
 void
-THREAD_GenerateNodeGraph(void *data, Id<Arena> thread_arena_id)
+THREAD_GenerateNodeGraph(void *data, PoolId<Arena> thread_arena_id)
 {
     GenerateNodeGraph_Params params = *(GenerateNodeGraph_Params *)data;
 

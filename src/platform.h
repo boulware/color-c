@@ -33,6 +33,8 @@ typedef void   fnsig_CreateWorkQueue(WorkQueue **, int, char *);
 typedef void   fnsig_AddWorkEntry(WorkQueue *, WorkEntry);
 typedef void   fnsig_QueueReleaseSemaphore(WorkQueue *);
 typedef size_t fnsig_WorkQueuePendingJobCount(WorkQueue *);
+typedef void   fnsig_BlockAndTakeMutex(void *);
+typedef void   fnsig_ReleaseMutex(void *);
 //typedef Utf32String fnsig_LoadUtf8FileAsUtf32String(const char *);
 
 typedef int fnsig_MyInterlockedIncrement(int volatile *);
@@ -72,6 +74,9 @@ struct Platform {
 	mPlatformFunction(AddWorkEntry);
 	mPlatformFunction(QueueReleaseSemaphore);
 	mPlatformFunction(WorkQueuePendingJobCount);
+
+	mPlatformFunction(BlockAndTakeMutex);
+	mPlatformFunction(ReleaseMutex);
 
 	#undef mPlatformFunction
 };

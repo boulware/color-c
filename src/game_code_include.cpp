@@ -49,3 +49,4 @@
 #include "effect.cpp"
 #include "ai_explorer.cpp"
 #include "memory_draw.cpp"
+#include "pool.cpp"

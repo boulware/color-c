@@ -33,3 +33,4 @@
 #include "font_loading.cpp"
 #include "buffer.cpp"
 #include "win32_work_queue.cpp"
+#include "pool.cpp"

@@ -46,6 +46,7 @@
 #include "passive_skill_tree.h"
 #include "permutation.h"
 #include "platform.h"
+#include "pool.h"
 #include "random.h"
 #include "ring_buffer.h"
 #include "room.h"
@@ -253,7 +254,7 @@ String MetaString(const Array<Type> *s)
 
 	AppendCString(&string, "  arena_id: ");
 	AppendString(&string, MetaString(&s->arena_id));
-	AppendCString(&string, "(Id<Arena>)\n");
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  count: %d (int)\n", s->count);
 
@@ -339,7 +340,7 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  arena_id: ");
 	AppendString(&string, MetaString(&s->arena_id));
-	AppendCString(&string, "(Id<Arena>)\n");
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  hud: ");
 	AppendString(&string, MetaString(&s->hud));
@@ -555,7 +556,7 @@ String MetaString(const Campaign *s)
 
 	AppendCString(&string, "  arena_id: ");
 	AppendString(&string, MetaString(&s->arena_id));
-	AppendCString(&string, "(Id<Arena>)\n");
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  map_generation_work_queue: %p (WorkQueue *)\n", s->map_generation_work_queue);
 
@@ -961,7 +962,7 @@ String MetaString(const Editor *s)
 
 	AppendCString(&string, "  arena_id: ");
 	AppendString(&string, MetaString(&s->arena_id));
-	AppendCString(&string, "(Id<Arena>)\n");
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  mode: ");
 	AppendString(&string, MetaString(&s->mode));
@@ -1248,6 +1249,32 @@ String MetaString(const AiAction *s)
 // game.h
 // ------------------------------------------
 
+String MetaString(const GameInitData *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "GameInitData {\n");
+
+	AppendCString(&string, "  per_frame_arena_id: ");
+	AppendString(&string, MetaString(&s->per_frame_arena_id));
+	AppendCString(&string, "(PoolId<Arena>)\n");
+
+	AppendCString(&string, "  permanent_arena_id: ");
+	AppendString(&string, MetaString(&s->permanent_arena_id));
+	AppendCString(&string, "(PoolId<Arena>)\n");
+
+	AppendCString(&string, "  arena_pool_mutex_handle: %p (void *)\n", s->arena_pool_mutex_handle);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 String MetaString(const Game *s)
 {
 	TIMED_BLOCK;
@@ -1259,7 +1286,7 @@ String MetaString(const Game *s)
 
 	AppendCString(&string, "Game {\n");
 
-	AppendCString(&string, "  arena_table: %p (Table<Arena> *)\n", s->arena_table);
+	AppendCString(&string, "  arena_pool: %p (Pool<Arena> *)\n", s->arena_pool);
 
 	AppendCString(&string, "  exit_requested: %d (bool)\n", s->exit_requested);
 
@@ -2136,7 +2163,7 @@ String MetaString(const ForceSimParams *s)
 
 	AppendCString(&string, "  temp_arena: ");
 	AppendString(&string, MetaString(&s->temp_arena));
-	AppendCString(&string, "(Id<Arena>)\n");
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  edge_free_length: %f (float)\n", s->edge_free_length);
 
@@ -2329,6 +2356,79 @@ String MetaString(const PassiveSkillTree *s)
 // ---------------FILE START---------------
 // permutation.h
 // ------------------------------------------
+
+// ---------------FILE START---------------
+// pool.h
+// ------------------------------------------
+
+template<typename Type>
+String MetaString(const PoolId<Type> *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "PoolId {\n");
+
+	AppendCString(&string, "  value: %d (int)\n", s->value);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+template<typename Type>
+String MetaString(const PoolEntry<Type> *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "PoolEntry {\n");
+
+	AppendCString(&string, "  data: ");
+	AppendString(&string, MetaString(&s->data));
+	AppendCString(&string, "(Type)\n");
+
+	AppendCString(&string, "  id: ");
+	AppendString(&string, MetaString(&s->id));
+	AppendCString(&string, "(PoolId<Type>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+template<typename Type>
+String MetaString(const Pool<Type> *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Pool {\n");
+
+	AppendCString(&string, "  entries: %p (PoolEntry<Type> *)\n", s->entries);
+
+	AppendCString(&string, "  entry_count: %d (int)\n", s->entry_count);
+
+	AppendCString(&string, "  max_entry_count: %d (int)\n", s->max_entry_count);
+
+	AppendCString(&string, "  id_counter: %d (int)\n", s->id_counter);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
 
 // ---------------FILE START---------------
 // random.h

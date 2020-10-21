@@ -475,7 +475,7 @@ DigitToUtf32Char(u32 digit)
 // }
 
 String
-StringFromToken(Token token, Id<Arena> arena_id)
+StringFromToken(Token token, PoolId<Arena> arena_id)
 {
 	String string = AllocStringDataFromArena(token.length, arena_id);
 	string.length = token.length;

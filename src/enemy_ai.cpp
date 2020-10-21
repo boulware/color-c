@@ -14,7 +14,7 @@
 // active_unitset contains all units for which actions are being considered.
 // other_unitset contains the remaining units in the battle.
 String
-DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, Id<Arena> arena_id) // @TODO: BigArena?
+DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id) // @TODO: BigArena?
 {
     TIMED_BLOCK;
 

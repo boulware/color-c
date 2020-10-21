@@ -119,7 +119,7 @@ CopyFromCString(Utf32String *utf32_string, const char *c_string)
 }
 
 Utf32String
-Utf32StringFromCString(Id<Arena> arena_id, const char *c_string)
+Utf32StringFromCString(PoolId<Arena> arena_id, const char *c_string)
 {
 	Utf32String string = {};
 	string.length = StringLength(c_string);

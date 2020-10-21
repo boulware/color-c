@@ -156,7 +156,7 @@ AppendString(String *dst, String src)
 }
 
 String
-AllocStringDataFromArena(int max_length, Id<Arena> arena_id)
+AllocStringDataFromArena(int max_length, PoolId<Arena> arena_id)
 {
 	// Arena *arena = ArenaFromId(arena_id);
 	// if(!arena)
@@ -175,7 +175,7 @@ AllocStringDataFromArena(int max_length, Id<Arena> arena_id)
 }
 
 String
-StringFromCString(const char *c_string, Id<Arena> arena_id)
+StringFromCString(const char *c_string, PoolId<Arena> arena_id)
 {
 	String string = {};
 	string.length = StringLength(c_string);
@@ -289,7 +289,7 @@ Utf8ToUtf32(String string, int index, u32 *utf32_char)
 }
 
 String
-CopyString(String src, Id<Arena> arena_id)
+CopyString(String src, PoolId<Arena> arena_id)
 {
 	String copied_string = {};
 	copied_string.length = src.length;
@@ -305,7 +305,7 @@ CopyString(String src, Id<Arena> arena_id)
 
 // Default argument for arena is memory::per_frame_arena
 String
-LowerCase(String string, Id<Arena> arena_id)
+LowerCase(String string, PoolId<Arena> arena_id)
 {
 	String lowered_string = CopyString(string, arena_id);
 	for(int i=0; i<lowered_string.length; i++)

@@ -150,7 +150,7 @@ ClearArray(Array<Type> *array)
 
 template<typename Type>
 Array<Type>
-CreateArrayFromArena(int max_count, Id<Arena> arena_id)
+CreateArrayFromArena(int max_count, PoolId<Arena> arena_id)
 {
 	Arena *arena = GetArenaFromId(arena_id);
 	if(!arena)

@@ -963,6 +963,7 @@ TickBattle(Battle *battle)
                     // Start ending the turn if the end turn button is clicked.
                     battle->ending_player_turn = true;
                     Reset(&battle->end_button_clicked_timer);
+                    Log("End turn pressed");
                 }
             }
         }

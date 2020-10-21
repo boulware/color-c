@@ -10,7 +10,6 @@
 //	      AOWTC: we have a default constructor that just sets id=0, generation=0. I don't foresee
 //        any issues with this, but keep it in mind.
 
-MetaBreakHere
 template<typename Type>
 struct Id
 {

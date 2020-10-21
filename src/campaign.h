@@ -21,7 +21,7 @@ struct Campaign
 {
     CampaignState state;
 
-    Id<Arena> arena_id;
+    PoolId<Arena> arena_id;
 
     WorkQueue *map_generation_work_queue;
     bool generation_finished[3];

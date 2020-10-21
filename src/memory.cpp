@@ -1,10 +1,13 @@
 #include "memory.h"
 
-Id<Arena>
+PoolId<Arena>
 AllocArena(char *debug_name)
 {
-    Id<Arena> arena_id = CreateEntry(game->arena_table);
-    Arena *arena = GetEntryFromId(*game->arena_table, arena_id);
+    platform->BlockAndTakeMutex(memory::arena_pool_mutex_handle);
+        PoolId<Arena> arena_id = CreateEntry(game->arena_pool);
+    platform->ReleaseMutex(memory::arena_pool_mutex_handle);
+
+    Arena *arena = GetEntryFromId(*game->arena_pool, arena_id);
     if(arena)
     {
         arena->start = platform->AllocateMemory(memory::arena_size);
@@ -26,34 +29,39 @@ AllocArena(char *debug_name)
 }
 
 Arena *
-GetArenaFromId(Id<Arena> arena_id)
+GetArenaFromId(PoolId<Arena> arena_id)
 {
-    return GetEntryFromId(*game->arena_table, arena_id);
+    return GetEntryFromId(*game->arena_pool, arena_id);
 }
 
 void
-FreeArena(Id<Arena> arena_id)
+FreeArena(PoolId<Arena> arena_id)
 {
-    Arena *arena = GetArenaFromId(arena_id);
-    if(!arena) return;
+    platform->BlockAndTakeMutex(memory::arena_pool_mutex_handle);
 
-    if(arena->start)
+    // In mutex
+    Arena *arena = GetArenaFromId(arena_id);
+    if(arena and arena->start)
     {
         platform->FreeMemory(arena->start);
     }
 
-    DeleteEntry(game->arena_table, arena_id);
+    DeleteEntry(game->arena_pool, arena_id);
+    // Out of mutex
+
+    platform->ReleaseMutex(memory::arena_pool_mutex_handle);
 }
 
 void
-ClearArena(Id<Arena> arena_id)
+ClearArena(PoolId<Arena> arena_id)
 {
     TIMED_BLOCK;
 
     Arena *arena = GetArenaFromId(arena_id);
     if(!arena) return;
 
-    #if DEBUG_BUILD
+    //#if DEBUG_BUILD
+    #if 0
         // Zero the arena if we're on debug build. This should make bugs where "cleared" temp
         // memory is references in future frames.
         u8 *p = (u8*)arena->start;
@@ -75,7 +83,7 @@ ArenaBytesAllocated(Arena arena)
 }
 
 size_t
-ArenaBytesRemaining(Id<Arena> arena_id)
+ArenaBytesRemaining(PoolId<Arena> arena_id)
 {
     Arena *arena = GetArenaFromId(arena_id);
     if(!arena) return 0;
@@ -112,7 +120,7 @@ ScratchString(int size)
 }
 
 void *
-AllocFromArena(Id<Arena> arena_id, size_t byte_count, bool zero)
+AllocFromArena(PoolId<Arena> arena_id, size_t byte_count, bool zero)
 {
     Arena *arena = GetArenaFromId(arena_id);
     if(!arena)

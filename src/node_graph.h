@@ -36,7 +36,7 @@ struct NodeGraphResponse
 
 struct ForceSimParams
 {
-    Id<Arena> temp_arena   = c::null_arena_id;
+    PoolId<Arena> temp_arena   = c::null_arena_id;
     float edge_free_length = 50.f;
     float spring_constant  = 0.01f;
     float charge_strength  = 1000.0f;
@@ -62,10 +62,10 @@ struct ForceSimState
     int max_restart_count;
 };
 
-void THREAD_GenerateNodeGraph(void *data, Id<Arena> thread_arena_id);
+void THREAD_GenerateNodeGraph(void *data, PoolId<Arena> thread_arena_id);
 
 bool EdgeAlreadyExists(NodeGraph *graph, Edge edge);
-bool GraphIsFullyConnected(NodeGraph *graph, Id<Arena> temp_arena_id);
+bool GraphIsFullyConnected(NodeGraph *graph, PoolId<Arena> temp_arena_id);
 
 void CompleteNode(NodeGraph *graph, int completed_node_index);
 void GenerateNodeGraph(NodeGraph *graph, GenerateNodeGraph_Params params);

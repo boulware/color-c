@@ -44,6 +44,7 @@
 #include "passive_skill_tree.h"
 #include "permutation.h"
 #include "platform.h"
+#include "pool.h"
 #include "random.h"
 #include "ring_buffer.h"
 #include "room.h"
@@ -137,6 +138,8 @@ String MetaString(const BattleScore *s);
 
 String MetaString(const AiAction *s);
 
+String MetaString(const GameInitData *s);
+
 String MetaString(const Game *s);
 
 String MetaString(const GameState *s);
@@ -200,6 +203,15 @@ String MetaString(const PassiveSkill *s);
 String MetaString(const PassiveNode *s);
 
 String MetaString(const PassiveSkillTree *s);
+
+template<typename Type>
+String MetaString(const PoolId<Type> *s);
+
+template<typename Type>
+String MetaString(const PoolEntry<Type> *s);
+
+template<typename Type>
+String MetaString(const Pool<Type> *s);
 
 String MetaString(const LCG *s);
 

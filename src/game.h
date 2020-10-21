@@ -21,10 +21,18 @@
 #include "generate_node_graph_params.h"
 #include "camera.h"
 #include "ai_explorer.h"
+#include "pool.h"
+
+struct GameInitData
+{
+	PoolId<Arena> per_frame_arena_id;
+	PoolId<Arena> permanent_arena_id;
+	void *arena_pool_mutex_handle;
+};
 
 struct Game
 {
-    Table<Arena> *arena_table = nullptr;
+    Pool<Arena> *arena_pool = nullptr;
 
 	bool exit_requested;
 
