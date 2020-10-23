@@ -28,6 +28,7 @@ struct ButtonLayout
 	Color button_color;
 	Color button_hover_color, label_hover_color;
 	Align align;
+	bool is_ui;
 };
 
 struct TextEntryLayout

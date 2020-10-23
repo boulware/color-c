@@ -13,12 +13,14 @@
 #include "color.h"
 #include "const.h"
 #include "debug.h"
+#include "debug_overlay.h"
 #include "draw.h"
 #include "editor.h"
 #include "effect.h"
 #include "enemy_ai.h"
 #include "fixed_array.h"
 #include "font_loading.h"
+#include "frametimes_draw.h"
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
@@ -29,6 +31,7 @@
 #include "image.h"
 #include "imgui.h"
 #include "input.h"
+#include "input_vk_constants.h"
 #include "keybinds.h"
 #include "lang.h"
 #include "log.h"
@@ -53,6 +56,7 @@
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
+#include "table_draw.h"
 #include "target_class.h"
 #include "test_mode.h"
 #include "text_parsing.h"
@@ -327,6 +331,24 @@ String MetaString(const BattleEvent *s)
 	return string;
 }
 
+String MetaString(const BattleState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BattleState {\n");
+
+	AppendCString(&string, "  finished: %d (bool)\n", s->finished);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 String MetaString(const Battle *s)
 {
 	TIMED_BLOCK;
@@ -531,6 +553,9 @@ String MetaString(const CampaignState *s)
 		case(CampaignState::InMap): {
 			AppendCString(&string, "InMap");
 		} break;
+		case(CampaignState::InRoom): {
+			AppendCString(&string, "InRoom");
+		} break;
 		default: {
 			AppendCString(&string, "?????");
 		} break;
@@ -556,6 +581,10 @@ String MetaString(const Campaign *s)
 
 	AppendCString(&string, "  arena_id: ");
 	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(PoolId<Arena>)\n");
+
+	AppendCString(&string, "  battle_arena_id: ");
+	AppendString(&string, MetaString(&s->battle_arena_id));
 	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  map_generation_work_queue: %p (WorkQueue *)\n", s->map_generation_work_queue);
@@ -594,13 +623,25 @@ String MetaString(const Campaign *s)
 	AppendString(&string, MetaString(&s->node_pulse_timer));
 	AppendCString(&string, "(OscillatingTimer)\n");
 
+	AppendCString(&string, "  room_is_init: %d (bool)\n", s->room_is_init);
+
 	AppendCString(&string, "  rooms: ");
 	AppendString(&string, MetaString(&s->rooms));
 	AppendCString(&string, "(Array<Room>)\n");
 
+	AppendCString(&string, "  current_room_index: %d (int)\n", s->current_room_index);
+
 	AppendCString(&string, "  player_party: ");
 	AppendString(&string, MetaString(&s->player_party));
 	AppendCString(&string, "(UnitSet)\n");
+
+	AppendCString(&string, "  map_camera: ");
+	AppendString(&string, MetaString(&s->map_camera));
+	AppendCString(&string, "(Camera)\n");
+
+	AppendCString(&string, "  current_battle: ");
+	AppendString(&string, MetaString(&s->current_battle));
+	AppendCString(&string, "(Battle)\n");
 
 	AppendCString(&string, "}");
 
@@ -686,6 +727,64 @@ String MetaString(const TimedBlock *s)
 	AppendCString(&string, "  entry: %p (TimedBlockEntry *)\n", s->entry);
 
 	AppendCString(&string, "  start_count: %u (u64)\n", s->start_count);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// debug_overlay.h
+// ------------------------------------------
+
+String MetaString(const OverlayOption *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "OverlayOption::");
+	switch(*s)
+	{
+		case(OverlayOption::Arenas): {
+			AppendCString(&string, "Arenas");
+		} break;
+		case(OverlayOption::TimedBlocks): {
+			AppendCString(&string, "TimedBlocks");
+		} break;
+		case(OverlayOption::Frametime): {
+			AppendCString(&string, "Frametime");
+		} break;
+		case(OverlayOption::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const DebugOverlay *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "DebugOverlay {\n");
+
+	AppendCString(&string, "  option_active: %p (bool[])\n", s->option_active);
+
+	AppendCString(&string, "  window_positions: %p (Vec2f[])\n", s->window_positions);
+
+	AppendCString(&string, "  dragging_index: %d (int)\n", s->dragging_index);
 
 	AppendCString(&string, "}");
 
@@ -1238,6 +1337,34 @@ String MetaString(const AiAction *s)
 // ------------------------------------------
 
 // ---------------FILE START---------------
+// frametimes_draw.h
+// ------------------------------------------
+
+String MetaString(const FrametimeGraphState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "FrametimeGraphState {\n");
+
+	AppendCString(&string, "  frametimes: %p (float *)\n", s->frametimes);
+
+	AppendCString(&string, "  cur_frametime_index: %d (int)\n", s->cur_frametime_index);
+
+	AppendCString(&string, "  entry_count: %d (int)\n", s->entry_count);
+
+	AppendCString(&string, "  graph_max: %f (float)\n", s->graph_max);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
 // freetype.h
 // ------------------------------------------
 
@@ -1302,7 +1429,13 @@ String MetaString(const Game *s)
 
 	AppendCString(&string, "  frame_time_ms: %f (float)\n", s->frame_time_ms);
 
-	AppendCString(&string, "  draw_debug_text: %d (bool)\n", s->draw_debug_text);
+	AppendCString(&string, "  frametime_graph_state: %p (FrametimeGraphState *)\n", s->frametime_graph_state);
+
+	AppendCString(&string, "  draw_debug_overlay: %d (bool)\n", s->draw_debug_overlay);
+
+	AppendCString(&string, "  debug_overlay: ");
+	AppendString(&string, MetaString(&s->debug_overlay));
+	AppendCString(&string, "(DebugOverlay)\n");
 
 	AppendCString(&string, "  debug_container: ");
 	AppendString(&string, MetaString(&s->debug_container));
@@ -1433,9 +1566,6 @@ String MetaString(const GameState *s)
 		} break;
 		case(GameState::MainMenu): {
 			AppendCString(&string, "MainMenu");
-		} break;
-		case(GameState::Battle): {
-			AppendCString(&string, "Battle");
 		} break;
 		case(GameState::Campaign): {
 			AppendCString(&string, "Campaign");
@@ -1610,6 +1740,8 @@ String MetaString(const ButtonLayout *s)
 	AppendCString(&string, "  align: ");
 	AppendString(&string, MetaString(&s->align));
 	AppendCString(&string, "(Align)\n");
+
+	AppendCString(&string, "  is_ui: %d (bool)\n", s->is_ui);
 
 	AppendCString(&string, "}");
 
@@ -1786,29 +1918,6 @@ String MetaString(const TextEntryResponse *s)
 // input.h
 // ------------------------------------------
 
-String MetaString(const VirtualKey *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "VirtualKey::");
-	switch(*s)
-	{
-		case(VirtualKey::None): {
-			AppendCString(&string, "None");
-		} break;
-		default: {
-			AppendCString(&string, "?????");
-		} break;
-	}
-
-	return string;
-}
-
 String MetaString(const InputState *s)
 {
 	TIMED_BLOCK;
@@ -1840,9 +1949,38 @@ String MetaString(const InputState *s)
 
 	AppendCString(&string, "  mouse_scroll: %d (int)\n", s->mouse_scroll);
 
+	AppendCString(&string, "  mouse_focus_taken: %d (bool)\n", s->mouse_focus_taken);
+
 	AppendCString(&string, "  utf32_translated_stream: %p (u32 *)\n", s->utf32_translated_stream);
 
 	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
+// input_vk_constants.h
+// ------------------------------------------
+
+String MetaString(const VirtualKey *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "VirtualKey::");
+	switch(*s)
+	{
+		case(VirtualKey::None): {
+			AppendCString(&string, "None");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
 
 	return string;
 }
@@ -1970,6 +2108,8 @@ String MetaString(const MainMenu *s)
 	AppendCString(&string, "(Array<String>)\n");
 
 	AppendCString(&string, "  selected_option: %d (int)\n", s->selected_option);
+
+	AppendCString(&string, "  hovered_option: %d (int)\n", s->hovered_option);
 
 	AppendCString(&string, "}");
 
@@ -2681,6 +2821,10 @@ String MetaString(const Table<Type> *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// table_draw.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // target_class.h

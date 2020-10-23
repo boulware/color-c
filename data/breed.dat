@@ -1,9 +1,9 @@
 unit "Warrior"
-traits (7,5,3)
+traits (8,5,3)
 moveset "Rest" "Strike" "Repair" "Rig Up"
 
 unit "Rogue"
-traits (20,6,2)
+traits (7,6,2)
 moveset "Strike" "Taunt" "Steal Armor" "Rally"
 
 unit "Archer"

@@ -35,6 +35,11 @@ Button(const char *label, ...)
 {
 	if(!ActiveContainerIsValid()) return ButtonResponse{};
 
+	// Set camera for UI drawing
+	Vec2f initial_cam_pos = game->camera.pos;
+	Vec2f initial_cam_view = game->camera.view;
+	MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
+
 	ButtonLayout layout = imgui::active_container->button_layout;
 
 	ButtonResponse response = {};
@@ -87,6 +92,11 @@ Button(const char *label, ...)
 	DrawFilledRect(padded_rect, c::black);
 	DrawUnfilledRect(padded_rect, outline_color);
 	DrawText(layout.label_layout, padded_rect.pos+0.5f*padded_rect.size, label);
+
+	// Reset camera transform for non-UI stuff
+    SetCameraPos( &game->camera, initial_cam_pos);
+    SetCameraView(&game->camera, initial_cam_view);
+
 
 	return response;
 }

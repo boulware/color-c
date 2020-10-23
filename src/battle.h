@@ -25,6 +25,11 @@ struct BattleEvent
 	TraitSet trait_changes;
 };
 
+struct BattleState
+{
+	bool finished;
+};
+
 struct Battle
 {
 	PoolId<Arena> arena_id;
@@ -52,7 +57,8 @@ struct Battle
 	String best_choice_string;
 };
 
-GameState TickBattle(Battle *battle);
+void InitBattle(Battle *battle, PoolId<Arena> arena_id);
+BattleState TickBattle(Battle *battle);
 
 void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);

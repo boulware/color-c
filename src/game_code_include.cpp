@@ -50,3 +50,5 @@
 #include "ai_explorer.cpp"
 #include "memory_draw.cpp"
 #include "pool.cpp"
+#include "table_draw.cpp"
+#include "frametimes_draw.cpp"

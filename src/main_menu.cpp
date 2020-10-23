@@ -4,8 +4,8 @@ void
 InitMainMenu(MainMenu *menu)
 {
 	menu->selected_option = 0;
+	menu->hovered_option = -1;
     menu->option_strings = CreatePermanentArray<String>(6);
-    menu->option_strings += "Battle";
     menu->option_strings += "Campaign";
     menu->option_strings += "Editor";
     menu->option_strings += "Options";
@@ -19,6 +19,8 @@ InitMainMenu(MainMenu *menu)
 GameState
 TickMainMenu(MainMenu *menu, bool entered)
 {
+	menu->hovered_option = -1;
+
 	if(entered)
 	{
 		MoveCameraToWorldRect(&game->camera, Rect{{0.f,0.f}, game->window_size});
@@ -33,39 +35,6 @@ TickMainMenu(MainMenu *menu, bool entered)
 	{
 		--menu->selected_option;
 		if(menu->selected_option < 0) menu->selected_option = menu->option_strings.count-1;
-	}
-
-	GameState new_state = GameState::None;
-	if(Pressed(vk::enter) or Pressed(vk::LMB))
-	{
-		if(menu->selected_option == 0)
-		{
-			new_state = GameState::Battle;
-		}
-		else if(menu->selected_option == 1)
-		{ // Campaign
-			new_state = GameState::Campaign;
-		}
-		else if(menu->selected_option == 2)
-		{ // Editor
-			new_state = GameState::Editor;
-		}
-		else if(menu->selected_option == 3)
-		{ // Options
-			new_state = GameState::Options;
-		}
-		else if(menu->selected_option == 4)
-		{
-			new_state = GameState::AiExplorer;
-		}
-		else if(menu->selected_option == 5)
-		{
-			new_state = GameState::Test;
-		}
-		else if(menu->selected_option == 6)
-		{ // Quit
-			new_state = GameState::Quit;
-		}
 	}
 
 	// Draw
@@ -86,12 +55,42 @@ TickMainMenu(MainMenu *menu, bool entered)
 			text_rect = DrawText(c::main_menu_unselected_text_layout, pen, string);
 		}
 
-		if(MouseInRect(text_rect) and MouseMoved())
+		if(MouseInRect(text_rect))
 		{
-			menu->selected_option = i;
+			menu->hovered_option = i;
+			if(MouseMoved()) menu->selected_option = i;
 		}
 
 		pen.y += text_rect.size.y;
+	}
+
+	GameState new_state = GameState::None;
+	if(Pressed(vk::enter) or (Pressed(vk::LMB) and menu->hovered_option != -1))
+	{
+		if(menu->selected_option == 0)
+		{ // Campaign
+			new_state = GameState::Campaign;
+		}
+		else if(menu->selected_option == 1)
+		{ // Editor
+			new_state = GameState::Editor;
+		}
+		else if(menu->selected_option == 2)
+		{ // Options
+			new_state = GameState::Options;
+		}
+		else if(menu->selected_option == 3)
+		{
+			new_state = GameState::AiExplorer;
+		}
+		else if(menu->selected_option == 4)
+		{
+			new_state = GameState::Test;
+		}
+		else if(menu->selected_option == 5)
+		{ // Quit
+			new_state = GameState::Quit;
+		}
 	}
 
 	if(Pressed(vk::esc)) new_state = GameState::Quit;

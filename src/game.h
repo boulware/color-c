@@ -22,6 +22,8 @@
 #include "camera.h"
 #include "ai_explorer.h"
 #include "pool.h"
+#include "debug_overlay.h"
+#include "frametimes_draw.h"
 
 struct GameInitData
 {
@@ -40,8 +42,11 @@ struct Game
 	bool state_entered;
 
 	LogState log_state;
+
 	float frame_time_ms;
-	bool draw_debug_text;
+	FrametimeGraphState *frametime_graph_state;
+	bool draw_debug_overlay;
+	DebugOverlay debug_overlay;
 
 	ImguiContainer debug_container;
 

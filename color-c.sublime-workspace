@@ -4,6 +4,218 @@
 		"selected_items":
 		[
 			[
+				"Mouse",
+				"MouseFocusTaken"
+			],
+			[
+				"draggin",
+				"dragging_index"
+			],
+			[
+				"cure",
+				"current_index"
+			],
+			[
+				"window",
+				"window_rects"
+			],
+			[
+				"debug",
+				"debug_overlay"
+			],
+			[
+				"button",
+				"button_layout"
+			],
+			[
+				"OverL",
+				"OverlayOption_strings"
+			],
+			[
+				"thread",
+				"thread_arena_id"
+			],
+			[
+				"thread_are",
+				"thread_arena_id"
+			],
+			[
+				"exit",
+				"exit_requested"
+			],
+			[
+				"deleted",
+				"deleted_entry"
+			],
+			[
+				"mBind",
+				"mBindPlatformFunction"
+			],
+			[
+				"arne",
+				"arena_table_mutex"
+			],
+			[
+				"arean",
+				"arena_table_mutex"
+			],
+			[
+				"arena_table",
+				"arena_table_mutex"
+			],
+			[
+				"Relese",
+				"ReleaseMutex"
+			],
+			[
+				"threadare",
+				"thread_arena_debug_name"
+			],
+			[
+				"scratc",
+				"scratch_arena"
+			],
+			[
+				"scrac",
+				"scratch_arena"
+			],
+			[
+				"scrat",
+				"scratch_arena"
+			],
+			[
+				"per_Fra",
+				"per_frame_arena_id"
+			],
+			[
+				"arena",
+				"arena_count"
+			],
+			[
+				"prepass",
+				"prepass_framebuffer"
+			],
+			[
+				"prepas",
+				"prepass_framebuffer"
+			],
+			[
+				"text",
+				"texture_id"
+			],
+			[
+				"blur",
+				"blur_shader"
+			],
+			[
+				"d_",
+				"d_color_y"
+			],
+			[
+				"outline",
+				"outline_shader"
+			],
+			[
+				"Gener",
+				"GenerateComputeShaderFromFile"
+			],
+			[
+				"GLTEXT",
+				"GL_TEXTURE0"
+			],
+			[
+				"Lo",
+				"LogGlError"
+			],
+			[
+				"dst",
+				"dst_coords"
+			],
+			[
+				"Bind",
+				"BindTexture"
+			],
+			[
+				"GLTE",
+				"GL_TEXTURE1"
+			],
+			[
+				"GL_TEXTU",
+				"GL_TEXTURE0"
+			],
+			[
+				"blurd",
+				"blur_dst_texture"
+			],
+			[
+				"Pro",
+				"ProgramUniform1i"
+			],
+			[
+				"blur_",
+				"blur_data"
+			],
+			[
+				"GL_TE",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"prepasS_",
+				"prepass_texture"
+			],
+			[
+				"GL_TEXT",
+				"GL_TEXTURE0"
+			],
+			[
+				"GL_TEXTUR",
+				"GL_TEXTURE_2D"
+			],
+			[
+				"texco",
+				"texcoords_attr"
+			],
+			[
+				"guas",
+				"gaussian_blur_shader"
+			],
+			[
+				"trait_chang",
+				"trait_change_text_layout"
+			],
+			[
+				"trait_change",
+				"trait_change_string"
+			],
+			[
+				"utf32",
+				"utf32_char"
+			],
+			[
+				"Next",
+				"NextAsUtf32Char"
+			],
+			[
+				"traitchange",
+				"trait_change_text_layout"
+			],
+			[
+				"trait_chan",
+				"trait_change_string"
+			],
+			[
+				"FromAre",
+				"AllocStringDataFromArena"
+			],
+			[
+				"ability_icon",
+				"ability_icon_button_layout"
+			],
+			[
+				"aligned",
+				"aligned_child"
+			],
+			[
 				"abilityicon",
 				"ability_icon_button_layout"
 			],
@@ -302,246 +514,86 @@
 			[
 				"produ",
 				"product_of_options"
-			],
-			[
-				"sub_ar",
-				"sub_array1"
-			],
-			[
-				"size_",
-				"size_of_dst"
-			],
-			[
-				"permutation",
-				"permutation_index"
-			],
-			[
-				"numer",
-				"number_of_sub_permutations"
-			],
-			[
-				"value",
-				"value_count"
-			],
-			[
-				"perm",
-				"perm1"
-			],
-			[
-				"Generate",
-				"GenerateU8Permutations"
-			],
-			[
-				"number",
-				"number_of_sub_arrays"
-			],
-			[
-				"perumtation",
-				"permutation_values"
-			],
-			[
-				"other",
-				"other_unitset"
-			],
-			[
-				"prem",
-				"permutation_count"
-			],
-			[
-				"option",
-				"option_count_for_this_unit"
-			],
-			[
-				"team_",
-				"team_counts"
-			],
-			[
-				"size",
-				"size_t"
-			],
-			[
-				"null",
-				"null_ability_id"
-			],
-			[
-				"selected",
-				"selected_ability_id"
-			],
-			[
-				"event_tar",
-				"event_target_unit"
-			],
-			[
-				"unit_slot",
-				"unit_slot_size"
-			],
-			[
-				"dead",
-				"dead_text_layout"
-			],
-			[
-				"Inferred",
-				"GenerateInferredUnitSet"
-			],
-			[
-				"target_ind",
-				"target_indication_layout"
-			],
-			[
-				"zoom",
-				"zoom_sensitivity"
-			],
-			[
-				"Set",
-				"SetCameraView"
-			],
-			[
-				"alig",
-				"aligned_rect"
-			],
-			[
-				"start",
-				"start_node_pos"
-			],
-			[
-				"hovered",
-				"hovered_node_index"
-			],
-			[
-				"complet",
-				"completed_node_index"
-			],
-			[
-				"thread",
-				"thread_arena"
-			],
-			[
-				"cam",
-				"campaign"
-			],
-			[
-				"NodeGra",
-				"NodeGraphResponse"
-			],
-			[
-				"set",
-				"SetCameraView"
-			],
-			[
-				"camer_start",
-				"camera_start_pos"
-			],
-			[
-				"SetCamera",
-				"SetCameraView"
-			],
-			[
-				"screnept",
-				"screen_pt"
-			],
-			[
-				"camera",
-				"camera_view"
-			],
-			[
-				"camer",
-				"camera_view"
-			],
-			[
-				"Rect",
-				"RectAspectRatio"
-			],
-			[
-				"SetCamr",
-				"SetCameraPos"
-			],
-			[
-				"Pr",
-				"ProgramUniform1f"
-			],
-			[
-				"graph",
-				"graph_response"
-			],
-			[
-				"map_",
-				"map_padding"
-			],
-			[
-				"SetC",
-				"SetCameraPos"
-			],
-			[
-				"maps",
-				"maps"
-			],
-			[
-				"Node",
-				"NodeGraph"
-			],
-			[
-				"cent",
-				"center_of_screen_in_world_space"
-			],
-			[
-				"tran",
-				"transformed_pos"
-			],
-			[
-				"Cmpaign",
-				"CampaignState"
-			],
-			[
-				"Map",
-				"MapSelection"
-			],
-			[
-				"Campa",
-				"CampaignState"
-			],
-			[
-				"Camp",
-				"CampaignState"
-			],
-			[
-				"def",
-				"def_text_layout"
-			],
-			[
-				"inita",
-				"initial_cam_zoom"
-			],
-			[
-				"initla",
-				"initial_cam_pos"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/battle.cpp",
+			"file": "src/memory.cpp",
 			"settings":
 			{
-				"buffer_size": 50374,
+				"buffer_size": 4616,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/draw.cpp",
+			"file": "src/game.cpp",
 			"settings":
 			{
-				"buffer_size": 7913,
+				"buffer_size": 20467,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/const.h",
+			"file": "src/memory_draw.cpp",
 			"settings":
 			{
-				"buffer_size": 15020,
+				"buffer_size": 1251,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/text_render.cpp",
+			"settings":
+			{
+				"buffer_size": 30966,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/text_render.h",
+			"settings":
+			{
+				"buffer_size": 1644,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "logs/critical.log",
+			"settings":
+			{
+				"buffer_size": 2514357,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/debug_overlay.h",
+			"settings":
+			{
+				"buffer_size": 424,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/input.cpp",
+			"settings":
+			{
+				"buffer_size": 2280,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/input.h",
+			"settings":
+			{
+				"buffer_size": 15161,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -551,15 +603,24 @@
 			"settings":
 			{
 				"buffer_size": 1864,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/vec.cpp",
+			"file": "src/const.h",
 			"settings":
 			{
-				"buffer_size": 7851,
+				"buffer_size": 18690,
 				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/draw.cpp",
+			"settings":
+			{
+				"buffer_size": 8288,
 				"line_ending": "Windows"
 			}
 		}
@@ -704,138 +765,138 @@
 	],
 	"file_history":
 	[
-		"/C/color-c/src/test_mode.cpp",
-		"/C/color-c/src/ai_explorer.cpp",
-		"/C/color-c/src/const.h",
-		"/C/color-c/src/game.cpp",
-		"/C/color-c/src/geometry.cpp",
-		"/C/color-c/src/draw.h",
-		"/C/color-c/logs/log.txt",
-		"/C/color-c/src/geometry.h",
-		"/C/color-c/src/platform_include.cpp",
-		"/C/color-c/src/game_code_include.cpp",
-		"/C/color-c/src/vec.cpp",
-		"/C/color-c/build/b.bat",
-		"/C/color-c/src/test_mode.h",
-		"/C/color-c/src/array.cpp",
-		"/C/color-c/src/array.h",
-		"/C/color-c/src/color_vertex.glsl",
-		"/C/color-c/src/draw.cpp",
-		"/C/color-c/src/string.h",
-		"/C/color-c/src/math.cpp",
-		"/C/color-c/src/string.cpp",
-		"/C/color-c/src/main_menu.cpp",
-		"/C/color-c/src/ai_explorer.h",
-		"/C/color-c/src/game.h",
+		"/C/color-c/src/debug.h",
+		"/C/color-c/src/imgui.h",
+		"/C/color-c/src/text_render.cpp",
+		"/C/color-c/src/debug.cpp",
 		"/C/color-c/src/battle.cpp",
-		"/C/color-c/src/enemy_ai.cpp",
+		"/C/color-c/src/node_graph.cpp",
+		"/C/color-c/build/b.bat",
+		"/C/color-c/src/memory_draw.cpp",
+		"/C/color-c/src/draw.cpp",
+		"/C/color-c/src/imgui.cpp",
+		"/C/color-c/src/memory_draw.h",
+		"/C/color-c/src/log.cpp",
+		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/win32_platform.cpp",
+		"/C/color-c/src/pool.cpp",
+		"/C/color-c/src/win32_work_queue.cpp",
+		"/C/color-c/src/game.cpp",
+		"/C/color-c/src/input.h",
+		"/C/color-c/src/debug_overlay.h",
+		"/C/color-c/src/const.h",
+		"/C/color-c/src/game.h",
+		"/C/color-c/src/platform.h",
+		"/C/color-c/src/memory.cpp",
 		"/C/color-c/_/todo.txt",
-		"/C/color-c/src/game_state.h",
-		"/C/color-c/src/enemy_ai.h",
-		"/C/color-c/data/breed.dat",
-		"/C/color-c/data/ability.dat",
-		"/C/color-c/src/ability.cpp",
 		"/C/color-c/src/main_menu.h",
-		"/C/color-c/src/traitset.cpp",
-		"/C/color-c/src/ability.h",
-		"/C/color-c/src/traitset.h",
+		"/C/color-c/src/win32_work_queue.h",
+		"/C/color-c/src/main_menu.cpp",
+		"/C/color-c/logs/critical.log",
+		"/C/color-c/src/input.cpp",
+		"/C/color-c/src/debug_window.h",
+		"/C/color-c/src/work_entry.h",
+		"/C/color-c/src/pool.h",
+		"/C/color-c/src/campaign.cpp",
+		"/C/color-c/src/node_graph.h",
+		"/C/color-c/src/platform_include.cpp",
+		"/C/color-c/src/table.h",
+		"/C/color-c/src/string.cpp",
+		"/C/color-c/src/string.h",
+		"/C/color-c/src/battle.h",
+		"/C/color-c/src/editor.cpp",
+		"/C/color-c/src/editor.h",
+		"/C/color-c/src/game_code_include.cpp",
+		"/C/color-c/src/memory.h",
+		"/C/color-c/src/table.cpp",
+		"/C/color-c/src/array.h",
+		"/C/color-c/src/array.cpp",
+		"/C/color-c/src/utf32string.cpp",
+		"/C/color-c/src/campaign.h",
+		"/C/color-c/src/text_parsing.cpp",
+		"/C/color-c/src/text_parsing.h",
+		"/C/color-c/src/enemy_ai.cpp",
+		"/C/color-c/src/util.h",
+		"/C/color-c/src/util.cpp",
 		"/C/color-c/logs/DebugTimings.txt",
+		"/C/color-c/_/performance_relevant_decisions.txt",
+		"/C/color-c/src/unit.cpp",
+		"/C/color-c/src/better_text_parsing.cpp",
+		"/C/color-c/src/ability.cpp",
+		"/C/color-c/src/enemy_ai.h",
+		"/C/color-c/src/shader/outline.cs.glsl",
+		"/C/color-c/src/draw.h",
+		"/C/color-c/src/opengl.cpp",
+		"/C/color-c/src/shader/gaussian_blur.cs.glsl",
+		"/C/color-c/src/opengl.h",
+		"/C/color-c/src/meta.cpp",
+		"/C/color-c/src/meta_print.cpp",
+		"/C/color-c/src/color_vertex.glsl",
+		"/C/color-c/src/font_loading.cpp",
+		"/C/color-c/src/sprite.cpp",
+		"/C/color-c/src/uv_fragment.glsl",
+		"/C/color-c/src/log.h",
+		"/C/color-c/src/meta_text_parsing.cpp",
+		"/C/color-c/build/freetype-2.9.1/builds/os2/os2-gcc.mk",
+		"/C/color-c/src/uv_vertex.glsl",
+		"/C/color-c/src/shader/gaussian_blur.vs.glsl",
+		"/C/color-c/src/color_fragment.glsl",
+		"/D/work/programming/fps/src/main.cpp",
+		"/D/work/programming/fps/src/win32_platform_layer.cpp",
+		"/C/color-c/src/ability.h",
+		"/C/color-c/src/buffer.h",
+		"/C/color-c/src/buffer.cpp",
+		"/C/color-c/src/text_render.h",
+		"/C/color-c/src/vec.cpp",
+		"/C/color-c/data/ability.dat",
+		"/C/color-c/src/test_mode.cpp",
+		"/D/work/programming/fps/src/opengl.cpp",
+		"/D/work/programming/fps/src/draw.cpp",
+		"/D/work/programming/fps/src/3d.cpp",
+		"/D/work/programming/fps/src/game.cpp",
+		"/C/color-c/src/align.cpp",
+		"/C/color-c/src/align.h",
+		"/C/color-c/src/ai_explorer.cpp",
+		"/C/color-c/src/geometry.cpp",
+		"/C/color-c/src/geometry.h",
+		"/C/color-c/src/test_mode.h",
+		"/C/color-c/src/math.cpp",
+		"/C/color-c/src/ai_explorer.h",
+		"/C/color-c/src/game_state.h",
+		"/C/color-c/data/breed.dat",
+		"/C/color-c/src/traitset.cpp",
+		"/C/color-c/src/traitset.h",
 		"/C/color-c/src/unit.h",
 		"/C/color-c/src/effect.cpp",
 		"/C/color-c/src/effect.h",
 		"/C/color-c/src/target_class.h",
 		"/C/color-c/src/target_class.cpp",
-		"/C/color-c/src/table.cpp",
-		"/C/color-c/src/unit.cpp",
 		"/C/color-c/src/macros.h",
 		"/C/color-c/src/random.cpp",
-		"/C/color-c/src/table.h",
-		"/C/color-c/logs/critical.log",
-		"/C/color-c/src/win32_platform.cpp",
-		"/C/color-c/src/platform.h",
-		"/C/color-c/src/battle.h",
 		"/C/color-c/src/scratch.cpp",
 		"/C/color-c/src/permutation.cpp",
-		"/C/color-c/src/log.cpp",
-		"/C/color-c/src/memory.cpp",
-		"/C/color-c/src/win32_work_queue.cpp",
-		"/C/color-c/src/win32_work_queue.h",
-		"/C/color-c/src/work_entry.h",
 		"/C/color-c/src/permutation.h",
 		"/C/color-c/src/fixed_array.h",
-		"/C/color-c/src/meta.cpp",
-		"/C/color-c/src/memory.h",
 		"/C/color-c/src/room.h",
 		"/C/color-c/src/map.cpp",
-		"/C/color-c/src/uv_vertex.glsl",
-		"/C/color-c/src/text_render.h",
-		"/C/color-c/src/font_loading.cpp",
 		"/C/color-c/build/game.i",
-		"/C/color-c/src/input.h",
-		"/C/color-c/src/campaign.cpp",
-		"/C/color-c/src/node_graph.h",
-		"/C/color-c/src/text_render.cpp",
-		"/C/color-c/src/campaign.h",
-		"/C/color-c/src/imgui.h",
 		"/C/color-c/src/map.h",
 		"/C/color-c/src/room.cpp",
-		"/C/color-c/src/node_graph.cpp",
-		"/C/color-c/src/util.cpp",
 		"/C/color-c/src/math.h",
 		"/C/color-c/src/timer.cpp",
 		"/C/color-c/src/camera.cpp",
 		"/C/color-c/src/oscillating_timer.cpp",
 		"/C/color-c/src/oscillating_timer.h",
-		"/C/color-c/src/input.cpp",
 		"/C/color-c/src/camera.h",
-		"/C/color-c/src/debug.cpp",
-		"/C/color-c/src/uv_fragment.glsl",
-		"/C/color-c/src/color_fragment.glsl",
 		"/C/color-c/build/freetype-2.9.1/docs/reference/ft2-header_file_macros.html",
 		"/C/color-c/src/vec.h",
 		"/C/color-c/src/win32_platform.h",
-		"/C/color-c/src/opengl.cpp",
 		"/C/color-c/src/timer.h",
-		"/C/color-c/src/align.cpp",
-		"/C/color-c/.gitignore",
-		"/C/color-c/src/ring_buffer.h",
-		"/C/color-c/src/generate_node_graph_params.h",
-		"/C/color-c/src/editor.h",
-		"/C/color-c/src/text_parsing.cpp",
-		"/C/color-c/src/log.h",
-		"/C/color-c/src/better_text_parsing.cpp",
-		"/C/color-c/src/text_parsing.h",
-		"/C/color-c/src/buffer.h",
-		"/C/color-c/src/buffer.cpp",
-		"/C/color-c/src/font_loading.h",
-		"/C/color-c/src/freetype_wrapper.cpp",
-		"/C/color-c/src/bitmap.cpp",
-		"/C/color-c/src/bitmap.h",
-		"/C/color-c/src/util.h",
-		"/C/Users/Harm/AppData/Roaming/Sublime Text 3/Packages/User/buildbat.sublime-build",
-		"/C/color-c/logs/log2.txt",
-		"/D/work/programming/color-c/src/log.cpp",
-		"/D/work/programming/color-c/logs/log.txt",
-		"/D/work/programming/color-c/TEST.txt",
-		"/D/work/programming/color-c/src/log.h",
-		"/D/work/programming/color-c/src/platform.h",
-		"/D/work/programming/color-c/logs/log2.txt",
-		"/D/work/programming/color-c/src/ring_buffer.cpp",
-		"/D/work/programming/color-c/src/ring_buffer.h",
-		"/D/work/programming/color-c/src/macros.h",
-		"/D/work/programming/color-c/src/campaign.cpp",
-		"/D/work/programming/color-c/src/game.h",
-		"/D/work/programming/color-c/src/work_entry.h",
-		"/D/work/programming/color-c/src/memory.h",
-		"/D/work/programming/color-c/build/win32_platform.i",
-		"/D/work/programming/color-c/build/b.bat",
-		"/D/work/programming/color-c/src/array.cpp",
-		"/D/work/programming/color-c/src/node_graph.cpp",
-		"/D/work/programming/color-c/src/game.cpp"
+		"/C/color-c/.gitignore"
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -861,9 +922,83 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
+			"Button(",
+			"dk_grey",
+			"Draw",
+			"MousePos()",
+			"dragging_index",
+			"SizeUiText",
+			"DrawText",
+			"ButtonLayout",
+			"ReleaseMutex",
+			"AddWorkEn",
+			"AllocArena",
+			"crit",
+			"mutex",
+			"platform",
+			"debug_container",
+			"platform_input",
+			"InputState",
+			"debug_container",
+			"debug_overlay",
+			"Draw",
+			"layer",
+			"mutex",
+			".\n",
+			"speed",
+			"CreateWorkQueue",
+			"Map Generation",
+			"DrawArena",
+			"ArenaFromId",
+			"TableFromId",
+			"CreateArrayFromArena",
+			"speed",
+			"g_work_queue_system",
+			"THREAD_GenerateNodeGraph",
+			"SizeTextUtf32",
+			"ScratchString",
+			"ValidArray",
+			"StepNodeGraphForceSimulation",
+			"id",
+			"GetUnitFromId",
+			"String",
+			"Texture",
+			"struct Texture",
+			"1600",
+			"BARRIER",
+			"0",
+			"blur_shader",
+			"severity = 0x",
+			"FRAME START",
+			"blur_dst_texture",
+			"opengl",
+			"BindTexture",
+			"ActiveTexture",
+			"256",
+			"vsprintf",
+			"SHADER",
+			"BindFragDataLocation",
+			"SwapBuffers",
+			"RectTopLeft",
+			"AbilityInfoBox",
+			"response.",
+			"response.rect",
+			"Pad",
+			"lt_blue",
+			"`red`",
+			"gold",
+			"DrawText",
+			"SizeText",
+			"align_",
+			"selected_ability",
+			"aligned_child.size",
+			"aligned_child.pos",
+			".x",
+			"AlignRect",
+			"SizeText",
 			"align_topleft",
 			"align_left",
 			"hover_ui_draw_depth",
@@ -917,81 +1052,7 @@
 			"current_traitsets",
 			"ScoreBattleState",
 			"DoAiStuff",
-			"player_turn = true",
-			"ally_traitsets",
-			"Score",
-			"target_count",
-			"actions",
-			"current_traitsets",
-			"cur_traitsets",
-			"cur_",
-			"CalculateAdjustedDamage",
-			"apply",
-			"CalculateAdjustedDamage",
-			"max",
-			"= 8",
-			"8",
-			"max",
-			"units",
-			"Copy",
-			"CombineUnitSet",
-			"armor",
-			"Apply",
-			"armor",
-			"InitLog",
-			"Log(",
-			"Log",
-			"DoAiStuff",
-			"FromPlatform",
-			"dst",
-			"enum class Team",
-			"Team",
-			"struct Team",
-			"ValidTarget",
-			"DetermineAbilityTier",
-			"struct TraitSet",
-			"struct UnitSet",
-			"UnitSet",
-			"thought",
-			"GenerateBattlePreviewEvent",
-			"Generate",
-			"struct Event",
-			"preview",
-			"battle->intents_",
-			"preview",
-			"intents_",
-			"action_points",
-			"GenerateEnemyIntent",
-			"struct UnitSet",
-			"player_turn",
-			"turn",
-			"thought",
-			"Enemy intent",
-			"GenerateInferredTargetSet",
-			"GenerateEnemyIntents",
-			"breath",
-			"DrawAbilityInfoBox",
-			"Random",
-			"U32.",
-			"U32",
-			"LoadFontData",
-			"room",
-			"graph->",
-			"Log(",
-			"zoom",
-			"DrawNodeGraph",
-			"Draw",
-			"cam",
-			"rect",
-			"camera->",
-			"game->camera_",
-			"draw_debug_text",
-			".x",
-			"space",
-			".x",
-			"next_entry_to_read",
-			"MoveCameraToWorldRect",
-			"game->current_state"
+			"player_turn = true"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -999,6 +1060,12 @@
 		"regex": false,
 		"replace_history":
 		[
+			"game->debug_overlay.dragging_index",
+			"",
+			"padded_button_rect",
+			"child_size",
+			"child_pos",
+			".y",
 			"unit",
 			"focus",
 			"armor",
@@ -1120,13 +1187,7 @@
 			"focus",
 			"armor",
 			"game->selected_unit",
-			"preview_font_size,",
-			"unit->",
-			"imgui::active_container",
-			"",
-			"else if(tc == TargetClass::",
-			"imgui::button_padding",
-			"imgui::active_container->"
+			"preview_font_size,"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1142,19 +1203,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "src/battle.cpp",
+					"file": "src/memory.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 50374,
+						"buffer_size": 4616,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								45277,
-								45277
+								515,
+								515
 							]
 						],
 						"settings":
@@ -1164,27 +1225,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 8742.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/draw.cpp",
+					"file": "src/game.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7913,
+						"buffer_size": 20467,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7687,
-								7687
+								14263,
+								14263
 							]
 						],
 						"settings":
@@ -1194,7 +1255,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3037.0,
+						"translation.y": 1020.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1203,24 +1264,84 @@
 			]
 		},
 		{
-			"selected": 0,
+			"selected": 9,
 			"sheets":
 			[
 				{
 					"buffer": 2,
-					"file": "src/const.h",
+					"file": "src/memory_draw.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15020,
+						"buffer_size": 1251,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13121,
-								13121
+								980,
+								980
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/text_render.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11055,
+								11055
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4460.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/text_render.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1644,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1229,14 +1350,129 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5649.0,
+						"translation.y": 429.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
+					"file": "logs/critical.log",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2514357,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2511025,
+								2511025
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 694750.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/debug_overlay.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 424,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								424,
+								424
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/input.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2280,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2084,
+								2084
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1079.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/input.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15161,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15154,
+								15154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8217.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
 					"file": "src/imgui.h",
 					"semi_transient": false,
 					"settings":
@@ -1248,8 +1484,8 @@
 						"selection":
 						[
 							[
-								291,
-								291
+								1118,
+								1118
 							]
 						],
 						"settings":
@@ -1258,27 +1494,56 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 42.0,
+						"translation.y": 549.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/vec.cpp",
+					"buffer": 10,
+					"file": "src/const.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7851,
+						"buffer_size": 18690,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7851,
-								7851
+								649,
+								649
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 46.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8288,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3349,
+								3216
 							]
 						],
 						"settings":
@@ -1288,10 +1553,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5186.0,
+						"translation.y": 1000.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -1299,7 +1564,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -1325,7 +1590,7 @@
 		"cols":
 		[
 			0.0,
-			0.539375,
+			0.49375,
 			1.0
 		],
 		"rows":
@@ -1347,7 +1612,7 @@
 	"project": "color-c.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1357,6 +1622,410 @@
 		"selected_items":
 		[
 			[
+				"bb",
+				"build\\b.bat"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"imgui",
+				"src\\imgui.h"
+			],
+			[
+				"batt",
+				"src\\battle.cpp"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"nodegra",
+				"src\\node_graph.cpp"
+			],
+			[
+				"inputc",
+				"src\\input.cpp"
+			],
+			[
+				"input",
+				"src\\input.h"
+			],
+			[
+				"textrend",
+				"src\\text_render.cpp"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"debugover",
+				"src\\debug_overlay.h"
+			],
+			[
+				"gamec",
+				"src\\game.cpp"
+			],
+			[
+				"logt",
+				"logs\\log.txt"
+			],
+			[
+				"log",
+				"src\\log.cpp"
+			],
+			[
+				"crit",
+				"logs\\critical.log"
+			],
+			[
+				"main",
+				"src\\main_menu.cpp"
+			],
+			[
+				"workque",
+				"src\\win32_work_queue.h"
+			],
+			[
+				"tod",
+				"_\\todo.txt"
+			],
+			[
+				"win32",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"pool",
+				"src\\pool.cpp"
+			],
+			[
+				"imguih",
+				"src\\imgui.h"
+			],
+			[
+				"mem",
+				"src\\memory.cpp"
+			],
+			[
+				"plat",
+				"src\\platform.h"
+			],
+			[
+				"win",
+				"src\\win32_platform.cpp"
+			],
+			[
+				"memor",
+				"src\\memory.cpp"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"iguih",
+				"src\\imgui.h"
+			],
+			[
+				"game",
+				"src\\game.cpp"
+			],
+			[
+				"node",
+				"src\\node_graph.cpp"
+			],
+			[
+				"memoryd",
+				"src\\memory_draw.cpp"
+			],
+			[
+				"inc",
+				"src\\platform_include.cpp"
+			],
+			[
+				"win32work",
+				"src\\win32_work_queue.cpp"
+			],
+			[
+				"worke",
+				"src\\work_entry.h"
+			],
+			[
+				"camp",
+				"src\\campaign.cpp"
+			],
+			[
+				"enemyai",
+				"src\\enemy_ai.cpp"
+			],
+			[
+				"utf32",
+				"src\\utf32string.cpp"
+			],
+			[
+				"array",
+				"src\\array.h"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"edit",
+				"src\\editor.cpp"
+			],
+			[
+				"textpars",
+				"src\\text_parsing.cpp"
+			],
+			[
+				"textpar",
+				"src\\text_parsing.h"
+			],
+			[
+				"strinh",
+				"src\\string.h"
+			],
+			[
+				"table",
+				"src\\table.h"
+			],
+			[
+				"memr",
+				"src\\memory.cpp"
+			],
+			[
+				"memry",
+				"src\\memory.cpp"
+			],
+			[
+				"tabl",
+				"src\\table.cpp"
+			],
+			[
+				"todo",
+				"_\\todo.txt"
+			],
+			[
+				"lo",
+				"logs\\log.txt"
+			],
+			[
+				"memorydarw",
+				"src\\memory_draw.cpp"
+			],
+			[
+				"work",
+				"src\\work_entry.h"
+			],
+			[
+				"workqu",
+				"src\\win32_work_queue.h"
+			],
+			[
+				"win32w",
+				"src\\win32_work_queue.cpp"
+			],
+			[
+				"util",
+				"src\\util.cpp"
+			],
+			[
+				"b",
+				"build\\b.bat"
+			],
+			[
+				"tableh",
+				"src\\table.h"
+			],
+			[
+				"gam",
+				"src\\game.cpp"
+			],
+			[
+				"tab",
+				"src\\table.cpp"
+			],
+			[
+				"lot",
+				"logs\\log.txt"
+			],
+			[
+				"arra",
+				"src\\array.cpp"
+			],
+			[
+				"timin",
+				"logs\\DebugTimings.txt"
+			],
+			[
+				"cam",
+				"src\\campaign.cpp"
+			],
+			[
+				"utf",
+				"src\\utf32string.cpp"
+			],
+			[
+				"str",
+				"src\\string.cpp"
+			],
+			[
+				"ene",
+				"src\\enemy_ai.cpp"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"better",
+				"src\\better_text_parsing.cpp"
+			],
+			[
+				"unit",
+				"src\\unit.cpp"
+			],
+			[
+				"bat",
+				"src\\battle.cpp"
+			],
+			[
+				"abili",
+				"src\\ability.cpp"
+			],
+			[
+				"memory",
+				"src\\memory.cpp"
+			],
+			[
+				"memo",
+				"src\\memory.h"
+			],
+			[
+				"ndo",
+				"src\\node_graph.cpp"
+			],
+			[
+				"ga",
+				"src\\game.cpp"
+			],
+			[
+				"outline",
+				"src\\shader\\outline.cs.glsl"
+			],
+			[
+				"cnost",
+				"src\\const.h"
+			],
+			[
+				"drawh",
+				"src\\draw.h"
+			],
+			[
+				"metaprint",
+				"src\\meta_print.cpp"
+			],
+			[
+				"meta",
+				"src\\meta.cpp"
+			],
+			[
+				"opengl",
+				"src\\opengl.h"
+			],
+			[
+				"open",
+				"src\\opengl.cpp"
+			],
+			[
+				"blur",
+				"src\\shader\\gaussian_blur.cs.glsl"
+			],
+			[
+				"openglh",
+				"src\\opengl.h"
+			],
+			[
+				"color",
+				"src\\color_vertex.glsl"
+			],
+			[
+				"uv",
+				"src\\uv_fragment.glsl"
+			],
+			[
+				"win32_work",
+				"src\\win32_work_queue.cpp"
+			],
+			[
+				"logcp",
+				"src\\log.cpp"
+			],
+			[
+				"ogc",
+				"build\\freetype-2.9.1\\builds\\os2\\os2-gcc.mk"
+			],
+			[
+				"uv_fra",
+				"src\\uv_fragment.glsl"
+			],
+			[
+				"uv_ver",
+				"src\\uv_vertex.glsl"
+			],
+			[
+				"vertex",
+				"src\\color_vertex.glsl"
+			],
+			[
+				"gauss",
+				"src\\shader\\gaussian_blur.vs.glsl"
+			],
+			[
+				"guas",
+				"src\\shader\\gaussian_blur.vs.glsl"
+			],
+			[
+				"color_fra",
+				"src\\color_fragment.glsl"
+			],
+			[
+				"openg",
+				"src\\opengl.cpp"
+			],
+			[
+				"test",
+				"src\\test_mode.cpp"
+			],
+			[
+				"textren",
+				"src\\text_render.h"
+			],
+			[
+				"ai",
+				"src\\enemy_ai.cpp"
+			],
+			[
+				"ability",
+				"data\\ability.dat"
+			],
+			[
+				"abi",
+				"src\\ability.cpp"
+			],
+			[
+				"abilityh",
+				"src\\ability.h"
+			],
+			[
+				"stringh",
+				"src\\string.h"
+			],
+			[
 				"vec",
 				"src\\vec.cpp"
 			],
@@ -1365,96 +2034,28 @@
 				"src\\const.h"
 			],
 			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"batt",
-				"src\\battle.cpp"
-			],
-			[
-				"game",
-				"src\\game.cpp"
-			],
-			[
-				"log",
-				"logs\\log.txt"
-			],
-			[
-				"drawh",
-				"src\\draw.h"
-			],
-			[
 				"plaf",
 				"src\\platform_include.cpp"
-			],
-			[
-				"inc",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"str",
-				"src\\string.cpp"
 			],
 			[
 				"geomr",
 				"src\\geometry.cpp"
 			],
 			[
-				"ai",
-				"src\\ai_explorer.cpp"
-			],
-			[
 				"math",
 				"src\\math.cpp"
-			],
-			[
-				"bb",
-				"build\\b.bat"
-			],
-			[
-				"color",
-				"src\\color_vertex.glsl"
 			],
 			[
 				"arrayc",
 				"src\\array.cpp"
 			],
 			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
-				"test",
-				"src\\test_mode.cpp"
-			],
-			[
-				"main",
-				"src\\main_menu.cpp"
-			],
-			[
-				"bat",
-				"src\\battle.cpp"
-			],
-			[
 				"aiex",
 				"src\\ai_explorer.h"
 			],
 			[
-				"gameh",
-				"src\\game.h"
-			],
-			[
 				"game state",
 				"src\\game_state.h"
-			],
-			[
-				"tod",
-				"_\\todo.txt"
-			],
-			[
-				"gamec",
-				"src\\game.cpp"
 			],
 			[
 				"breed",
@@ -1469,10 +2070,6 @@
 				"data\\ability.dat"
 			],
 			[
-				"enemyai",
-				"src\\enemy_ai.h"
-			],
-			[
 				"abilitydat",
 				"data\\ability.dat"
 			],
@@ -1485,52 +2082,20 @@
 				"data\\ability.dat"
 			],
 			[
-				"abilityh",
-				"src\\ability.h"
-			],
-			[
-				"b",
-				"build\\b.bat"
-			],
-			[
 				"Traitset",
 				"src\\traitset.h"
-			],
-			[
-				"unit",
-				"src\\unit.h"
-			],
-			[
-				"todo",
-				"_\\todo.txt"
-			],
-			[
-				"timin",
-				"logs\\DebugTimings.txt"
 			],
 			[
 				"effect",
 				"src\\effect.h"
 			],
 			[
-				"abili",
-				"src\\ability.cpp"
-			],
-			[
 				"ab h",
 				"src\\ability.h"
 			],
 			[
-				"abi",
-				"data\\ability.dat"
-			],
-			[
 				"bre",
 				"data\\breed.dat"
-			],
-			[
-				"con",
-				"src\\const.h"
 			],
 			[
 				"bree",
@@ -1545,10 +2110,6 @@
 				"src\\target_class.h"
 			],
 			[
-				"ability",
-				"src\\ability.h"
-			],
-			[
 				"unith",
 				"src\\unit.h"
 			],
@@ -1561,20 +2122,8 @@
 				"data\\ability.dat"
 			],
 			[
-				"crit",
-				"logs\\critical.log"
-			],
-			[
-				"table",
-				"src\\table.cpp"
-			],
-			[
 				"cri",
 				"logs\\critical.log"
-			],
-			[
-				"win32",
-				"src\\win32_platform.cpp"
 			],
 			[
 				"",
@@ -1583,290 +2132,6 @@
 			[
 				"platfo",
 				"src\\platform.h"
-			],
-			[
-				"timing",
-				"logs\\DebugTimings.txt"
-			],
-			[
-				"ab",
-				"data\\ability.dat"
-			],
-			[
-				"ablih",
-				"src\\ability.h"
-			],
-			[
-				"scrat",
-				"src\\scratch.cpp"
-			],
-			[
-				"abiltyd",
-				"data\\ability.dat"
-			],
-			[
-				"array",
-				"src\\array.cpp"
-			],
-			[
-				"target",
-				"src\\target_class.h"
-			],
-			[
-				"win",
-				"src\\win32_platform.cpp"
-			],
-			[
-				"work",
-				"src\\win32_work_queue.h"
-			],
-			[
-				"string",
-				"src\\string.h"
-			],
-			[
-				"mem",
-				"src\\memory.cpp"
-			],
-			[
-				"include",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"plat",
-				"src\\platform.h"
-			],
-			[
-				"meta",
-				"src\\meta.cpp"
-			],
-			[
-				"battl",
-				"src\\battle.h"
-			],
-			[
-				"abiltiyd",
-				"data\\ability.dat"
-			],
-			[
-				"battle",
-				"src\\battle.h"
-			],
-			[
-				"memory",
-				"src\\memory.h"
-			],
-			[
-				"battelh",
-				"src\\battle.h"
-			],
-			[
-				"unitc",
-				"src\\unit.cpp"
-			],
-			[
-				"breedd",
-				"data\\breed.dat"
-			],
-			[
-				"ablityd",
-				"data\\ability.dat"
-			],
-			[
-				"arra",
-				"src\\array.h"
-			],
-			[
-				"gamei",
-				"build\\game.i"
-			],
-			[
-				"node",
-				"src\\node_graph.h"
-			],
-			[
-				"room",
-				"src\\room.h"
-			],
-			[
-				"inputh",
-				"src\\input.h"
-			],
-			[
-				"font",
-				"src\\font_loading.cpp"
-			],
-			[
-				"text",
-				"src\\text_render.cpp"
-			],
-			[
-				"map",
-				"src\\map.cpp"
-			],
-			[
-				"textren",
-				"src\\text_render.h"
-			],
-			[
-				"imgui",
-				"src\\imgui.h"
-			],
-			[
-				"verte",
-				"src\\uv_vertex.glsl"
-			],
-			[
-				"cons",
-				"src\\const.h"
-			],
-			[
-				"util",
-				"src\\util.cpp"
-			],
-			[
-				"btat",
-				"src\\battle.cpp"
-			],
-			[
-				"timerc",
-				"src\\timer.cpp"
-			],
-			[
-				"timer",
-				"src\\oscillating_timer.h"
-			],
-			[
-				"camera",
-				"src\\camera.h"
-			],
-			[
-				"input",
-				"src\\input.cpp"
-			],
-			[
-				"nodegra",
-				"src\\node_graph.cpp"
-			],
-			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
-				"renderte",
-				"build\\freetype-2.9.1\\docs\\reference\\ft2-header_file_macros.html"
-			],
-			[
-				"uv_ver",
-				"src\\uv_vertex.glsl"
-			],
-			[
-				"uvfra",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"glsl",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"workq",
-				"src\\win32_work_queue.cpp"
-			],
-			[
-				"drawc",
-				"src\\draw.cpp"
-			],
-			[
-				"gamc",
-				"src\\game.cpp"
-			],
-			[
-				"camp",
-				"src\\campaign.h"
-			],
-			[
-				"colorv",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"uv",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"uvfr",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"openg",
-				"src\\opengl.cpp"
-			],
-			[
-				"logt",
-				"logs\\log.txt"
-			],
-			[
-				"color_fra",
-				"src\\color_fragment.glsl"
-			],
-			[
-				"colorver",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"paltf",
-				"src\\platform.h"
-			],
-			[
-				"arrayh",
-				"src\\array.h"
-			],
-			[
-				"critic",
-				"logs\\critical.log"
-			],
-			[
-				"edit",
-				"src\\editor.h"
-			],
-			[
-				"workentr",
-				"src\\work_entry.h"
-			],
-			[
-				"inclu",
-				"src\\game_code_include.cpp"
-			],
-			[
-				"textpars",
-				"src\\text_parsing.cpp"
-			],
-			[
-				"effec",
-				"src\\effect.h"
-			],
-			[
-				"targetcl",
-				"src\\target_class.h"
-			],
-			[
-				"textpar",
-				"src\\text_parsing.cpp"
-			],
-			[
-				"inputc",
-				"src\\input.cpp"
-			],
-			[
-				"bitm",
-				"src\\bitmap.h"
-			],
-			[
-				"metac",
-				"src\\meta.cpp"
-			],
-			[
-				"log2",
-				"logs\\log2.txt"
 			]
 		],
 		"width": 0.0

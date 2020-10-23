@@ -200,6 +200,13 @@ CreateUnitByName(String name, Team team)
 	return CreateUnit(breed_id, team);
 }
 
+Id<Unit>
+CreateUnitByName(char *name, Team team)
+{
+	String name_string = StringFromCString(name);
+	return CreateUnitByName(name_string, team);
+}
+
 // bool
 // _CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)
 // {
@@ -792,4 +799,13 @@ GetUnitFromId(Id<Unit> id)
 {
 	TIMED_BLOCK;
 	return GetEntryFromId(g::unit_table, id);
+}
+
+void
+FullHealUnit(Id<Unit> id)
+{
+	Unit *unit = GetUnitFromId(id);
+	if(!unit) return;
+
+	unit->cur_traits = unit->max_traits;
 }

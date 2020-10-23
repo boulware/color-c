@@ -51,32 +51,12 @@ template<typename Type>
 bool
 operator!=(Id<Type> a, Id<Type> b);
 
-// Allocates a chunk of memory from the platform large enough to hold max_entry_count entries.
-template<typename Type>
-Table<Type>
-AllocTable(int max_entry_count);
-
-// Attempts to create an entry in [table]. On success, returns a Id which refers to that
-// entry. Failure occurs when the table has reached full capacity.
-template<typename Type>
-Id<Type>
-CreateEntry(Table<Type> *table);
-
-template <typename Type>
-Type *
-GetEntryFromRawIndex(Table<Type> table, int index);
-
-template <typename Type>
-Id<Type>
-NullIndex();
-
-template <typename Type>
-Type *
-GetEntryFromId(Table<Type> table, Id<Type> id);
-
-template<typename Type>
-void
-DeleteEntry(Table<Type> *table, Id<Type> id);
+template<typename Type> Table<Type> AllocTable(int max_entry_count);
+template<typename Type> Id<Type>    CreateEntry(Table<Type> *table);
+template<typename Type> Type *      GetEntryFromRawIndex(Table<Type> table, int index);
+template<typename Type> Id<Type>    NullIndex();
+template<typename Type> Type *      GetEntryFromId(Table<Type> table, Id<Type> id);
+template<typename Type> void        DeleteEntry(Table<Type> *table, Id<Type> id);
 
 // template <typename Type>
 // Id<Type>

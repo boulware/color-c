@@ -110,6 +110,33 @@ DeleteEntry(Table<Type> *table, Id<Type> id)
                                   // access with the current id will just return a nullptr
 }
 
+template<typename Type>
+Id<Type>
+RandomActiveId(Table<Type> table)
+{
+    int valid_entry_count = 0;
+    for(int i=0; i<table.entry_count; ++i)
+    {
+        if(table.entries[i].active) ++valid_entry_count;
+    }
+
+    if(valid_entry_count == 0) return Id<Type>{0,0};
+
+    int selected_entry_number = RandomU32(0, valid_entry_count-1);
+    int cur_entry_number = 0;
+    for(int i=0; i<table.entry_count; ++i)
+    {
+        if(table.entries[i].active)
+        {
+            if(cur_entry_number == selected_entry_number)
+                return table.entries[i].id;
+            else
+                ++cur_entry_number;
+        }
+    }
+
+    return Id<Type>{0,0};
+}
 // template <typename Type>
 // Id<Type>
 // GetGenerationalIndexFromIndex(Table<Type> table, int index)

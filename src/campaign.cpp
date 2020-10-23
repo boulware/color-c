@@ -231,6 +231,7 @@ InitCampaign(Campaign *campaign)
     campaign->state = CampaignState::MapSelection;
 
     campaign->arena_id = AllocArena("Campaign");
+    campaign->battle_arena_id = AllocArena("Campaign Battle");
 
     // Maps
     int max_nodes = MaxNodesFromGenerationParams(campaign->generation_params_template);
@@ -244,11 +245,12 @@ InitCampaign(Campaign *campaign)
 
     // Rooms
     campaign->rooms = CreateArrayFromArena<Room>(max_nodes, campaign->arena_id);
+    campaign->room_is_init = false;
 
     campaign->map_zoom_timer = {
         .start = 0.f,
         .cur = 0.f,
-        .length_s = 2.5f,
+        .length_s = 0.1f,//2.5f,
         .finished = false,
     };
 
@@ -297,6 +299,9 @@ InitCampaign(Campaign *campaign)
         .size = Vec2f{1600.f, 900.f}
     };
     MoveCameraToWorldRect(&game->camera, rect);
+
+    AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
+    //AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
 
     // Log("Thread %d started.", platform->StartJob(&params));
     // Log("Thread %d started.", platform->StartJob(&params));
@@ -464,7 +469,8 @@ TickCampaign(Campaign *campaign)
             //for(auto &room : campaign->rooms)
             for(int _=0; _<current_map.nodes.count; ++_)
             {
-                Room room = {.type = (RoomType)RandomU32(2, (u32)RoomType::COUNT-1)};
+                //Room room = {.type = (RoomType)RandomU32(2, (u32)RoomType::COUNT-1)};
+                Room room = {.type = RoomType::Battle};
                 campaign->rooms += room;
             }
 
@@ -473,6 +479,8 @@ TickCampaign(Campaign *campaign)
     }
     else if(campaign->state == CampaignState::InMap)
     {
+        SetDrawDepth(50.f);
+
         // Move around map with WASD
         float cam_movespeed = 10.f;
         if(Down(vk::S))
@@ -517,135 +525,82 @@ TickCampaign(Campaign *campaign)
         if(Pressed(vk::LMB) and map_response.hovered_node_index >= 0)
         {
             Node &node = campaign->maps[campaign->selected_map_index].nodes[map_response.hovered_node_index]; // alias
-            if(node.reachable) CompleteNode(&campaign->maps[campaign->selected_map_index], map_response.hovered_node_index);
+            if(node.reachable)
+            {
+                CompleteNode(&campaign->maps[campaign->selected_map_index], map_response.hovered_node_index);
+                campaign->state = CampaignState::InRoom;
+                campaign->current_room_index = map_response.hovered_node_index;
+            }
         }
 
+        Camera initial_camera = game->camera;
+        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, game->window_size});
+
+        Rect side_panel_rect = {{}, {200.f, game->window_size.y}};
+        DrawFilledRect(side_panel_rect, c::dk_grey);
+        DrawLine(RectTopRight(side_panel_rect), RectBottomRight(side_panel_rect), c::white);
+        Vec2f pen = {5.f, 0.f};
+
+        for(auto unit_id : campaign->player_party)
+        {
+            Unit *unit = GetUnitFromId(unit_id);
+            if(!unit) continue;
+
+            Vec2f name_size = DrawText(c::def_text_layout, pen, unit->name).size;
+            DrawTraitSetWithPreview(pen + Vec2f{0.f, name_size.y},
+                                    unit->cur_traits,
+                                    unit->max_traits,
+                                    unit->cur_traits,
+                                    0.f);
+            pen += {0.f, 100.f};
+        }
+
+        SetCameraPos(&game->camera, initial_camera.pos);
+        SetCameraView(&game->camera, initial_camera.view);
         //if(map_response.newly_hovered) ResetLow(&campaign->node_pulse_timer);
+    }
+    else if(campaign->state == CampaignState::InRoom)
+    {
+        Room current_room = campaign->rooms[campaign->current_room_index];
+        if(current_room.type == RoomType::Battle)
+        {
+            if(!campaign->room_is_init)
+            {
+                InitBattle(&campaign->current_battle, campaign->battle_arena_id);
+                UnitSet enemy_units = {};
+                int enemy_count = RandomU32(1,1);
+                for(int i=0; i<enemy_count; ++i)
+                {
+                    Id<Unit> random_unit_id = CreateUnit(RandomActiveId(g::breed_table), Team::enemies);
+                    AddUnitToUnitSet(random_unit_id, &enemy_units);
+                }
+
+                UnitSet battle_units = CombineUnitSets(&campaign->player_party, &enemy_units);
+                StartBattle(&campaign->current_battle, battle_units);
+
+                campaign->map_camera = game->camera;
+                MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, game->window_size});
+
+                campaign->room_is_init = true;
+
+            }
+
+            auto battle_state = TickBattle(&campaign->current_battle);
+            if(battle_state.finished)
+            {
+                SetCameraPos(&game->camera, campaign->map_camera.pos);
+                SetCameraView(&game->camera, campaign->map_camera.view);
+                for(auto unit_id : campaign->player_party)
+                    FullHealUnit(unit_id);
+
+                campaign->room_is_init = false;
+                campaign->state = CampaignState::InMap;
+            }
+        }
     }
 
 
-    //DrawText(c::def_text_layout, {}, "%f, %f", rel_mouse_pos.x, rel_mouse_pos.y);
-    //DrawUiText(c::def_text_layout, {}, "%f, %f", game->camera_pos.x, game->camera_pos.y);
 
-    //DrawFilledRect({{}, {5.f,5.f}}, c::green);
-
-    //DrawTextMultiline(c::small_text_layout, MousePos(), MetaString(campaign));
-
-    // float cam_move_speed = 20.f;
-    // if(Down(vk::right))
-    // {
-    //     campaign->camera_offset.x -= cam_move_speed;
-    //     //SetCameraPos(game->camera_pos);
-    // }
-    // if(Down(vk::left))
-    // {
-    //     campaign->camera_offset.x += cam_move_speed;
-    //     //SetCameraPos(game->camera_pos);
-    // }
-    // if(Down(vk::up))
-    // {
-    //     campaign->camera_offset.y += cam_move_speed;
-    //     //SetCameraPos(game->camera_pos);
-    // }
-    // if(Down(vk::down))
-    // {
-    //     campaign->camera_offset.y -= cam_move_speed;
-    //     //SetCameraPos(game->camera_pos);
-    // }
-
-    // if(Pressed(vk::m)) game->camera_pos = 0.5f*game->window_size;
-
-    // if(Pressed(vk::enter))
-    // //if(Tick(&campaign->generation_timer))
-    // {
-    //     campaign->max_speed = 0.f;
-    //     GenerateTreeFromMainBranch(campaign);
-    //     //SetCameraPos({0.f,0.f});
-    //     campaign->generation_finished = false;
-    //     Reset(&campaign->generation_timer);
-    // }
-
-    // if(Pressed(vk::space))
-    // {
-    //     campaign->fdg_running = !campaign->fdg_running;
-    // }
-
-    // if(Pressed(vk::RMB))
-    // {
-    //     // AddNode(Campaign *campaign, Node node, Array<int> edge_indices)
-    //     Node node = {
-    //         .pos = MousePos()
-    //     };
-    //     AddNode(campaign, node);
-    // }
-
-
-
-
-
-
-    // Color line_color = c::white;
-    // if(campaign->generation_finished) line_color = c::white;
-
-    // for(int i=0; i<campaign->edges.count; ++i)
-    // {
-    //     int a0_index = campaign->edges[i].indices[0];
-    //     int a1_index = campaign->edges[i].indices[1];
-    //     Vec2f a0 = campaign->nodes[a0_index].pos;
-    //     Vec2f a1 = campaign->nodes[a1_index].pos;
-
-    //     for(int j=i+1; j<campaign->edges.count; ++j)
-    //     {
-    //         int b0_index = campaign->edges[j].indices[0];
-    //         int b1_index = campaign->edges[j].indices[1];
-    //         Vec2f b0 = campaign->nodes[b0_index].pos;
-    //         Vec2f b1 = campaign->nodes[b1_index].pos;
-
-    //         if(LineSegmentsInnerIntersect(a0, a1, b0, b1, 0.01f))
-    //         {
-    //             //line_color = c::red;
-    //             int temp = campaign->edges[i].indices[0];
-    //             campaign->edges[i].indices[0] = campaign->edges[j].indices[0];
-    //             campaign->edges[j].indices[0] = temp;
-
-    //             if(!GraphIsFullyConnected(campaign)) GenerateTreeFromMainBranch(campaign);
-
-    //             break;
-    //         }
-    //     }
-
-    //     DrawLine(a0, a1, line_color);
-    // }
-
-    // DrawText(c::def_text_layout, {0.f,0.f}, "generations: %d", campaign->generation_count);
-
-
-    // for(int i=0; i<campaign->nodes.count; ++i)
-    // {
-    //     Node &node = campaign->nodes[i]; // alias
-
-    //     Rect aligned_rect = AlignRect({node.pos, c::node_size}, c::align_center);
-
-    //     DrawFilledRect(aligned_rect, c::black);
-
-    //     Color outline_color = c::red;
-
-    //     if(PointInRect(aligned_rect, MousePos() - campaign->camera_offset))
-    //     {
-    //         outline_color = c::white;
-    //     }
-    //     else if(i == 0)                      outline_color = c::green;
-    //     else if(i == campaign->end_index)    outline_color = c::yellow;
-
-    //     DrawUnfilledRect(aligned_rect, outline_color);
-    // }
-
-    // //DrawText(c::def_text_layout, {0.f,0.f}, "%d", campaign->edges.count);
-
-    // if(Released(vk::LMB))
-    // {
-    //     campaign->drag_start_index = -1;
-    // }
 
     GameState new_state = GameState::None;
     if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;

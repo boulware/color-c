@@ -6,7 +6,6 @@ enum class GameState
 	None,
 	Quit,
 	MainMenu,
-	Battle,
     Campaign,
 	Editor,
 	Options,

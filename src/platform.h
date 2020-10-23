@@ -35,6 +35,7 @@ typedef void   fnsig_QueueReleaseSemaphore(WorkQueue *);
 typedef size_t fnsig_WorkQueuePendingJobCount(WorkQueue *);
 typedef void   fnsig_BlockAndTakeMutex(void *);
 typedef void   fnsig_ReleaseMutex(void *);
+typedef void   fnsig_ReadWriteBarrier();
 //typedef Utf32String fnsig_LoadUtf8FileAsUtf32String(const char *);
 
 typedef int fnsig_MyInterlockedIncrement(int volatile *);
@@ -77,6 +78,7 @@ struct Platform {
 
 	mPlatformFunction(BlockAndTakeMutex);
 	mPlatformFunction(ReleaseMutex);
+	mPlatformFunction(ReadWriteBarrier);
 
 	#undef mPlatformFunction
 };

@@ -353,6 +353,18 @@ SizeText(TextLayout layout, String string, int char_count)
     return Vec2f{pen.x, LineHeight(layout)};
 }
 
+Vec2f
+SizeText(TextLayout layout, char *c_string, ...)
+{
+    TIMED_BLOCK;
+
+    char *formatted_string;
+    mFormatString(formatted_string, c_string);
+    String string = StringFromCString(formatted_string);
+
+    return SizeText(layout, string);
+}
+
 // [char_count] is an optional parameter which will count only that number of chars
 // in the size, rather than the entire string. A negative char_count will use the
 // whole string.

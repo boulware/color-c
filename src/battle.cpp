@@ -514,10 +514,11 @@ SetSelectedUnit(Battle *battle, Id<Unit> new_unit_id)
     battle->selected_ability_id = c::null_ability_id;
 }
 
-void InitBattle(Battle *battle)
+void InitBattle(Battle *battle, PoolId<Arena> arena_id)
 {
     // Memory allocation
-    battle->arena_id = AllocArena("Battle");
+    battle->arena_id = arena_id;//AllocArena("Battle");
+    ClearArena(arena_id);
     battle->preview_events = CreateArrayFromArena<BattleEvent>(100, battle->arena_id);
     battle->intents =        CreateArrayFromArena<Intent>(8, battle->arena_id);
     for(int i=0; i<8; ++i) battle->intents += {};
@@ -532,7 +533,7 @@ void InitBattle(Battle *battle)
     battle->end_button_clicked_timer = {};
     battle->end_button_clicked_timer.length_s = c::end_button_clicked_time_s;
 
-
+    battle->hud = {{0.f, game->window_size.y-c::hud_offset_from_bottom}, {game->window_size.x, c::hud_offset_from_bottom}};
 }
 
 void
@@ -554,20 +555,37 @@ StartBattle(Battle *battle, UnitSet battle_units)
     battle->is_player_turn = true;
 
     // Enemy AI (# of permutations)
-    UnitSet active_unitset = {};
-    UnitSet other_unitset  = {};
+    UnitSet ally_unitset = {};
+    UnitSet enemy_unitset  = {};
     for(Id<Unit> unit_id : battle->units)
     {
         Unit *unit = GetUnitFromId(unit_id);
         if(!ValidUnit(unit)) continue;
 
-        if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &active_unitset);
-        else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &other_unitset);
+        if(     unit->team == Team::allies)  AddUnitToUnitSet(unit_id, &ally_unitset);
+        else if(unit->team == Team::enemies) AddUnitToUnitSet(unit_id, &enemy_unitset);
     }
-    //battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
+    //battle->best_choice_string = DoAiStuff(ally_unitset, enemy_unitset, &battle->arena);
+
+    { // Generate unit slots
+        Vec2f pos = {50.f, 300.f};
+        float x_between_slots = c::unit_slot_size.x + c::unit_slot_padding;
+        for(int i=0; i<ally_unitset.size; ++i)
+        {
+            battle->unit_slots[i] = pos;
+            pos.x += x_between_slots;
+        }
+
+        pos = {50.f + c::max_party_size*x_between_slots, 300.f};
+        for(int i=0; i<enemy_unitset.size; ++i)
+        {
+            battle->unit_slots[ally_unitset.size + i] = pos;
+            pos.x += x_between_slots;
+        }
+    }
 }
 
-GameState
+BattleState
 TickBattle(Battle *battle)
 {
     ClearArray<BattleEvent>(&battle->preview_events);
@@ -1321,10 +1339,23 @@ TickBattle(Battle *battle)
     DrawTextMultiline(c::small_text_layout, {}, "%.*s",
                       battle->best_choice_string.length, battle->best_choice_string.data);
 
-    GameState new_state = GameState::None;
-    { // Return to main menu if esc is pressed
-        if(Pressed(KeyBind::Exit)) new_state = GameState::MainMenu;
+    BattleState battle_state = {};
+    // Check if all allies are dead.
+    bool any_ally_is_alive = false;
+    bool any_enemy_is_alive = false;
+    for(auto unit_id : battle->units)
+    {
+        Unit *unit = GetUnitFromId(unit_id);
+        if(!unit) continue;
+
+        if(unit->cur_traits.vigor > 0)
+        {
+            if     (unit->team == Team::allies) any_ally_is_alive = true;
+            else if(unit->team == Team::enemies) any_enemy_is_alive = true;
+        }
     }
 
-    return new_state;
+    if(!any_ally_is_alive or !any_enemy_is_alive) battle_state.finished = true;
+
+    return battle_state;
 }

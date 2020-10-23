@@ -33,6 +33,11 @@ namespace m
         return((float)(int)(value + 0.5f));
     }
 
+    float Ceil(float value)
+    {
+        return(Round(value + 0.5f));
+    }
+
     template <class Type>
     Type Pow(Type base, int power)
     {

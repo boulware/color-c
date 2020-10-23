@@ -9,6 +9,7 @@ struct MainMenu
 {
 	Array<String> option_strings;
 	int selected_option;
+    int hovered_option;
 };
 
 void InitMainMenu(MainMenu *menu);

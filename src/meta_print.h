@@ -11,12 +11,14 @@
 #include "color.h"
 #include "const.h"
 #include "debug.h"
+#include "debug_overlay.h"
 #include "draw.h"
 #include "editor.h"
 #include "effect.h"
 #include "enemy_ai.h"
 #include "fixed_array.h"
 #include "font_loading.h"
+#include "frametimes_draw.h"
 #include "freetype.h"
 #include "freetype_wrapper.h"
 #include "game.h"
@@ -27,6 +29,7 @@
 #include "image.h"
 #include "imgui.h"
 #include "input.h"
+#include "input_vk_constants.h"
 #include "keybinds.h"
 #include "lang.h"
 #include "log.h"
@@ -51,6 +54,7 @@
 #include "sprite.h"
 #include "string.h"
 #include "table.h"
+#include "table_draw.h"
 #include "target_class.h"
 #include "test_mode.h"
 #include "text_parsing.h"
@@ -82,6 +86,8 @@ String MetaString(const Intent *s);
 
 String MetaString(const BattleEvent *s);
 
+String MetaString(const BattleState *s);
+
 String MetaString(const Battle *s);
 
 String MetaString(const BgraPixel *s);
@@ -101,6 +107,10 @@ String MetaString(const Color *s);
 String MetaString(const TimedBlockEntry *s);
 
 String MetaString(const TimedBlock *s);
+
+String MetaString(const OverlayOption *s);
+
+String MetaString(const DebugOverlay *s);
 
 String MetaString(const Texture *s);
 
@@ -138,6 +148,8 @@ String MetaString(const BattleScore *s);
 
 String MetaString(const AiAction *s);
 
+String MetaString(const FrametimeGraphState *s);
+
 String MetaString(const GameInitData *s);
 
 String MetaString(const Game *s);
@@ -166,9 +178,9 @@ String MetaString(const ButtonResponse *s);
 
 String MetaString(const TextEntryResponse *s);
 
-String MetaString(const VirtualKey *s);
-
 String MetaString(const InputState *s);
+
+String MetaString(const VirtualKey *s);
 
 String MetaString(const KeyBind *s);
 

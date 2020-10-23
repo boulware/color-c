@@ -505,6 +505,7 @@ DrawNodeGraph(NodeGraph *graph, float t)
 NodeGraphResponse
 DrawNodeGraphInRect(NodeGraph *graph, Rect rect)
 {
+    SetDrawDepth(c::def_draw_depth);
     NodeGraphResponse response = {};
 
     Vec2f min = graph->nodes[0].pos;

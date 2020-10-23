@@ -65,11 +65,11 @@ effect Heal all_allies (0,5,0)
 
 23) Meditate (for example) can be "clicked" on an enemy and it will just do nothing but use up AP? Probably the case with all self-targeting things if i had to guess.
 
-24) Develop a better way to compare two scores.
+24) Develop a better way to compare two scores (enemy AI).
 
 25) Make iteration on UI stuff faster -- because it's a very difficult design part of the game, and we need to do lots of changes fast to see what will work as an effective way to communicate relevant information to the player. Visual editor? Better API?
 
-26) Going into campaign and back to main menu destroys the main menu strings. Permanent arena being overwritten?
+//26) Going into campaign and back to main menu destroys the main menu strings. Permanent arena being overwritten? [Main menu state was allocating its strings from the temp arena because of a default parameter to StringFromCString, rather than the strings allocating data from the same arena as their containing array]
 
 //27) Should our struct Array<Type> store an (Arena *) or an Id<Arena>? I think storing a raw pointer is OK here, since we don't expect to be doing much fiddling with the arena of an array in userspace code, and adding the overhead of a table lookup (although it is rather small, something like 200 cycles last time I checked) every time we need to resize the array (which, admittedly probably won't be happening too much with the way the game is currently structured) may not be what we want -- we need to look at the (dis)advantages of having that slight bit of extra safety and see if it's relevant for this game. AOWTC, it is a raw pointer, and I can't think of any IMMEDIATE issues this will cause. [I decided to use an Id<Arena>, because I didn't want to have to have overloads for everything that
 arrays might use -- this did cause some clear overhead (frametime increased visibly -- only by about 0.1ms or so -- but it's impossible to tell if that was a multiplicative increase or an absolute increase -- if it's an absolute increase, it's probably not a big deal, but if it's a multiplicative increase that could become an issue in the future as frametimes get longer. I think it's unlikely that it's a multiplicative increase, but we should keep this thing in mind for the future when we're looking for performance tweaks)]
@@ -79,3 +79,9 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 29) Because of the way our Table currently works, any arenas that are created for temporary use and then deleted will quickly run the arena_table to its end, because it doesn't try to track which entries are not in use. We could do a somewhat simple fix to this which would be running through the whole table and checking for the first non-active entry to place a new entry, or we could create a new data structure like a pool which might track entries in a more explicit way; e.g., a linked list of all currently free inactive entry slots.
 
 30) We need to do something about AllocArena and make it be able to do interlocked allocations (same thing for free) into the arena_table, because DoNextEntryOnWorkQueue() will run in multiple threads potentially simultaneously and have overlapping AllocArena() or FreeArena() calls, which will have inherent race conditions.
+
+31) Can we actually call something like Log() from a threaded function? E.g., in AllocArena(), if we call Log(), will it actually work, or will it do some weird things? I need to think about it more.
+
+32) Somewhat frequent (1/30 runs) in AllocArena. Almost certainly MT issue. CreateEntry() is returning a bogus arena_id for some reason -- when I immediately call GetEntryFromId(), I get a nullptr instead of an actual entry that I expected. A temporary fix is possible where we just cancel the thread execution when we fail to get a proper temp thread arena and try to restart it, but it's not an ideal fix.
+
+33) Track GPU time in addition to "CPU time" (what we call frametime now) -- frametime should consider GPU time as well, and it currently does not.

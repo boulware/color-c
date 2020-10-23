@@ -28,6 +28,7 @@ CreateEntry(Pool<Type> *pool)
     {
         // @unsure: does the mStringify macro happen before or after templatization?
         Log("[%s] Pool couldn't create a requested entry because it was full.", mStringify(Type));
+        Assert(false);
         return PoolId<Type>{.value = 0};
     }
 

@@ -44,7 +44,7 @@ requires (0,0,5)
 effect Restore single_ally (0,0,1)
 tier 3
 requires (0,0,10)
-effect Restore all_allies_not_self (0,0,1)
+effect Restore all_allies (0,0,1)
 
 ability "Rally"
 tier 1

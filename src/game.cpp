@@ -39,10 +39,10 @@ GameInit(GameInitData init_data)
     memory::per_frame_arena_id = init_data.per_frame_arena_id;
     memory::permanent_arena_id = init_data.permanent_arena_id;
 
-    game->current_state = GameState::Battle;
+    game->current_state = GameState::Campaign;
 
 
-    #if 0
+    #if 1
     InitLcgSystemSeed(&random::default_lcg);
     #else
     InitLcgSetSeed(&random::default_lcg, 42685076);
@@ -145,21 +145,9 @@ GameInit(GameInitData init_data)
     AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
 
     game->current_battle = {};
-    game->current_battle.hud = {{0.f, game->window_size.y-c::hud_offset_from_bottom}, {game->window_size.x, c::hud_offset_from_bottom}};
 
     // CreateUnit("Wolf", Team::enemies, &game->enemies[0]);
     // CreateUnit("Slime", Team::enemies, &game->enemies[1]);
-
-    // Generate unit slots
-    {
-        Vec2f pos = {50.f, 300.f};
-
-        for(Vec2f &slot : game->current_battle.unit_slots)
-        {
-            slot = pos;
-            pos.x += c::unit_slot_size.x + c::unit_slot_padding;
-        }
-    }
 
     // Place units in unit slots
     // for(int i=0; i<c::max_party_size; i++)
@@ -173,6 +161,7 @@ GameInit(GameInitData init_data)
 
     // imgui
     game->debug_container = c::def_ui_container;
+    game->debug_container.button_layout.label_layout.font_size = 16.f;
     game->debug_container.max_size = {300.f,200.f};
 
     // Cursor
@@ -196,7 +185,7 @@ GameInit(GameInitData init_data)
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     InitMainMenu(&game->mainmenu_state);
-    InitBattle(&game->current_battle);
+    InitBattle(&game->current_battle, AllocArena("Game Battle"));
     InitCampaign(&game->campaign);
 
     StartBattle(&game->current_battle, battle_units);
@@ -208,9 +197,10 @@ GameInit(GameInitData init_data)
     debug::start_count = __rdtsc();
     //debug::timed_block_array_size = __COUNTER__;
     debug::cycles_per_second = platform->PerformanceCounterFrequency();
-    game->draw_debug_text = false;
     game->test_float = 1.f;
 
+    game->draw_debug_overlay = false;
+    game->debug_overlay = {};
     // int work_grp_cnt[3];
     // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
     // gl->GetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
@@ -285,7 +275,7 @@ GameUpdateAndRender()
     debug::timed_block_array_size = __COUNTER__;
     ClearArena(memory::per_frame_arena_id);
 
-    gl->UseProgram(game->color_shader);
+    //gl->UseProgram(game->color_shader);
     gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, game->prepass_framebuffer.id);
     gl->NamedFramebufferTexture(game->prepass_framebuffer.id, GL_COLOR_ATTACHMENT0,
                                 game->prepass_framebuffer.texture.id, 0);
@@ -293,6 +283,113 @@ GameUpdateAndRender()
     gl->ClearColor(0.0f, 0.f, 0.f, 1.f);
     gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //opengl->UseProgram(game->prepass_shader);
+
+    // Reset pen position to container origin for all gui containers
+    ResetImguiContainer(&game->debug_container);
+    if(game->draw_debug_overlay)
+    {
+        SetDrawDepth(c::debug_control_draw_depth);
+        SetActiveContainer(&game->debug_container);
+        ButtonResponse response = {};
+
+        for(int i=0; i<ArrayCount(game->debug_overlay.option_active); ++i)
+        {
+            if(game->debug_overlay.option_active[i])
+            {
+                game->debug_container.button_layout = c::active_debug_button;
+            }
+            else
+            {
+                game->debug_container.button_layout = c::inactive_debug_button;
+                //game->debug_overlay.window_rects[i] = {};
+            }
+
+            auto response = Button(OverlayOption_userstrings[i]);
+            if(response.pressed and !MouseFocusTaken()) game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];
+            game->input.mouse_focus_taken = game->input.mouse_focus_taken || response.hovered;
+        }
+
+        float cur_draw_depth = c::debug_window_draw_depth;
+        int current_index = (int)OverlayOption::Arenas;
+        if(game->debug_overlay.option_active[current_index])
+        {
+            Vec2f window_pos = game->debug_overlay.window_positions[current_index];
+            //Rect arenas_window_rect = GetTimedBlockDataRect(window_pos);
+            //game->debug_overlay.window_positions[(u8)OverlayOption::TimedBlocks] = timed_block_window_rect;
+            SetDrawDepth(cur_draw_depth);
+            cur_draw_depth += 0.1f;
+            // DrawFilledRect(timed_block_window_rect, c::dk_grey, true);
+            // DrawUnfilledRect(timed_block_window_rect, c::white, true);
+
+            Rect window_rect = DrawArenas(*game->arena_pool, window_pos);
+
+            if(MouseInRect(window_rect))
+            {
+                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
+                game->input.mouse_focus_taken = true;
+            }
+        }
+
+        current_index = (int)OverlayOption::TimedBlocks;
+        if(game->debug_overlay.option_active[current_index])
+        {
+            Vec2f window_pos = game->debug_overlay.window_positions[current_index];
+            Rect window_rect = GetTimedBlockDataRect(window_pos);
+            //game->debug_overlay.window_positions[(u8)OverlayOption::TimedBlocks] = timed_block_window_rect;
+            SetDrawDepth(cur_draw_depth);
+            cur_draw_depth += 0.1f;
+            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawUnfilledRect(window_rect, c::white, true);
+            DrawTimedBlockData(window_pos);
+
+            if(MouseInRect(window_rect))
+            {
+                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
+                game->input.mouse_focus_taken = true;
+            }
+        }
+
+        current_index = (int)OverlayOption::Frametime;
+        if(game->debug_overlay.option_active[current_index])
+        {
+            Vec2f window_pos = game->debug_overlay.window_positions[current_index];
+            Vec2f window_size = {300.f,300.f};
+            Rect window_rect = {window_pos, window_size};
+            SetDrawDepth(cur_draw_depth);
+            cur_draw_depth += 0.1f;
+            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawUnfilledRect(window_rect, c::white, true);
+            DrawFrametimes(game->frametime_graph_state, window_rect);
+
+            if(MouseInRect(window_rect))
+            {
+                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
+                game->input.mouse_focus_taken = true;
+            }
+        }
+
+        if(!Down(vk::LMB)) game->debug_overlay.dragging_index = -1;
+
+        // Window dragging
+        if(game->debug_overlay.dragging_index >= 0)
+        {
+            Vec2f d_mouse = MousePos() - PrevMousePos();
+            game->debug_overlay.window_positions[game->debug_overlay.dragging_index] += d_mouse;
+        }
+
+        SetDrawDepth(c::debug_window_draw_depth);
+        for(int i=0; i<ArrayCount(game->debug_overlay.window_positions); ++i)
+        {
+            //DrawFilledRect(game->debug_overlay.window_rects[i], c::gold, true);
+        }
+        //DrawTimedBlockData();
+    }
+
+    SetDrawDepth(5.f);
+    DrawTable(g::unit_table, {}, 200.f);
+
+
+//    DrawDummyText(c::small_text_layout, {});
 
     //DrawText(c::def_text_layout, {}, "%d", game->
 
@@ -337,7 +434,7 @@ GameUpdateAndRender()
     }
 
     // Toggle drawing timed block data
-    if(Pressed(vk::tilde)) game->draw_debug_text = !game->draw_debug_text;
+    if(Pressed(vk::tilde)) game->draw_debug_overlay = !game->draw_debug_overlay;
 
     // Right click cancels selected ability if one is selected.
     // If no ability is selected, cancels selected unit if one is selected.
@@ -356,21 +453,14 @@ GameUpdateAndRender()
 //      }
 //  }
 
-    // Reset pen position to container origin for all gui containers
-    ResetImguiContainer(&game->debug_container);
 
     // Function keys to switch between game states.
-    if(Pressed(vk::F1)) game->current_state = GameState::Battle;
     if(Pressed(vk::F2)) game->current_state = GameState::Editor;
 
     GameState new_state = GameState::None;
     if(game->current_state == GameState::MainMenu)
     {
         new_state = TickMainMenu(&game->mainmenu_state, game->state_entered);
-    }
-    else if(game->current_state == GameState::Battle)
-    {
-        new_state = TickBattle(&game->current_battle);
     }
     else if(game->current_state == GameState::Editor)
     {
@@ -399,11 +489,6 @@ GameUpdateAndRender()
         game->state_entered = true;
         game->current_state = new_state;
         if(game->current_state == GameState::Quit) game->exit_requested = true;
-    }
-
-    if(game->draw_debug_text)
-    {
-        DrawTimedBlockData();
     }
 
     // Log timed block data and exit game.
@@ -446,13 +531,13 @@ GameUpdateAndRender()
     frametime_layout.align = c::align_topright;
     pos.y += DrawUiText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
 
-    for(int i=0; i<game->arena_pool->entry_count; ++i)
-    {
-        PoolEntry<Arena> *entry = (game->arena_pool->entries + i);
+    // for(int i=0; i<game->arena_pool->entry_count; ++i)
+    // {
+    //     PoolEntry<Arena> *entry = (game->arena_pool->entries + i);
 
-        Arena arena = entry->data;
-        DrawArena(arena, {10.f,10.f + i*20.f});
-    }
+    //     Arena arena = entry->data;
+    //     DrawArena(arena, {10.f,10.f + i*20.f});
+    // }
 }
 
 TimedBlockEntry TIMED_BLOCK_ARRAY[__COUNTER__-1];

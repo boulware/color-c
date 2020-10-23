@@ -110,12 +110,19 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
         thread_arena_debug_name[63] = '\0';
 
         PoolId<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
-        entry.callback(temp_data, thread_arena_id);
-        FreeArena(thread_arena_id);
+        if(thread_arena_id != c::null_arena_id)
+        {
+            entry.callback(temp_data, thread_arena_id);
+            FreeArena(thread_arena_id);
+            InterlockedIncrement(&queue->job_completion_count);
+        }
+        else
+        {
+            LogToFile("logs/critical.log", "Failed to start thread.");
+        }
 
         free(temp_data);
 
-        InterlockedIncrement(&queue->job_completion_count);
 
     }
     else

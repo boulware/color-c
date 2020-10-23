@@ -15,6 +15,7 @@ enum class CampaignState
     MapSelection,
     TransitionIntoMap,
     InMap,
+    InRoom,
 };
 
 struct Campaign
@@ -22,6 +23,7 @@ struct Campaign
     CampaignState state;
 
     PoolId<Arena> arena_id;
+    PoolId<Arena> battle_arena_id;
 
     WorkQueue *map_generation_work_queue;
     bool generation_finished[3];
@@ -39,8 +41,14 @@ struct Campaign
 
     OscillatingTimer node_pulse_timer;
 
+    bool room_is_init;
     Array<Room> rooms;
+    int current_room_index;
     UnitSet player_party;
+
+    Camera map_camera;
+
+    Battle current_battle;
 };
 
 //Node *AddNode(Campaign *campaign, Node node, Array<int> edge_indices = Array<int>{});

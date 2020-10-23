@@ -237,21 +237,26 @@ DrawHealthbar()
 ButtonResponse
 DrawButton(ButtonLayout layout, Rect rect, String label)
 {
+    Camera initial_camera = game->camera;
+    if(layout.is_ui)
+    {
+        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
+    }
+
     ButtonResponse response = {};
 
     Rect aligned_button_rect = AlignRect(rect, layout.align);
-    response.rect = aligned_button_rect;
 
-    if(PointInRect(aligned_button_rect, MousePos()))
+    if(PointInRect(aligned_button_rect, MousePos(layout.is_ui)))
     {
         response.hovered = true;
-        if(!PointInRect(aligned_button_rect, PrevMousePos()))
+        if(!PointInRect(aligned_button_rect, PrevMousePos(layout.is_ui)))
         {
             response.just_now_hovered = true;
         }
     }
 
-    if(response.hovered)
+    if(response.hovered and !MouseFocusTaken())
     {
         // Button is being hovered
         DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
@@ -273,6 +278,18 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
         DrawText(layout.label_layout, text_pos, label);
     }
 
+    if(MouseFocusTaken())
+    { // Disregard most of the response values if the focus was already taken by something else.
+        response = {};
+    }
+
+    if(layout.is_ui)
+    {
+        SetCameraPos(&game->camera, initial_camera.pos);
+        SetCameraView(&game->camera, initial_camera.view);
+    }
+
+    response.rect = aligned_button_rect;
     return response;
 }
 

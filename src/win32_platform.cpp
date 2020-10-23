@@ -305,6 +305,12 @@ win32_ReleaseMutex(void *mutex_handle)
 }
 
 void
+win32_ReadWriteBarrier()
+{
+    _ReadWriteBarrier();
+}
+
+void
 win32_ShowCursor()
 {
     ShowCursor(TRUE);
@@ -567,6 +573,7 @@ void WIN32_BIND_PLATFORM_FUNCTIONS(Platform *platform)
 
     mBindPlatformFunction(BlockAndTakeMutex);
     mBindPlatformFunction(ReleaseMutex);
+    mBindPlatformFunction(ReadWriteBarrier);
 
     platform->SwapIntervalEXT = (fnsig_SwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
 
@@ -756,6 +763,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
     // ----------------------------------------------------------------------------
 
     InitLog(&game->log_state);
+    LogToFile("logs/critical.log", "-----------------");
 
     CreateWindowAndOpenGlContext(hInstance, nCmdShow);
     WIN32_BIND_OPENGL_EXTENSIONS(gl);
@@ -787,7 +795,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     //platform->SwapIntervalEXT(0);
-    input::global_input = &platform_input;
+    input::global_input = &game->input;
 
     FT_Library ft_lib;
     if(InitFreetype(&ft_lib))
@@ -796,6 +804,10 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
         text_render::default_font = LoadFontData(roboto_face, 64);
         CloseFreetype(&ft_lib);
     }
+
+    FrametimeGraphState frametime_graph_state;
+    InitFrametimeGraphState(&frametime_graph_state, c::number_of_frametimes);
+    game->frametime_graph_state = &frametime_graph_state;
 
     while(!QUIT_GAME)
     {
@@ -847,6 +859,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             GetKeyboardState((BYTE*)&game->input.down_keys);
             game->input.prev_mouse_pos = game->input.mouse_pos;
             win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);
+            game->input.mouse_focus_taken = false;
 
             // Null-terminate the translated stream and give the game input its address.
             current_translated_stream[pos_in_translated_stream] = 0;
@@ -875,14 +888,15 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             // memset(&game->input.released_keys, 0, 256);
             // memset(&game->input.repeated_keys, 0, 256);
             // game->input.mouse_scroll = 0;
-            ResetInputState(&game->input);
 
             // END update
 
             s64 after_update = win32_CurrentTime();
             float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
             game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
+            AddFrametimeToGraph(&frametime_graph_state, this_frame_time_ms);
 
+            ResetInputState(&game->input);
             SwapBuffers(wc.hdc);
             RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);
         }

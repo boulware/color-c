@@ -5,16 +5,22 @@ AllocArena(char *debug_name)
 {
     platform->BlockAndTakeMutex(memory::arena_pool_mutex_handle);
         PoolId<Arena> arena_id = CreateEntry(game->arena_pool);
+        platform->ReadWriteBarrier();
     platform->ReleaseMutex(memory::arena_pool_mutex_handle);
 
     Arena *arena = GetEntryFromId(*game->arena_pool, arena_id);
-    if(arena)
+    if(!arena)
     {
-        arena->start = platform->AllocateMemory(memory::arena_size);
-        arena->end = (u8*)arena->start + memory::arena_size;
-        arena->current = arena->start;
-        arena->allocs_since_reset = 0;
+        //Log(__FUNCTION__ "() failed to get a valid arena_id. Mutex issue?");
+        Assert(false);
+        return c::null_arena_id;
     }
+
+
+    arena->start = platform->AllocateMemory(memory::arena_size);
+    arena->end = (u8*)arena->start + memory::arena_size;
+    arena->current = arena->start;
+    arena->allocs_since_reset = 0;
 
     if(debug_name)
     {
@@ -49,6 +55,7 @@ FreeArena(PoolId<Arena> arena_id)
     DeleteEntry(game->arena_pool, arena_id);
     // Out of mutex
 
+    platform->ReadWriteBarrier();
     platform->ReleaseMutex(memory::arena_pool_mutex_handle);
 }
 
@@ -77,9 +84,12 @@ ClearArena(PoolId<Arena> arena_id)
 }
 
 size_t
-ArenaBytesAllocated(Arena arena)
+ArenaBytesAllocated(PoolId<Arena> arena_id)
 {
-    return (u8*)arena.current - (u8*)arena.start;
+    Arena *arena = GetArenaFromId(arena_id);
+    if(!arena) return 0;
+
+    return (u8*)arena->current - (u8*)arena->start;
 }
 
 size_t
@@ -125,8 +135,14 @@ AllocFromArena(PoolId<Arena> arena_id, size_t byte_count, bool zero)
     Arena *arena = GetArenaFromId(arena_id);
     if(!arena)
     {
-        Log(__FUNCTION__ "() tried to allocate from invalid arena.");
-        return nullptr;
+        Log(__FUNCTION__ "() tried to allocate from invalid arena. Falling back to malloc() in release build.");
+
+        #if DEBUG_BUILD
+            Assert(false);
+            return nullptr;
+        #else
+            return malloc(byte_count);
+        #endif
     }
 
     if(byte_count > memory::arena_size)
