@@ -24,6 +24,7 @@
 #include "pool.h"
 #include "debug_overlay.h"
 #include "frametimes_draw.h"
+#include "table_draw.h"
 
 struct GameInitData
 {
@@ -45,6 +46,7 @@ struct Game
 
 	float frame_time_ms;
 	FrametimeGraphState *frametime_graph_state;
+	TableDrawState table_draw_state;
 	bool draw_debug_overlay;
 	DebugOverlay debug_overlay;
 
@@ -77,7 +79,7 @@ struct Game
 	Vec2i string_bmp_size;
 
 	UnitSet player_party;
-	Battle current_battle;
+	//Battle current_battle;
 
 	Editor editor_state;
 	OptionsMenu options_menu;

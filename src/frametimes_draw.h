@@ -8,6 +8,8 @@ struct FrametimeGraphState
     int entry_count;
 
     float graph_max;
+    ImguiContainer ui_container;
+    TextLayout label_text;
 };
 
 #endif

@@ -39,14 +39,14 @@ TickOptionsMenu(OptionsMenu *menu)
             {
                 text_size = DrawText(c::options_modifying_text_layout, pen,
                                      "%s => [Press Key]",
-                                     keybinds::userstrings[i]).size;
+                                     keybinds::userstrings[i]).rect.size;
             }
             else
             {
                 text_size = DrawText(c::options_selected_text_layout, pen,
                                      "%s => %s",
                                      keybinds::userstrings[i],
-                                     VirtualKey_userstrings[virtual_key]).size;
+                                     VirtualKey_userstrings[virtual_key]).rect.size;
             }
         }
         else
@@ -54,7 +54,7 @@ TickOptionsMenu(OptionsMenu *menu)
             text_size = DrawText(c::options_unselected_text_layout, pen,
                                  "%s => %s",
                                  keybinds::userstrings[i],
-                                 VirtualKey_userstrings[virtual_key]).size;
+                                 VirtualKey_userstrings[virtual_key]).rect.size;
         }
 
         pen.y += text_size.y;

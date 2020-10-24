@@ -101,34 +101,6 @@ ArenaBytesRemaining(PoolId<Arena> arena_id)
     return (u8*)arena->end - (u8*)arena->current;
 }
 
-char *
-ScratchString(int size)
-{
-    TIMED_BLOCK;
-
-    if(size > memory::arena_size)
-    {
-        Log("ScratchString() tried to allocate a string larger than an arena. Ignoring request.");
-        return nullptr;
-    }
-
-    Arena *scratch_arena = GetArenaFromId(memory::per_frame_arena_id);
-    if(!scratch_arena)
-    {
-        Log(__FUNCTION__ "() called, but scratch arena doesn't exist.");
-        return nullptr;
-    }
-
-    if(ArenaBytesRemaining(memory::per_frame_arena_id) < size)
-    {
-        scratch_arena->current = scratch_arena->start;
-    }
-
-    char *p = (char*)(scratch_arena->current);
-    scratch_arena->current = (u8*)(scratch_arena->current) + size;
-    return p;
-}
-
 void *
 AllocFromArena(PoolId<Arena> arena_id, size_t byte_count, bool zero)
 {
@@ -190,4 +162,34 @@ void *
 AllocPerma(size_t byte_count)
 {
     return AllocFromArena(memory::permanent_arena_id, byte_count);
+}
+
+char *
+ScratchString(int size)
+{
+    TIMED_BLOCK;
+
+    return (char *)AllocTemp(size);
+
+    // if(size > memory::arena_size)
+    // {
+    //     Log("ScratchString() tried to allocate a string larger than an arena. Ignoring request.");
+    //     return nullptr;
+    // }
+
+    // Arena *scratch_arena = GetArenaFromId(memory::per_frame_arena_id);
+    // if(!scratch_arena)
+    // {
+    //     Log(__FUNCTION__ "() called, but scratch arena doesn't exist.");
+    //     return nullptr;
+    // }
+
+    // if(ArenaBytesRemaining(memory::per_frame_arena_id) < size)
+    // {
+    //     scratch_arena->current = scratch_arena->start;
+    // }
+
+    // char *p = (char*)(scratch_arena->current);
+    // scratch_arena->current = (u8*)(scratch_arena->current) + size;
+    // return p;
 }

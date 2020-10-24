@@ -36,11 +36,13 @@ Button(const char *label, ...)
 	if(!ActiveContainerIsValid()) return ButtonResponse{};
 
 	// Set camera for UI drawing
-	Vec2f initial_cam_pos = game->camera.pos;
-	Vec2f initial_cam_view = game->camera.view;
-	MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
+	auto initial_cam = PushUiCamera();
+	// Vec2f initial_cam_pos = game->camera.pos;
+	// Vec2f initial_cam_view = game->camera.view;
+	// MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
 
-	ButtonLayout layout = imgui::active_container->button_layout;
+	ImguiContainer *ui_container = imgui::active_container; // alias
+	ButtonLayout layout = ui_container->button_layout;
 
 	ButtonResponse response = {};
 
@@ -49,23 +51,29 @@ Button(const char *label, ...)
 	char *formatted_string;
 	mFormatString(formatted_string, label);
 
-	Vec2f label_size = SizeUtf8Line(layout.label_layout, label);
-	//Vec2f padding_multiplier = {0.2f,0.2f};
-	//Vec2f padding = padding_multiplier*label_size;
+	Vec2f label_size = SizeUtf8Line(layout.label_layout, formatted_string);
 	Vec2f padded_size = label_size+2*imgui::button_padding;
 
-	Rect padded_rect = {imgui::active_container->pos+imgui::active_container->pen, padded_size};
+	Rect padded_rect = {ui_container->pos+ui_container->pen, padded_size};
 	padded_rect = AlignRect(padded_rect, layout.align);
 	response.rect = padded_rect;
+
 	// Check if there's enough horizontal room left for this button.
-	if(padded_size.x > imgui::active_container->max_size.x - imgui::active_container->pen.x)
+	if(padded_size.x > ui_container->max_size.x - ui_container->pen.x)
 	{
-		imgui::active_container->pen.x = 0.f;
-		imgui::active_container->pen.y += padded_size.y+1; // +1 so rects don't overlap on edges
+		ui_container->pen.x = 0.f;
+		ui_container->pen.y += padded_size.y+1; // +1 so rects don't overlap on edges
+		ui_container->at_row_start = true;
 	}
 	else
 	{
-		imgui::active_container->pen.x += padded_rect.size.x+1; // +1 so rects don't overlap on edges
+		ui_container->pen.x += padded_rect.size.x+1; // +1 so rects don't overlap on edges
+	}
+
+	if(ui_container->at_row_start)
+	{
+		++ui_container->cur_row_count;
+		ui_container->at_row_start = false;
 	}
 
 	Color outline_color;
@@ -91,11 +99,12 @@ Button(const char *label, ...)
 
 	DrawFilledRect(padded_rect, c::black);
 	DrawUnfilledRect(padded_rect, outline_color);
-	DrawText(layout.label_layout, padded_rect.pos+0.5f*padded_rect.size, label);
+	DrawText(layout.label_layout, padded_rect.pos+0.5f*padded_rect.size, formatted_string);
 
 	// Reset camera transform for non-UI stuff
-    SetCameraPos( &game->camera, initial_cam_pos);
-    SetCameraView(&game->camera, initial_cam_view);
+	PopUiCamera(initial_cam);
+    // SetCameraPos( &game->camera, initial_cam_pos);
+    // SetCameraView(&game->camera, initial_cam_view);
 
 
 	return response;
@@ -181,6 +190,8 @@ void
 ResetImguiContainer(ImguiContainer *container)
 {
 	container->pen = {0.f,0.f};
+	container->at_row_start = true;
+	container->cur_row_count = 0;
 }
 
 void
@@ -303,7 +314,7 @@ ListPanelEntry(ListPanel_ *panel, const String entry_name)
 		}
 
 		// @note: spooky! We should write a real implementation of DrawText that takes a String.
-		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name).size;
+		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name).rect.size;
 		//SetDrawDepth(120.0f);
 
 
@@ -335,4 +346,13 @@ IntegerBox(IntegerBoxLayout layout, Vec2f pos, String label, String text)
 	}
 
 	return response;
+}
+
+float
+BottomOfUiContainer(ImguiContainer container)
+{
+	float label_height = LineHeight(container.button_layout.label_layout);
+	float padded_button_height = label_height+2*imgui::button_padding.y;
+
+	return container.pos.y + container.cur_row_count * padded_button_height;
 }

@@ -6,6 +6,7 @@ enum class OverlayOption : int
     Arenas,
     TimedBlocks,
     Frametime,
+    Tables,
     COUNT,
 };
 
@@ -13,6 +14,7 @@ const char *OverlayOption_userstrings[] = {
     "Arenas",
     "TimedBlocks",
     "Frametime",
+    "Tables"
 };
 
 struct DebugOverlay

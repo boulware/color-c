@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"SetCam",
+				"SetCameraView"
+			],
+			[
 				"align",
 				"aligned_button_rect"
 			],
@@ -510,10 +514,6 @@
 			[
 				"active",
 				"active_unitset"
-			],
-			[
-				"cur_trait",
-				"current_traitsets"
 			]
 		]
 	},
@@ -540,7 +540,26 @@
 			"file": "src/input.cpp",
 			"settings":
 			{
-				"buffer_size": 2639,
+				"buffer_size": 2721,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 148 files for \"MouseFocusTaken\"\n\nC:\\color-c\\src\\draw.cpp:\n  257      }\n  258  \n  259:     if(response.hovered and !MouseFocusTaken())\n  260      {\n  261          // Button is being hovered\n  ...\n  279      }\n  280  \n  281:     if(MouseFocusTaken())\n  282      { // Disregard most of the response values if the focus was already taken by something else.\n  283          response = {};\n\nC:\\color-c\\src\\game.cpp:\n  306  \n  307              auto response = Button(OverlayOption_userstrings[i]);\n  308:             if(response.pressed and !MouseFocusTaken()) game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];\n  309              game->input.mouse_focus_taken = game->input.mouse_focus_taken || response.hovered;\n  310          }\n\nC:\\color-c\\src\\input.h:\n   46  int MouseScroll();\n   47  bool MouseInRect(Rect rect, bool absolute = false);\n   48: bool MouseFocusTaken();\n   49  \n   50  bool Down(const InputState *input, u8 key);\n\n4 matches across 3 files\n\n\nSearching 148 files for \"TakeMouseFocus\"\n\nC:\\color-c\\src\\draw.cpp:\n  260      if(response.hovered and !MouseFocusIsTaken())\n  261      {\n  262:         has_focus = TakeMouseFocus();\n  263          // Button is being hovered\n  264          DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);\n\nC:\\color-c\\src\\game.cpp:\n  306  \n  307              auto response = Button(OverlayOption_userstrings[i]);\n  308:             if(response.pressed and TakeMouseFocus())\n  309                  game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];\n  310              //game->input.mouse_focus_taken = game->input.mouse_focus_taken || response.hovered;\n  ...\n  325              Rect window_rect = DrawArenas(*game->arena_pool, window_pos);\n  326  \n  327:             if(MouseInRect(window_rect) and TakeMouseFocus())\n  328              {\n  329                  if(Pressed(vk::LMB))\n  ...\n  344              DrawTimedBlockData(window_pos);\n  345  \n  346:             if(MouseInRect(window_rect) and TakeMouseFocus())\n  347              {\n  348                  if(Pressed(vk::LMB))\n  ...\n  363              DrawUnfilledRect(window_rect, c::white, true);\n  364  \n  365:             if(MouseInRect(window_rect) and TakeMouseFocus())\n  366              {\n  367                  if(Pressed(vk::LMB))\n\nC:\\color-c\\src\\input.cpp:\n  130  // one place in the code can \"take mouse focus\" each frame.\n  131  bool\n  132: TakeMouseFocus()\n  133  {\n  134      if(input::global_input->mouse_focus_taken == false)\n\nC:\\color-c\\src\\input.h:\n   46  int MouseScroll();\n   47  bool MouseInRect(Rect rect, bool absolute = false);\n   48: bool TakeMouseFocus();\n   49  bool MouseFocusIsTaken();\n   50  \n\n7 matches across 4 files\n\n\nSearching 148 files for \"mouse_focus_taken\"\n\nC:\\color-c\\src\\game.cpp:\n  308              if(response.pressed and TakeMouseFocus())\n  309                  game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];\n  310:             //game->input.mouse_focus_taken = game->input.mouse_focus_taken || response.hovered;\n  311          }\n  312  \n\nC:\\color-c\\src\\input.cpp:\n  132  TakeMouseFocus()\n  133  {\n  134:     if(input::global_input->mouse_focus_taken == false)\n  135      {\n  136:         input::global_input->mouse_focus_taken = true;\n  137          return true;\n  138      }\n  ...\n  146  MouseFocusIsTaken()\n  147  {\n  148:     return(input::global_input->mouse_focus_taken);\n  149  }\n\nC:\\color-c\\src\\input.h:\n   19      int mouse_scroll;\n   20  \n   21:     bool mouse_focus_taken;\n   22  \n   23      // A utf-32 encoded bytestream which is updated by the platform with translated characters\n\nC:\\color-c\\src\\meta_print.cpp:\n 1950  \tAppendCString(&string, \"  mouse_scroll: %d (int)\\n\", s->mouse_scroll);\n 1951  \n 1952: \tAppendCString(&string, \"  mouse_focus_taken: %d (bool)\\n\", s->mouse_focus_taken);\n 1953  \n 1954  \tAppendCString(&string, \"  utf32_translated_stream: %p (u32 *)\\n\", s->utf32_translated_stream);\n\nC:\\color-c\\src\\win32_platform.cpp:\n  860              game->input.prev_mouse_pos = game->input.mouse_pos;\n  861              win32_GetMousePosF(&game->input.mouse_pos.x, &game->input.mouse_pos.y);\n  862:             game->input.mouse_focus_taken = false;\n  863  \n  864              // Null-terminate the translated stream and give the game input its address.\n\n9 matches across 5 files\n\n\nSearching 148 files for \"Push\"\n\nC:\\color-c\\src\\bitmap.cpp:\n   62  \tstatic const int compression\t= 0x1E;\n   63  \n   64: \t#pragma pack(push, 1)\n   65  \tstruct Header\n   66  \t{\n\nC:\\color-c\\src\\game.cpp:\n  287      // Reset pen position to container origin for all gui containers\n  288      ResetImguiContainer(&game->debug_container);\n  289:     PushCameraTransform()\n  290      if(game->draw_debug_overlay)\n  291      {\n\nC:\\color-c\\src\\log.cpp:\n   29  \n   30  void\n   31: _push_to_log_strings(char *str)\n   32  {\n   33      strcpy(game->log_state.log_strings[(game->log_state.log_cur_index++)%MAX_LOG_COUNT], str);\n   ..\n   47  \n   48  void\n   49: PushLogEntry(char *filename, char *string, ...)\n   50  {\n   51      Log_params params = {};\n   ..\n   62          // We exceeded the length of the formatted_str buffer, so we can only write a partial log\n   63          formatted_str[ArrayCount(params.string)-1] = '\\0'; // vsnprintf wouldn't have null-appended if the buffer was too small.\n   64:         _push_to_log_strings(formatted_str);\n   65:         PushLogEntry(\"logs/log.txt\", \"%s\", formatted_str);\n   66:         PushLogEntry(\"logs/log.txt\", \"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n   67          return;\n   68      }\n   ..\n   95          // We exceeded the length of the formatted_str buffer, so we can only write a partial log\n   96          formatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsnprintf wouldn't have null-appended if the buffer was too small.\n   97:         _push_to_log_strings(formatted_str);\n   98:         PushLogEntry(\"logs/log.txt\", \"%s\", formatted_str);\n   99:         PushLogEntry(\"logs/log.txt\", \"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  100          return;\n  101      }\n  102  \n  103:     PushLogEntry(\"logs/log.txt\", formatted_str);\n  104  }\n  105  \n  ...\n  125          // We exceeded the length of the formatted_str buffer, so we can only write a partial log\n  126          formatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsnprintf wouldn't have null-appended if the buffer was too small.\n  127:         _push_to_log_strings(formatted_str);\n  128          Log(\"%s\", formatted_str);\n  129          Log(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n  ...\n  147          // We exceeded the length of the formatted_str buffer, so we can only write a partial log\n  148          formatted_str[MAX_LOG_LENGTH-1] = '\\0'; // vsnprintf wouldn't have null-appended if the buffer was too small.\n  149:         _push_to_log_strings(formatted_str);\n  150          Log(\"%s\", formatted_str);\n  151          Log(\"ERROR: Maximum log length exceeded (formatted_length=%d). Only partial log was written.\", formatted_length);\n\nC:\\color-c\\src\\log.h:\n   18  };\n   19  \n   20: void PushLogEntry(char *filename, char *string, ...);\n   21  void Log(char *string, ...);\n   22  \n\n14 matches across 4 files\n\n\nSearching 148 files for \"SetCamera\"\n\nC:\\color-c\\src\\campaign.cpp:\n  420                      campaign->end_camera.view = map_rect.size/2.f;\n  421  \n  422:                     //SetCameraPos(campaign->camera_start_pos);\n  423                      //MoveCameraToWorldRect(world_space_rect);\n  424                  }\n  ...\n  446  \n  447          //ZoomCameraIntoPoint(1.03f, campaign->start_node_pos);\n  448:         //SetCameraPos( Lerp(campaign->camera_start_pos, campaign->camera_end_pos, t_over_T) );\n  449          Camera lerped_cam = LerpCamera(campaign->start_camera, campaign->end_camera, cubic_t);\n  450:         SetCameraPos(&game->camera, lerped_cam.pos);\n  451:         SetCameraView(&game->camera, PadToAspectRatio(lerped_cam.view, AspectRatio(game->window_size)));\n  452  \n  453          // MoveCameraToWorldRect(&game->camera,\n  ...\n  513          {\n  514              float zoom_amount = m::Pow(c::zoom_sensitivity, -mouse_scroll);\n  515:             SetCameraView(&game->camera, zoom_amount * game->camera.view);\n  516          }\n  517  \n  ...\n  556          }\n  557  \n  558:         SetCameraPos(&game->camera, initial_camera.pos);\n  559:         SetCameraView(&game->camera, initial_camera.view);\n  560          //if(map_response.newly_hovered) ResetLow(&campaign->node_pulse_timer);\n  561      }\n  ...\n  589              if(battle_state.finished)\n  590              {\n  591:                 SetCameraPos(&game->camera, campaign->map_camera.pos);\n  592:                 SetCameraView(&game->camera, campaign->map_camera.view);\n  593                  for(auto unit_id : campaign->player_party)\n  594                      FullHealUnit(unit_id);\n\nC:\\color-c\\src\\draw.cpp:\n   32  \n   33  void\n   34: SetCameraPos(Camera *camera, Vec2f camera_pos)\n   35  {\n   36      //game->prev_camera_pos = game->camera_pos;\n   ..\n   44  {\n   45      camera->pos += move;\n   46:     SetCameraPos(camera, camera->pos);\n   47  }\n   48  \n   49  void\n   50: SetCameraView(Camera *camera, Vec2f view)\n   51  {\n   52      camera->view = view;\n   ..\n   72          adjusted_rect.size = {screen_AR / rect_AR * rect.size.x, rect.size.y};\n   73      }\n   74:     SetCameraPos(camera, RectCenter(rect));\n   75:     SetCameraView(camera, adjusted_rect.size);\n   76  }\n   77  \n   78  // void\n   79: // SetCameraZoom(float z)\n   80  // {\n   81  //     game->prev_camera_zoom = game->camera_zoom;\n   ..\n   89  // {\n   90  //     Vec2f new_camera_pos = point - (1/z)*(point - game->camera_pos);\n   91: //     SetCameraPos(new_camera_pos);\n   92  //     game->camera_zoom *= z;\n   93: //     SetCameraZoom(game->camera_zoom);\n   94  // }\n   95  \n   ..\n  118      if(ui)\n  119      {\n  120:         SetCameraPos( &game->camera, initial_cam_pos);\n  121:         SetCameraView(&game->camera, initial_cam_view);\n  122      }\n  123  }\n  ...\n  153      if(ui)\n  154      {\n  155:         SetCameraPos( &game->camera, initial_cam_pos);\n  156:         SetCameraView(&game->camera, initial_cam_view);\n  157      }\n  158  }\n  ...\n  288      if(layout.is_ui)\n  289      {\n  290:         SetCameraPos(&game->camera, initial_camera.pos);\n  291:         SetCameraView(&game->camera, initial_camera.view);\n  292      }\n  293  \n\nC:\\color-c\\src\\draw.h:\n   49  void SetDrawDepth(float depth);\n   50  \n   51: void SetCameraPos(Camera *camera, Vec2f camera_pos);\n   52  void MoveCamera(Camera *camera, Vec2f move);\n   53: void SetCameraView(Camera *camera, Vec2f view);\n   54  void MoveCameraToWorldRect(Camera *camera, Rect rect);\n   55  \n\nC:\\color-c\\src\\game.cpp:\n   77      gl->ProgramUniform2fv(game->uv_shader, 0, 1, (GLfloat*)&game->window_size);\n   78  \n   79:     SetCameraPos(&game->camera, {0.f,0.f});\n   80  \n   81      game->blur_shader = GenerateComputeShaderFromFile(\"src/shader/gaussian_blur.cs.glsl\");\n\nC:\\color-c\\src\\imgui.cpp:\n   95  \n   96  \t// Reset camera transform for non-UI stuff\n   97:     SetCameraPos( &game->camera, initial_cam_pos);\n   98:     SetCameraView(&game->camera, initial_cam_view);\n   99  \n  100  \n\nC:\\color-c\\src\\text_render.cpp:\n  174      MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});\n  175      //float initial_cam_zoom = game->camera_zoom;\n  176:     //SetCameraPos({0.f,0.f});\n  177:     //SetCameraZoom(1.f);\n  178  \n  179      Rect text_rect = DrawText(layout, origin, string);\n  180  \n  181:     SetCameraPos(&game->camera, initial_camera.pos);\n  182:     SetCameraView(&game->camera, initial_camera.view);\n  183  \n  184      return text_rect;\n\n32 matches across 6 files\n",
+			"settings":
+			{
+				"buffer_size": 11854,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/draw.cpp",
+			"settings":
+			{
+				"buffer_size": 7406,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -567,19 +586,52 @@
 			"file": "src/const.h",
 			"settings":
 			{
-				"buffer_size": 19560,
+				"buffer_size": 19674,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "#include \"frametimes_draw.h\"\n\n#include \"ring_buffer.h\"\n#include \"vec.h\"\n\nvoid\nInitFrametimeGraphState(FrametimeGraphState *state, int entry_count)\n{\n    size_t byte_count = entry_count * sizeof(float);\n    state->frametimes = (float *)AllocPerma(byte_count);\n    ZeroMemoryBlock(state->frametimes, byte_count);\n    state->cur_frametime_index = 0;\n    state->entry_count = entry_count;\n\n    state->graph_max = c::frametime_def_graph_max;\n}\n\nvoid\nAddFrametimeToGraph(FrametimeGraphState *state, float frametime_value)\n{\n    state->frametimes[state->cur_frametime_index++] = frametime_value;\n    if(state->cur_frametime_index == state->entry_count) state->cur_frametime_index = 0;\n}\n\nvoid\nDrawFrametimes(FrametimeGraphState *state, Rect graph_rect)\n{\n    // DrawFilledRect(graph_rect, c::vdk_red, true);\n    // DrawUnfilledRect(graph_rect, c::white, true);\n\n    // float max_frametime = 0.f;\n    // for(int i=0; i<frametime_count; ++i)\n    // {\n    //     max_frametime = m::Max(frametimes[i], max_frametime);\n    // }\n\n    float bar_width = graph_rect.size.x / state->entry_count;\n    Vec2f origin = RectBottomLeft(graph_rect);\n    for(int i=0; i<state->entry_count; ++i)\n    {\n        float ratio_to_max = state->frametimes[i] / state->graph_max;\n        Rect bar_rect = {\n            .pos = origin + Vec2f{i*bar_width},\n            .size = Vec2f{bar_width, -ratio_to_max * graph_rect.size.y}\n        };\n\n        DrawFilledRect(bar_rect, c::red, true);\n    }\n\n    DrawUiText(c::frametime_max_text, RectTopRight(graph_rect) - Vec2f{2.f,2.f}, \"%.2fms\", state->graph_max);\n\n    Vec2f pen = RectTopLeft(graph_rect) + Vec2f{2.f,2.f}; // with padding\n    {\n        auto response = DrawButton(c::frametime_scale_button, {pen, c::frametime_scale_button_size}, \"+\");\n        if(response.pressed)\n        {\n            state->graph_max /= c::frametime_scale_amount;\n            \n        }\n        pen.x += response.rect.size.x + 1.f; // 1.f padding\n    }\n    {\n        auto response = DrawButton(c::frametime_scale_button, {pen, c::frametime_scale_button_size}, \"-\");\n        if(response.pressed) state->graph_max *= c::frametime_scale_amount;\n        pen.x += response.rect.size.x + 1.f;\n    }\n    {\n        auto response = DrawButton(c::frametime_scale_button, {pen, c::frametime_scale_button_size}, \"60fps\");\n        if(response.pressed) state->graph_max = 1000.f * (1.f/60.f);\n        pen.x += response.rect.size.x + 1.f;\n    }\n    {\n        auto response = DrawButton(c::frametime_scale_button, {pen, c::frametime_scale_button_size}, \"1ms\");\n        if(response.pressed) state->graph_max = 1.f;\n        pen.x += response.rect.size.x + 1.f;\n    }\n}",
-			"file": "src/frametimes_draw.cpp",
-			"file_size": 2703,
-			"file_write_time": 132479742680718946,
+			"file": "src/camera.cpp",
 			"settings":
 			{
-				"buffer_size": 2641,
+				"buffer_size": 1883,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/camera.h",
+			"settings":
+			{
+				"buffer_size": 485,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/game_code_include.cpp",
+			"settings":
+			{
+				"buffer_size": 1291,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/platform_include.cpp",
+			"settings":
+			{
+				"buffer_size": 916,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/frametimes_draw.cpp",
+			"settings":
+			{
+				"buffer_size": 2629,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -596,7 +648,16 @@
 			"file": "src/game.cpp",
 			"settings":
 			{
-				"buffer_size": 20872,
+				"buffer_size": 20757,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/input.h",
+			"settings":
+			{
+				"buffer_size": 1482,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -606,15 +667,6 @@
 			"settings":
 			{
 				"buffer_size": 1759,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/game_code_include.cpp",
-			"settings":
-			{
-				"buffer_size": 1291,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -760,6 +812,7 @@
 	],
 	"file_history":
 	[
+		"/C/color-c/src/stack.h",
 		"/C/color-c/src/win32_platform.cpp",
 		"/C/color-c/src/draw.cpp",
 		"/C/color-c/src/input.cpp",
@@ -886,12 +939,11 @@
 		"/C/color-c/src/room.cpp",
 		"/C/color-c/src/math.h",
 		"/C/color-c/src/timer.cpp",
-		"/C/color-c/src/camera.cpp",
-		"/C/color-c/src/oscillating_timer.cpp"
+		"/C/color-c/src/camera.cpp"
 	],
 	"find":
 	{
-		"height": 22.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -920,6 +972,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"SetCamera",
+			"Push",
+			"ui",
+			"mouse_focus_taken",
+			"TakeMouseFocus",
+			"MouseFocusTaken",
 			"state.",
 			"DrawFrametimes",
 			"padding",
@@ -1041,13 +1099,7 @@
 			"Score",
 			"struct TraitSet",
 			"TraitSet",
-			"tiers +=",
-			"vigor",
-			".vigor",
-			"current",
-			"vigor",
-			"DoAi",
-			"cur_tier."
+			"tiers +="
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1193,7 +1245,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 11,
 			"sheets":
 			[
 				{
@@ -1223,7 +1275,7 @@
 						"translation.y": 5727.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1251,7 +1303,7 @@
 						"translation.y": 1343.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1260,15 +1312,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2639,
+						"buffer_size": 2721,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2331,
-								2331
+								2451,
+								2451
 							]
 						],
 						"settings":
@@ -1278,14 +1330,351 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1330.0,
+						"translation.y": 1427.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 11854,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										125,
+										140
+									],
+									[
+										240,
+										255
+									],
+									[
+										544,
+										559
+									],
+									[
+										882,
+										897
+									],
+									[
+										1152,
+										1166
+									],
+									[
+										1443,
+										1457
+									],
+									[
+										1812,
+										1826
+									],
+									[
+										2011,
+										2025
+									],
+									[
+										2225,
+										2239
+									],
+									[
+										2421,
+										2435
+									],
+									[
+										2632,
+										2646
+									],
+									[
+										2984,
+										3001
+									],
+									[
+										3016,
+										3033
+									],
+									[
+										3175,
+										3192
+									],
+									[
+										3252,
+										3269
+									],
+									[
+										3400,
+										3417
+									],
+									[
+										3507,
+										3524
+									],
+									[
+										3789,
+										3806
+									],
+									[
+										3825,
+										3842
+									],
+									[
+										4185,
+										4202
+									],
+									[
+										4477,
+										4481
+									],
+									[
+										4687,
+										4691
+									],
+									[
+										4815,
+										4819
+									],
+									[
+										4990,
+										4994
+									],
+									[
+										5345,
+										5349
+									],
+									[
+										5396,
+										5400
+									],
+									[
+										5462,
+										5466
+									],
+									[
+										5889,
+										5893
+									],
+									[
+										5940,
+										5944
+									],
+									[
+										6006,
+										6010
+									],
+									[
+										6200,
+										6204
+									],
+									[
+										6514,
+										6518
+									],
+									[
+										6972,
+										6976
+									],
+									[
+										7231,
+										7235
+									],
+									[
+										7530,
+										7539
+									],
+									[
+										7769,
+										7778
+									],
+									[
+										7972,
+										7981
+									],
+									[
+										8032,
+										8041
+									],
+									[
+										8317,
+										8326
+									],
+									[
+										8451,
+										8460
+									],
+									[
+										8515,
+										8524
+									],
+									[
+										8761,
+										8770
+									],
+									[
+										8839,
+										8848
+									],
+									[
+										9065,
+										9074
+									],
+									[
+										9234,
+										9243
+									],
+									[
+										9305,
+										9314
+									],
+									[
+										9504,
+										9513
+									],
+									[
+										9555,
+										9564
+									],
+									[
+										9640,
+										9649
+									],
+									[
+										9844,
+										9853
+									],
+									[
+										9926,
+										9935
+									],
+									[
+										10032,
+										10041
+									],
+									[
+										10094,
+										10103
+									],
+									[
+										10216,
+										10225
+									],
+									[
+										10278,
+										10287
+									],
+									[
+										10410,
+										10419
+									],
+									[
+										10474,
+										10483
+									],
+									[
+										10629,
+										10638
+									],
+									[
+										10741,
+										10750
+									],
+									[
+										10986,
+										10995
+									],
+									[
+										11229,
+										11238
+									],
+									[
+										11287,
+										11296
+									],
+									[
+										11532,
+										11541
+									],
+									[
+										11570,
+										11579
+									],
+									[
+										11679,
+										11688
+									],
+									[
+										11739,
+										11748
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								9072,
+								9072
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 5,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2717.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7406,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								850,
+								850
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 229.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
 					"file": "src/win32_platform.cpp",
 					"semi_transient": false,
 					"settings":
@@ -1297,8 +1686,8 @@
 						"selection":
 						[
 							[
-								29331,
-								29331
+								26539,
+								26539
 							]
 						],
 						"settings":
@@ -1308,14 +1697,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 11511.0,
+						"translation.y": 10582.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 6,
 					"file": "src/debug_overlay.h",
 					"semi_transient": false,
 					"settings":
@@ -1339,24 +1728,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 7,
 					"file": "src/const.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 19560,
+						"buffer_size": 19674,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4681,
-								4681
+								589,
+								589
 							]
 						],
 						"settings":
@@ -1366,33 +1755,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1404.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 7,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 2,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 6,
-					"file": "src/frametimes_draw.cpp",
+					"buffer": 8,
+					"file": "src/camera.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2641,
+						"buffer_size": 1883,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1867,
-								1867
+								1196,
+								1196
 							]
 						],
 						"settings":
@@ -1400,14 +1783,132 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 476.0,
+						"translation.y": 351.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/camera.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 485,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								485,
+								485
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/game_code_include.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1291,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								618,
+								618
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 11,
+					"file": "src/platform_include.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 916,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								916,
+								916
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 12,
+					"file": "src/frametimes_draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2629,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1855,
+								1855
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 421.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
 					"file": "src/frametimes_draw.h",
 					"semi_transient": false,
 					"settings":
@@ -1431,24 +1932,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 14,
 					"file": "src/game.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20872,
+						"buffer_size": 20757,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15079,
-								15079
+								15600,
+								15600
 							]
 						],
 						"settings":
@@ -1458,7 +1959,37 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4423.0,
+						"translation.y": 3406.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "src/text_render.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 30966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5270,
+								5270
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1853.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1466,6 +1997,124 @@
 				},
 				{
 					"buffer": 9,
+					"file": "src/camera.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 485,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								60,
+								60
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/input.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2721,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2594,
+								2594
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1408.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "src/input.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1482,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1326,
+								1326
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 351.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7406,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5965,
+								5965
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2608.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
 					"file": "src/game.h",
 					"semi_transient": false,
 					"settings":
@@ -1490,7 +2139,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1518,11 +2167,11 @@
 						"translation.y": 134.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 6,
 					"file": "src/debug_overlay.h",
 					"semi_transient": false,
 					"settings":
@@ -1546,7 +2195,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 22,
 					"type": "text"
 				}
 			]
@@ -1612,16 +2261,44 @@
 		"selected_items":
 		[
 			[
+				"plat",
+				"src\\platform_include.cpp"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"inc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"camera",
+				"src\\camera.cpp"
+			],
+			[
+				"text",
+				"src\\text_render.cpp"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"inputc",
+				"src\\input.cpp"
+			],
+			[
 				"input",
 				"src\\input.cpp"
 			],
 			[
 				"todo",
 				"_\\todo.txt"
-			],
-			[
-				"text",
-				"src\\text_render.cpp"
 			],
 			[
 				"inclu",
@@ -1656,24 +2333,8 @@
 				"src\\log.cpp"
 			],
 			[
-				"con",
-				"src\\const.h"
-			],
-			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
 				"vec",
 				"src\\vec.cpp"
-			],
-			[
-				"plat",
-				"src\\platform_include.cpp"
 			],
 			[
 				"mem",
@@ -1698,10 +2359,6 @@
 			[
 				"include",
 				"src\\game_code_include.cpp"
-			],
-			[
-				"inc",
-				"src\\platform_include.cpp"
 			],
 			[
 				"mat",
@@ -1766,10 +2423,6 @@
 			[
 				"nodegra",
 				"src\\node_graph.cpp"
-			],
-			[
-				"inputc",
-				"src\\input.cpp"
 			],
 			[
 				"textrend",
@@ -2118,10 +2771,6 @@
 			[
 				"effect",
 				"src\\effect.h"
-			],
-			[
-				"ab h",
-				"src\\ability.h"
 			]
 		],
 		"width": 0.0

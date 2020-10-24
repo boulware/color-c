@@ -37,6 +37,10 @@ struct TextLayout
 {
 	Font *font;
 	Color color;
+
+	Color hover_color;
+	bool has_hover_color;
+
 	int font_size;
 	Align align;
 	bool draw_debug;
@@ -46,16 +50,22 @@ struct TextLayout
 	float max_width;
 };
 
+struct TextResponse
+{
+	Rect rect;
+	bool hovered;
+};
+
 float LineHeight(TextLayout layout);
 
 bool ValidFont(Font *font);
 
-void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, Font font, bool round_to_integer_pixel = false);
+void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Font font, bool round_to_integer_pixel = false);
 
 //void _RenderUtf32Char(u32 utf32_char, Vec2f *pen, u32 size, Color color, FT_Face face);
 //Vec2f SizeUtf8Line(TextLayout layout, const char *string, ...);
-Rect DrawText(TextLayout layout, Vec2f origin, String string);
-Rect DrawText(TextLayout layout, Vec2f origin, const char *string, ...);
+TextResponse DrawText(TextLayout layout, Vec2f origin, String string);
+TextResponse DrawText(TextLayout layout, Vec2f origin, const char *string, ...);
 Rect DrawUiText(TextLayout layout, Vec2f origin, String string);
 Rect DrawUiText(TextLayout layout, Vec2f origin, const char *string, ...);
 void EasyDrawText(const char *string, ...);

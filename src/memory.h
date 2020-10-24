@@ -12,6 +12,7 @@ struct Arena
 
     int allocs_since_reset;
     char debug_name[64];
+    void *max_current; // The highest *current has ever been.
 };
 
 namespace memory

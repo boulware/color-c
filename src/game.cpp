@@ -41,11 +41,12 @@ GameInit(GameInitData init_data)
 
     game->current_state = GameState::Campaign;
 
+    InitTableDrawState(&game->table_draw_state);
 
     #if 1
-    InitLcgSystemSeed(&random::default_lcg);
+        InitLcgSystemSeed(&random::default_lcg);
     #else
-    InitLcgSetSeed(&random::default_lcg, 42685076);
+        InitLcgSetSeed(&random::default_lcg, 42685076);
     #endif
 
     //TestDistributionAndLog();
@@ -139,12 +140,12 @@ GameInit(GameInitData init_data)
     //  }
     // }
 
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
+    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
+    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
+    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
+    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
 
-    game->current_battle = {};
+    //game->current_battle = {};
 
     // CreateUnit("Wolf", Team::enemies, &game->enemies[0]);
     // CreateUnit("Slime", Team::enemies, &game->enemies[1]);
@@ -162,7 +163,7 @@ GameInit(GameInitData init_data)
     // imgui
     game->debug_container = c::def_ui_container;
     game->debug_container.button_layout.label_layout.font_size = 16.f;
-    game->debug_container.max_size = {300.f,200.f};
+    game->debug_container.max_size = {150.f,200.f};
 
     // Cursor
     game->pointer_cursor = LoadBitmapFileIntoSprite("resource/cursor.bmp");
@@ -177,7 +178,7 @@ GameInit(GameInitData init_data)
     //     AddUnitToUnitSet(CreateUnit(breed_id, Team::enemies), &battle_units);
     // }
 
-    AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
+    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Mage"), Team::enemies), &battle_units);
@@ -185,10 +186,10 @@ GameInit(GameInitData init_data)
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
     //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     InitMainMenu(&game->mainmenu_state);
-    InitBattle(&game->current_battle, AllocArena("Game Battle"));
+//    InitBattle(&game->current_battle, AllocArena("Game Battle"));
     InitCampaign(&game->campaign);
 
-    StartBattle(&game->current_battle, battle_units);
+  //  StartBattle(&game->current_battle, battle_units);
     StartEditor(&game->editor_state);
 
     LoadKeybindsFromFile("data/default_keybinds.dat");
@@ -369,6 +370,35 @@ GameUpdateAndRender()
             }
         }
 
+        current_index = (int)OverlayOption::Tables;
+        if(game->debug_overlay.option_active[current_index])
+        {
+            Vec2f window_pos = game->debug_overlay.window_positions[current_index];
+            Vec2f window_size = {300.f,300.f};
+            Rect window_rect = {window_pos, window_size};
+            SetDrawDepth(cur_draw_depth);
+            cur_draw_depth += 0.1f;
+            DrawFilledRect(window_rect, c::vdk_red, true);
+
+            if(game->table_draw_state.cur_mode == TableDrawMode::Ability) {
+                DrawTable(&game->table_draw_state, &g::ability_table, window_rect);
+            }
+            else if(game->table_draw_state.cur_mode == TableDrawMode::Breed) {
+                DrawTable(&game->table_draw_state, &g::breed_table, window_rect);
+            }
+            else if(game->table_draw_state.cur_mode == TableDrawMode::Unit) {
+                DrawTable(&game->table_draw_state, &g::unit_table, window_rect);
+            }
+
+            DrawUnfilledRect(window_rect, c::white, true);
+
+            if(MouseInRect(window_rect) and TakeMouseFocus())
+            {
+                if(Pressed(vk::LMB))
+                    game->debug_overlay.dragging_index = current_index;
+            }
+        }
+
         if(!Down(vk::LMB)) game->debug_overlay.dragging_index = -1;
 
         // Window dragging
@@ -387,8 +417,8 @@ GameUpdateAndRender()
     }
     PopUiCamera(pushed_camera);
 
-    SetDrawDepth(5.f);
-    DrawTable(g::unit_table, {}, 200.f);
+    // SetDrawDepth(5.f);
+    // DrawTable(g::unit_table, {}, 200.f);
 
 
 //    DrawDummyText(c::small_text_layout, {});

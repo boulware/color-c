@@ -48,11 +48,11 @@ TickMainMenu(MainMenu *menu, bool entered)
 		Rect text_rect = {};
 		if(i == menu->selected_option)
 		{
-			text_rect = DrawText(c::main_menu_selected_text_layout, pen, string);
+			text_rect = DrawText(c::main_menu_selected_text_layout, pen, string).rect;
 		}
 		else
 		{
-			text_rect = DrawText(c::main_menu_unselected_text_layout, pen, string);
+			text_rect = DrawText(c::main_menu_unselected_text_layout, pen, string).rect;
 		}
 
 		if(MouseInRect(text_rect))

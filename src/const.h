@@ -116,9 +116,10 @@ namespace c
     const float clip_A = 2.0f/(far_plane-near_plane); // [A] in z'=Az+B (the depth=>clip space eqn)
     const float clip_B = -(far_plane+near_plane)/(far_plane-near_plane); // [B] in z'=Az+B
 
-    const float debug_control_draw_depth = 1.f;
-    const float debug_overlay_draw_depth = 2.f;
-    const float debug_window_draw_depth = 3.f;
+    const float debug_control_draw_depth = 1.f;   // The top-left buttons that let you turn on/off each debug window
+    const float debug_overlay_button_draw_depth = 2.f; // Debug overlay buttons
+    const float debug_overlay_draw_depth = 3.f;   // The depth at which the actual debug stuff is drawn
+    const float debug_window_draw_depth = 5.f;    // The vdk_red window drawn behind debug stuff
     const float def_draw_depth = 50.f;
     const float hover_ui_draw_depth = 80.f;
     const float hud_draw_depth = 100.0f;

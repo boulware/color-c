@@ -546,7 +546,7 @@ TickCampaign(Campaign *campaign)
             Unit *unit = GetUnitFromId(unit_id);
             if(!unit) continue;
 
-            Vec2f name_size = DrawText(c::def_text_layout, pen, unit->name).size;
+            Vec2f name_size = DrawText(c::def_text_layout, pen, unit->name).rect.size;
             DrawTraitSetWithPreview(pen + Vec2f{0.f, name_size.y},
                                     unit->cur_traits,
                                     unit->max_traits,

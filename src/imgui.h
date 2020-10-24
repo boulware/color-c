@@ -57,8 +57,9 @@ struct ImguiContainer
 {
 	Vec2f pos; // Top left corner of container in window coordinates
 	Vec2f max_size; // Maximum size the container should stretch to
-	Vec2f pen; // Offset relative to [pos] where the end of the last element occured. (i.e., where the next element should be placed)
-	//int font_size;
+	Vec2f pen; // Offset relative to [pos] where the end of the last element occurred. (i.e., where the next element should be placed)
+	bool at_row_start;
+	int cur_row_count;
 
 	ButtonLayout button_layout;
 	TextEntryLayout text_entry_layout;
@@ -99,5 +100,7 @@ void SetActiveContainer(ImguiContainer *container);
 
 
 void DrawListPanel_(ListPanel_ panel);
+
+float BottomOfUiContainer(ImguiContainer container);
 
 #endif

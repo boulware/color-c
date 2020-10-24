@@ -758,6 +758,9 @@ String MetaString(const OverlayOption *s)
 		case(OverlayOption::Frametime): {
 			AppendCString(&string, "Frametime");
 		} break;
+		case(OverlayOption::Tables): {
+			AppendCString(&string, "Tables");
+		} break;
 		case(OverlayOption::COUNT): {
 			AppendCString(&string, "COUNT");
 		} break;
@@ -1359,6 +1362,14 @@ String MetaString(const FrametimeGraphState *s)
 
 	AppendCString(&string, "  graph_max: %f (float)\n", s->graph_max);
 
+	AppendCString(&string, "  ui_container: ");
+	AppendString(&string, MetaString(&s->ui_container));
+	AppendCString(&string, "(ImguiContainer)\n");
+
+	AppendCString(&string, "  label_text: ");
+	AppendString(&string, MetaString(&s->label_text));
+	AppendCString(&string, "(TextLayout)\n");
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -1431,6 +1442,10 @@ String MetaString(const Game *s)
 
 	AppendCString(&string, "  frametime_graph_state: %p (FrametimeGraphState *)\n", s->frametime_graph_state);
 
+	AppendCString(&string, "  table_draw_state: ");
+	AppendString(&string, MetaString(&s->table_draw_state));
+	AppendCString(&string, "(TableDrawState)\n");
+
 	AppendCString(&string, "  draw_debug_overlay: %d (bool)\n", s->draw_debug_overlay);
 
 	AppendCString(&string, "  debug_overlay: ");
@@ -1486,10 +1501,6 @@ String MetaString(const Game *s)
 	AppendCString(&string, "  player_party: ");
 	AppendString(&string, MetaString(&s->player_party));
 	AppendCString(&string, "(UnitSet)\n");
-
-	AppendCString(&string, "  current_battle: ");
-	AppendString(&string, MetaString(&s->current_battle));
-	AppendCString(&string, "(Battle)\n");
 
 	AppendCString(&string, "  editor_state: ");
 	AppendString(&string, MetaString(&s->editor_state));
@@ -1853,6 +1864,10 @@ String MetaString(const ImguiContainer *s)
 	AppendString(&string, MetaString(&s->pen));
 	AppendCString(&string, "(Vec2f)\n");
 
+	AppendCString(&string, "  at_row_start: %d (bool)\n", s->at_row_start);
+
+	AppendCString(&string, "  cur_row_count: %d (int)\n", s->cur_row_count);
+
 	AppendCString(&string, "  button_layout: ");
 	AppendString(&string, MetaString(&s->button_layout));
 	AppendCString(&string, "(ButtonLayout)\n");
@@ -2172,6 +2187,8 @@ String MetaString(const Arena *s)
 	AppendCString(&string, "  allocs_since_reset: %d (int)\n", s->allocs_since_reset);
 
 	AppendCString(&string, "  debug_name: %p (char[])\n", s->debug_name);
+
+	AppendCString(&string, "  max_current: %p (void *)\n", s->max_current);
 
 	AppendCString(&string, "}");
 
@@ -2826,6 +2843,62 @@ String MetaString(const Table<Type> *s)
 // table_draw.h
 // ------------------------------------------
 
+String MetaString(const TableDrawMode *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TableDrawMode::");
+	switch(*s)
+	{
+		case(TableDrawMode::Ability): {
+			AppendCString(&string, "Ability");
+		} break;
+		case(TableDrawMode::Breed): {
+			AppendCString(&string, "Breed");
+		} break;
+		case(TableDrawMode::Unit): {
+			AppendCString(&string, "Unit");
+		} break;
+		case(TableDrawMode::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
+
+	return string;
+}
+
+String MetaString(const TableDrawState *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TableDrawState {\n");
+
+	AppendCString(&string, "  cur_mode: ");
+	AppendString(&string, MetaString(&s->cur_mode));
+	AppendCString(&string, "(TableDrawMode)\n");
+
+	AppendCString(&string, "  ui_container: ");
+	AppendString(&string, MetaString(&s->ui_container));
+	AppendCString(&string, "(ImguiContainer)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
 // ---------------FILE START---------------
 // target_class.h
 // ------------------------------------------
@@ -3073,6 +3146,12 @@ String MetaString(const TextLayout *s)
 	AppendString(&string, MetaString(&s->color));
 	AppendCString(&string, "(Color)\n");
 
+	AppendCString(&string, "  hover_color: ");
+	AppendString(&string, MetaString(&s->hover_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  has_hover_color: %d (bool)\n", s->has_hover_color);
+
 	AppendCString(&string, "  font_size: %d (int)\n", s->font_size);
 
 	AppendCString(&string, "  align: ");
@@ -3082,6 +3161,28 @@ String MetaString(const TextLayout *s)
 	AppendCString(&string, "  draw_debug: %d (bool)\n", s->draw_debug);
 
 	AppendCString(&string, "  max_width: %f (float)\n", s->max_width);
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const TextResponse *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "TextResponse {\n");
+
+	AppendCString(&string, "  rect: ");
+	AppendString(&string, MetaString(&s->rect));
+	AppendCString(&string, "(Rect)\n");
+
+	AppendCString(&string, "  hovered: %d (bool)\n", s->hovered);
 
 	AppendCString(&string, "}");
 

@@ -246,6 +246,10 @@ String MetaString(const TableEntry<Type> *s);
 template<typename Type>
 String MetaString(const Table<Type> *s);
 
+String MetaString(const TableDrawMode *s);
+
+String MetaString(const TableDrawState *s);
+
 String MetaString(const TargetClass *s);
 
 String MetaString(const TestMode *s);
@@ -257,6 +261,8 @@ String MetaString(const Token *s);
 String MetaString(const Font *s);
 
 String MetaString(const TextLayout *s);
+
+String MetaString(const TextResponse *s);
 
 String MetaString(const Timer *s);
 
