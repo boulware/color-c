@@ -286,6 +286,7 @@ GameUpdateAndRender()
 
     // Reset pen position to container origin for all gui containers
     ResetImguiContainer(&game->debug_container);
+    Camera pushed_camera = PushUiCamera();
     if(game->draw_debug_overlay)
     {
         SetDrawDepth(c::debug_control_draw_depth);
@@ -305,8 +306,8 @@ GameUpdateAndRender()
             }
 
             auto response = Button(OverlayOption_userstrings[i]);
-            if(response.pressed and !MouseFocusTaken()) game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];
-            game->input.mouse_focus_taken = game->input.mouse_focus_taken || response.hovered;
+            if(response.pressed and TakeMouseFocus())
+                game->debug_overlay.option_active[i] = !game->debug_overlay.option_active[i];
         }
 
         float cur_draw_depth = c::debug_window_draw_depth;
@@ -323,10 +324,10 @@ GameUpdateAndRender()
 
             Rect window_rect = DrawArenas(*game->arena_pool, window_pos);
 
-            if(MouseInRect(window_rect))
+            if(MouseInRect(window_rect) and TakeMouseFocus())
             {
-                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
-                game->input.mouse_focus_taken = true;
+                if(Pressed(vk::LMB))
+                    game->debug_overlay.dragging_index = current_index;
             }
         }
 
@@ -342,10 +343,10 @@ GameUpdateAndRender()
             DrawUnfilledRect(window_rect, c::white, true);
             DrawTimedBlockData(window_pos);
 
-            if(MouseInRect(window_rect))
+            if(MouseInRect(window_rect) and TakeMouseFocus())
             {
-                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
-                game->input.mouse_focus_taken = true;
+                if(Pressed(vk::LMB))
+                    game->debug_overlay.dragging_index = current_index;
             }
         }
 
@@ -358,13 +359,13 @@ GameUpdateAndRender()
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
             DrawFilledRect(window_rect, c::vdk_red, true);
-            DrawUnfilledRect(window_rect, c::white, true);
             DrawFrametimes(game->frametime_graph_state, window_rect);
+            DrawUnfilledRect(window_rect, c::white, true);
 
-            if(MouseInRect(window_rect))
+            if(MouseInRect(window_rect) and TakeMouseFocus())
             {
-                if(Pressed(vk::LMB) and !MouseFocusTaken()) game->debug_overlay.dragging_index = current_index;
-                game->input.mouse_focus_taken = true;
+                if(Pressed(vk::LMB))
+                    game->debug_overlay.dragging_index = current_index;
             }
         }
 
@@ -384,6 +385,7 @@ GameUpdateAndRender()
         }
         //DrawTimedBlockData();
     }
+    PopUiCamera(pushed_camera);
 
     SetDrawDepth(5.f);
     DrawTable(g::unit_table, {}, 200.f);

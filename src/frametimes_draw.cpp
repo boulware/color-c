@@ -52,7 +52,11 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
     Vec2f pen = RectTopLeft(graph_rect) + Vec2f{2.f,2.f}; // with padding
     {
         auto response = DrawButton(c::frametime_scale_button, {pen, c::frametime_scale_button_size}, "+");
-        if(response.pressed) state->graph_max /= c::frametime_scale_amount;
+        if(response.pressed)
+        {
+            state->graph_max /= c::frametime_scale_amount;
+
+        }
         pen.x += response.rect.size.x + 1.f; // 1.f padding
     }
     {

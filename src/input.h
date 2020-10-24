@@ -45,7 +45,8 @@ Vec2f MousePos(bool absolute = false);
 bool MouseMoved();
 int MouseScroll();
 bool MouseInRect(Rect rect, bool absolute = false);
-bool MouseFocusTaken();
+bool TakeMouseFocus();
+bool MouseFocusIsTaken();
 
 bool Down(const InputState *input, u8 key);
 bool Pressed(const InputState *input, u8 key);

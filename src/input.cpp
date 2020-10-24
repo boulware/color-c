@@ -125,8 +125,25 @@ MouseScroll()
     return(input::global_input->mouse_scroll);
 }
 
+// Attempts to take mouse focus. If successful, takes focus and returns true.
+// Subsequent calls to this on the same frame shall fail and return false -- thus only
+// one place in the code can "take mouse focus" each frame.
 bool
-MouseFocusTaken()
+TakeMouseFocus()
+{
+    if(input::global_input->mouse_focus_taken == false)
+    {
+        input::global_input->mouse_focus_taken = true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool
+MouseFocusIsTaken()
 {
     return(input::global_input->mouse_focus_taken);
 }

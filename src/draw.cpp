@@ -30,51 +30,6 @@ SetDrawDepth(float depth)
     gl->ProgramUniform1f(game->color_shader, 2, clip_space_depth);
 }
 
-void
-SetCameraPos(Camera *camera, Vec2f camera_pos)
-{
-    //game->prev_camera_pos = game->camera_pos;
-    camera->pos = camera_pos;
-    gl->ProgramUniform2fv(game->color_shader, 4, 1, (GLfloat*)&camera_pos);
-    gl->ProgramUniform2fv(game->uv_shader, 4, 1, (GLfloat*)&camera_pos);
-}
-
-void
-MoveCamera(Camera *camera, Vec2f move)
-{
-    camera->pos += move;
-    SetCameraPos(camera, camera->pos);
-}
-
-void
-SetCameraView(Camera *camera, Vec2f view)
-{
-    camera->view = view;
-    gl->ProgramUniform2fv(game->color_shader, 0, 1, (GLfloat*)&view);
-    gl->ProgramUniform2fv(game->uv_shader,    0, 1, (GLfloat*)&view);
-}
-
-void
-MoveCameraToWorldRect(Camera *camera, Rect rect)
-{
-    float screen_AR = AspectRatio(game->window_size);
-    float rect_AR   = AspectRatio(rect);
-
-    Rect adjusted_rect = rect;
-    if(rect_AR >= screen_AR)
-    { // X is larger than it should be relative to Y (or equal), so scale by the x range
-        float x_range = rect.size.x;
-        adjusted_rect.size = {rect.size.x, screen_AR / rect_AR * rect.size.y};
-    }
-    else
-    {
-        float y_range = rect.size.y;
-        adjusted_rect.size = {screen_AR / rect_AR * rect.size.x, rect.size.y};
-    }
-    SetCameraPos(camera, RectCenter(rect));
-    SetCameraView(camera, adjusted_rect.size);
-}
-
 // void
 // SetCameraZoom(float z)
 // {
@@ -256,8 +211,10 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
         }
     }
 
-    if(response.hovered and !MouseFocusTaken())
+    bool has_focus = false;
+    if(response.hovered and !MouseFocusIsTaken())
     {
+        has_focus = TakeMouseFocus();
         // Button is being hovered
         DrawUnfilledRect(aligned_button_rect, layout.button_hover_color);
         TextLayout hovered_layout = layout.label_layout;
@@ -278,7 +235,7 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
         DrawText(layout.label_layout, text_pos, label);
     }
 
-    if(MouseFocusTaken())
+    if(!has_focus)
     { // Disregard most of the response values if the focus was already taken by something else.
         response = {};
     }

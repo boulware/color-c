@@ -6,6 +6,7 @@
 #include "text_render.h"
 #include "imgui.h"
 #include "table.h"
+#include "camera.h"
 
 struct Ability;
 struct Breed;
@@ -103,6 +104,11 @@ namespace c
 
     // Debug
     const float error_flash_speed = 0.017f;
+
+    Camera ui_camera = {
+        .pos = {800.f,450.f},
+        .view = {1600.f,900.f}
+    };
 
     // Drawing depths
     const float near_plane = 0.0f;

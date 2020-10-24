@@ -85,3 +85,5 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 32) Somewhat frequent (1/30 runs) in AllocArena. Almost certainly MT issue. CreateEntry() is returning a bogus arena_id for some reason -- when I immediately call GetEntryFromId(), I get a nullptr instead of an actual entry that I expected. A temporary fix is possible where we just cancel the thread execution when we fail to get a proper temp thread arena and try to restart it, but it's not an ideal fix.
 
 33) Track GPU time in addition to "CPU time" (what we call frametime now) -- frametime should consider GPU time as well, and it currently does not.
+
+34) Text rendering is probably fast enough right now, but it would be a pretty easy fix to do the texture atlas and I think it would probably help significantly with GPU performance -- we don't know how long the GPU is actually taking, but large amounts of text do cause significant frametime increases (on the GPU, not CPU) -- it's a simple fix that we should probably do at some point just so we have the most amount of GPU time to work with as we can.
