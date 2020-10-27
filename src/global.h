@@ -26,4 +26,10 @@ namespace g
 
 };
 
+// Aliases until RemedyBG has namespace support
+Table<Ability> *g_ability_table;
+Table<Breed> *g_breed_table;
+Table<Unit> *g_unit_table;
+
+
 #endif

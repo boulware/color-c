@@ -32,6 +32,7 @@
 #include "imgui.h"
 #include "input.h"
 #include "input_vk_constants.h"
+#include "intent.h"
 #include "keybinds.h"
 #include "lang.h"
 #include "log.h"
@@ -242,66 +243,10 @@ String MetaString(const Align *s)
 // array.h
 // ------------------------------------------
 
-template<typename Type>
-String MetaString(const Array<Type> *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Array {\n");
-
-	AppendCString(&string, "  data: %p (Type *)\n", s->data);
-
-	AppendCString(&string, "  arena_id: ");
-	AppendString(&string, MetaString(&s->arena_id));
-	AppendCString(&string, "(PoolId<Arena>)\n");
-
-	AppendCString(&string, "  count: %d (int)\n", s->count);
-
-	AppendCString(&string, "  max_count: %d (int)\n", s->max_count);
-
-	AppendCString(&string, "  _allocated_count: %d (int)\n", s->_allocated_count);
-
-	AppendCString(&string, "}");
-
-	return string;
-}
 
 // ---------------FILE START---------------
 // battle.h
 // ------------------------------------------
-
-String MetaString(const Intent *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Intent {\n");
-
-	AppendCString(&string, "  caster_id: ");
-	AppendString(&string, MetaString(&s->caster_id));
-	AppendCString(&string, "(Id<Unit>)\n");
-
-	AppendCString(&string, "  ability_id: ");
-	AppendString(&string, MetaString(&s->ability_id));
-	AppendCString(&string, "(Id<Ability>)\n");
-
-	AppendCString(&string, "  target_set: ");
-	AppendString(&string, MetaString(&s->target_set));
-	AppendCString(&string, "(UnitSet)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
 
 String MetaString(const BattleEvent *s)
 {
@@ -327,6 +272,50 @@ String MetaString(const BattleEvent *s)
 	AppendCString(&string, "(TraitSet)\n");
 
 	AppendCString(&string, "}");
+
+	return string;
+}
+
+String MetaString(const BattlePhase *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "BattlePhase::");
+	switch(*s)
+	{
+		case(BattlePhase::invalid): {
+			AppendCString(&string, "invalid");
+		} break;
+		case(BattlePhase::start): {
+			AppendCString(&string, "start");
+		} break;
+		case(BattlePhase::player_turn): {
+			AppendCString(&string, "player_turn");
+		} break;
+		case(BattlePhase::end_of_player_turn): {
+			AppendCString(&string, "end_of_player_turn");
+		} break;
+		case(BattlePhase::enemy_turn): {
+			AppendCString(&string, "enemy_turn");
+		} break;
+		case(BattlePhase::end_of_enemy_turn): {
+			AppendCString(&string, "end_of_enemy_turn");
+		} break;
+		case(BattlePhase::end): {
+			AppendCString(&string, "end");
+		} break;
+		case(BattlePhase::COUNT): {
+			AppendCString(&string, "COUNT");
+		} break;
+		default: {
+			AppendCString(&string, "?????");
+		} break;
+	}
 
 	return string;
 }
@@ -368,6 +357,10 @@ String MetaString(const Battle *s)
 	AppendString(&string, MetaString(&s->hud));
 	AppendCString(&string, "(Rect)\n");
 
+	AppendCString(&string, "  phase: ");
+	AppendString(&string, MetaString(&s->phase));
+	AppendCString(&string, "(BattlePhase)\n");
+
 	AppendCString(&string, "  selected_unit_id: ");
 	AppendString(&string, MetaString(&s->selected_unit_id));
 	AppendCString(&string, "(Id<Unit>)\n");
@@ -378,35 +371,19 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  units: ");
 	AppendString(&string, MetaString(&s->units));
-	AppendCString(&string, "(UnitSet)\n");
-
-	AppendCString(&string, "  unit_slots: %p (Vec2f[])\n", s->unit_slots);
-
-	AppendCString(&string, "  intents: ");
-	AppendString(&string, MetaString(&s->intents));
-	AppendCString(&string, "(Array<Intent>)\n");
-
-	AppendCString(&string, "  player_intent: ");
-	AppendString(&string, MetaString(&s->player_intent));
-	AppendCString(&string, "(Intent)\n");
-
-	AppendCString(&string, "  show_preview: %d (bool)\n", s->show_preview);
+	AppendCString(&string, "(Array<UnitId>)\n");
 
 	AppendCString(&string, "  preview_events: ");
 	AppendString(&string, MetaString(&s->preview_events));
 	AppendCString(&string, "(Array<BattleEvent>)\n");
 
-	AppendCString(&string, "  is_player_turn: %d (bool)\n", s->is_player_turn);
-
 	AppendCString(&string, "  preview_damage_timer: ");
 	AppendString(&string, MetaString(&s->preview_damage_timer));
 	AppendCString(&string, "(OscillatingTimer)\n");
 
-	AppendCString(&string, "  end_button_clicked_timer: ");
-	AppendString(&string, MetaString(&s->end_button_clicked_timer));
+	AppendCString(&string, "  end_player_turn_timer: ");
+	AppendString(&string, MetaString(&s->end_player_turn_timer));
 	AppendCString(&string, "(Timer)\n");
-
-	AppendCString(&string, "  ending_player_turn: %d (bool)\n", s->ending_player_turn);
 
 	AppendCString(&string, "  best_choice_string: ");
 	AppendString(&string, MetaString(&s->best_choice_string));
@@ -2001,6 +1978,38 @@ String MetaString(const VirtualKey *s)
 }
 
 // ---------------FILE START---------------
+// intent.h
+// ------------------------------------------
+
+String MetaString(const Intent *s)
+{
+	TIMED_BLOCK;
+
+	String string = {};
+	string.length = 0;
+	string.max_length = 1024;
+	string.data = ScratchString(string.max_length);
+
+	AppendCString(&string, "Intent {\n");
+
+	AppendCString(&string, "  caster_id: ");
+	AppendString(&string, MetaString(&s->caster_id));
+	AppendCString(&string, "(Id<Unit>)\n");
+
+	AppendCString(&string, "  ability_id: ");
+	AppendString(&string, MetaString(&s->ability_id));
+	AppendCString(&string, "(Id<Ability>)\n");
+
+	AppendCString(&string, "  target_set: ");
+	AppendString(&string, MetaString(&s->target_set));
+	AppendCString(&string, "(Array<UnitId>)\n");
+
+	AppendCString(&string, "}");
+
+	return string;
+}
+
+// ---------------FILE START---------------
 // keybinds.h
 // ------------------------------------------
 
@@ -2789,6 +2798,9 @@ String MetaString(const Id<Type> *s)
 	return string;
 }
 
+
+
+
 template<typename Type>
 String MetaString(const TableEntry<Type> *s)
 {
@@ -2827,6 +2839,10 @@ String MetaString(const Table<Type> *s)
 	string.data = ScratchString(string.max_length);
 
 	AppendCString(&string, "Table {\n");
+
+	AppendCString(&string, "  arena_id: ");
+	AppendString(&string, MetaString(&s->arena_id));
+	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  entries: %p (TableEntry<Type> *)\n", s->entries);
 
@@ -3300,6 +3316,8 @@ String MetaString(const Breed *s)
 
 	AppendCString(&string, "  ability_ids: %p (Id<Ability>[])\n", s->ability_ids);
 
+	AppendCString(&string, "  tier: %d (int)\n", s->tier);
+
 	AppendCString(&string, "}");
 
 	return string;
@@ -3340,45 +3358,13 @@ String MetaString(const Unit *s)
 
 	AppendCString(&string, "  ability_ids: %p (Id<Ability>[])\n", s->ability_ids);
 
-	AppendCString(&string, "}");
+	AppendCString(&string, "  intent: ");
+	AppendString(&string, MetaString(&s->intent));
+	AppendCString(&string, "(Intent)\n");
 
-	return string;
-}
-
-String MetaString(const UnitSlot *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "UnitSlot {\n");
-
-	AppendCString(&string, "  pos: ");
-	AppendString(&string, MetaString(&s->pos));
+	AppendCString(&string, "  slot_pos: ");
+	AppendString(&string, MetaString(&s->slot_pos));
 	AppendCString(&string, "(Vec2f)\n");
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-String MetaString(const UnitSet *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "UnitSet {\n");
-
-	AppendCString(&string, "  size: %d (int)\n", s->size);
-
-	AppendCString(&string, "  ids: %p (Id<Unit>[])\n", s->ids);
 
 	AppendCString(&string, "}");
 

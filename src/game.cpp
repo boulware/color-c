@@ -114,20 +114,25 @@ GameInit(GameInitData init_data)
     gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1);
     gl->Enable(GL_BLEND);
 
+    { // Ability table
+        auto arena_id = AllocArena("Ability Table");
+        g::ability_table = AllocTable<Ability>(100, arena_id);
+        LoadAbilityFile("data/ability.dat", &g::ability_table);
+        g_ability_table = &g::ability_table;
+    }
 
-    // Ability table
-    g::ability_table = AllocTable<Ability>(100);
-    LoadAbilityFile("data/ability.dat", &g::ability_table);
-    auto ability_table_copy = &g::ability_table;
+    { // Unit breed table
+        auto arena_id = AllocArena("Breed Table");
+        g::breed_table = AllocTable<Breed>(100, arena_id);
+        LoadBreedFile("data/breed.dat", &g::breed_table, g::ability_table);
+        g_breed_table = &g::breed_table;
+    }
 
-    // Unit breed table
-    g::breed_table = AllocTable<Breed>(100);
-    LoadBreedFile("data/breed.dat", &g::breed_table, g::ability_table);
-    auto breed_table_copy = &g::breed_table;
-
-    // Unit table
-    g::unit_table = AllocTable<Unit>(100);
-    auto unit_table_copy = &g::unit_table;
+    { // Unit table
+        auto arena_id = AllocArena("Unit Table");
+        g::unit_table = AllocTable<Unit>(100, arena_id);
+        g_unit_table = &g::unit_table;
+    }
 
     // Passive skill table
     // g::passive_skill_table = AllocTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
@@ -140,25 +145,6 @@ GameInit(GameInitData init_data)
     //  }
     // }
 
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Warrior"), Team::allies), &game->player_party);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Rogue"), Team::allies), &game->player_party);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Archer"), Team::allies), &game->player_party);
-    // AddUnitToUnitSet(CreateUnitByName(StringFromCString("Cleric"), Team::allies), &game->player_party);
-
-    //game->current_battle = {};
-
-    // CreateUnit("Wolf", Team::enemies, &game->enemies[0]);
-    // CreateUnit("Slime", Team::enemies, &game->enemies[1]);
-
-    // Place units in unit slots
-    // for(int i=0; i<c::max_party_size; i++)
-    // {
-    //  game->current_battle.units[i] = game->player_party[i];
-    // }
-    //game->current_battle.units[c::max_party_size+0] = CreateUnitByName("Dragon", Team::enemies);
-    // game->current_battle.units[c::max_party_size+1] = CreateUnitByName("Slime", Team::enemies);
-    // game->current_battle.units[c::max_party_size+2] = CreateUnitByName("Wolf", Team::enemies);
-    // game->current_battle.units[c::max_party_size+3] = CreateUnitByName("Slime", Team::enemies);
 
     // imgui
     game->debug_container = c::def_ui_container;
@@ -170,26 +156,10 @@ GameInit(GameInitData init_data)
     game->target_cursor = LoadBitmapFileIntoSprite("resource/target.bmp", c::align_center);
     game->red_target_cursor = LoadBitmapFileIntoSprite("resource/target_red.bmp", c::align_center);
 
-    UnitSet battle_units = game->player_party;
-    // for(int i=0; i<4; ++i)
-    // {
-    //     int random_index = RandomU32(6, g::breed_table.entry_count-1);
-    //     Id breed_id = g::breed_table.entries[random_index].id;
-    //     AddUnitToUnitSet(CreateUnit(breed_id, Team::enemies), &battle_units);
-    // }
 
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Mage"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Slime"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Wolf"), Team::enemies), &battle_units);
-    //AddUnitToUnitSet(CreateUnitByName(StringFromCString("Dragon"), Team::enemies), &battle_units);
     InitMainMenu(&game->mainmenu_state);
-//    InitBattle(&game->current_battle, AllocArena("Game Battle"));
     InitCampaign(&game->campaign);
 
-  //  StartBattle(&game->current_battle, battle_units);
     StartEditor(&game->editor_state);
 
     LoadKeybindsFromFile("data/default_keybinds.dat");
@@ -561,7 +531,7 @@ GameUpdateAndRender()
     Vec2f pos = {1600.f,0.f};
     TextLayout frametime_layout = c::def_text_layout;
     frametime_layout.align = c::align_topright;
-    pos.y += DrawUiText(frametime_layout, pos, "frame: %.3fms", game->frame_time_ms).size.y;
+    pos.y += DrawUiText(frametime_layout, pos, "cpu frame: %.3fms", game->frame_time_ms).size.y;
 
     // for(int i=0; i<game->arena_pool->entry_count; ++i)
     // {

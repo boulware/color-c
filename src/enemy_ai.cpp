@@ -13,6 +13,8 @@
 
 // active_unitset contains all units for which actions are being considered.
 // other_unitset contains the remaining units in the battle.
+
+#if 0
 String
 DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id) // @TODO: BigArena?
 {
@@ -20,7 +22,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
     String best_choice_string = AllocStringDataFromArena(1000, arena_id);
 
-    if(active_unitset.size == 0)
+    if(active_unitset.count == 0)
     {
         AppendCString(&best_choice_string, __FUNCTION__ "(): No units in active_unitset. Skipping.");
         return best_choice_string;
@@ -46,11 +48,13 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
     Array<Array<u8>> arrays = CreateTempArray<Array<u8>>(4);
 
-    UnitSet all_unitset = CombineUnitSets(&active_unitset, &other_unitset);
-    Array<Unit> all_units = CreateTempArray<Unit>(all_unitset.size);
+    Array<UnitId> all_unitset = CreateTempArray<UnitId>(active_unitset.count + other_unitset.count);
+    AppendArrayToArray(&all_unitset, active_unitset);
+    AppendArrayToArray(&all_unitset, other_unitset);
+    Array<Unit> all_units = CreateTempArray<Unit>(all_unitset.count);
 
     // Confirm that all units are valid.
-    for(int i=0; i<all_unitset.size; ++i)
+    for(int i=0; i<all_unitset.count; ++i)
     {
         Id unit_id = all_unitset.ids[i];
         Unit *unit = GetUnitFromId(unit_id);
@@ -639,6 +643,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
     // }
 }
+#endif
 
 // For scoring, what data do we need?
 

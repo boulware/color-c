@@ -300,7 +300,8 @@ InitCampaign(Campaign *campaign)
     };
     MoveCameraToWorldRect(&game->camera, rect);
 
-    AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
+    campaign->player_party = CreateArrayFromArena<UnitId>(c::max_party_size, campaign->arena_id);
+    campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
     //AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
 
     // Log("Thread %d started.", platform->StartJob(&params));
@@ -567,15 +568,14 @@ TickCampaign(Campaign *campaign)
             if(!campaign->room_is_init)
             {
                 InitBattle(&campaign->current_battle, campaign->battle_arena_id);
-                UnitSet enemy_units = {};
-                int enemy_count = RandomU32(1,1);
+                Array<UnitId> battle_units = CreateTempArray<UnitId>(2*c::max_party_size);
+                AppendArrayToArray(&battle_units, campaign->player_party); // Add ally units
+                int enemy_count = RandomU32(3,3);
                 for(int i=0; i<enemy_count; ++i)
-                {
-                    Id<Unit> random_unit_id = CreateUnit(RandomActiveId(g::breed_table), Team::enemies);
-                    AddUnitToUnitSet(random_unit_id, &enemy_units);
+                { // Add enemy units
+                    battle_units += CreateUnit(RandomBreedIdByTier(1), Team::enemies, campaign->battle_arena_id);
                 }
 
-                UnitSet battle_units = CombineUnitSets(&campaign->player_party, &enemy_units);
                 StartBattle(&campaign->current_battle, battle_units);
 
                 campaign->map_camera = game->camera;

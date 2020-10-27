@@ -10,18 +10,6 @@
 // 	return set.units[index];
 // }
 
-Id<Unit> *
-begin(UnitSet &target_set)
-{
-	return (target_set.ids);
-}
-
-Id<Unit> *
-end(UnitSet &target_set)
-{
-	return (target_set.ids + target_set.size);
-}
-
 
 
 bool
@@ -91,6 +79,10 @@ ParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)
 					break;
 				}
 			}
+		}
+		else if(TokenMatchesString(token, "tier"))
+		{
+			valid_unit_data = ParseNextAsS32(buffer, &temp_breed.tier);
 		}
 		else
 		{
@@ -164,7 +156,7 @@ LoadBreedFile(const char *filename, Table<Breed> *breed_table, Table<Ability> ab
 // On success, returns pointer to newly created unit, which is placed in g::unit_table.
 // Returns nullptr if unit creation fails for any reason.
 Id<Unit>
-CreateUnit(Id<Breed> breed_id, Team team)
+CreateUnit(Id<Breed> breed_id, Team team, PoolId<Arena> arena_id)
 {
 	Breed *breed = GetBreedFromId(breed_id);
 	if(!ValidBreed(breed)) return c::null_unit_id;
@@ -173,7 +165,7 @@ CreateUnit(Id<Breed> breed_id, Team team)
 	Unit *unit = GetUnitFromId(unit_id);
 	if(!unit) return c::null_unit_id;
 
-	unit->name = CopyString(breed->name, memory::permanent_arena_id);
+	unit->name = CopyString(breed->name, arena_id);
 	unit->team = team;
 	unit->max_traits = breed->max_traits;
 	unit->cur_traits = breed->max_traits;
@@ -189,22 +181,24 @@ CreateUnit(Id<Breed> breed_id, Team team)
 	unit->cur_action_points = 0;
 	unit->max_action_points = 1;
 
+	unit->intent.target_set = CreateArrayFromArena<UnitId>(8, arena_id);
+
 	unit->init = true;
 	return unit_id;
 }
 
 Id<Unit>
-CreateUnitByName(String name, Team team)
+CreateUnitByName(String name, Team team, PoolId<Arena> arena_id)
 {
 	Id breed_id = GetIndexFromName(g::breed_table, name);
-	return CreateUnit(breed_id, team);
+	return CreateUnit(breed_id, team, arena_id);
 }
 
 Id<Unit>
-CreateUnitByName(char *name, Team team)
+CreateUnitByName(char *name, Team team, PoolId<Arena> arena_id)
 {
 	String name_string = StringFromCString(name);
-	return CreateUnitByName(name_string, team);
+	return CreateUnitByName(name_string, team, arena_id);
 }
 
 // bool
@@ -258,41 +252,41 @@ CreateUnitByName(char *name, Team team)
 // 	return false;
 // }
 
-void AddUnitToUnitSet(Id<Unit> unit_id, UnitSet *unit_set)
-{
-	if(unit_set->size >= ArrayCount(unit_set->ids)) return; // Set is already full.
+// void AddUnitToUnitSet(Id<Unit> unit_id, Array<UnitId> *unit_set)
+// {
+// 	if(unit_set->count >= ArrayCount(unit_set->ids)) return; // Set is already full.
 
-	bool unit_already_in_set = false;
-	for(auto unit_in_set_id : *unit_set)
-	{
-		if(unit_id == unit_in_set_id) unit_already_in_set = true;
-	}
+// 	bool unit_already_in_set = false;
+// 	for(auto unit_in_set_id : *unit_set)
+// 	{
+// 		if(unit_id == unit_in_set_id) unit_already_in_set = true;
+// 	}
 
-	if(!unit_already_in_set)
-	{
-		unit_set->ids[unit_set->size++] = unit_id;
-	}
-}
+// 	if(!unit_already_in_set)
+// 	{
+// 		unit_set->ids[unit_set->size++] = unit_id;
+// 	}
+// }
 
-UnitSet
-CombineUnitSets(const UnitSet *a, const UnitSet *b)
-{
-	UnitSet combined = {};
-	for(int i=0; i<a->size; i++)
-	{
-		AddUnitToUnitSet(a->ids[i], &combined);
-	}
+// UnitSet
+// CombineUnitSets(const UnitSet *a, const UnitSet *b)
+// {
+// 	UnitSet combined = {};
+// 	for(int i=0; i<a->size; i++)
+// 	{
+// 		AddUnitToUnitSet(a->ids[i], &combined);
+// 	}
 
-	for(int i=0; i<b->size; i++)
-	{
-		if(!UnitInUnitSet(b->ids[i], *a))
-		{
-			AddUnitToUnitSet(b->ids[i], &combined);
-		}
-	}
+// 	for(int i=0; i<b->size; i++)
+// 	{
+// 		if(!UnitInUnitSet(b->ids[i], *a))
+// 		{
+// 			AddUnitToUnitSet(b->ids[i], &combined);
+// 		}
+// 	}
 
-	return combined;
-}
+// 	return combined;
+// }
 
 bool
 CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)
@@ -346,57 +340,47 @@ CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)
 	return false;
 }
 
-UnitSet
-GenerateInferredUnitSet(Id<Unit> caster_id, Id<Unit> selected_target_id, TargetClass tc, UnitSet all_targets)
+void
+GenerateInferredUnitSet(Id<Unit> caster_id,
+	                    Id<Unit> selected_target_id,
+	                    TargetClass tc,
+	                    Array<UnitId> all_targets,
+	                    Array<UnitId> *inferred_target_set)
 {
 	TIMED_BLOCK;
 
 	Unit *caster = GetUnitFromId(caster_id);
 	Unit *selected_target = GetUnitFromId(selected_target_id);
-	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return UnitSet{};
+	if(!ValidUnit(caster) or !ValidUnit(selected_target)) return;
 
-	// Return empty target set if the selected target is invalid not a valid target for the given target_class
-	if(!CheckValidTarget(caster_id, selected_target_id, tc))
-	{
-		return UnitSet{};
-	}
+	// Return empty target set if the selected target is invalid or not a valid target for the given target_class
+	if(!CheckValidTarget(caster_id, selected_target_id, tc)) return;
 
-	// Sanitize all_targets not to include invalid units (nullptr or not init)
-	UnitSet all_targets_clean = {};
-	for(auto unit_id : all_targets)
-	{
-		Unit *unit = GetUnitFromId(unit_id);
-		if(!ValidUnit(unit)) continue;
-
-		AddUnitToUnitSet(unit_id, &all_targets_clean);
-	}
-
-	UnitSet inferred_target_set = {};
 	if(tc == TargetClass::all_allies)
 	{
 		// All targets that are on the same team as the caster
-		for(auto target_id : all_targets_clean)
+		for(auto target_id : all_targets)
 		{
 			Unit *target = GetUnitFromId(target_id);
 			if(!ValidUnit(target)) continue;
 
 			if(target->team == caster->team)
 			{
-				AddUnitToUnitSet(target_id, &inferred_target_set);
+				*inferred_target_set += target_id;
 			}
 		}
 	}
 	else if(tc == TargetClass::all_allies_not_self)
 	{
 		// All targets that are on the same team as the caster, excluding the caster.
-		for(auto target_id : all_targets_clean)
+		for(auto target_id : all_targets)
 		{
 			Unit *target = GetUnitFromId(target_id);
 			if(!ValidUnit(target)) continue;
 
 			if(target_id != caster_id and target->team == caster->team)
 			{
-				AddUnitToUnitSet(target_id, &inferred_target_set);
+				*inferred_target_set += target_id;
 			}
 		}
 	}
@@ -405,7 +389,7 @@ GenerateInferredUnitSet(Id<Unit> caster_id, Id<Unit> selected_target_id, TargetC
 		// if(selected target is ally _AND_ selected target is not self)
 		if(selected_target->team == caster->team and selected_target != caster)
 		{
-			AddUnitToUnitSet(selected_target_id, &inferred_target_set);
+			*inferred_target_set += selected_target_id;
 		}
 	}
 	else if(tc == TargetClass::single_unit_not_self)
@@ -413,27 +397,27 @@ GenerateInferredUnitSet(Id<Unit> caster_id, Id<Unit> selected_target_id, TargetC
 		// if(selected target is not self)
 		if(selected_target != caster)
 		{
-			AddUnitToUnitSet(selected_target_id, &inferred_target_set);
+			*inferred_target_set += selected_target_id;
 		}
 	}
 	else if(tc == TargetClass::all_enemies)
 	{
 		// All targets that are not on the same team as the caster.
-		for(auto target_id : all_targets_clean)
+		for(auto target_id : all_targets)
 		{
 			Unit *target = GetUnitFromId(target_id);
 			if(!ValidUnit(target)) continue;
 
 			if(target->team != caster->team)
 			{
-				AddUnitToUnitSet(target_id, &inferred_target_set);
+				*inferred_target_set += target_id;
 			}
 		}
 	}
 	else if(tc == TargetClass::all_units)
 	{
 		// All targets
-		inferred_target_set = all_targets_clean;
+		CopyArray(inferred_target_set, all_targets);
 	}
 	else
 	{
@@ -442,21 +426,20 @@ GenerateInferredUnitSet(Id<Unit> caster_id, Id<Unit> selected_target_id, TargetC
 		// At the time of writing this comment, this includes:
 		// 		self, single_ally, single_enemy, single_unit
 
-		AddUnitToUnitSet(selected_target_id, &inferred_target_set);
-	}
 
-	return inferred_target_set;
+		*inferred_target_set += selected_target_id;
+	}
 }
 
 bool
-UnitInUnitSet(Id<Unit> unit_id, UnitSet target_set, int *index)
+UnitInUnitSet(Id<Unit> unit_id, Array<UnitId> target_set, int *index)
 {
 	Unit *unit = GetUnitFromId(unit_id);
 	if(!ValidUnit(unit)) return false;
 
-	for(int i=0; i<target_set.size; i++)
+	for(int i=0; i<target_set.count; i++)
 	{
-		if(unit_id == target_set.ids[i])
+		if(unit_id == target_set[i])
 		{
 			if(index) *index = i;
 			return true;
@@ -467,23 +450,23 @@ UnitInUnitSet(Id<Unit> unit_id, UnitSet target_set, int *index)
 	return false;
 }
 
-// @note: AOWTC this doesn't check that the unit_id is valid.
-//        I figured this wouldn't be a problem, since it's not
-//        necessarilly a bug for a unit id corresponding to an
-//        invalid unit to be inside a unit set -- it's up to the
-//        methods interpreting the unit set to check for that.
-void
-AddUnitIdToUnitSet(Id<Unit> unit_id, UnitSet *target_set)
-{
-	// Do nothing if target set is already at max size
-	if(target_set->size >= ArrayCount(target_set->ids)) return;
+// // @note: AOWTC this doesn't check that the unit_id is valid.
+// //        I figured this wouldn't be a problem, since it's not
+// //        necessarilly a bug for a unit id corresponding to an
+// //        invalid unit to be inside a unit set -- it's up to the
+// //        methods interpreting the unit set to check for that.
+// void
+// AddUnitIdToUnitSet(Id<Unit> unit_id, UnitSet *target_set)
+// {
+// 	// Do nothing if target set is already at max size
+// 	if(target_set->size >= ArrayCount(target_set->ids)) return;
 
-	// Do nothing if [*unit] is already part of the set
-	if(UnitInUnitSet(unit_id, *target_set)) return;
+// 	// Do nothing if [*unit] is already part of the set
+// 	if(UnitInUnitSet(unit_id, *target_set)) return;
 
-	// Add the unit to the set
-	target_set->ids[target_set->size++] = unit_id;
-}
+// 	// Add the unit to the set
+// 	target_set->ids[target_set->size++] = unit_id;
+// }
 
 Vec2f
 DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer)
@@ -808,4 +791,21 @@ FullHealUnit(Id<Unit> id)
 	if(!unit) return;
 
 	unit->cur_traits = unit->max_traits;
+}
+
+Id<Breed>
+RandomBreedIdByTier(int tier)
+{
+	Array<Id<Breed>> valid_ids = CreateTempArray<Id<Breed>>(g::breed_table.entry_count);
+	for(int i=0; i<g::breed_table.entry_count; ++i)
+	{
+		auto &entry = g::breed_table.entries[i]; // alias
+		Breed &breed = entry.data; // alias
+		if(!breed.init) continue;
+
+		if(breed.tier == tier) valid_ids += entry.id;
+	}
+
+	int chosen_index = RandomU32(0, valid_ids.count-1);
+	return valid_ids[chosen_index];
 }

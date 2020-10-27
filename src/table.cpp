@@ -1,5 +1,7 @@
 #include "table.h"
 
+#include <typeinfo>
+
 template<typename Type>
 TableEntry<Type>*
 begin(Table<Type> &table)
@@ -36,10 +38,12 @@ operator!=(Id<Type> a, Id<Type> b)
 
 template<typename Type>
 Table<Type>
-AllocTable(int max_entry_count)
+AllocTable(int max_entry_count, PoolId<Arena> arena_id)
 {
     Table<Type> table = {};
-    table.entries = (TableEntry<Type>*)platform->AllocateMemory(max_entry_count*sizeof(TableEntry<Type>));
+    table.arena_id = arena_id;
+    //table.entries = (TableEntry<Type>*)platform->AllocateMemory(max_entry_count*sizeof(TableEntry<Type>));
+    table.entries = (TableEntry<Type> *)AllocFromArena(arena_id, max_entry_count*sizeof(TableEntry<Type>), false);
     table.entry_count = 0;
     table.max_entry_count = max_entry_count;
 

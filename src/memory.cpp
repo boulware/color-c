@@ -21,6 +21,7 @@ AllocArena(char *debug_name)
     arena->end = (u8*)arena->start + memory::arena_size;
     arena->current = arena->start;
     arena->allocs_since_reset = 0;
+    arena->max_current = arena->start;
 
     if(debug_name)
     {
@@ -78,6 +79,7 @@ ClearArena(PoolId<Arena> arena_id)
             p[i] = 0;
         }
     #endif
+    arena->max_current = m::Max(arena->current, arena->max_current);
     arena->current = arena->start;
 
     arena->allocs_since_reset = 0;

@@ -127,24 +127,24 @@ namespace c
     const float ability_card_draw_depth = 300.f;
 
     // Frametime display
-    int number_of_frametimes = 120;
+    int number_of_frametimes = 240;
     float frametime_def_graph_max = 1.f;//(1000.f) * 1.f/60.f;
     float frametime_scale_amount = 2.f;
-    Vec2f frametime_scale_button_size = {40.f, 40.f};
-    const ButtonLayout frametime_scale_button = {
-        .label_layout = {
-            .font = &text_render::default_font,
-            .color = c::grey,
-            .font_size = 16,
-            .align = c::align_center,
-            .draw_debug = false
-        },
-        .button_color = c::grey,
-        .button_hover_color = c::white,
-        .label_hover_color = c::white,
-        .align = c::align_topleft,
-        .is_ui = true
-    };
+    // Vec2f frametime_scale_button_size = {40.f, 40.f};
+    // const ButtonLayout frametime_scale_button = {
+    //     .label_layout = {
+    //         .font = &text_render::default_font,
+    //         .color = c::grey,
+    //         .font_size = 16,
+    //         .align = c::align_center,
+    //         .draw_debug = false
+    //     },
+    //     .button_color = c::grey,
+    //     .button_hover_color = c::white,
+    //     .label_hover_color = c::white,
+    //     .align = c::align_topleft,
+    //     .is_ui = true
+    // };
     const TextLayout frametime_max_text = {
         .font = &text_render::default_font,
         .color = c::white,

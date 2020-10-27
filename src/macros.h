@@ -4,6 +4,7 @@
 #define ArrayCount(x) (sizeof(x)/sizeof(x[0]))
 #define Introspect
 #define NoIntrospect
+#define NoImplementation
 #define MetaBreakHere
 #define mStringify(s) #s
 

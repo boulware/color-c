@@ -19,8 +19,9 @@ namespace memory
 {
 	const size_t arena_size = 1024*1024;
     void *arena_pool_mutex_handle;
-	PoolId<Arena> permanent_arena_id;
+    PoolId<Arena> default_arena_id;
 	PoolId<Arena> per_frame_arena_id;
+	PoolId<Arena> permanent_arena_id;
 };
 
 

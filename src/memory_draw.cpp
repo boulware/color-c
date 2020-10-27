@@ -14,12 +14,15 @@ DrawArenas(Pool<Arena> arena_pool, Vec2f pos)
         //SetDrawDepth(c::debug_overlay_draw_depth);
         size_t total_bytes = (u8 *)arena.end - (u8 *)arena.start;
         size_t cur_bytes   = (u8 *)arena.current - (u8 *)arena.start;
+        size_t max_bytes   = (u8 *)arena.max_current - (u8 *)arena.start;
         float filled_ratio = (float)cur_bytes / total_bytes;
+        float max_ratio = (float)max_bytes / total_bytes;
 
         Rect rect = {pos + i*Vec2f{0.f,20.f}, {600.f, 20.f}};
-        DrawFilledRect(rect.pos, rect.size, c::vdk_red, true);
-        DrawFilledRect(rect.pos, {filled_ratio * rect.size.x, rect.size.y}, c::green, true);
-        DrawUnfilledRect(rect.pos, {600.f, 20.f}, c::white, true);
+        DrawFilledRect(rect.pos, rect.size, c::vdk_red);
+        DrawFilledRect(rect.pos, {max_ratio * rect.size.x, rect.size.y}, c::grey);
+        DrawFilledRect(rect.pos, {filled_ratio * rect.size.x, rect.size.y}, c::green);
+        DrawUnfilledRect(rect.pos, {600.f, 20.f}, c::white);
 
         TextLayout layout = c::small_text_layout;
         layout.align = c::align_center;

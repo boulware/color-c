@@ -17,6 +17,14 @@ struct Id
     int generation;
 };
 
+struct Ability;
+struct Breed;
+struct Unit;
+
+typedef Id<Ability> AbilityId;
+typedef Id<Breed> BreedId;
+typedef Id<Unit> UnitId;
+
 template<typename Type>
 struct TableEntry
 {
@@ -29,6 +37,7 @@ struct TableEntry
 template<typename Type>
 struct Table
 {
+    PoolId<Arena> arena_id;
 	TableEntry<Type> *entries;  // Pointer to first entry inside .arena
     int entry_count;
     int max_entry_count;
@@ -51,7 +60,7 @@ template<typename Type>
 bool
 operator!=(Id<Type> a, Id<Type> b);
 
-template<typename Type> Table<Type> AllocTable(int max_entry_count);
+template<typename Type> Table<Type> AllocTable(int max_entry_count, PoolId<Arena> arena_id);
 template<typename Type> Id<Type>    CreateEntry(Table<Type> *table);
 template<typename Type> Type *      GetEntryFromRawIndex(Table<Type> table, int index);
 template<typename Type> Id<Type>    NullIndex();

@@ -157,9 +157,8 @@ win32_CreateWorkQueue(WorkQueue **queue_ptr, int thread_count, char *name)
         return;
     }
 
-    *queue_ptr = AppendEmptyElement(&g_work_queue_system.queues);
-    WorkQueue *queue = *queue_ptr;
-    //*queue = (WorkQueue *)AllocPerma(sizeof(WorkQueue));
+    *queue_ptr = Append(&g_work_queue_system.queues);
+    WorkQueue *queue = *queue_ptr; // alias
     queue->semaphore_handle = CreateSemaphoreEx(NULL, 0, 1024, NULL, 0, SEMAPHORE_ALL_ACCESS);
 
     queue->thread_count = thread_count;

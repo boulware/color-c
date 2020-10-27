@@ -746,6 +746,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
     game->arena_pool = &arena_pool;
 
     HANDLE arena_pool_mutex = CreateMutex(NULL, FALSE, NULL);
+    memory::default_arena_id   = AllocArena("Default");
     memory::per_frame_arena_id = AllocArena("Per Frame");
     memory::permanent_arena_id = AllocArena("Permanent");
 

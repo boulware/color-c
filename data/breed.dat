@@ -1,35 +1,44 @@
 unit "Warrior"
-traits (8,5,3)
+traits (10,5,3)
 moveset "Rest" "Strike" "Repair" "Rig Up"
+tier 0
 
 unit "Rogue"
 traits (7,6,2)
 moveset "Strike" "Taunt" "Steal Armor" "Rally"
+tier 0
 
 unit "Archer"
 traits (13,8,1)
 moveset "Rest" "Shoot" "Split Arrow" "Taunt"
+tier 0
 
 unit "Mage"
 traits (3,12,1)
 moveset "Strike" "Confuse" "Meditate" "Corrosion"
+tier 0
 
 unit "Time Mage"
 traits (4,10,1)
 moveset "Rewind"
+tier 0
 
 unit "Cleric"
 traits (4,10,4)
 moveset "Strike" "Meditate" "Vitalize"
+tier 0
 
 unit "Wolf"
 traits (12,4,2)
 moveset "Strike" "Rally" "Taunt"
+tier 1
 
 unit "Slime"
 traits (8,6,2)
 moveset "Strike" "Steal Armor"
+tier 1
 
 unit "Dragon"
 traits (25,10,10)
 moveset "Swipe" "Breathe Fire" "Sleep"
+tier 2

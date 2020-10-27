@@ -8,57 +8,72 @@
 #include "array.h"
 #include "unit.h"
 #include "game_state.h"
-
-struct Intent
-{
-	Id<Unit> caster_id;
-	Id<Ability> ability_id;
-	UnitSet target_set;
-};
+#include "intent.h"
 
 // Data associated with a battle-wide change in state
 // (e.g., after an ability would be used, this holds data for trait changes for all units, death, status effects, etc.)
 struct BattleEvent
 {
-	Id<Unit> caster_id;
-	Id<Unit> target_id;
-	TraitSet trait_changes;
+    Id<Unit> caster_id;
+    Id<Unit> target_id;
+    TraitSet trait_changes;
 };
+
+enum class BattlePhase : int
+{
+    invalid,
+    start,
+    player_turn,
+    end_of_player_turn,
+    enemy_turn,
+    end_of_enemy_turn,
+    end,
+    COUNT
+};
+
+const char *BattlePhase_userstrings[] = {
+    "invalid",
+    "start",
+    "player_turn",
+    "end_of_player_turn",
+    "enemy_turn",
+    "end_of_enemy_turn",
+    "end",
+};
+
+const char *BattlePhaseAsCString(BattlePhase battle_phase);
 
 struct BattleState
 {
-	bool finished;
+    bool finished;
 };
 
 struct Battle
 {
-	PoolId<Arena> arena_id;
+    PoolId<Arena> arena_id;
 
-	Rect hud;
+    Rect hud;
 
-	Id<Unit> selected_unit_id;
-	Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
+    BattlePhase phase;
 
-	UnitSet units; // 0 through max_party_size-1 are ally slots, the remaining max_party_size slots are enemy slots
-	Vec2f unit_slots[c::max_target_count]; // concurrent array to *units
-	Array<Intent> intents; // concurrent to *units, but currently wasted space because it has room for friendly intents.
+    Id<Unit> selected_unit_id;
+    Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
 
+    Array<UnitId> units;
+    Array<BattleEvent> preview_events;
 
-	Intent player_intent;
+    //bool is_player_turn;
+    OscillatingTimer preview_damage_timer;
+    Timer end_player_turn_timer;
+    //bool ending_player_turn;
 
-	bool show_preview;
-	Array<BattleEvent> preview_events;
-
-	bool is_player_turn;
-	OscillatingTimer preview_damage_timer;
-	Timer end_button_clicked_timer;
-	bool ending_player_turn;
-
-	String best_choice_string;
+    String best_choice_string;
 };
 
 void InitBattle(Battle *battle, PoolId<Arena> arena_id);
 BattleState TickBattle(Battle *battle);
+
+void GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events);
 
 void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);

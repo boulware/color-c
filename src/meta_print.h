@@ -30,6 +30,7 @@
 #include "imgui.h"
 #include "input.h"
 #include "input_vk_constants.h"
+#include "intent.h"
 #include "keybinds.h"
 #include "lang.h"
 #include "log.h"
@@ -82,9 +83,9 @@ String MetaString(const Align *s);
 template<typename Type>
 String MetaString(const Array<Type> *s);
 
-String MetaString(const Intent *s);
-
 String MetaString(const BattleEvent *s);
+
+String MetaString(const BattlePhase *s);
 
 String MetaString(const BattleState *s);
 
@@ -182,6 +183,8 @@ String MetaString(const InputState *s);
 
 String MetaString(const VirtualKey *s);
 
+String MetaString(const Intent *s);
+
 String MetaString(const KeyBind *s);
 
 String MetaString(const LogState *s);
@@ -273,10 +276,6 @@ String MetaString(const Team *s);
 String MetaString(const Breed *s);
 
 String MetaString(const Unit *s);
-
-String MetaString(const UnitSlot *s);
-
-String MetaString(const UnitSet *s);
 
 String MetaString(const Utf32String *s);
 

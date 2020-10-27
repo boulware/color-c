@@ -6,13 +6,19 @@ tier 2
 requires (5,5,0)
 effect Damage single_unit (4,0,0)
 tier 3
-requires (10,6,0)
+requires (10,10,0)
 effect Damage single_unit (10,0,0)
 
 ability "Rest"
 tier 1
 requires (0,0,0)
 effect Restore self (2,0,0)
+tier 2
+requires (0,5,0)
+effect Restore self (3,0,0)
+tier 3
+requires (0,10,0)
+effect Restore self (4,0,0)
 
 ability "Meditate"
 tier 1

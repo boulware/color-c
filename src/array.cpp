@@ -15,6 +15,13 @@ Array<Type>::operator[](int index)
 	return *(data + index);
 }
 
+// template<typename Type>
+// Array<Type> &
+// Array<Type>::operator=(Array<Type> &other)
+// {
+// 	return other;
+// }
+
 template<typename Type>
 bool
 ValidArray(Array<Type> array)
@@ -27,13 +34,43 @@ ValidArray(Array<Type> array)
 
 template<typename Type>
 Type *
-Append(Array<Type> *array, Type value)
+Append(Array<Type> *array)
 {
-	Assert(array->data != nullptr);
+	if(!array->data)
+	{
+		Assert(false);
+		// In release, fall back to allocating from (presumably) the default arena (index 0)
+		// If the memory isn't actually zero'd, then the arena_id may not be 0, but in that case,
+		// AllocFromArena() should do a final fallback to malloc()
+		*array = CreateArrayFromArena<Type>(1, array->arena_id);
+	}
 
 	if(array->count >= array->max_count)
 	{
-		ResizeArray(array, 2*array->max_count);
+		ResizeArray(array, 2*array->max_count + 1);
+	}
+
+	Type *entry = &array->data[array->count++];
+	ZeroMemoryBlock(entry, sizeof(Type));
+	return entry;
+}
+
+template<typename Type>
+Type *
+Append(Array<Type> *array, Type value)
+{
+	if(!array->data)
+	{
+		Assert(false);
+		// In release, fall back to allocating from (presumably) the default arena (index 0)
+		// If the memory isn't actually zero'd, then the arena_id may not be 0, but in that case,
+		// AllocFromArena() should do a final fallback to malloc()
+		*array = CreateArrayFromArena<Type>(1, array->arena_id);
+	}
+
+	if(array->count >= array->max_count)
+	{
+		ResizeArray(array, 2*array->max_count + 1);
 	}
 
 	Type *entry = &array->data[array->count++];
@@ -43,19 +80,36 @@ Append(Array<Type> *array, Type value)
 
 template<typename Type>
 Type *
-AppendEmptyElement(Array<Type> *array)
+AppendIfUnique(Array<Type> *array, Type value)
 {
-	Assert(array->data != nullptr);
-
-	if(array->count >= array->max_count)
+	bool is_unique = true;
+	for(auto entry : *array)
 	{
-		ResizeArray(array, 2*array->max_count);
+		if(entry.data == value)
+		{
+			is_unique = false;
+			break;
+		}
 	}
 
-	Type *entry = &array->data[array->count++];
-	ZeroMemoryBlock(entry, sizeof(Type));
-	return entry;
+	if(is_unique) Append(array, value);
 }
+
+// template<typename Type>
+// Type *
+// AppendEmptyElement(Array<Type> *array)
+// {
+// 	Assert(array->data != nullptr);
+
+// 	if(array->count >= array->max_count)
+// 	{
+// 		ResizeArray(array, 2*array->max_count);
+// 	}
+
+// 	Type *entry = &array->data[array->count++];
+// 	ZeroMemoryBlock(entry, sizeof(Type));
+// 	return entry;
+// }
 
 template<typename Type>
 bool
@@ -143,6 +197,25 @@ AppendArrayToArray(Array<Type> *root_array, Array<Type> appended_array)
 
 template<typename Type>
 void
+AssignArray(Array<Type> *dst, Array<Type> src)
+{
+	dst->data = src.data;
+	dst->arena_id = src.arena_id;
+	dst->count = src.count;
+	dst->max_count = src.max_count;
+	dst->_allocated_count = src._allocated_count;
+}
+
+template<typename Type>
+void
+CopyArray(Array<Type> *dst, Array<Type> src)
+{
+	ClearArray(dst);
+	AppendArrayToArray(dst, src);
+}
+
+template<typename Type>
+void
 ClearArray(Array<Type> *array)
 {
 	array->count = 0;
@@ -181,17 +254,4 @@ Array<Type>
 CreateTempArray(int max_count)
 {
 	return CreateArrayFromArena<Type>(max_count, memory::per_frame_arena_id);
-}
-
-template<typename Type>
-Array<Type>
-AllocateArrayFromPlatform(int max_count)
-{
-	return Array<Type>{
-		.data = platform->AllocateMemory(sizeof(Type) * max_count),
-		.arena = nullptr,
-		.count = 0,
-		.max_count = max_count,
-		._allocated_count = max_count,
-	};
 }
