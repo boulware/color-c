@@ -93,3 +93,5 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 36) Convert ability_ids array member of struct Breed and struct Unit to an Array<AbilityId>
 
 37) Fix unit hotkeys in battle -- because the first 4 slots are no longer guaranteed to be allies, we need a different way of handling it.
+
+38) If we spam campaign map threads, we will get huge frame spikes every so often (up to anywhere around 15ms) -- unknown cause -- probably worth investigating, especially after we have tools for analysing particular frames to see where cycles went. This is relatively low priority for now since it doesn't seem to happen when we're not really spamming them, and even if it does, it's a small frame hitch for only 1 frame and it's just during map generation -- but(!) at some point it may start showing up in other things, so tracking down the issue is likely a good idea at some point.

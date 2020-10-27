@@ -33,9 +33,10 @@ struct GameInitData
 	void *arena_pool_mutex_handle;
 };
 
+NoIntrospect
 struct Game
 {
-    Pool<Arena> *arena_pool = nullptr;
+    Pool<Arena> volatile *arena_pool = nullptr;
 
 	bool exit_requested;
 

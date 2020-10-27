@@ -28,9 +28,10 @@ win32_AddWorkEntry(WorkQueue *queue, WorkEntry entry)
 
             queue->entries[queue->next_entry_to_write] = entry;
             u32 new_next_entry_to_write = (queue->next_entry_to_write + 1) % ArrayCount(queue->entries);
+
             if(new_next_entry_to_write != queue->next_entry_to_read)
             { // Entry buffer isn't full.
-                ++queue->next_entry_to_write;
+                queue->next_entry_to_write = new_next_entry_to_write;
             }
             else
             { // Entry buffer is full. We won't move the write pointer, so subsequent calls will just continually overwrite
@@ -73,8 +74,10 @@ win32_AddWorkEntry(WorkQueue *queue, WorkEntry entry)
 
 
 bool
-DoNextEntryOnWorkQueue(WorkQueue *queue)
+DoNextEntryOnWorkQueue(ThreadContext *context)
 {
+    WorkQueue *queue = context->queue;
+
     bool tried_to_do_something = false;
 
     DWORD wait_code = WaitForSingleObjectEx(queue->mutex_handle, INFINITE, FALSE);
@@ -98,36 +101,21 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
 
         ++queue->job_started_count;
 
-        _WriteBarrier();
+        platform->ReadWriteBarrier();
 
         if(ReleaseMutex(queue->mutex_handle) == 0)
         {
             LogToFile("logs/critical.log", "Tried to release mutex without ownership");
         }
 
-        char thread_arena_debug_name[64];
-        snprintf(thread_arena_debug_name, 64, "Temp Thread [%zu] [%s]", queue->job_started_count, queue->name);
-        thread_arena_debug_name[63] = '\0';
+        entry.callback(temp_data, context->arena_id);
 
-        PoolId<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
-        if(thread_arena_id != c::null_arena_id)
-        {
-            entry.callback(temp_data, thread_arena_id);
-            FreeArena(thread_arena_id);
-            InterlockedIncrement(&queue->job_completion_count);
-        }
-        else
-        {
-            LogToFile("logs/critical.log", "Failed to start thread.");
-        }
-
+        InterlockedIncrement(&queue->job_completion_count);
         free(temp_data);
-
-
     }
     else
     {
-        LogToFile("logs/critical.log", __FUNCTION__ "got wait_code that wasn't WAIT_OBJECT_0");
+        LogToFile("logs/critical.log", __FUNCTION__ "got wait_code that wasn't WAIT_OBJECT_0 [%u]", wait_code);
         ReleaseMutex(queue->mutex_handle);
     }
 
@@ -137,13 +125,14 @@ DoNextEntryOnWorkQueue(WorkQueue *queue)
 DWORD
 ThreadProc(LPVOID lpParameter)
 {
-    WorkQueue *queue = (WorkQueue *)lpParameter;
+    ThreadContext *context = (ThreadContext *)lpParameter;
+    WorkQueue *queue = context->queue; // alias
 
     WaitForSingleObjectEx(queue->semaphore_handle, INFINITE, FALSE);
 
     for(;;)
     {
-        DoNextEntryOnWorkQueue(queue);
+        DoNextEntryOnWorkQueue(context);
         WaitForSingleObjectEx(queue->semaphore_handle, INFINITE, FALSE);
     }
 }
@@ -154,6 +143,12 @@ win32_CreateWorkQueue(WorkQueue **queue_ptr, int thread_count, char *name)
     if(!g_work_queue_system.init)
     {
         LogToFile("logs/critical.log", "Tried to create work queue before g_work_queue_system was init'd. Ignoring request.");
+        return;
+    }
+
+    if(thread_count > c::max_threads_per_work_queue)
+    {
+        LogToFile("logs/critical.log", "Tried to create work queue with higher thread_count than max_threads_per_work_queue. Ignoring request.");
         return;
     }
 
@@ -180,10 +175,23 @@ win32_CreateWorkQueue(WorkQueue **queue_ptr, int thread_count, char *name)
     queue->entry_data_buffer.size_in_bytes = Megabyte(1);
     queue->entry_data_buffer.data = win32_AllocateMemory(Megabyte(1));
 
-
     for(int i=0; i<thread_count; ++i)
     {
-        CreateThread(0, 0, ThreadProc, (void *)queue, 0, nullptr);
+        char thread_arena_debug_name[64];
+        snprintf(thread_arena_debug_name, 64, "WorkQueue thread %d/%d [%s]",
+                                              i+1, thread_count, queue->name);
+        thread_arena_debug_name[63] = '\0';
+
+        PoolId<Arena> thread_arena_id = AllocArena(thread_arena_debug_name);
+        Arena *arena = GetEntryFromId(game->arena_pool, thread_arena_id);
+        Assert(arena);
+
+        queue->thread_contexts[i] = {
+            .arena_id = thread_arena_id,
+            .queue = queue
+        };
+
+        CreateThread(0, 0, ThreadProc, (void *)&queue->thread_contexts, 0, nullptr);
     }
 
     queue->init = true;

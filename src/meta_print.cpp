@@ -566,6 +566,8 @@ String MetaString(const Campaign *s)
 
 	AppendCString(&string, "  map_generation_work_queue: %p (WorkQueue *)\n", s->map_generation_work_queue);
 
+	AppendCString(&string, "  show_generation: %p (bool[])\n", s->show_generation);
+
 	AppendCString(&string, "  generation_finished: %p (bool[])\n", s->generation_finished);
 
 	AppendCString(&string, "  restart_counts: %p (int[])\n", s->restart_counts);
@@ -838,8 +840,12 @@ String MetaString(const DirectedLineLayout *s)
 
 	AppendCString(&string, "  segment_count: %d (int)\n", s->segment_count);
 
-	AppendCString(&string, "  color: ");
-	AppendString(&string, MetaString(&s->color));
+	AppendCString(&string, "  line_color: ");
+	AppendString(&string, MetaString(&s->line_color));
+	AppendCString(&string, "(Color)\n");
+
+	AppendCString(&string, "  arrow_color: ");
+	AppendString(&string, MetaString(&s->arrow_color));
 	AppendCString(&string, "(Color)\n");
 
 	AppendCString(&string, "  arrow_size: %f (float)\n", s->arrow_size);
@@ -1384,146 +1390,6 @@ String MetaString(const GameInitData *s)
 	AppendCString(&string, "(PoolId<Arena>)\n");
 
 	AppendCString(&string, "  arena_pool_mutex_handle: %p (void *)\n", s->arena_pool_mutex_handle);
-
-	AppendCString(&string, "}");
-
-	return string;
-}
-
-String MetaString(const Game *s)
-{
-	TIMED_BLOCK;
-
-	String string = {};
-	string.length = 0;
-	string.max_length = 1024;
-	string.data = ScratchString(string.max_length);
-
-	AppendCString(&string, "Game {\n");
-
-	AppendCString(&string, "  arena_pool: %p (Pool<Arena> *)\n", s->arena_pool);
-
-	AppendCString(&string, "  exit_requested: %d (bool)\n", s->exit_requested);
-
-	AppendCString(&string, "  current_state: ");
-	AppendString(&string, MetaString(&s->current_state));
-	AppendCString(&string, "(GameState)\n");
-
-	AppendCString(&string, "  state_entered: %d (bool)\n", s->state_entered);
-
-	AppendCString(&string, "  log_state: ");
-	AppendString(&string, MetaString(&s->log_state));
-	AppendCString(&string, "(LogState)\n");
-
-	AppendCString(&string, "  frame_time_ms: %f (float)\n", s->frame_time_ms);
-
-	AppendCString(&string, "  frametime_graph_state: %p (FrametimeGraphState *)\n", s->frametime_graph_state);
-
-	AppendCString(&string, "  table_draw_state: ");
-	AppendString(&string, MetaString(&s->table_draw_state));
-	AppendCString(&string, "(TableDrawState)\n");
-
-	AppendCString(&string, "  draw_debug_overlay: %d (bool)\n", s->draw_debug_overlay);
-
-	AppendCString(&string, "  debug_overlay: ");
-	AppendString(&string, MetaString(&s->debug_overlay));
-	AppendCString(&string, "(DebugOverlay)\n");
-
-	AppendCString(&string, "  debug_container: ");
-	AppendString(&string, MetaString(&s->debug_container));
-	AppendCString(&string, "(ImguiContainer)\n");
-
-	AppendCString(&string, "  input: ");
-	AppendString(&string, MetaString(&s->input));
-	AppendCString(&string, "(InputState)\n");
-
-	AppendCString(&string, "  temp_screen_texture: ");
-	AppendString(&string, MetaString(&s->temp_screen_texture));
-	AppendCString(&string, "(Texture)\n");
-
-	AppendCString(&string, "  prepass_framebuffer: ");
-	AppendString(&string, MetaString(&s->prepass_framebuffer));
-	AppendCString(&string, "(Framebuffer)\n");
-
-	AppendCString(&string, "  color_shader: %u (GLuint)\n", s->color_shader);
-
-	AppendCString(&string, "  color_vao: %u (GLuint)\n", s->color_vao);
-
-	AppendCString(&string, "  color_vbo: %u (GLuint)\n", s->color_vbo);
-
-	AppendCString(&string, "  uv_shader: %u (GLuint)\n", s->uv_shader);
-
-	AppendCString(&string, "  uv_vao: %u (GLuint)\n", s->uv_vao);
-
-	AppendCString(&string, "  uv_vbo: %u (GLuint)\n", s->uv_vbo);
-
-	AppendCString(&string, "  blur_shader: %u (GLuint)\n", s->blur_shader);
-
-	AppendCString(&string, "  outline_shader: %u (GLuint)\n", s->outline_shader);
-
-	AppendCString(&string, "  window_size: ");
-	AppendString(&string, MetaString(&s->window_size));
-	AppendCString(&string, "(Vec2f)\n");
-
-	AppendCString(&string, "  camera: ");
-	AppendString(&string, MetaString(&s->camera));
-	AppendCString(&string, "(Camera)\n");
-
-	AppendCString(&string, "  temp_texture: %u (GLuint)\n", s->temp_texture);
-
-	AppendCString(&string, "  string_bmp_size: ");
-	AppendString(&string, MetaString(&s->string_bmp_size));
-	AppendCString(&string, "(Vec2i)\n");
-
-	AppendCString(&string, "  player_party: ");
-	AppendString(&string, MetaString(&s->player_party));
-	AppendCString(&string, "(UnitSet)\n");
-
-	AppendCString(&string, "  editor_state: ");
-	AppendString(&string, MetaString(&s->editor_state));
-	AppendCString(&string, "(Editor)\n");
-
-	AppendCString(&string, "  options_menu: ");
-	AppendString(&string, MetaString(&s->options_menu));
-	AppendCString(&string, "(OptionsMenu)\n");
-
-	AppendCString(&string, "  mainmenu_state: ");
-	AppendString(&string, MetaString(&s->mainmenu_state));
-	AppendCString(&string, "(MainMenu)\n");
-
-	AppendCString(&string, "  campaign: ");
-	AppendString(&string, MetaString(&s->campaign));
-	AppendCString(&string, "(Campaign)\n");
-
-	AppendCString(&string, "  ai_explorer: ");
-	AppendString(&string, MetaString(&s->ai_explorer));
-	AppendCString(&string, "(AiExplorer)\n");
-
-	AppendCString(&string, "  test_mode: ");
-	AppendString(&string, MetaString(&s->test_mode));
-	AppendCString(&string, "(TestMode)\n");
-
-	AppendCString(&string, "  pointer_cursor: ");
-	AppendString(&string, MetaString(&s->pointer_cursor));
-	AppendCString(&string, "(Sprite)\n");
-
-	AppendCString(&string, "  target_cursor: ");
-	AppendString(&string, MetaString(&s->target_cursor));
-	AppendCString(&string, "(Sprite)\n");
-
-	AppendCString(&string, "  red_target_cursor: ");
-	AppendString(&string, MetaString(&s->red_target_cursor));
-	AppendCString(&string, "(Sprite)\n");
-
-	AppendCString(&string, "  generate_node_graph_params: ");
-	AppendString(&string, MetaString(&s->generate_node_graph_params));
-	AppendCString(&string, "(GenerateNodeGraph_Params)\n");
-
-	AppendCString(&string, "  number_of_arenas_allocated: %d (int)\n", s->number_of_arenas_allocated);
-
-	AppendCString(&string, "  test_float: %f (float)\n", s->test_float);
-
-	AppendCString(&string, "  test_int: %d (int)\n", s->test_int);
 
 	AppendCString(&string, "}");
 
@@ -2590,6 +2456,10 @@ String MetaString(const Pool<Type> *s)
 	AppendCString(&string, "  max_entry_count: %d (int)\n", s->max_entry_count);
 
 	AppendCString(&string, "  id_counter: %d (int)\n", s->id_counter);
+
+	AppendCString(&string, "  Pool: ");
+	AppendString(&string, MetaString(&s->Pool));
+	AppendCString(&string, "(template<typename Type>)\n");
 
 	AppendCString(&string, "}");
 

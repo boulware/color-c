@@ -153,8 +153,6 @@ String MetaString(const FrametimeGraphState *s);
 
 String MetaString(const GameInitData *s);
 
-String MetaString(const Game *s);
-
 String MetaString(const GameState *s);
 
 String MetaString(const GenerateNodeGraph_Params *s);

@@ -302,7 +302,7 @@ InitCampaign(Campaign *campaign)
 
     campaign->player_party = CreateArrayFromArena<UnitId>(c::max_party_size, campaign->arena_id);
     campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
-    campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
+    //campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
     //AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
 
     // Log("Thread %d started.", platform->StartJob(&params));
@@ -336,6 +336,10 @@ InitCampaign(Campaign *campaign)
 GameState
 TickCampaign(Campaign *campaign)
 {
+    //for(int i=0; i<1; ++i)
+    // if(RandomU32(0, 2) == 0)
+    //     Log("Tick");
+
     if(campaign->state == CampaignState::MapSelection)
     {
         // Check map generation status.
@@ -350,6 +354,7 @@ TickCampaign(Campaign *campaign)
         {
             for(int i=0; i<ArrayCount(campaign->maps); ++i)
             {
+                campaign->show_generation[i] = false;
                 campaign->generation_finished[i] = false;
                 campaign->restart_counts[i] = 0;
                 campaign->max_speeds[i] = 100.f;
@@ -366,7 +371,9 @@ TickCampaign(Campaign *campaign)
                     .data_byte_count = sizeof(params)
                 };
 
+                //for(int j=0; j<10; ++j)
                 platform->AddWorkEntry(campaign->map_generation_work_queue, entry);
+                //for(int j=0; j<1000; ++j)
             }
         }
 
@@ -377,6 +384,9 @@ TickCampaign(Campaign *campaign)
                                        {400.f,400.f}}, c::align_center);
             //if(campaign->generation_finished[i])
             if(campaign->max_speeds[i] < 0.1f)
+                campaign->show_generation[i] = true;
+
+            if(campaign->show_generation[i])
             {
                 DrawNodeGraphInRect(&campaign->maps[i], map_rect);
             }
@@ -571,10 +581,11 @@ TickCampaign(Campaign *campaign)
                 InitBattle(&campaign->current_battle, campaign->battle_arena_id);
                 Array<UnitId> battle_units = CreateTempArray<UnitId>(2*c::max_party_size);
                 AppendArrayToArray(&battle_units, campaign->player_party); // Add ally units
-                int enemy_count = RandomU32(2,2);
+                int enemy_count = RandomU32(1,1);
                 for(int i=0; i<enemy_count; ++i)
                 { // Add enemy units
-                    battle_units += CreateUnit(RandomBreedIdByTier(1), Team::enemies, campaign->battle_arena_id);
+                    //battle_units += CreateUnit(RandomBreedIdByTier(1), Team::enemies, campaign->battle_arena_id);
+                    battle_units += CreateUnitByName("Slime", Team::enemies, campaign->arena_id);
                 }
 
                 StartBattle(&campaign->current_battle, battle_units);

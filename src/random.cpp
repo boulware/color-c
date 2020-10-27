@@ -8,7 +8,7 @@ void Seed(u32 seed_value)
 void
 InitLcgSetSeed(LCG *lcg, u32 seed)
 {
-	lcg->m = 0xFFFFFFFF;
+	lcg->m = 0xFFFFFFFE;
 	//lcg->m = 2147483647;
 	lcg->a = 1583458089;
 	lcg->c = 12345;
@@ -22,7 +22,7 @@ u64
 InitLcgSystemSeed(LCG *lcg)
 {
 	// TODO: Can m actually be 2^32-1 and still be random enough?
-	lcg->m = 0xFFFFFFFF;
+	lcg->m = 0xFFFFFFFE;
 	//lcg->m = 2147483647;
 	lcg->a = 1583458089;
 	lcg->c = 12345;

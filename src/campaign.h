@@ -26,6 +26,7 @@ struct Campaign
     PoolId<Arena> battle_arena_id;
 
     WorkQueue *map_generation_work_queue;
+    bool show_generation[3];
     bool generation_finished[3];
     int restart_counts[3];
     float max_speeds[3];

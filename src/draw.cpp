@@ -133,13 +133,13 @@ DrawLine(Vec2f start, Vec2f end, Color color=c::white)
 }
 
 void
-DrawDirectedLine2(DirectedLineLayout layout,
+DrawDirectedLine(DirectedLineLayout layout,
                   Vec2f start_pos, Vec2f end_pos,
                   Vec2f start_vel, Vec2f end_vel,
                   String label)
 {
     if(layout.segment_count <= 0) return;
-    ActivateColorShader(layout.color);
+    ActivateColorShader(layout.line_color);
     Vec2f average_vel = (end_pos - start_pos);
 
     // p(t) = At^3 + Bt^2 + Ct + D,
@@ -166,11 +166,11 @@ DrawDirectedLine2(DirectedLineLayout layout,
         end_pos - layout.arrow_size*Normalize(Rotate(end_vel, -layout.arrow_angle))
     };
 
-    ActivateColorShader(c::dk_red);
+    ActivateColorShader(layout.arrow_color);
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_TRIANGLES, 0, 3);
 
-    ActivateColorShader(layout.color);
+    ActivateColorShader(layout.line_color);
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(arrow_verts), arrow_verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_LINE_LOOP, 0, 3);
 

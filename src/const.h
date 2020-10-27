@@ -19,7 +19,8 @@ namespace c
     float pi = 3.1415926535898;
 
     // Threading
-    u32 mutex_timeout_ms = 1;
+    u32 const mutex_timeout_ms = 1;
+    int const max_threads_per_work_queue = 3;
 
     // Colors
     const Color vdk_red = {0.15f,0.f,0.f,1.f};
@@ -121,6 +122,7 @@ namespace c
     const float debug_overlay_draw_depth = 3.f;   // The depth at which the actual debug stuff is drawn
     const float debug_window_draw_depth = 5.f;    // The vdk_red window drawn behind debug stuff
     const float def_draw_depth = 50.f;
+    const float battle_arrow_draw_depth = 70.f;
     const float hover_ui_draw_depth = 80.f;
     const float hud_draw_depth = 100.0f;
     const float field_draw_depth = 150.0f;
@@ -128,6 +130,7 @@ namespace c
 
     // Frametime display
     int number_of_frametimes = 240;
+    float speed_threshold_for_fast_timestep = 1.f;
     float frametime_def_graph_max = 1.f;//(1000.f) * 1.f/60.f;
     float frametime_scale_amount = 2.f;
     // Vec2f frametime_scale_button_size = {40.f, 40.f};

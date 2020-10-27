@@ -308,6 +308,7 @@ void
 win32_ReadWriteBarrier()
 {
     _ReadWriteBarrier();
+    _mm_mfence();
 }
 
 void
@@ -742,7 +743,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
 
     WIN32_BIND_PLATFORM_FUNCTIONS(platform);
 
-    Pool<Arena> arena_pool = AllocPool<Arena>(100);
+    volatile Pool<Arena> arena_pool = AllocPool<Arena>(100);
     game->arena_pool = &arena_pool;
 
     HANDLE arena_pool_mutex = CreateMutex(NULL, FALSE, NULL);
@@ -896,6 +897,18 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
             game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
             AddFrametimeToGraph(&frametime_graph_state, this_frame_time_ms);
+
+
+            String queues_string = AllocStringDataFromArena(1024, memory::per_frame_arena_id);
+            //for(int i=0; i<g_work_queue_system.queues.count; ++i)
+            for(auto &queue : g_work_queue_system.queues)
+            {
+                AppendCString(&queues_string, "read: %u, write: %u\n",
+                              queue.next_entry_to_read,
+                              queue.next_entry_to_write);
+            }
+
+            DrawTextMultiline(c::def_text_layout, {}, queues_string);
 
             ResetInputState(&game->input);
             SwapBuffers(wc.hdc);

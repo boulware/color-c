@@ -38,4 +38,6 @@ void *AllocFromArena(PoolId<Arena> arena_id, size_t byte_count, bool zero=false)
 void *AllocTemp(size_t byte_count);
 void *AllocPerma(size_t byte_count);
 
+Arena *GetArenaFromId(PoolId<Arena> volatile arena_id);
+
 #endif

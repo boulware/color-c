@@ -64,28 +64,19 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
     bool highlight_max = false;
     bool highlight_avg = false;
 
-    SetDrawDepth(c::debug_overlay_button_draw_depth);
-    Vec2f pen = RectTopRight(graph_rect) - Vec2f{2.f,2.f};
-    pen.y += DrawText(c::frametime_max_text, pen, "scale: %.2fms", state->graph_max).rect.size.y;
+    // Draw tracking bar in background
     {
-        auto response = DrawText(state->label_text, pen, "min: %.2fms", frametime_min);
-        if(response.hovered) highlight_min = true;
-        pen.y += response.rect.size.y;
-    }
-    {
-        auto response = DrawText(state->label_text, pen, "max: %.2fms", frametime_max);
-        if(response.hovered) highlight_max = true;
-        pen.y += response.rect.size.y;
-    }
-    {
-        auto response = DrawText(state->label_text, pen, "avg: %.2fms", frametime_avg);
-        if(response.hovered) highlight_avg = true;
-        pen.y += response.rect.size.y;
-    }
+        float ratio_to_max = 1.f;
+        Rect bar_rect = {
+            .pos = origin + Vec2f{state->cur_frametime_index*bar_width, 0.f},
+            .size = Vec2f{bar_width, -ratio_to_max * graph_rect.size.y}
+        };
 
+        Color bar_color = c::grey;
+        DrawFilledRect(bar_rect, bar_color, true);
+    }
 
     // Draw bars
-    SetDrawDepth(c::debug_overlay_draw_depth);
     for(int i=0; i<state->entry_count; ++i)
     {
         float ratio_to_max = state->frametimes[i] / state->graph_max;
@@ -105,6 +96,46 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
 
         DrawFilledRect(bar_rect, bar_color, true);
     }
+
+    Vec2f pen = RectTopRight(graph_rect) - Vec2f{2.f,2.f};
+    pen.y += DrawText(c::frametime_max_text, pen, "scale: %.2fms", state->graph_max).rect.size.y;
+    {
+        auto response = DrawText(state->label_text, pen, "min: %.2fms", frametime_min);
+        if(response.hovered) highlight_min = true;
+        pen.y += response.rect.size.y;
+    }
+    {
+        auto response = DrawText(state->label_text, pen, "max: %.2fms", frametime_max);
+        if(response.hovered) highlight_max = true;
+        pen.y += response.rect.size.y;
+    }
+    {
+        auto response = DrawText(state->label_text, pen, "avg: %.2fms", frametime_avg);
+        if(response.hovered) highlight_avg = true;
+        pen.y += response.rect.size.y;
+    }
+
+    // Highlight min/max frametime
+    for(int i=0; i<state->entry_count; ++i)
+    {
+        Color bar_color = c::green;
+        if(highlight_min and state->frametimes[i] == frametime_min)
+            bar_color = c::white;
+        else if(highlight_max and state->frametimes[i] == frametime_max)
+            bar_color = c::white;
+        else continue;
+
+        float ratio_to_max = state->frametimes[i] / state->graph_max;
+        float clamped_ratio = m::Min(ratio_to_max, 1.f);
+        Rect bar_rect = {
+            .pos = origin + Vec2f{i*bar_width, 0.f},
+            .size = Vec2f{bar_width, -clamped_ratio * graph_rect.size.y}
+        };
+
+        DrawFilledRect(bar_rect, bar_color, true);
+    }
+    // Draw bars
+    //SetDrawDepth(c::debug_overlay_draw_depth);
 
     if(highlight_avg)
     {

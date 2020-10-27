@@ -100,7 +100,11 @@ THREAD_GenerateNodeGraph(void *data, PoolId<Arena> thread_arena_id)
         ClearArena(thread_arena_id);
         ForceSimParams force_params = {};
         force_params.temp_arena = thread_arena_id;
-        state = StepNodeGraphForceSimulation(graph, force_params, 1.f/500.f, 500);
+        int time_steps = 500;
+        if(*params.max_speed <= c::speed_threshold_for_fast_timestep)
+            time_steps = 100;
+
+        state = StepNodeGraphForceSimulation(graph, force_params, 1.f/time_steps, time_steps);
         *(params.max_speed) = state.max_speed;
 
         ClearArena(thread_arena_id);

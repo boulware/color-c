@@ -5,13 +5,22 @@
 #include "ring_buffer.h"
 #include "work_entry.h"
 
+struct WorkQueue;
+
 NoIntrospect
+struct ThreadContext
+{
+    PoolId<Arena> arena_id;
+    WorkQueue *queue;
+};
+
 struct WorkQueue
 {
     bool init;
     HANDLE mutex_handle;
 
     int thread_count;
+    ThreadContext thread_contexts[c::max_threads_per_work_queue];
 
     volatile size_t job_queued_count;     // # of jobs that have been added to the queue.
     volatile size_t job_started_count;    // # of jobs that have actually been sent off and run in a thread.
@@ -38,7 +47,7 @@ struct WorkQueueSystem
 DWORD ThreadProc(LPVOID lpParameter);
 void win32_QueueReleaseSemaphore(WorkQueue *queue);
 void win32_AddWorkEntry(WorkQueue *queue, WorkEntry entry);
-bool DoNextEntryOnWorkQueue(WorkQueue *queue);
+bool DoNextEntryOnWorkQueue(ThreadContext *context);
 void win32_CreateWorkQueue(WorkQueue **queue_ptr, int thread_count, char *name);
 
 #endif

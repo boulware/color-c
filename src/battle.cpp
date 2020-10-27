@@ -463,7 +463,17 @@ GenerateEnemyIntents(Battle *battle)
 
         if(valid_ability_count <= 0) continue;
 
-        chosen_ability_index = valid_ability_indices[RandomU32(0, valid_ability_count-1)];
+        for(int i=0; i<50; ++i)
+        {
+            Log("%u", RandomU32(0, valid_ability_count-1));
+        }
+        u32 index_into_valid_ability_indices = RandomU32(0, valid_ability_count-1);
+        if(index_into_valid_ability_indices != 0)
+        {
+            int a=0;
+        }
+        chosen_ability_index = valid_ability_indices[index_into_valid_ability_indices];
+
         Id chosen_ability_id = unit->ability_ids[chosen_ability_index];
         Array<UnitId> chosen_ability_valid_targets = valid_target_sets[chosen_ability_index];
 
@@ -811,6 +821,7 @@ TickBattle(Battle *battle)
     }
 
     Id<Unit> hovered_unit_id = c::null_unit_id;
+    //bool just_hovered = false;
     { // Update hovered_unit
         if(!mouse_in_hud)
         {
@@ -822,7 +833,10 @@ TickBattle(Battle *battle)
                 Rect unit_slot_rect = Rect{unit->slot_pos, c::unit_slot_size};
                 if(MouseInRect(unit_slot_rect))
                 {
-                    if(ValidUnit(unit)) hovered_unit_id = unit_id;
+                    if(ValidUnit(unit))
+                        hovered_unit_id = unit_id;
+                    if(!PointInRect(unit_slot_rect, PrevMousePos()))
+                        ResetHigh(&battle->preview_damage_timer);
                     break;
                 }
             }
@@ -1147,6 +1161,34 @@ TickBattle(Battle *battle)
                 // AP text
                 DrawText(c::action_points_text_layout, origin + c::action_points_text_offset,
                          "AP: %d", unit->cur_action_points);
+
+                SetDrawDepth(c::battle_arrow_draw_depth);
+                // Draw directed arrows for previewed events
+                for(auto event : battle->preview_events)
+                {
+                    if(event.target_id != unit_id) continue;
+
+                    Unit *caster = GetUnitFromId(event.caster_id);
+                    if(!ValidUnit(caster)) continue;
+                    Unit *target = unit; // alias
+
+                    DirectedLineLayout dline_layout = {};
+                    Rect caster_rect = {caster->slot_pos, c::unit_slot_size};
+                    Rect target_rect = {target->slot_pos, c::unit_slot_size};
+
+                    float line_speed = 800.f;
+                    Vec2f caster_pos = RectTopLeft(caster_rect);
+                    Vec2f target_pos = RectTopRight(target_rect);
+                    Vec2f arrow_direction = Normalize(target_pos - caster_pos);
+                    Vec2f start_vel = 0.5f*(Vec2f{0.f,-1.f} + arrow_direction);
+                    Vec2f end_vel = 0.5f*(  Vec2f{0.f, 1.f} + arrow_direction);
+                    DrawDirectedLine(dline_layout,
+                                     caster_pos,
+                                     target_pos,
+                                     line_speed*start_vel,
+                                     line_speed*end_vel,
+                                     StringFromCString(""));
+                }
             }
 
             // Ability "buttons"/icons for allied units (enemy ones are drawn slightly differently
@@ -1380,8 +1422,6 @@ TickBattle(Battle *battle)
 
         if(!any_ally_is_alive or !any_enemy_is_alive) battle_state.finished = true;
     }
-
-    DrawText(c::small_text_layout, {}, MetaString(&battle->preview_events));
 
     return battle_state;
 }

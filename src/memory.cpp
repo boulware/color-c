@@ -8,7 +8,7 @@ AllocArena(char *debug_name)
         platform->ReadWriteBarrier();
     platform->ReleaseMutex(memory::arena_pool_mutex_handle);
 
-    Arena *arena = GetEntryFromId(*game->arena_pool, arena_id);
+    Arena *arena = GetEntryFromId(game->arena_pool, arena_id);
     if(!arena)
     {
         //Log(__FUNCTION__ "() failed to get a valid arena_id. Mutex issue?");
@@ -38,15 +38,20 @@ AllocArena(char *debug_name)
 Arena *
 GetArenaFromId(PoolId<Arena> arena_id)
 {
-    return GetEntryFromId(*game->arena_pool, arena_id);
+    return GetEntryFromId(game->arena_pool, arena_id);
 }
+
+// Arena *
+// GetArenaFromId(PoolId<Arena> volatile arena_id)
+// {
+//     return GetEntryFromId(*game->arena_pool, *arena_id);
+// }
 
 void
 FreeArena(PoolId<Arena> arena_id)
 {
     platform->BlockAndTakeMutex(memory::arena_pool_mutex_handle);
 
-    // In mutex
     Arena *arena = GetArenaFromId(arena_id);
     if(arena and arena->start)
     {
@@ -54,7 +59,6 @@ FreeArena(PoolId<Arena> arena_id)
     }
 
     DeleteEntry(game->arena_pool, arena_id);
-    // Out of mutex
 
     platform->ReadWriteBarrier();
     platform->ReleaseMutex(memory::arena_pool_mutex_handle);

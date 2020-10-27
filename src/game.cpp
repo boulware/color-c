@@ -43,10 +43,10 @@ GameInit(GameInitData init_data)
 
     InitTableDrawState(&game->table_draw_state);
 
-    #if 1
+    #if 0
         InitLcgSystemSeed(&random::default_lcg);
     #else
-        InitLcgSetSeed(&random::default_lcg, 42685076);
+        InitLcgSetSeed(&random::default_lcg, 505309726);
     #endif
 
     //TestDistributionAndLog();
@@ -168,6 +168,7 @@ GameInit(GameInitData init_data)
     debug::start_count = __rdtsc();
     //debug::timed_block_array_size = __COUNTER__;
     debug::cycles_per_second = platform->PerformanceCounterFrequency();
+    game->test_int = 0;
     game->test_float = 1.f;
 
     game->draw_debug_overlay = false;
@@ -293,7 +294,7 @@ GameUpdateAndRender()
             // DrawFilledRect(timed_block_window_rect, c::dk_grey, true);
             // DrawUnfilledRect(timed_block_window_rect, c::white, true);
 
-            Rect window_rect = DrawArenas(*game->arena_pool, window_pos);
+            Rect window_rect = DrawArenas(game->arena_pool, window_pos);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
             {

@@ -9,11 +9,11 @@ TickTestMode(TestMode *test)
 
     String line_label = StringFromCString("4");
 
-    DirectedLineLayout line_layout = {.color = c::red};
-    DrawDirectedLine2(line_layout,
-                     test->a0, test->a1,
-                     300.f*Vec2f{1.f, -1.f}, 300.f*Vec2f{1.f, 1.f},
-                     line_label);
+    DirectedLineLayout line_layout = {.line_color = c::red};
+    DrawDirectedLine(line_layout,
+                    test->a0, test->a1,
+                    300.f*Vec2f{1.f, -1.f}, 300.f*Vec2f{1.f, 1.f},
+                    line_label);
 
     DrawFilledRect(AlignRect({test->a0, {3.f,3.f}}, c::align_center), c::green);
     DrawFilledRect(AlignRect({test->a1, {3.f,3.f}}, c::align_center), c::red);
