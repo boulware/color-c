@@ -498,8 +498,17 @@ SetSelectedAbility(Battle *battle, Id<Ability> new_ability_id)
 }
 
 void
+DeselectSelectedUnit(Battle *battle)
+{
+    battle->selected_unit_id = c::null_unit_id;
+    battle->selected_ability_id = c::null_ability_id;
+}
+
+void
 SetSelectedUnit(Battle *battle, Id<Unit> new_unit_id)
 {
+    if(UnitIsDead(new_unit_id)) return;
+
     battle->selected_unit_id = new_unit_id;
     battle->selected_ability_id = c::null_ability_id;
 }
@@ -636,7 +645,7 @@ TickBattle(Battle *battle)
             }
             else if(battle->selected_unit_id != c::null_unit_id)
             {
-                SetSelectedUnit(battle, c::null_unit_id);
+                DeselectSelectedUnit(battle);
             }
         }
 
@@ -907,7 +916,7 @@ TickBattle(Battle *battle)
                 // @note: I'm intuitively sensing a bit of execution order weirdness here where you have to be careful
                 // with changing the selected_unit with left click, but I think it's ok if there is no selected ability.
                 // Just leaving this note here to remind me if I notice something strange going on later.
-                battle->selected_unit_id = hovered_unit_id;
+                SetSelectedUnit(battle, hovered_unit_id);
             }
             else if(ValidUnit(hovered_unit) and battle->selected_ability_id != c::null_ability_id and selected_unit->cur_action_points > 0)
             { // Execute the player intent if a valid target is clicked and the selected unit has enough action points.

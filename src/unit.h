@@ -76,6 +76,7 @@ void _AddUnitToUnitSet(Unit *unit, UnitSet *target_set);
 
 Breed *GetBreed(Unit unit);
 
+bool UnitIsDead(UnitId unit_id);
 bool CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc);
 
 void GenerateInferredUnitSet(Id<Unit> caster_id,

@@ -22,7 +22,7 @@ effect Heal all_allies (0,5,0)
 
 4) Effects could be single-inheritance instead of using a void* to effect parameters? Not sure which road I want to go down here. AOWTC it's a void*, but it's just a little spooky. Even a union is an option, but it might be even worse than a void*.
 
-5) Units dying in battles.
+//5) Units dying in battles.
 
 6) Enemy AI
 
@@ -91,3 +91,5 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 35) Default arena for arrays that were not properly initialized, and having some proper fallback behavior for uninit'd arrays (like just lazy allocating from the default arena if we have user-level code that is trying to add elements to an array that has no memory allocated), and then we can just reserve this default arena (id=0) so that we can catch anything trying to allocate from it and deal with it explicitly -- but in the case that something DOES need to allocate memory without being properly init'd, it will still be able to do so reasonably safely.
 
 36) Convert ability_ids array member of struct Breed and struct Unit to an Array<AbilityId>
+
+37) Fix unit hotkeys in battle -- because the first 4 slots are no longer guaranteed to be allies, we need a different way of handling it.

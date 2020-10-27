@@ -302,6 +302,7 @@ InitCampaign(Campaign *campaign)
 
     campaign->player_party = CreateArrayFromArena<UnitId>(c::max_party_size, campaign->arena_id);
     campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
+    campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
     //AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
 
     // Log("Thread %d started.", platform->StartJob(&params));
