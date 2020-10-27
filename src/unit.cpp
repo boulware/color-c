@@ -356,6 +356,8 @@ GenerateInferredUnitSet(Id<Unit> caster_id,
 	// Return empty target set if the selected target is invalid or not a valid target for the given target_class
 	if(!CheckValidTarget(caster_id, selected_target_id, tc)) return;
 
+	ClearArray(inferred_target_set);
+
 	if(tc == TargetClass::all_allies)
 	{
 		// All targets that are on the same team as the caster

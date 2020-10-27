@@ -584,6 +584,11 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
 BattleState
 TickBattle(Battle *battle)
 {
+    if(Pressed(vk::f9))
+    {
+        int a = 0;
+    }
+
     BattleState battle_state = {};
 
     if(battle->phase == BattlePhase::invalid)
@@ -1261,24 +1266,26 @@ TickBattle(Battle *battle)
 
     if(battle->phase == BattlePhase::enemy_turn)
     {
-        //for(int i=0; i<battle->intents.count; ++i)
+        auto events = CreateTempArray<BattleEvent>(10);
         for(auto caster_id : battle->units)
         { // Execute enemy intents
             Unit *caster = GetUnitFromId(caster_id);
             if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
 
-            for(auto event : battle->preview_events)
-            {
-                Unit *target = GetUnitFromId(event.target_id);
-                if(!ValidUnit(target)) continue;
+            GenerateEventsFromIntent(caster->intent, &events);
+        }
 
-                target->cur_traits += event.trait_changes;
-            }
+        for(auto event : events)
+        {
+            Unit *target = GetUnitFromId(event.target_id);
+            if(!ValidUnit(target)) continue;
+
+            target->cur_traits += event.trait_changes;
         }
 
         // Enemy AI (# of permutations)
-        UnitSet active_unitset = {};
-        UnitSet other_unitset  = {};
+        Array<UnitId> active_unitset = CreateTempArray<UnitId>(4);
+        Array<UnitId> other_unitset  = CreateTempArray<UnitId>(4);
         for(Id<Unit> unit_id : battle->units)
         {
             Unit *unit = GetUnitFromId(unit_id);
@@ -1364,6 +1371,8 @@ TickBattle(Battle *battle)
 
         if(!any_ally_is_alive or !any_enemy_is_alive) battle_state.finished = true;
     }
+
+    DrawText(c::small_text_layout, {}, MetaString(&battle->preview_events));
 
     return battle_state;
 }
