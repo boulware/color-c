@@ -1322,21 +1322,39 @@ TickBattle(Battle *battle)
     if(battle->phase == BattlePhase::enemy_turn)
     {
         auto events = CreateTempArray<BattleEvent>(10);
-        for(auto caster_id : battle->units)
-        { // Execute enemy intents
-            Unit *caster = GetUnitFromId(caster_id);
-            if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
-
-            GenerateEventsFromIntent(caster->intent, &events);
-        }
-
-        for(auto event : events)
+        int enemy_count = 0;
+        for(auto unit_id : battle->units)
         {
-            Unit *target = GetUnitFromId(event.target_id);
-            if(!ValidUnit(target)) continue;
+            Unit *unit = GetUnitFromId(unit_id);
+            if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
 
-            target->cur_traits += event.trait_changes;
+            ++enemy_count;
         }
+
+        for(int i=0; i<enemy_count; ++i)
+        {
+            for(auto caster_id : battle->units)
+            { // Execute enemy intents
+                Unit *caster = GetUnitFromId(caster_id);
+                if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
+
+                if(caster->intent.position == i)
+                {
+                    ClearArray(&events);
+                    GenerateEventsFromIntent(caster->intent, &events);
+
+                    for(auto event : events)
+                    {
+                        Unit *target = GetUnitFromId(event.target_id);
+                        if(!ValidUnit(target)) continue;
+
+                        target->cur_traits += event.trait_changes;
+                    }
+                }
+            }
+        }
+
+
 
         // Reset action points of all units
         for(Id unit_id : battle->units)

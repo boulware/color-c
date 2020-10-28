@@ -556,6 +556,8 @@ DoAiStuff(Array<UnitId> active_unit_ids, Array<UnitId> all_unit_ids, Team active
         {
             global_unit->intent.target_set += all_unit_ids[intent.unit_indices[j]];
         }
+
+        global_unit->intent.position = i;
     }
 
 

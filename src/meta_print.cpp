@@ -1881,6 +1881,8 @@ String MetaString(const Intent *s)
 	AppendString(&string, MetaString(&s->target_set));
 	AppendCString(&string, "(Array<UnitId>)\n");
 
+	AppendCString(&string, "  position: %u (u8)\n", s->position);
+
 	AppendCString(&string, "}");
 
 	return string;
