@@ -18,8 +18,6 @@ struct Array
     // Delete the copy constructor so that all user-level code must explicitly choose between
     // AssignArray() (points to same memory) and CopyArray() (points to different memory)
     template<typename Type> Array<Type> &operator=(Array<Type> &other) = delete;
-    //template<typename Type> Array(const Array<Type> &other) = delete;
-    //A(const A& other)
 };
 
 String

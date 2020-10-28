@@ -353,6 +353,10 @@ String MetaString(const Battle *s)
 	AppendString(&string, MetaString(&s->arena_id));
 	AppendCString(&string, "(PoolId<Arena>)\n");
 
+	AppendCString(&string, "  ai_arena_id: ");
+	AppendString(&string, MetaString(&s->ai_arena_id));
+	AppendCString(&string, "(PoolId<Arena>)\n");
+
 	AppendCString(&string, "  hud: ");
 	AppendString(&string, MetaString(&s->hud));
 	AppendCString(&string, "(Rect)\n");
@@ -1291,7 +1295,7 @@ String MetaString(const BattleScore *s)
 	return string;
 }
 
-String MetaString(const AiAction *s)
+String MetaString(const AiIntent *s)
 {
 	TIMED_BLOCK;
 
@@ -1300,11 +1304,15 @@ String MetaString(const AiAction *s)
 	string.max_length = 1024;
 	string.data = ScratchString(string.max_length);
 
-	AppendCString(&string, "AiAction {\n");
+	AppendCString(&string, "AiIntent {\n");
 
 	AppendCString(&string, "  ability: ");
 	AppendString(&string, MetaString(&s->ability));
 	AppendCString(&string, "(Ability)\n");
+
+	AppendCString(&string, "  ability_id: ");
+	AppendString(&string, MetaString(&s->ability_id));
+	AppendCString(&string, "(AbilityId)\n");
 
 	AppendCString(&string, "  caster_index: %u (u8)\n", s->caster_index);
 

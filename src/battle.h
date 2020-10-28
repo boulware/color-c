@@ -51,6 +51,7 @@ struct BattleState
 struct Battle
 {
     PoolId<Arena> arena_id;
+    PoolId<Arena> ai_arena_id;
 
     Rect hud;
 

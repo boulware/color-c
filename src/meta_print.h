@@ -147,7 +147,7 @@ String MetaString(const EffectParams_Steal *s);
 
 String MetaString(const BattleScore *s);
 
-String MetaString(const AiAction *s);
+String MetaString(const AiIntent *s);
 
 String MetaString(const FrametimeGraphState *s);
 

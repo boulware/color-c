@@ -527,6 +527,8 @@ void InitBattle(Battle *battle, PoolId<Arena> arena_id)
     battle->units          = CreateArrayFromArena<UnitId>(2*c::max_party_size, battle->arena_id);
     battle->preview_events = CreateArrayFromArena<BattleEvent>(100, battle->arena_id);
 
+    battle->ai_arena_id = AllocArena("AI");
+
     // Fill out timers
     battle->preview_damage_timer = {
         .low = 0.3f,
@@ -555,11 +557,12 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
         unit->cur_action_points = unit->max_action_points;
     }
 
-    GenerateEnemyIntents(battle);
+    //GenerateEnemyIntents(battle);
 
     // Enemy AI (# of permutations)
     Array<UnitId> ally_unitset = CreateTempArray<UnitId>(4);
     Array<UnitId> enemy_unitset = CreateTempArray<UnitId>(4);
+    Array<UnitId> ordered_battle_units = CreateTempArray<UnitId>(8);
     for(Id<Unit> unit_id : battle->units)
     {
         Unit *unit = GetUnitFromId(unit_id);
@@ -568,7 +571,9 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
         if(     unit->team == Team::allies)  ally_unitset += unit_id;
         else if(unit->team == Team::enemies) enemy_unitset += unit_id;
     }
-    //battle->best_choice_string = DoAiStuff(ally_unitset, enemy_unitset, &battle->arena);
+    AppendArrayToArray(&ordered_battle_units, enemy_unitset);
+    AppendArrayToArray(&ordered_battle_units, ally_unitset);
+    battle->best_choice_string = DoAiStuff(enemy_unitset, ordered_battle_units, Team::enemies, battle->ai_arena_id);
 
     { // Generate unit slot positions
         float x_between_slots = c::unit_slot_size.x + c::unit_slot_padding;
@@ -1333,20 +1338,6 @@ TickBattle(Battle *battle)
             target->cur_traits += event.trait_changes;
         }
 
-        // Enemy AI (# of permutations)
-        Array<UnitId> active_unitset = CreateTempArray<UnitId>(4);
-        Array<UnitId> other_unitset  = CreateTempArray<UnitId>(4);
-        for(Id<Unit> unit_id : battle->units)
-        {
-            Unit *unit = GetUnitFromId(unit_id);
-            if(!ValidUnit(unit)) continue;
-            if(unit->cur_traits.vigor <= 0) continue;
-
-            if(     unit->team == Team::allies) active_unitset += unit_id;
-            else if(unit->team == Team::enemies) other_unitset += unit_id;
-        }
-        //battle->best_choice_string = DoAiStuff(active_unitset, other_unitset, &battle->arena);
-
         // Reset action points of all units
         for(Id unit_id : battle->units)
         {
@@ -1356,7 +1347,22 @@ TickBattle(Battle *battle)
             unit->cur_action_points = unit->max_action_points;
         }
 
-        GenerateEnemyIntents(battle);
+        //GenerateEnemyIntents(battle);
+        // Enemy AI (# of permutations)
+        Array<UnitId> ally_unitset = CreateTempArray<UnitId>(4);
+        Array<UnitId> enemy_unitset = CreateTempArray<UnitId>(4);
+        Array<UnitId> ordered_battle_units = CreateTempArray<UnitId>(8);
+        for(Id<Unit> unit_id : battle->units)
+        {
+            Unit *unit = GetUnitFromId(unit_id);
+            if(!ValidUnit(unit)) continue;
+
+            if(     unit->team == Team::allies)  ally_unitset += unit_id;
+            else if(unit->team == Team::enemies) enemy_unitset += unit_id;
+        }
+        AppendArrayToArray(&ordered_battle_units, enemy_unitset);
+        AppendArrayToArray(&ordered_battle_units, ally_unitset);
+        battle->best_choice_string = DoAiStuff(enemy_unitset, ordered_battle_units, Team::enemies, battle->ai_arena_id);
 
         // Set player turn
         battle->phase = BattlePhase::player_turn;

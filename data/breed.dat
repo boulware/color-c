@@ -1,5 +1,5 @@
 unit "Warrior"
-traits (10,5,3)
+traits (24,1,6)
 moveset "Rest" "Strike" "Repair" "Rig Up"
 tier 0
 
@@ -41,4 +41,9 @@ tier 1
 unit "Dragon"
 traits (25,10,10)
 moveset "Swipe" "Breathe Fire" "Sleep"
+tier 2
+
+unit "Test"
+traits (10,10,10)
+moveset "Test Strike" "Test Steal Armor"
 tier 2

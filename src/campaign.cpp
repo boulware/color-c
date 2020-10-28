@@ -581,11 +581,14 @@ TickCampaign(Campaign *campaign)
                 InitBattle(&campaign->current_battle, campaign->battle_arena_id);
                 Array<UnitId> battle_units = CreateTempArray<UnitId>(2*c::max_party_size);
                 AppendArrayToArray(&battle_units, campaign->player_party); // Add ally units
-                int enemy_count = RandomU32(1,1);
+                int enemy_count = RandomU32(1,4);
                 for(int i=0; i<enemy_count; ++i)
                 { // Add enemy units
-                    //battle_units += CreateUnit(RandomBreedIdByTier(1), Team::enemies, campaign->battle_arena_id);
-                    battle_units += CreateUnitByName("Slime", Team::enemies, campaign->arena_id);
+                    #if 1
+                        battle_units += CreateUnit(RandomBreedIdByTier(1), Team::enemies, campaign->battle_arena_id);
+                    #else
+                        battle_units += CreateUnitByName("Test", Team::enemies, campaign->battle_arena_id);
+                    #endif
                 }
 
                 StartBattle(&campaign->current_battle, battle_units);

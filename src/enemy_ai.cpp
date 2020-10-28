@@ -11,103 +11,87 @@
 // 2) Generate all permutations of an integer sequence containing all of those numbers.
 // 3) For each permutation of numbers, calculate the final state.
 
-// active_unitset contains all units for which actions are being considered.
-// other_unitset contains the remaining units in the battle.
+// active_units contains all units for which actions are being considered.
+// all_units contains all units in the battle (note: it's a superset of active_units).
 
-#if 0
+// @TODO: aowtc DoAIStuff relies on all_unit_ids having the active_unit_ids first and in order. Fix this.
+#if 1
 String
-DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id) // @TODO: BigArena?
+DoAiStuff(Array<UnitId> active_unit_ids, Array<UnitId> all_unit_ids, Team active_team, PoolId<Arena> arena_id) // @TODO: BigArena?
 {
     TIMED_BLOCK;
 
+    ClearArena(arena_id);
+
     String best_choice_string = AllocStringDataFromArena(1000, arena_id);
 
-    if(active_unitset.count == 0)
-    {
+    if(active_unit_ids.count == 0)
+    { // There are no active units, so there is nothing to be done.
         AppendCString(&best_choice_string, __FUNCTION__ "(): No units in active_unitset. Skipping.");
         return best_choice_string;
     }
 
-    int team_counts[2] = {};
-    for(auto unit_id : active_unitset)
-    {
-        Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit)) continue;
-
-        if(     unit->team == Team::allies)  team_counts[(size_t)Team::allies]  += 1;
-        else if(unit->team == Team::enemies) team_counts[(size_t)Team::enemies] += 1;
-    }
-    for(auto unit_id : other_unitset)
-    {
-        Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit)) continue;
-
-        if(     unit->team == Team::allies)  team_counts[(size_t)Team::allies]  += 1;
-        else if(unit->team == Team::enemies) team_counts[(size_t)Team::enemies] += 1;
-    }
-
-    Array<Array<u8>> arrays = CreateTempArray<Array<u8>>(4);
-
-    Array<UnitId> all_unitset = CreateTempArray<UnitId>(active_unitset.count + other_unitset.count);
-    AppendArrayToArray(&all_unitset, active_unitset);
-    AppendArrayToArray(&all_unitset, other_unitset);
-    Array<Unit> all_units = CreateTempArray<Unit>(all_unitset.count);
-
-    // Confirm that all units are valid.
-    for(int i=0; i<all_unitset.count; ++i)
-    {
-        Id unit_id = all_unitset.ids[i];
-        Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit))
+    int team_counts[2] = {}; // Used to calculate # of permutations.
+    { // Fill out team_counts
+        for(auto unit_id : all_unit_ids)
         {
-            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
-            return best_choice_string;
-        }
+            Unit *unit = GetUnitFromId(unit_id);
+            if(!ValidUnit(unit)) continue;
 
-        all_units += *unit;
+            if(     unit->team == Team::allies)  team_counts[(u8)Team::allies]  += 1;
+            else if(unit->team == Team::enemies) team_counts[(u8)Team::enemies] += 1;
+        }
     }
 
-    Array<Unit> ally_units = CreateTempArray<Unit>(active_unitset.size);
-    for(int i=0; i<active_unitset.size; ++i)
-    {
-        Unit *unit = GetUnitFromId(active_unitset.ids[i]);
-        if(!ValidUnit(unit))
+    Array<Array<u8>> permutation_index_arrays = CreateTempArray<Array<u8>>(4);
+    { // Explanation of permutation_index_arrays
+        // [permutation_index_arrays] is a thing we'll hand to the permutation generator. It's basically an array with
+        // N elements, where N is the number of active_units, s.t. each element of the array is an array
+        // with M elements, where M is the number of distinct actions that unit can take. All u8 elements
+        // will be unique numbers from 0 to X, where X is the total number of distinct actions that can be taken by
+        // all active units.
+        //
+        // e.g., in the case that we have 4 active units; unit 1 has 3 possible actions, unit 2 has 2 possible actions,
+        //       unit 3 has 2 possible actions, and unit 4 has 1 possible action, [permutation_index_arrays] will look like this:
+        //       permutation_index_arrays => [(0 1 2)(3 4)(5 6)(7)]
+        //
+        // This lets use later create these permutation of permutation things that we use to enumerate all possible
+        // sequences of actions, which we then score and compare to find the best scoring sequence.
+
+        // [all_units] is an array parallel to [active_units], but will contain (copies of) the units
+        // so that we don't need to query the unit table whenever we need to know something about a unit.
+    }
+
+    Array<Unit> all_units = CreateTempArray<Unit>(all_unit_ids.count);
+    { // Confirm that all units are valid, and add a copy of each unit from the unit table to all_units.
+        for(int i=0; i<all_unit_ids.count; ++i)
         {
-            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
-            return best_choice_string;
-        }
+            Unit *unit = GetUnitFromId(all_unit_ids[i]);
+            if(!ValidUnit(unit))
+            {
+                AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
+                return best_choice_string;
+            }
 
-        ally_units += *unit;
+            all_units += *unit;
+        }
     }
 
-    Array<Unit> enemy_units = CreateTempArray<Unit>(other_unitset.size);
-    for(int i=0; i<other_unitset.size; ++i)
-    {
-        Unit *unit = GetUnitFromId(other_unitset.ids[i]);
-        if(!ValidUnit(unit))
-        {
-            AppendCString(&best_choice_string, __FUNCTION__ "() Not all units were valid. Aborting.");
-            return best_choice_string;
-        }
-
-        enemy_units += *unit;
-    }
-
-    // Array of "actions", which correspond to the values in the permutation (0... 25 or whatever)
+    // Array of "intentes", which correspond to the values in the permutation (0... 25 or whatever)
     // This should contain:
-    //     1) a specific Effect (which has an EffectType and an traitset damage/heal amount)
-    //     2) a specific target (as a unit index into current_traitsets)
-    Array<AiAction> actions = CreateTempArray<AiAction>(50);
+    //     1) a specific Ability (which has tiers, and each tier has a set of effects)
+    //     2) a specific set of targets (as unit indices into current_traitsets)
+    Array<AiIntent> intents = CreateTempArray<AiIntent>(50);
 
-    s64 total_option_count = 0; // Number of possible actions that should be permutated
+    s64 total_option_count = 0; // Number of distinct actions that should be permutated
 
     u8 cur_option_counter = 0;
-    s64 permutation_count = m::Factorial(active_unitset.size); // Incomplete value. We'll add a product_of_options
+    s64 permutation_count = m::Factorial(active_unit_ids.count); // Incomplete value. We'll add a product_of_options once it's fully calculated
     s64 product_of_options = 1;
 
-    for(int i=0; i<active_unitset.size; ++i)
+    for(int i=0; i<active_unit_ids.count; ++i)
     {
-        Id caster_id = active_unitset.ids[i];
+        Id caster_id = active_unit_ids[i];
         Unit *caster = GetUnitFromId(caster_id);
         if(!ValidUnit(caster)) continue;
 
@@ -125,82 +109,83 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
             // Determine number of possible options there are for this ability,
             // depending on the target_class and what units are in the battle.
 
-            AiAction action = {};
-            action.ability = *ability;
-            action.caster_index = i;
+            AiIntent intent = {};
+            intent.ability = *ability;
+            intent.ability_id = ability_id;
+            intent.caster_index = i;
 
             if(tier.target_class == TargetClass::self)
             {
                 option_count_for_this_unit += 1;
 
-                action.target_count = 1;
-                action.unit_indices[0] = i;
+                intent.target_count = 1;
+                intent.unit_indices[0] = i;
 
-                actions += action;
+                intents += intent;
             }
             else if(tier.target_class == TargetClass::single_ally)
             {
                 option_count_for_this_unit += team_counts[(size_t)caster->team];
 
-                action.target_count = 1;
-                int actions_added = 0;
+                intent.target_count = 1;
+                int intents_added = 0;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(caster->team == all_units[unit_index].team)
                     {
-                        action.unit_indices[0] = unit_index;
-                        actions += action;
-                        ++actions_added;
+                        intent.unit_indices[0] = unit_index;
+                        intents += intent;
+                        ++intents_added;
                     }
                 }
 
-                Assert(actions_added == team_counts[(size_t)caster->team]);
+                Assert(intents_added == team_counts[(size_t)caster->team]);
             }
             else if(tier.target_class == TargetClass::single_ally_not_self)
             {
                 option_count_for_this_unit += (team_counts[(size_t)caster->team] - 1);
 
-                action.target_count = 1;
-                int actions_added = 0;
+                intent.target_count = 1;
+                int intents_added = 0;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(unit_index != i and caster->team == all_units[unit_index].team)
                     {
-                        action.unit_indices[0] = unit_index;
-                        actions += action;
-                        ++actions_added;
+                        intent.unit_indices[0] = unit_index;
+                        intents += intent;
+                        ++intents_added;
                     }
                 }
 
-                Assert(actions_added == team_counts[(size_t)caster->team] - 1);
+                Assert(intents_added == team_counts[(size_t)caster->team] - 1);
             }
             else if(tier.target_class == TargetClass::all_allies)
             {
                 option_count_for_this_unit += 1;
 
-                //action.target_count = option_count_for_this_unit;
+                //intent.target_count = option_count_for_this_unit;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(caster->team == all_units[unit_index].team)
-                        action.unit_indices[action.target_count++] = unit_index;
+                        intent.unit_indices[intent.target_count++] = unit_index;
                 }
-                Assert(action.target_count == team_counts[(size_t)caster->team]);
+                Assert(intent.target_count == team_counts[(size_t)caster->team]);
 
-                actions += action;
+                intents += intent;
             }
             else if(tier.target_class == TargetClass::all_allies_not_self)
             {
                 option_count_for_this_unit += 1;
 
-                //action.target_count = option_count_for_this_unit;
+                //intent.target_count = option_count_for_this_unit;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(unit_index != i and caster->team == all_units[unit_index].team)
-                        action.unit_indices[action.target_count++] = unit_index;
+                        intent.unit_indices[intent.target_count++] = unit_index;
                 }
-                Assert(action.target_count == team_counts[(size_t)caster->team] - 1);
+                Assert(intent.target_count == team_counts[(size_t)caster->team] - 1);
 
-                actions += action;
+                intents += intent;
             }
             else if(tier.target_class == TargetClass::single_enemy)
             {
@@ -210,19 +195,19 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
                 option_count_for_this_unit += team_counts[opposite_team_index];
 
-                action.target_count = 1;
-                int actions_added = 0;
+                intent.target_count = 1;
+                int intents_added = 0;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(caster->team != all_units[unit_index].team)
                     {
-                        action.unit_indices[0] = unit_index;
-                        actions += action;
-                        ++actions_added;
+                        intent.unit_indices[0] = unit_index;
+                        intents += intent;
+                        ++intents_added;
                     }
                 }
 
-                Assert(actions_added == team_counts[(size_t)caster->team]);
+                Assert(intents_added == team_counts[(size_t)caster->team]);
             }
             else if(tier.target_class == TargetClass::all_enemies)
             {
@@ -232,69 +217,74 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
                 option_count_for_this_unit += 1;
 
-                //action.target_count = option_count_for_this_unit;
+                //intent.target_count = option_count_for_this_unit;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(caster->team != all_units[unit_index].team)
-                        action.unit_indices[action.target_count++] = unit_index;
+                        intent.unit_indices[intent.target_count++] = unit_index;
                 }
-                Assert(action.target_count == team_counts[opposite_team_index]);
+                Assert(intent.target_count == team_counts[opposite_team_index]);
 
-                actions += action;
+                intents += intent;
             }
             else if(tier.target_class == TargetClass::single_unit)
             {
                 option_count_for_this_unit += (team_counts[0] + team_counts[1]);
 
-                action.target_count = 1;
-                int actions_added = 0;
+                intent.target_count = 1;
+                int intents_added = 0;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
-                    action.unit_indices[0] = unit_index;
-                    actions += action;
-                    ++actions_added;
+                    intent.unit_indices[0] = unit_index;
+                    intents += intent;
+                    ++intents_added;
                 }
 
-                Assert(actions_added == (team_counts[0] + team_counts[1]));
+                Assert(intents_added == (team_counts[0] + team_counts[1]));
             }
             else if(tier.target_class == TargetClass::single_unit_not_self)
             {
                 option_count_for_this_unit += (team_counts[0] + team_counts[1] - 1);
 
-                action.target_count = 1;
-                int actions_added = 0;
+                intent.target_count = 1;
+                int intents_added = 0;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
                     if(i == unit_index) continue; // Skip self
 
-                    action.unit_indices[0] = unit_index;
-                    actions += action;
-                    ++actions_added;
+                    intent.unit_indices[0] = unit_index;
+                    intents += intent;
+                    ++intents_added;
                 }
 
-                Assert(actions_added == (team_counts[0] + team_counts[1] - 1));
+                Assert(intents_added == (team_counts[0] + team_counts[1] - 1));
             }
             else if(tier.target_class == TargetClass::all_units)
             {
                 option_count_for_this_unit += 1;
 
-                //action.target_count = option_count_for_this_unit;
+                //intent.target_count = option_count_for_this_unit;
                 for(int unit_index = 0; unit_index < all_units.count; ++unit_index)
                 {
-                    action.unit_indices[action.target_count++] = unit_index;
+                    intent.unit_indices[intent.target_count++] = unit_index;
                 }
-                Assert(action.target_count == all_units.count);
+                Assert(intent.target_count == all_units.count);
 
-                actions += action;
+                intents += intent;
             }
         }
 
-        Array<u8> sub_array = CreateTempArray<u8>(8);
+
+        //Array<u8> sub_array = CreateTempArray<u8>(8);
+        Array<u8> *sub_array = Append(&permutation_index_arrays);
+        *sub_array = CreateArrayFromArena<u8>(8, arena_id);
         for(u8 i=0; i<option_count_for_this_unit; ++i)
         {
-            sub_array += (u8)(cur_option_counter + i);
+            *sub_array += (u8)(cur_option_counter + i);
         }
-        arrays += sub_array;
+
+        // Array<u8> *sub_array_ptr = Append(&permutation_index_arrays);
+        // *sub_array_ptr = sub_array;
 
         cur_option_counter += option_count_for_this_unit;
         total_option_count += option_count_for_this_unit;
@@ -310,13 +300,13 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
     permutation_count *= product_of_options;
     Log("permutation count: %zu", permutation_count);
 
-    int length_of_one_permutation = active_unitset.size; // 1234, 1235, 1236, etc.
+    int length_of_one_permutation = active_unit_ids.count; // 1234, 1235, 1236, etc.
     size_t permutation_values_byte_count = length_of_one_permutation * permutation_count;
     u8 *permutation_values = (u8 *)platform->AllocateMemory(permutation_values_byte_count);
     u8 *p = permutation_values;
 
 
-    GenerateU8Permutations(arrays, permutation_values, permutation_values_byte_count);
+    GenerateU8Permutations(permutation_index_arrays, permutation_values, permutation_values_byte_count);
 
     // Methods we might need:
     // ...
@@ -326,14 +316,14 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
 
     // [current_traitsets] will be parallel to [all_unitset]
-    int total_unit_count = active_unitset.size + other_unitset.size;
+    int total_unit_count = all_unit_ids.count;
     Array<TraitSet> initial_traitsets = CreateTempArray<TraitSet>(total_unit_count);
     Array<TraitSet> current_traitsets = CreateTempArray<TraitSet>(total_unit_count);
     Array<TraitSet> traitset_changes  = CreateTempArray<TraitSet>(total_unit_count);
     Array<TraitSet> max_traitsets     = CreateTempArray<TraitSet>(total_unit_count);
     for(int i=0; i<total_unit_count; ++i)
     {
-        Id unit_id = all_unitset.ids[i];
+        Id unit_id = all_unit_ids[i];
         Unit *unit = GetUnitFromId(unit_id);
         initial_traitsets += unit->cur_traits;
         max_traitsets += unit->max_traits;
@@ -345,26 +335,13 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
     }
 
 
+    #if 0
     Array<TraitSet> ally_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
     Array<TraitSet> enemy_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
 
     Array<TraitSet> ally_traitset_changes = CreateTempArray<TraitSet>(c::max_party_size);
     Array<TraitSet> enemy_traitset_changes = CreateTempArray<TraitSet>(c::max_party_size);
-
-    Array<TraitSet> max_ally_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
-    Array<TraitSet> max_enemy_traitsets = CreateTempArray<TraitSet>(c::max_party_size);
-    for(int i=0; i<active_unitset.size; ++i)
-    {
-        max_ally_traitsets += max_traitsets[i];
-    }
-    for(int i=0; i<other_unitset.size; ++i)
-    {
-        // if(current_traitsets[active_unitset.size + i].vigor < 0)
-        // {
-        //     Log("tick");
-        // }
-        max_enemy_traitsets += max_traitsets[active_unitset.size + i];
-    }
+    #endif
 
     int permutation_counter = 0;
     BattleScore best_score = {.total = -1000.f};
@@ -388,7 +365,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
         {
             size_t action_index = permutation_values[length_of_one_permutation*i + j];
 
-            AiAction &cur_action = actions[action_index]; // alias
+            AiIntent &cur_action = intents[action_index]; // alias
 
             int tier_index = -1;
             { // Determine ability tier
@@ -492,6 +469,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
             }
         }
 
+        #if 0
         ally_traitsets.count = 0;
         enemy_traitsets.count = 0;
         ally_traitset_changes.count = 0;
@@ -510,6 +488,7 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
             enemy_traitsets += initial_traitsets[active_unitset.size + i];
             enemy_traitset_changes += traitset_changes[active_unitset.size + i];
         }
+        #endif
         //if(i == 12802)
         // if(    permutation_values[length_of_one_permutation*i + 0] == 6
         //    and permutation_values[length_of_one_permutation*i + 1] == 27
@@ -519,8 +498,11 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
         //     Log("tick");
         // }
 
+        BattleScore score = ScoreBattleState3(all_units, traitset_changes, active_team);
+        #if 0
         BattleScore score = ScoreBattleState2(ally_units, enemy_units,
                                               ally_traitset_changes, enemy_traitset_changes);
+        #endif
 
         if(score.total == best_score.total)
             ++equivalent_line_count;
@@ -551,17 +533,32 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
     for(int i=0; i<length_of_one_permutation; ++i)
     {
         u8 option_index = permutation_start[i];
-        AiAction action = actions[option_index];
-        Unit caster = all_units[action.caster_index];
-        Unit first_target = all_units[action.unit_indices[0]];
+        AiIntent intent = intents[option_index];
+        Unit caster = all_units[intent.caster_index];
+        Unit first_target = all_units[intent.unit_indices[0]];
 
         AppendCString(&best_choice_string,
             "\"%.*s\" uses \"%.*s\" on \"%.*s\" [%d]\n",
             caster.name.length, caster.name.data,
-            action.ability.name.length, action.ability.name.data,
+            intent.ability.name.length, intent.ability.name.data,
             first_target.name.length, first_target.name.data,
-            action.unit_indices[0]);
+            intent.unit_indices[0]);
+
+        // Change intents in the actual global unit table
+        UnitId global_unit_id = all_unit_ids[intent.caster_index];
+        Unit *global_unit = GetUnitFromId(global_unit_id);
+        if(!ValidUnit(global_unit)) continue;
+
+        ClearArray(&global_unit->intent.target_set);
+        global_unit->intent.caster_id  =  all_unit_ids[intent.caster_index];
+        global_unit->intent.ability_id =  intent.ability_id;
+        for(int j=0; j<intent.target_count; ++j)
+        {
+            global_unit->intent.target_set += all_unit_ids[intent.unit_indices[j]];
+        }
     }
+
+
 
     //Log("%d", current_traitsets.count);
     // String permutation_string = {};
@@ -630,6 +627,9 @@ DoAiStuff(UnitSet active_unitset, UnitSet other_unitset, PoolId<Arena> arena_id)
 
     platform->FreeMemory(permutation_values);
     //platform->FreeMemory(permutation_string.data);
+
+
+
     return best_choice_string;
     //Log("permutation count: %zu", permutation_count);
 
@@ -962,6 +962,102 @@ ScoreBattleState2(Array<Unit> ally_units,
 
     }
 
+
+    score.total = score.rel_change + score.abs_change + score.ally_potential + score.enemy_potential;
+    return score;
+}
+
+BattleScore
+ScoreBattleState3(Array<Unit> all_units,
+                  Array<TraitSet> traitset_changes,
+                  Team active_team)
+{
+    TIMED_BLOCK;
+
+    BattleScore score = {};
+    //float score = 0.f;
+
+    float ally_mult  = 1.f;
+    float enemy_mult = -1.f;
+    if(active_team == Team::enemies)
+    {
+        ally_mult =  -1.f;
+        enemy_mult = 1.f;
+    }
+
+    for(int i=0; i<all_units.count; ++i)
+    {
+        Unit before_change_unit = all_units[i];
+
+        Unit after_change_unit = all_units[i];
+        after_change_unit.cur_traits += traitset_changes[i];
+
+        if(all_units[i].team == Team::allies)
+        {
+            float potential_before_change = UnitAbilityPotential(before_change_unit);
+            float potential_after_change = UnitAbilityPotential(after_change_unit);
+            float d_potential = potential_after_change - potential_before_change;
+            score.ally_potential += ally_mult * ai::wt_ability_potential * d_potential;
+
+            // Trait changes
+            TraitSet initial_traits = before_change_unit.cur_traits;
+
+            // Vigor
+            if(initial_traits.vigor > 0)
+            {
+                score.rel_change += ally_mult * ai::wt_vigor * ai::wt_rel_change * ((float)(traitset_changes[i].vigor) / (float)initial_traits.vigor);
+                score.abs_change += ally_mult * ai::wt_vigor * ai::wt_abs_change * (traitset_changes[i].vigor);
+            }
+            else
+            {
+                continue; // Unit is dead
+            }
+            // Focus (no effect aowtc)
+            if(initial_traits.focus > 0)
+            {
+                score.rel_change += ally_mult * ai::wt_focus * ai::wt_rel_change * ((float)(traitset_changes[i].focus) / (float)initial_traits.focus);
+                score.abs_change += ally_mult * ai::wt_focus * ai::wt_abs_change * (traitset_changes[i].focus);
+            }
+
+            // Armor
+            if(initial_traits.armor > 0)
+            {
+                score.rel_change += ally_mult * ai::wt_armor * ai::wt_rel_change * ((float)(traitset_changes[i].armor) / (float)initial_traits.armor);
+                score.abs_change += ally_mult * ai::wt_armor * ai::wt_abs_change * (traitset_changes[i].armor);
+            }
+        }
+        else
+        {
+            float potential_before_change = UnitAbilityPotential(before_change_unit);
+            float potential_after_change = UnitAbilityPotential(after_change_unit);
+            float d_potential = potential_after_change - potential_before_change;
+            score.enemy_potential += enemy_mult * ai::wt_ability_potential * d_potential;
+
+            // Trait changes
+            TraitSet initial_traits = before_change_unit.cur_traits;
+
+            // Vigor
+            if(initial_traits.vigor > 0)
+            {
+                score.rel_change += enemy_mult * ai::wt_rel_change * ((float)(traitset_changes[i].vigor) / (float)initial_traits.vigor);
+                score.abs_change += enemy_mult * ai::wt_abs_change * (traitset_changes[i].vigor);
+            }
+            else continue; // Unit is dead
+
+            // Focus (no effect aowtc)
+            if(initial_traits.focus > 0)
+            {
+
+            }
+
+            // Armor
+            if(initial_traits.armor > 0)
+            {
+                score.rel_change += enemy_mult * ai::wt_rel_change * ((float)(traitset_changes[i].armor) / (float)initial_traits.armor);
+                score.abs_change += enemy_mult * ai::wt_abs_change * (traitset_changes[i].armor);
+            }
+        }
+    }
 
     score.total = score.rel_change + score.abs_change + score.ally_potential + score.enemy_potential;
     return score;
