@@ -585,6 +585,9 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
     #define mBindBaseOpenGLFunction(name) opengl->name = gl##name
     #define mBindExtendedOpenGLFunction(name) opengl->name = (fnsig_gl##name*)wglGetProcAddress("gl"#name)
 
+    mBindExtendedOpenGLFunction(GetInteger64v);
+    mBindExtendedOpenGLFunction(GetInteger64i_v);
+
     mBindBaseOpenGLFunction(GetError);
     mBindExtendedOpenGLFunction(BindBuffer);
     mBindExtendedOpenGLFunction(GenBuffers);
@@ -723,6 +726,24 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
     mBindExtendedOpenGLFunction(FramebufferTexture);
     mBindExtendedOpenGLFunction(BindTextureUnit);
 
+    // Query
+    mBindExtendedOpenGLFunction(GenQueries);
+    mBindExtendedOpenGLFunction(DeleteQueries);
+    mBindExtendedOpenGLFunction(IsQuery);
+    mBindExtendedOpenGLFunction(BeginQuery);
+    mBindExtendedOpenGLFunction(EndQuery);
+    mBindExtendedOpenGLFunction(GetQueryiv);
+    mBindExtendedOpenGLFunction(GetQueryObjectiv);
+    mBindExtendedOpenGLFunction(GetQueryObjectuiv);
+    mBindExtendedOpenGLFunction(CreateQueries);
+    mBindExtendedOpenGLFunction(GetQueryBufferObjecti64v);
+    mBindExtendedOpenGLFunction(GetQueryBufferObjectiv);
+    mBindExtendedOpenGLFunction(GetQueryBufferObjectui64v);
+    mBindExtendedOpenGLFunction(GetQueryBufferObjectuiv);
+    mBindExtendedOpenGLFunction(QueryCounter);
+    mBindExtendedOpenGLFunction(GetQueryObjecti64v);
+    mBindExtendedOpenGLFunction(GetQueryObjectui64v);
+
     #undef mBindBaseOpenGLFunction
     #undef mBindExtendedOpenGLFunction
 
@@ -807,9 +828,17 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
         CloseFreetype(&ft_lib);
     }
 
-    FrametimeGraphState frametime_graph_state;
-    InitFrametimeGraphState(&frametime_graph_state, c::number_of_frametimes);
-    game->frametime_graph_state = &frametime_graph_state;
+    FrametimeGraphState cpu_frametime_graph_state;
+    InitFrametimeGraphState(&cpu_frametime_graph_state, c::number_of_frametimes);
+    game->cpu_frametime_graph_state = &cpu_frametime_graph_state;
+
+    FrametimeGraphState gpu_frametime_graph_state;
+    InitFrametimeGraphState(&gpu_frametime_graph_state, c::number_of_frametimes);
+    game->gpu_frametime_graph_state = &gpu_frametime_graph_state;
+
+    GLuint gpu_start_counter, gpu_end_counter;
+    gl->CreateQueries(GL_TIMESTAMP, 1, &gpu_start_counter);
+    gl->CreateQueries(GL_TIMESTAMP, 1, &gpu_end_counter);
 
     while(!QUIT_GAME)
     {
@@ -830,6 +859,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             s64 before_update = win32_CurrentTime();
 
             // START update
+            gl->QueryCounter(gpu_start_counter, GL_TIMESTAMP);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
  //    HANDLE mutex_handle;
@@ -896,9 +926,26 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             s64 after_update = win32_CurrentTime();
             float this_frame_time_ms = win32_TimeElapsedMs(before_update, after_update);
             game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
-            AddFrametimeToGraph(&frametime_graph_state, this_frame_time_ms);
-
+            AddFrametimeToGraph(&cpu_frametime_graph_state, this_frame_time_ms);
             ResetInputState(&game->input);
+
+            // Process GPU frametime query
+            gl->QueryCounter(gpu_end_counter, GL_TIMESTAMP);
+            u64 gpu_start_time, gpu_end_time;
+            gl->GetQueryObjectui64v(gpu_start_counter, GL_QUERY_RESULT, &gpu_start_time);
+            gl->GetQueryObjectui64v(gpu_end_counter, GL_QUERY_RESULT, &gpu_end_time);
+            float gpu_time_ms = (float)(gpu_end_time - gpu_start_time) / 1000000.f;
+            AddFrametimeToGraph(&gpu_frametime_graph_state, gpu_time_ms);
+
+            Vec2f pos = {1600.f,0.f};
+            TextLayout frametime_layout = c::def_text_layout;
+            frametime_layout.align = c::align_topright;
+            auto cam = PushUiCamera();
+            pos.y += DrawText(frametime_layout, pos, "cpu: %.3fms",
+                              game->frame_time_ms).rect.size.y;
+            DrawText(frametime_layout, pos, "gpu: %.3fms", gpu_time_ms);
+            PopUiCamera(cam);
+
             SwapBuffers(wc.hdc);
             RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);
         }

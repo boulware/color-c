@@ -734,8 +734,11 @@ String MetaString(const OverlayOption *s)
 		case(OverlayOption::TimedBlocks): {
 			AppendCString(&string, "TimedBlocks");
 		} break;
-		case(OverlayOption::Frametime): {
-			AppendCString(&string, "Frametime");
+		case(OverlayOption::CpuFrametime): {
+			AppendCString(&string, "CpuFrametime");
+		} break;
+		case(OverlayOption::GpuFrametime): {
+			AppendCString(&string, "GpuFrametime");
 		} break;
 		case(OverlayOption::Tables): {
 			AppendCString(&string, "Tables");

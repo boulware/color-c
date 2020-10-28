@@ -295,6 +295,7 @@ GameUpdateAndRender()
             // DrawUnfilledRect(timed_block_window_rect, c::white, true);
 
             Rect window_rect = DrawArenas(game->arena_pool, window_pos);
+            DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
             {
@@ -314,6 +315,7 @@ GameUpdateAndRender()
             DrawFilledRect(window_rect, c::vdk_red, true);
             DrawUnfilledRect(window_rect, c::white, true);
             DrawTimedBlockData(window_pos);
+            DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
             {
@@ -322,7 +324,7 @@ GameUpdateAndRender()
             }
         }
 
-        current_index = (int)OverlayOption::Frametime;
+        current_index = (int)OverlayOption::CpuFrametime;
         if(game->debug_overlay.option_active[current_index])
         {
             Vec2f window_pos = game->debug_overlay.window_positions[current_index];
@@ -331,8 +333,30 @@ GameUpdateAndRender()
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
             DrawFilledRect(window_rect, c::vdk_red, true);
-            DrawFrametimes(game->frametime_graph_state, window_rect);
+            DrawFrametimes(game->cpu_frametime_graph_state, window_rect);
             DrawUnfilledRect(window_rect, c::white, true);
+
+            DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
+
+            if(MouseInRect(window_rect) and TakeMouseFocus())
+            {
+                if(Pressed(vk::LMB))
+                    game->debug_overlay.dragging_index = current_index;
+            }
+        }
+
+        current_index = (int)OverlayOption::GpuFrametime;
+        if(game->debug_overlay.option_active[current_index])
+        {
+            Vec2f window_pos = game->debug_overlay.window_positions[current_index];
+            Vec2f window_size = {300.f,300.f};
+            Rect window_rect = {window_pos, window_size};
+            SetDrawDepth(cur_draw_depth);
+            cur_draw_depth += 0.1f;
+            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawFrametimes(game->gpu_frametime_graph_state, window_rect);
+            DrawUnfilledRect(window_rect, c::white, true);
+            DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
             {
@@ -362,6 +386,7 @@ GameUpdateAndRender()
             }
 
             DrawUnfilledRect(window_rect, c::white, true);
+            DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
             {
@@ -528,11 +553,6 @@ GameUpdateAndRender()
 
     //ApplyComputeShaderToScreenTexture(game->blur_shader, &game->prepass_framebuffer.texture);
     CopyFramebufferToScreen(game->prepass_framebuffer);
-
-    Vec2f pos = {1600.f,0.f};
-    TextLayout frametime_layout = c::def_text_layout;
-    frametime_layout.align = c::align_topright;
-    pos.y += DrawUiText(frametime_layout, pos, "cpu frame: %.3fms", game->frame_time_ms).size.y;
 
     // for(int i=0; i<game->arena_pool->entry_count; ++i)
     // {

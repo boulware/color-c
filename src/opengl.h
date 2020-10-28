@@ -4,11 +4,22 @@
 #include "log.h"
 #include "types.h"
 
+
+// Meta
 #define GL_VENDOR                         0x1F00
 #define GL_RENDERER                       0x1F01
 #define GL_VERSION                        0x1F02
 #define GL_EXTENSIONS                     0x1F03
 
+// Queries
+#define GL_QUERY_COUNTER_BITS             0x8864
+#define GL_CURRENT_QUERY                  0x8865
+#define GL_QUERY_RESULT                   0x8866
+#define GL_QUERY_RESULT_AVAILABLE         0x8867
+#define GL_TIME_ELAPSED                   0x88BF
+#define GL_TIMESTAMP                      0x8E28
+
+//
 #define GL_ARRAY_BUFFER					  0x8892
 #define GL_ELEMENT_ARRAY_BUFFER 		  0x8893
 #define GL_STATIC_DRAW 					  0x88E4
@@ -19,6 +30,7 @@
 #define GL_LINK_STATUS 					  0x8B82
 #define GL_DYNAMIC_DRAW 				  0x88E8
 
+// Textures
 #define GL_TEXTURE0 					  0x84C0
 #define GL_TEXTURE1                       0x84C1
 #define GL_TEXTURE2                       0x84C2
@@ -52,6 +64,7 @@
 #define GL_TEXTURE30                      0x84DE
 #define GL_TEXTURE31                      0x84D
 
+// Compute shaders
 #define GL_MAX_COMPUTE_UNIFORM_BLOCKS     0x91BB
 #define GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS 0x91BC
 #define GL_MAX_COMPUTE_IMAGE_UNIFORMS     0x91BD
@@ -65,6 +78,7 @@
 #define GL_MAX_COMPUTE_WORK_GROUP_SIZE    0x91BF
 #define GL_COMPUTE_WORK_GROUP_SIZE        0x8267
 
+//
 #define GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT 0x00000001
 #define GL_ELEMENT_ARRAY_BARRIER_BIT       0x00000002
 #define GL_UNIFORM_BARRIER_BIT             0x00000004
@@ -82,6 +96,7 @@
 #define GL_WRITE_ONLY                     0x88B9
 #define GL_READ_WRITE                     0x88BA
 
+// Debug callbacks
 #define GL_DEBUG_TYPE_ERROR               0x824C
 #define GL_DEBUG_OUTPUT                   0x92E0
 #define GL_DEBUG_SEVERITY_HIGH            0x9146
@@ -91,6 +106,7 @@
 #define GL_DEBUG_SEVERITY_MEDIUM_ARB      0x9147
 #define GL_DEBUG_SEVERITY_LOW_ARB         0x9148
 
+//
 #define GL_BGR 							  0x80E0
 #define GL_BGRA                           0x80E1
 #define GL_VERTEX_ARRAY_BINDING 		  0x85B5
@@ -154,6 +170,7 @@
 #define GL_ZERO                           0
 #define GL_ONE                            1
 
+//
 #define GL_POINTS                         0x0000
 #define GL_LINES                          0x0001
 #define GL_LINE_LOOP                      0x0002
@@ -163,6 +180,7 @@
 #define GL_TRIANGLE_FAN                   0x0006
 #define GL_QUADS                          0x0007
 
+// Type enums
 #define GL_BYTE            				  0x1400
 #define GL_UNSIGNED_BYTE   				  0x1401
 #define GL_SHORT           				  0x1402
@@ -184,6 +202,8 @@ typedef u32 GLuint;
 typedef u32 GLbitfield;
 typedef u64 * GLintptr;
 typedef u8 GLubyte;
+typedef s64 GLint64;
+typedef u64 GLuint64;
 
 typedef void (*GLDEBUGPROC)(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,const GLchar *message,const void *userParam);
 
@@ -191,6 +211,9 @@ typedef void (*GLDEBUGPROC)(GLenum source,GLenum type,GLuint id,GLenum severity,
 	typedef s8 GLboolean;
 #endif
 
+// Get
+typedef void           fnsig_glGetInteger64v (GLenum pname, GLint64 *data);
+typedef void           fnsig_glGetInteger64i_v (GLenum target, GLuint index, GLint64 *data);
 
 typedef GLenum 		   fnsig_glGetError(void);
 typedef void 		   fnsig_glBindBuffer(GLenum, GLuint);
@@ -330,11 +353,31 @@ typedef void        fnsig_glDispatchComputeIndirect(GLintptr indirect);
 typedef void        fnsig_glFramebufferTexture (GLenum target, GLenum attachment, GLuint texture, GLint level);
 typedef void        fnsig_glBindTextureUnit (GLuint unit, GLuint texture);
 
+// Query
+typedef void        fnsig_glGenQueries (GLsizei n, GLuint *ids);
+typedef void        fnsig_glDeleteQueries (GLsizei n, const GLuint *ids);
+typedef GLboolean   fnsig_glIsQuery (GLuint id);
+typedef void        fnsig_glBeginQuery (GLenum target, GLuint id);
+typedef void        fnsig_glEndQuery (GLenum target);
+typedef void        fnsig_glGetQueryiv (GLenum target, GLenum pname, GLint *params);
+typedef void        fnsig_glGetQueryObjectiv (GLuint id, GLenum pname, GLint *params);
+typedef void        fnsig_glGetQueryObjectuiv (GLuint id, GLenum pname, GLuint *params);
+typedef void        fnsig_glCreateQueries (GLenum target, GLsizei n, GLuint *ids);
+typedef void        fnsig_glGetQueryBufferObjecti64v (GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+typedef void        fnsig_glGetQueryBufferObjectiv (GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+typedef void        fnsig_glGetQueryBufferObjectui64v (GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+typedef void        fnsig_glGetQueryBufferObjectuiv (GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+typedef void        fnsig_glQueryCounter (GLuint id, GLenum target);
+typedef void        fnsig_glGetQueryObjecti64v (GLuint id, GLenum pname, GLint64 *params);
+typedef void        fnsig_glGetQueryObjectui64v (GLuint id, GLenum pname, GLuint64 *params);
 
 
 #define mOpenGLFunction(name) fnsig_gl##name *name
 
 struct OpenGL {
+    mOpenGLFunction(GetInteger64v);
+    mOpenGLFunction(GetInteger64i_v);
+
 	mOpenGLFunction(GetError);
 	mOpenGLFunction(BindBuffer);
 	mOpenGLFunction(DeleteBuffers);
@@ -473,6 +516,24 @@ struct OpenGL {
     mOpenGLFunction(NamedFramebufferTexture);
     mOpenGLFunction(FramebufferTexture);
     mOpenGLFunction(BindTextureUnit);
+
+    // Query
+    mOpenGLFunction(GenQueries);
+    mOpenGLFunction(DeleteQueries);
+    mOpenGLFunction(IsQuery);
+    mOpenGLFunction(BeginQuery);
+    mOpenGLFunction(EndQuery);
+    mOpenGLFunction(GetQueryiv);
+    mOpenGLFunction(GetQueryObjectiv);
+    mOpenGLFunction(GetQueryObjectuiv);
+    mOpenGLFunction(CreateQueries);
+    mOpenGLFunction(GetQueryBufferObjecti64v);
+    mOpenGLFunction(GetQueryBufferObjectiv);
+    mOpenGLFunction(GetQueryBufferObjectui64v);
+    mOpenGLFunction(GetQueryBufferObjectuiv);
+    mOpenGLFunction(QueryCounter);
+    mOpenGLFunction(GetQueryObjecti64v);
+    mOpenGLFunction(GetQueryObjectui64v);
 };
 
 void LogGlError();

@@ -5,7 +5,8 @@ enum class OverlayOption : int
 {
     Arenas,
     TimedBlocks,
-    Frametime,
+    CpuFrametime,
+    GpuFrametime,
     Tables,
     COUNT,
 };
@@ -13,7 +14,8 @@ enum class OverlayOption : int
 const char *OverlayOption_userstrings[] = {
     "Arenas",
     "TimedBlocks",
-    "Frametime",
+    "CPU Frametime",
+    "GPU Frametime",
     "Tables"
 };
 

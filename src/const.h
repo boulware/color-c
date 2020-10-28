@@ -265,6 +265,14 @@ namespace c
         .align = c::align_topleft
     };
 
+    TextLayout const debug_window_label_text = {
+        .font = &text_render::default_font,
+        .color = c::white,
+        .font_size = 16,
+        .align = c::align_bottomleft,
+        .draw_debug = false
+    };
+
     // Main menu
     const TextLayout main_menu_unselected_text_layout = {
         .font = &text_render::default_font,

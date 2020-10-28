@@ -46,7 +46,8 @@ struct Game
 	LogState log_state;
 
 	float frame_time_ms;
-	FrametimeGraphState *frametime_graph_state;
+	FrametimeGraphState *cpu_frametime_graph_state;
+	FrametimeGraphState *gpu_frametime_graph_state;
 	TableDrawState table_draw_state;
 	bool draw_debug_overlay;
 	DebugOverlay debug_overlay;

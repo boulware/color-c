@@ -101,3 +101,7 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 //40) Our LCG isn't actually random. e.g., RandomU32(0,1) tends to alternate 0,1,0,1,0,1,... [fixed by changing our lcg.m back to something I got from... somewhere. It was 0xFFFFFFFF or 0xFFFFFFFE, but those produce very periodic results -- this is still potentially problematic because now we don't have the full range of U32 -- so when we do things like produce random floats we have to scale to the lcg.m rather than 0xFFFFFFFF. Or if we want random U32s larger than our m [which is a good amount smaller than 0xFFFFFFFF], we have issues. We could always fix this by going to a 64-bit LCG, which should give us plenty of room for things we want to do.)
 
 41) WorkQueue visualization
+
+42) Actually implement enemy AI with the (janky) system we have now, so that the enemies will perform those actions.
+
+43) Battle arrows point from ability box rather than unit slot box.
