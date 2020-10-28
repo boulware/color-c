@@ -463,10 +463,6 @@ GenerateEnemyIntents(Battle *battle)
 
         if(valid_ability_count <= 0) continue;
 
-        for(int i=0; i<50; ++i)
-        {
-            Log("%u", RandomU32(0, valid_ability_count-1));
-        }
         u32 index_into_valid_ability_indices = RandomU32(0, valid_ability_count-1);
         if(index_into_valid_ability_indices != 0)
         {
@@ -932,7 +928,10 @@ TickBattle(Battle *battle)
                 // Just leaving this note here to remind me if I notice something strange going on later.
                 SetSelectedUnit(battle, hovered_unit_id);
             }
-            else if(ValidUnit(hovered_unit) and battle->selected_ability_id != c::null_ability_id and selected_unit->cur_action_points > 0)
+            else if(    ValidUnit(hovered_unit)
+                    and battle->selected_ability_id != c::null_ability_id
+                    and selected_unit->cur_action_points > 0
+                    and UnitInUnitSet(hovered_unit_id, player_intent.target_set))
             { // Execute the player intent if a valid target is clicked and the selected unit has enough action points.
 
                 // Generate the event associated with the player intent and execute it.

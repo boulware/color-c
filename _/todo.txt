@@ -95,3 +95,9 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 37) Fix unit hotkeys in battle -- because the first 4 slots are no longer guaranteed to be allies, we need a different way of handling it.
 
 38) If we spam campaign map threads, we will get huge frame spikes every so often (up to anywhere around 15ms) -- unknown cause -- probably worth investigating, especially after we have tools for analysing particular frames to see where cycles went. This is relatively low priority for now since it doesn't seem to happen when we're not really spamming them, and even if it does, it's a small frame hitch for only 1 frame and it's just during map generation -- but(!) at some point it may start showing up in other things, so tracking down the issue is likely a good idea at some point.
+
+39) More of a note (in commit 7ac01af69cb57f82a8cfaab2bb87a7a389d29e7a): we said in this commit that we didn't find the root of the bug, but I think in fixing the entry overflow thing (where the next_entry_to_write would go past the end of a queue's entry array) may have been related -- I'm not totally sure about this, but that could have been the reason that we were seeing invalid arena_id's at various points.
+
+//40) Our LCG isn't actually random. e.g., RandomU32(0,1) tends to alternate 0,1,0,1,0,1,... [fixed by changing our lcg.m back to something I got from... somewhere. It was 0xFFFFFFFF or 0xFFFFFFFE, but those produce very periodic results -- this is still potentially problematic because now we don't have the full range of U32 -- so when we do things like produce random floats we have to scale to the lcg.m rather than 0xFFFFFFFF. Or if we want random U32s larger than our m [which is a good amount smaller than 0xFFFFFFFF], we have issues. We could always fix this by going to a 64-bit LCG, which should give us plenty of room for things we want to do.)
+
+41) WorkQueue visualization

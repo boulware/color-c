@@ -43,7 +43,7 @@ GameInit(GameInitData init_data)
 
     InitTableDrawState(&game->table_draw_state);
 
-    #if 0
+    #if 1
         InitLcgSystemSeed(&random::default_lcg);
     #else
         InitLcgSetSeed(&random::default_lcg, 505309726);

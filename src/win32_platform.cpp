@@ -898,18 +898,6 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             game->frame_time_ms = 0.5f*(this_frame_time_ms + game->frame_time_ms);
             AddFrametimeToGraph(&frametime_graph_state, this_frame_time_ms);
 
-
-            String queues_string = AllocStringDataFromArena(1024, memory::per_frame_arena_id);
-            //for(int i=0; i<g_work_queue_system.queues.count; ++i)
-            for(auto &queue : g_work_queue_system.queues)
-            {
-                AppendCString(&queues_string, "read: %u, write: %u\n",
-                              queue.next_entry_to_read,
-                              queue.next_entry_to_write);
-            }
-
-            DrawTextMultiline(c::def_text_layout, {}, queues_string);
-
             ResetInputState(&game->input);
             SwapBuffers(wc.hdc);
             RedrawWindow(wc.hwnd, NULL, NULL, RDW_INVALIDATE);

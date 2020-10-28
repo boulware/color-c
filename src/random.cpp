@@ -8,11 +8,12 @@ void Seed(u32 seed_value)
 void
 InitLcgSetSeed(LCG *lcg, u32 seed)
 {
-	lcg->m = 0xFFFFFFFE;
-	//lcg->m = 2147483647;
+	//lcg->m = 0xFFFFFFFE;
+	lcg->m = 2147483647;
 	lcg->a = 1583458089;
 	lcg->c = 12345;
 	lcg->seed = seed;
+	Log("Set seed: %zu", lcg->seed);
 
 	// Do some iterations to get out of the start range
 	for(int i=0; i<100; i++) RandomU32(0,1);
@@ -22,8 +23,8 @@ u64
 InitLcgSystemSeed(LCG *lcg)
 {
 	// TODO: Can m actually be 2^32-1 and still be random enough?
-	lcg->m = 0xFFFFFFFE;
-	//lcg->m = 2147483647;
+	//lcg->m = 0xFFFFFFFE;
+	lcg->m = 2147483647;
 	lcg->a = 1583458089;
 	lcg->c = 12345;
 	lcg->seed = __rdtsc();
@@ -59,7 +60,8 @@ RandomFloat(float min, float max)
     if(min > max or min == max) return min;
 	u32 roll = RandomU32(0, 0xFFFFFFFF);
 
-	return min + ((float)roll / (float)0xFFFFFFFF)*(max-min);
+	LCG &lcg = random::default_lcg;
+	return min + ((float)roll / (float)(lcg.m-1))*(max-min);
 }
 
 bool

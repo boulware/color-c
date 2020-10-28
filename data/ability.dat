@@ -44,7 +44,7 @@ effect Restore self (0,0,2)
 ability "Rig Up"
 tier 1
 requires (0,0,1)
-effect Gift single_ally (0,0,1)
+effect Gift single_ally_not_self (0,0,1)
 tier 2
 requires (0,0,5)
 effect Restore single_ally (0,0,1)
