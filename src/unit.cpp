@@ -796,10 +796,10 @@ GetBreedFromId(Id<Breed> id)
 }
 
 Unit *
-GetUnitFromId(Id<Unit> id)
+GetUnitFromId(Id<Unit> id, Table<Unit> unit_table)
 {
     TIMED_BLOCK;
-    return GetEntryFromId(g::unit_table, id);
+    return GetEntryFromId(unit_table, id);
 }
 
 void

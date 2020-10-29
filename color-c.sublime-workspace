@@ -4,6 +4,70 @@
 		"selected_items":
 		[
 			[
+				"Battle",
+				"BattleEvent"
+			],
+			[
+				"enemy",
+				"enemy_count"
+			],
+			[
+				"glbo",
+				"global_unit"
+			],
+			[
+				"all_unit",
+				"all_unit_ids"
+			],
+			[
+				"all_",
+				"all_unit_ids"
+			],
+			[
+				"global",
+				"global_unit"
+			],
+			[
+				"all_uni",
+				"all_units"
+			],
+			[
+				"all_units",
+				"all_units"
+			],
+			[
+				"ordere",
+				"ordered_battle_units"
+			],
+			[
+				"active_units",
+				"active_units"
+			],
+			[
+				"gpu_start_",
+				"gpu_start_counter"
+			],
+			[
+				"gpu_end",
+				"gpu_end_time"
+			],
+			[
+				"nex",
+				"next_entry_to_write"
+			],
+			[
+				"queues",
+				"queues_string"
+			],
+			[
+				"thread_",
+				"thread_contexts"
+			],
+			[
+				"threadarea",
+				"thread_arena_debug_name"
+			],
+			[
 				"chosen",
 				"chosen_ability"
 			],
@@ -42,10 +106,6 @@
 			[
 				"Gene",
 				"GenerateEventsFromIntent"
-			],
-			[
-				"Battle",
-				"BattlePhase"
 			],
 			[
 				"ability",
@@ -210,10 +270,6 @@
 			[
 				"en",
 				"entries_per_dimension"
-			],
-			[
-				"enemy",
-				"enemy_units"
 			],
 			[
 				"random",
@@ -458,72 +514,51 @@
 			[
 				"current",
 				"current_state"
-			],
-			[
-				"cur_pot",
-				"cur_potential"
-			],
-			[
-				"best_",
-				"best_score"
-			],
-			[
-				"pote",
-				"ability_potential"
-			],
-			[
-				"abs",
-				"abs_change"
-			],
-			[
-				"rel",
-				"rel_change"
-			],
-			[
-				"best",
-				"best_score"
-			],
-			[
-				"abilit_",
-				"ability_id"
-			],
-			[
-				"tier_pote",
-				"tier_potentials"
-			],
-			[
-				"next_",
-				"next_tier_index"
-			],
-			[
-				"requir",
-				"required_traits"
-			],
-			[
-				"cur_tier",
-				"cur_tier_reqs"
-			],
-			[
-				"cur_",
-				"cur_tier_index"
-			],
-			[
-				"armor",
-				"armor_score"
-			],
-			[
-				"focus",
-				"focus_score"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "src/unit.h",
+			"settings":
+			{
+				"buffer_size": 2759,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/enemy_ai.h",
+			"settings":
+			{
+				"buffer_size": 1992,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "src/battle.cpp",
 			"settings":
 			{
-				"buffer_size": 59371,
+				"buffer_size": 61026,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/battle.h",
+			"settings":
+			{
+				"buffer_size": 2063,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "_/todo.txt",
+			"settings":
+			{
+				"buffer_size": 12688,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -532,77 +567,35 @@
 			"file": "src/campaign.cpp",
 			"settings":
 			{
-				"buffer_size": 22281,
+				"buffer_size": 22697,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "data/breed.dat",
+			"file": "src/intent.h",
 			"settings":
 			{
-				"buffer_size": 681,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/draw.cpp",
-			"settings":
-			{
-				"buffer_size": 7424,
+				"buffer_size": 275,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/const.h",
+			"contents": "Searching 149 files for \"struct Intent\"\n\nC:\\color-c\\src\\intent.h:\n    4  #include \"table.h\"\n    5  \n    6: struct Intent\n    7  {\n    8      Id<Unit> caster_id;\n\n1 match in 1 file\n\n\nSearching 149 files for \"enum class Team\"\n\nC:\\color-c\\src\\unit.h:\n    6  #include \"intent.h\"\n    7  \n    8: enum class Team : u8\n    9  {\n   10  \tallies,\n\n1 match in 1 file\n",
 			"settings":
 			{
-				"buffer_size": 20022,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
+				"buffer_size": 355,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
 			}
 		},
 		{
-			"file": "src/random.cpp",
+			"file": "src/enemy_ai.cpp",
 			"settings":
 			{
-				"buffer_size": 1660,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/draw.h",
-			"settings":
-			{
-				"buffer_size": 1425,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/game.cpp",
-			"settings":
-			{
-				"buffer_size": 20021,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "logs/log.txt",
-			"settings":
-			{
-				"buffer_size": 8855168,
-				"encoding": "Western (Windows 1252)",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/array.h",
-			"settings":
-			{
-				"buffer_size": 3050,
+				"buffer_size": 42947,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -748,65 +741,85 @@
 	],
 	"file_history":
 	[
-		"/C/color-c/src/battle.h",
-		"/C/color-c/src/vec.cpp",
-		"/C/color-c/src/game.cpp",
-		"/C/color-c/src/frametimes_draw.cpp",
-		"/C/color-c/build/b.bat",
-		"/C/color-c/src/unit.cpp",
-		"/C/color-c/src/unit.h",
-		"/C/color-c/_/todo.txt",
-		"/C/color-c/src/win32_platform.cpp",
 		"/C/color-c/data/ability.dat",
-		"/C/color-c/src/const.h",
-		"/C/color-c/src/test_mode.cpp",
-		"/C/color-c/src/draw.h",
-		"/C/color-c/src/campaign.cpp",
 		"/C/color-c/src/battle.cpp",
 		"/C/color-c/src/array.h",
+		"/C/color-c/data/breed.dat",
+		"/C/color-c/src/campaign.cpp",
+		"/C/color-c/src/game.cpp",
+		"/C/color-c/src/game_code_include.cpp",
+		"/C/color-c/src/battle.h",
+		"/C/color-c/src/meta_print.cpp",
+		"/C/color-c/src/meta_print.h",
+		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/enemy_ai.h",
+		"/C/color-c/src/enemy_ai.cpp",
+		"/C/color-c/src/const.h",
+		"/C/color-c/src/meta_print(manual).cpp",
+		"/C/color-c/src/meta_print(manual).h",
+		"/C/color-c/build/b.bat",
+		"/C/color-c/src/win32_work_queue.cpp",
+		"/C/color-c/src/text_render.cpp",
+		"/C/color-c/src/debug_overlay.h",
+		"/C/color-c/src/game.h",
+		"/C/color-c/src/draw.cpp",
+		"/C/color-c/src/opengl.h",
+		"/C/color-c/src/camera.h",
+		"/C/color-c/src/win32_platform.cpp",
+		"/C/color-c/src/shader/gaussian_blur.cs.glsl",
+		"/C/color-c/src/node_graph.cpp",
+		"/C/color-c/_/design.txt",
+		"/C/color-c/_/todo_design.txt",
+		"/C/color-c/_/todo.txt",
+		"/C/color-c/_/todo_technical.txt",
+		"/C/color-c/_/performance_relevant_decisions.txt",
+		"/C/color-c/src/memory.h",
+		"/C/color-c/src/win32_work_queue.h",
+		"/C/color-c/src/random.cpp",
+		"/C/color-c/logs/critical.log",
+		"/C/color-c/src/string.h",
+		"/C/color-c/src/string.cpp",
+		"/C/color-c/src/pool.cpp",
+		"/C/color-c/src/memory.cpp",
+		"/C/color-c/src/frametimes_draw.h",
+		"/C/color-c/src/frametimes_draw.cpp",
+		"/C/color-c/build/work_queue_draw.cpp",
+		"/C/color-c/src/campaign.h",
+		"/C/color-c/src/memory_draw.cpp",
+		"/C/color-c/src/ability.cpp",
+		"/C/color-c/src/pool.h",
+		"/C/color-c/src/memory_draw.h",
+		"/C/color-c/src/main_menu.cpp",
+		"/C/color-c/src/ring_buffer.h",
+		"/C/color-c/src/draw.h",
+		"/C/color-c/src/node_graph.h",
+		"/C/color-c/src/generate_node_graph_params.h",
+		"/C/color-c/src/vec.cpp",
+		"/C/color-c/src/unit.cpp",
+		"/C/color-c/src/unit.h",
+		"/C/color-c/src/test_mode.cpp",
 		"/C/color-c/src/table.h",
 		"/C/color-c/src/table.cpp",
-		"/C/color-c/src/win32_work_queue.cpp",
 		"/C/color-c/src/array.cpp",
-		"/C/color-c/src/win32_work_queue.h",
 		"/C/color-c/src/intent.h",
-		"/C/color-c/src/memory.h",
 		"/C/color-c/src/global.h",
-		"/C/color-c/src/campaign.h",
-		"/C/color-c/src/memory.cpp",
 		"/C/color-c/src/work_entry.h",
 		"/C/color-c/src/ring_buffer.cpp",
-		"/C/color-c/src/ring_buffer.h",
-		"/C/color-c/src/enemy_ai.cpp",
 		"/C/color-c/src/better_text_parsing.h",
-		"/C/color-c/logs/log.txt",
-		"/C/color-c/src/meta_print.cpp",
 		"/C/color-c/src/meta.cpp",
 		"/C/color-c/src/macros.h",
 		"/C/color-c/src/battle_unit.h",
-		"/C/color-c/data/breed.dat",
 		"/C/color-c/src/editor.cpp",
 		"/C/color-c/src/text_render.h",
-		"/C/color-c/src/text_render.cpp",
-		"/C/color-c/src/ability.cpp",
-		"/C/color-c/src/memory_draw.cpp",
-		"/C/color-c/src/frametimes_draw.h",
 		"/C/color-c/src/meta_text_parsing.h",
 		"/C/color-c/src/meta_text_parsing.cpp",
 		"/C/color-c/src/imgui.cpp",
-		"/C/color-c/src/main_menu.cpp",
 		"/C/color-c/src/options_menu.cpp",
-		"/C/color-c/logs/critical.log",
-		"/C/color-c/src/game.h",
 		"/C/color-c/src/table_draw.cpp",
 		"/C/color-c/src/table_draw.h",
-		"/C/color-c/src/game_code_include.cpp",
 		"/C/color-c/src/imgui.h",
-		"/C/color-c/src/debug_overlay.h",
-		"/C/color-c/src/camera.h",
 		"/C/color-c/src/input.cpp",
 		"/C/color-c/src/input.h",
-		"/C/color-c/src/draw.cpp",
 		"/C/color-c/src/camera.cpp",
 		"/C/color-c/src/platform_include.cpp",
 		"/C/color-c/src/stack.h",
@@ -819,31 +832,20 @@
 		"/C/color-c/src/map.h",
 		"/C/color-c/src/map.cpp",
 		"/C/color-c/src/room.h",
-		"/C/color-c/src/pool.h",
-		"/C/color-c/src/pool.cpp",
-		"/C/color-c/src/node_graph.cpp",
-		"/C/color-c/src/node_graph.h",
 		"/C/color-c/src/debug.h",
 		"/C/color-c/src/debug.cpp",
-		"/C/color-c/src/memory_draw.h",
 		"/C/color-c/src/platform.h",
 		"/C/color-c/src/main_menu.h",
 		"/C/color-c/src/debug_window.h",
-		"/C/color-c/src/string.cpp",
-		"/C/color-c/src/string.h",
 		"/C/color-c/src/editor.h",
 		"/C/color-c/src/utf32string.cpp",
 		"/C/color-c/src/text_parsing.cpp",
 		"/C/color-c/src/text_parsing.h",
 		"/C/color-c/src/util.h",
 		"/C/color-c/logs/DebugTimings.txt",
-		"/C/color-c/_/performance_relevant_decisions.txt",
 		"/C/color-c/src/better_text_parsing.cpp",
-		"/C/color-c/src/enemy_ai.h",
 		"/C/color-c/src/shader/outline.cs.glsl",
 		"/C/color-c/src/opengl.cpp",
-		"/C/color-c/src/shader/gaussian_blur.cs.glsl",
-		"/C/color-c/src/opengl.h",
 		"/C/color-c/src/color_vertex.glsl",
 		"/C/color-c/src/font_loading.cpp",
 		"/C/color-c/src/sprite.cpp",
@@ -866,16 +868,7 @@
 		"/C/color-c/src/align.h",
 		"/C/color-c/src/ai_explorer.cpp",
 		"/C/color-c/src/geometry.cpp",
-		"/C/color-c/src/geometry.h",
-		"/C/color-c/src/test_mode.h",
-		"/C/color-c/src/ai_explorer.h",
-		"/C/color-c/src/traitset.cpp",
-		"/C/color-c/src/traitset.h",
-		"/C/color-c/src/effect.cpp",
-		"/C/color-c/src/effect.h",
-		"/C/color-c/src/target_class.h",
-		"/C/color-c/src/target_class.cpp",
-		"/C/color-c/src/random.cpp"
+		"/C/color-c/src/geometry.h"
 	],
 	"find":
 	{
@@ -908,6 +901,62 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"preview_events",
+			"EventTraitChangesForUnit",
+			"preview",
+			"GenerateEnemyIntents",
+			"intent.",
+			"intents",
+			"permutation_values",
+			"DoAi",
+			"DoAiStuff",
+			"ScoreBattleState3",
+			"enemy_traitset_changes",
+			"ally_traitset_changes",
+			"best_choice",
+			"arena_id",
+			"action",
+			"traitset_changes",
+			"ally_traitset_changes",
+			"max_ally_traitsets",
+			"integer",
+			"int'",
+			"action",
+			"actions",
+			"AiAction",
+			"ally_units",
+			"all_allies",
+			"arrays",
+			"enum class Team",
+			"struct Intent",
+			"intent",
+			"text",
+			"font",
+			"frametime_graph_state",
+			"PushUi",
+			"fnsig_glGetQueryObjectiv",
+			"opengl3",
+			"opengl",
+			"Pressed(KeyBind::Select",
+			"LMB",
+			"Log(\"",
+			"Log(",
+			"Log(\"",
+			"Log(",
+			"Temp",
+			"ThreadProc",
+			"    }\n    }\nThreadProc",
+			"    }\nThreadProc",
+			"ThreadProc",
+			"WAIT_TIMEOUT returned",
+			"DeleteEntry",
+			"thread_count",
+			"CreateEntry",
+			"arena_pool.",
+			"pool",
+			"DeleteEntry",
+			"max_speed",
+			"StepNodeGraphForceSimulation",
 			"shift",
 			"KeyBind::Select",
 			"selected_unit_id",
@@ -979,63 +1028,7 @@
 			"intent",
 			"MetaString",
 			"name()",
-			"no_implement",
-			"shift",
-			"Random",
-			"color.",
-			"_RenderUtf32Char",
-			"OPTIMIZE",
-			"F12",
-			".size",
-			".size.y",
-			"debug_control_draw_depth",
-			"GenerateAbilityTier",
-			"current_battle",
-			"battle",
-			"table.",
-			"frametime_",
-			"LineHeight",
-			"imgui::active_container",
-			"Reset",
-			"OverlayOption",
-			"SetCamera",
-			"Push",
-			"ui",
-			"mouse_focus_taken",
-			"TakeMouseFocus",
-			"MouseFocusTaken",
-			"state.",
-			"DrawFrametimes",
-			"padding",
-			"entry_data_buffer",
-			"RingBuffer",
-			"->hud",
-			"hud",
-			"unit_slots",
-			"CreateUnit",
-			"CombineUnit",
-			"rooms =",
-			"room",
-			"state =",
-			"draw unit",
-			"TraitSet",
-			"hovered_node_index",
-			"enum class Team",
-			"struct UnitSet",
-			"UnitFrom",
-			"Button(",
-			"dk_grey",
-			"Draw",
-			"MousePos()",
-			"dragging_index",
-			"SizeUiText",
-			"DrawText",
-			"ButtonLayout",
-			"ReleaseMutex",
-			"AddWorkEn",
-			"AllocArena",
-			"crit",
-			"mutex"
+			"no_implement"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1043,6 +1036,10 @@
 		"regex": false,
 		"replace_history":
 		[
+			"traitset_changes",
+			"intent",
+			"intents",
+			"arena_pool->",
 			"battle->units",
 			"battle->units_",
 			"enemy_pen",
@@ -1166,11 +1163,7 @@
 			"FASTSLOW_FUNCTION",
 			"font->",
 			"entry->",
-			"Length(traitset_string)",
-			", ",
-			"fullscreen_",
-			"align.y == AlignY",
-			"trait_layout"
+			"Length(traitset_string)"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1181,208 +1174,24 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/battle.cpp",
+					"file": "src/unit.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 59371,
+						"buffer_size": 2759,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								18564,
-								18564
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 5749.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "src/campaign.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 22281,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								21326,
-								21326
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 7117.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "data/breed.dat",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 681,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								543,
-								548
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 3,
-			"sheets":
-			[
-				{
-					"buffer": 3,
-					"file": "src/draw.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7424,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4598,
-								4598
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1672.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/const.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 20022,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4471,
-								4494
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1099.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 0,
-					"file": "src/battle.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 59371,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "src/random.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1660,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								454,
-								454
+								635,
+								641
 							]
 						],
 						"settings":
@@ -1394,24 +1203,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/draw.h",
+					"buffer": 1,
+					"file": "src/enemy_ai.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1425,
+						"buffer_size": 1992,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								178,
-								178
+								1064,
+								1064
 							]
 						],
 						"settings":
@@ -1421,27 +1230,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 78.0,
+						"translation.y": 195.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "src/game.cpp",
+					"buffer": 2,
+					"file": "src/battle.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 20021,
+						"buffer_size": 61026,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								610,
-								610
+								7850,
+								7886
 							]
 						],
 						"settings":
@@ -1451,27 +1260,57 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 117.0,
+						"translation.y": 2551.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "logs/log.txt",
+					"buffer": 3,
+					"file": "src/battle.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8855168,
+						"buffer_size": 2063,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8855168,
-								8855168
+								1675,
+								1675
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 663.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "_/todo.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12688,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								12688,
+								12688
 							]
 						],
 						"settings":
@@ -1479,27 +1318,27 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 4504322.0,
+						"translation.y": 1611.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "src/array.h",
+					"buffer": 5,
+					"file": "src/campaign.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3050,
+						"buffer_size": 22697,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								831,
-								831
+								21654,
+								21654
 							]
 						],
 						"settings":
@@ -1509,10 +1348,184 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 7214.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 6,
+					"file": "src/intent.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 275,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								264,
+								264
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 355,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										107,
+										120
+									],
+									[
+										290,
+										305
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								297,
+								297
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 2,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 143.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "src/unit.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2759,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								480,
+								480
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 39.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/enemy_ai.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 42947,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23599,
+								23599
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6830.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/battle.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2063,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1233,
+								1233
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 351.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1520,7 +1533,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 28.0
 	},
 	"input":
 	{
@@ -1578,76 +1591,196 @@
 		"selected_items":
 		[
 			[
-				"rand",
-				"src\\random.cpp"
-			],
-			[
-				"array",
-				"src\\array.h"
-			],
-			[
-				"logt",
-				"logs\\log.txt"
-			],
-			[
-				"game",
-				"src\\game.cpp"
-			],
-			[
-				"breed",
-				"data\\breed.dat"
-			],
-			[
-				"camp",
-				"src\\campaign.cpp"
-			],
-			[
-				"test",
-				"src\\test_mode.cpp"
-			],
-			[
-				"con",
-				"src\\const.h"
-			],
-			[
-				"abilitydat",
-				"data\\ability.dat"
-			],
-			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"batt",
-				"src\\battle.cpp"
-			],
-			[
 				"battleh",
 				"src\\battle.h"
-			],
-			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
-				"bb",
-				"build\\b.bat"
 			],
 			[
 				"todo",
 				"_\\todo.txt"
 			],
 			[
+				"camp",
+				"src\\campaign.cpp"
+			],
+			[
+				"batt",
+				"src\\battle.cpp"
+			],
+			[
 				"unit",
-				"src\\unit.cpp"
+				"src\\unit.h"
+			],
+			[
+				"log",
+				"logs\\log.txt"
+			],
+			[
+				"abili",
+				"data\\ability.dat"
+			],
+			[
+				"breed",
+				"data\\breed.dat"
+			],
+			[
+				"ab",
+				"data\\ability.dat"
+			],
+			[
+				"cam",
+				"src\\campaign.cpp"
+			],
+			[
+				"game",
+				"src\\game.cpp"
+			],
+			[
+				"arrayh",
+				"src\\array.h"
+			],
+			[
+				"array",
+				"src\\array.h"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"metaprint",
+				"src\\meta_print(manual).cpp"
+			],
+			[
+				"inc",
+				"src\\game_code_include.cpp"
+			],
+			[
+				"metaprintma",
+				"src\\meta_print(manual).h"
+			],
+			[
+				"meta_printh",
+				"src\\meta_print.h"
+			],
+			[
+				"enemyai",
+				"src\\enemy_ai.cpp"
+			],
+			[
+				"bb",
+				"build\\b.bat"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"win32",
+				"src\\win32_work_queue.cpp"
+			],
+			[
+				"gameh",
+				"src\\game.h"
+			],
+			[
+				"blur",
+				"src\\shader\\gaussian_blur.cs.glsl"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"opengl",
+				"src\\opengl.h"
+			],
+			[
+				"ability",
+				"data\\ability.dat"
+			],
+			[
+				"rand",
+				"src\\random.cpp"
+			],
+			[
+				"node",
+				"src\\node_graph.cpp"
+			],
+			[
+				"cri",
+				"logs\\critical.log"
+			],
+			[
+				"frametime",
+				"src\\frametimes_draw.cpp"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"crit",
+				"logs\\critical.log"
+			],
+			[
+				"con",
+				"src\\const.h"
+			],
+			[
+				"queue",
+				"src\\win32_work_queue.h"
+			],
+			[
+				"memr",
+				"src\\memory.h"
+			],
+			[
+				"workque",
+				"src\\win32_work_queue.cpp"
+			],
+			[
+				"mem",
+				"src\\memory.cpp"
+			],
+			[
+				"arra",
+				"src\\array.h"
+			],
+			[
+				"pool",
+				"src\\pool.cpp"
+			],
+			[
+				"memorydraw",
+				"src\\memory_draw.cpp"
+			],
+			[
+				"ringbu",
+				"src\\ring_buffer.h"
+			],
+			[
+				"memor",
+				"src\\memory.cpp"
+			],
+			[
+				"main",
+				"src\\main_menu.cpp"
+			],
+			[
+				"logt",
+				"logs\\log.txt"
+			],
+			[
+				"test",
+				"src\\test_mode.cpp"
+			],
+			[
+				"abilitydat",
+				"data\\ability.dat"
 			],
 			[
 				"gamec",
 				"src\\game.cpp"
-			],
-			[
-				"win32",
-				"src\\win32_platform.cpp"
 			],
 			[
 				"intent",
@@ -1662,20 +1795,8 @@
 				"src\\table.h"
 			],
 			[
-				"arra",
-				"src\\array.h"
-			],
-			[
 				"unith",
 				"src\\unit.h"
-			],
-			[
-				"memor",
-				"src\\memory.h"
-			],
-			[
-				"workque",
-				"src\\win32_work_queue.h"
 			],
 			[
 				"win32_wor",
@@ -1694,14 +1815,6 @@
 				"src\\win32_work_queue.h"
 			],
 			[
-				"memr",
-				"src\\memory.cpp"
-			],
-			[
-				"enemyai",
-				"src\\enemy_ai.cpp"
-			],
-			[
 				"battle",
 				"src\\battle_unit.h"
 			],
@@ -1714,16 +1827,8 @@
 				"src\\table.h"
 			],
 			[
-				"log",
-				"logs\\log.txt"
-			],
-			[
 				"Battle",
 				"src\\battle.h"
-			],
-			[
-				"metaprint",
-				"src\\meta_print.cpp"
 			],
 			[
 				"macro",
@@ -1746,18 +1851,6 @@
 				"src\\battle.cpp"
 			],
 			[
-				"abili",
-				"data\\ability.dat"
-			],
-			[
-				"memorydraw",
-				"src\\memory_draw.cpp"
-			],
-			[
-				"mem",
-				"src\\memory.cpp"
-			],
-			[
 				"text",
 				"src\\text_render.cpp"
 			],
@@ -1770,32 +1863,16 @@
 				"src\\options_menu.cpp"
 			],
 			[
-				"main",
-				"src\\main_menu.cpp"
-			],
-			[
 				"img",
 				"src\\imgui.cpp"
-			],
-			[
-				"crit",
-				"logs\\critical.log"
 			],
 			[
 				"_draw",
 				"src\\frametimes_draw.cpp"
 			],
 			[
-				"frametime",
-				"src\\frametimes_draw.cpp"
-			],
-			[
 				"include",
 				"src\\game_code_include.cpp"
-			],
-			[
-				"gameh",
-				"src\\game.h"
 			],
 			[
 				"imgui",
@@ -1808,14 +1885,6 @@
 			[
 				"plat",
 				"src\\platform_include.cpp"
-			],
-			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
-				"inc",
-				"src\\game_code_include.cpp"
 			],
 			[
 				"camera",
@@ -1890,20 +1959,12 @@
 				"_\\todo.txt"
 			],
 			[
-				"pool",
-				"src\\pool.cpp"
-			],
-			[
 				"imguih",
 				"src\\imgui.h"
 			],
 			[
 				"iguih",
 				"src\\imgui.h"
-			],
-			[
-				"node",
-				"src\\node_graph.cpp"
 			],
 			[
 				"memoryd",
@@ -1920,10 +1981,6 @@
 			[
 				"utf32",
 				"src\\utf32string.cpp"
-			],
-			[
-				"string",
-				"src\\string.cpp"
 			],
 			[
 				"edit",
@@ -1982,10 +2039,6 @@
 				"logs\\DebugTimings.txt"
 			],
 			[
-				"cam",
-				"src\\campaign.cpp"
-			],
-			[
 				"utf",
 				"src\\utf32string.cpp"
 			],
@@ -2026,16 +2079,8 @@
 				"src\\draw.h"
 			],
 			[
-				"opengl",
-				"src\\opengl.h"
-			],
-			[
 				"open",
 				"src\\opengl.cpp"
-			],
-			[
-				"blur",
-				"src\\shader\\gaussian_blur.cs.glsl"
 			],
 			[
 				"openglh",
@@ -2056,38 +2101,6 @@
 			[
 				"logcp",
 				"src\\log.cpp"
-			],
-			[
-				"ogc",
-				"build\\freetype-2.9.1\\builds\\os2\\os2-gcc.mk"
-			],
-			[
-				"uv_fra",
-				"src\\uv_fragment.glsl"
-			],
-			[
-				"uv_ver",
-				"src\\uv_vertex.glsl"
-			],
-			[
-				"vertex",
-				"src\\color_vertex.glsl"
-			],
-			[
-				"gauss",
-				"src\\shader\\gaussian_blur.vs.glsl"
-			],
-			[
-				"guas",
-				"src\\shader\\gaussian_blur.vs.glsl"
-			],
-			[
-				"color_fra",
-				"src\\color_fragment.glsl"
-			],
-			[
-				"openg",
-				"src\\opengl.cpp"
 			]
 		],
 		"width": 0.0
@@ -2110,7 +2123,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

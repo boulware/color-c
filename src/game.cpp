@@ -134,6 +134,11 @@ GameInit(GameInitData init_data)
         g_unit_table = &g::unit_table;
     }
 
+    { // Temp unit table
+        auto arena_id = AllocArena("Temp Unit Table");
+        g::temp_unit_table = AllocTable<Unit>(100, arena_id);
+    }
+
     // Passive skill table
     // g::passive_skill_table = AllocTable(sizeof(PassiveSkill), c::passive_skill_table_partition_size);
     // {
@@ -383,6 +388,9 @@ GameUpdateAndRender()
             }
             else if(game->table_draw_state.cur_mode == TableDrawMode::Unit) {
                 DrawTable(&game->table_draw_state, &g::unit_table, window_rect);
+            }
+            else if(game->table_draw_state.cur_mode == TableDrawMode::TempUnit) {
+                DrawTable(&game->table_draw_state, &g::temp_unit_table, window_rect);
             }
 
             DrawUnfilledRect(window_rect, c::white, true);

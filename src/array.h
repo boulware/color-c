@@ -63,6 +63,7 @@ String MetaString(const Array<Type> *s)
 template<typename Type> Type *      begin(Array<Type> &array);
 template<typename Type> Type *      end(Array<Type> &array);
 template<typename Type> bool        ValidArray(Array<Type> array);
+template<typename Type> Type *      Append(Array<Type> *array);
 template<typename Type> Type *      Append(Array<Type> *array, Type entry);
 template<typename Type> Type *      AppendIfUnique(Array<Type> *array, Type entry);
 template<typename Type> Type *      AppendEmptyElement(Array<Type> *array);

@@ -4,6 +4,7 @@
 #include "text_parsing.h"
 #include "ability.h"
 #include "intent.h"
+#include "global.h"
 
 enum class Team : u8
 {
@@ -89,6 +90,6 @@ char *TraitSetString(TraitSet traits);
 int DetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id);
 
 Breed *GetBreedFromId(Id<Breed> id);
-Unit *GetUnitFromId(Id<Unit> id);
+Unit *GetUnitFromId(Id<Unit> id, Table<Unit> unit_table = g::unit_table);
 
 #endif

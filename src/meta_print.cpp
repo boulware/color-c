@@ -377,9 +377,9 @@ String MetaString(const Battle *s)
 	AppendString(&string, MetaString(&s->units));
 	AppendCString(&string, "(Array<UnitId>)\n");
 
-	AppendCString(&string, "  preview_events: ");
-	AppendString(&string, MetaString(&s->preview_events));
-	AppendCString(&string, "(Array<BattleEvent>)\n");
+	AppendCString(&string, "  preview_intents: ");
+	AppendString(&string, MetaString(&s->preview_intents));
+	AppendCString(&string, "(Array<Intent>)\n");
 
 	AppendCString(&string, "  preview_damage_timer: ");
 	AppendString(&string, MetaString(&s->preview_damage_timer));
@@ -1502,6 +1502,7 @@ String MetaString(const GenerateNodeGraph_Params *s)
 // ---------------FILE START---------------
 // global.h
 // ------------------------------------------
+
 
 // ---------------FILE START---------------
 // image.h
@@ -2762,6 +2763,9 @@ String MetaString(const TableDrawMode *s)
 		} break;
 		case(TableDrawMode::Unit): {
 			AppendCString(&string, "Unit");
+		} break;
+		case(TableDrawMode::TempUnit): {
+			AppendCString(&string, "TempUnit");
 		} break;
 		case(TableDrawMode::COUNT): {
 			AppendCString(&string, "COUNT");

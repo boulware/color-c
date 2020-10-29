@@ -95,13 +95,13 @@ ValidSelectionUnitSet(Id<Unit> caster_id, TargetClass tc, Array<UnitId> all_unit
 // For the given [intent], determine all events that would occur if the intent
 // would be executed, and add those events to [*events]
 void
-GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events)
+GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events, Table<Unit> unit_table)
 {
     auto caster_id = intent.caster_id;
     auto ability_id = intent.ability_id;
 
     // Check that the caster and ability in intent are valid.
-    Unit *caster = GetUnitFromId(caster_id);
+    Unit *caster = GetUnitFromId(caster_id, unit_table);
     Ability *ability = GetAbilityFromId(ability_id);
     { // Check caster and ability are valid
         if(!caster)
@@ -134,7 +134,7 @@ GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events)
     {
         for(Id<Unit> target_id : intent.target_set)
         {
-            Unit *target = GetUnitFromId(target_id);
+            Unit *target = GetUnitFromId(target_id, unit_table);
             if(!target) continue;
 
             TraitSet trait_changes = {};
@@ -209,23 +209,57 @@ GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events)
     }
 }
 
-// Returns the TraitSet that the [target_id] will receive after the
-// given [events] are executed.
-TraitSet
-EventTraitChangesForUnit(Array<BattleEvent> events, Id<Unit> target_id)
-{
-    TraitSet trait_changes = {};
-
-    for(auto event : events)
+void
+IntentTraitChangesForUnits(Array<Intent> intents, Array<UnitId> unit_ids, Array<TraitSet> *traitset_changes)
+{ TIMED_BLOCK;
+    g::temp_unit_table.entry_count = g::unit_table.entry_count;
+    // Copy unit table into temp unit table
+    for(int i=0; i<g::unit_table.entry_count; ++i)
     {
-        Unit *caster = GetUnitFromId(event.caster_id);
-        if(!ValidUnit(caster) or caster->cur_traits.vigor <= 0) continue;
-        if(target_id != event.target_id) continue;
-
-        trait_changes += event.trait_changes;
+        g::temp_unit_table.entries[i] = g::unit_table.entries[i];
     }
 
-    return trait_changes;
+    for(auto intent : intents)
+    {
+        Unit *temp_caster = GetUnitFromId(intent.caster_id, g::temp_unit_table);
+        if(!ValidUnit(temp_caster)) continue;
+
+        Ability *ability = GetAbilityFromId(intent.ability_id);
+        if(!ValidAbility(ability)) continue;
+
+        int tier_index = -1;
+        for(int i=ability->tiers.count-1; i>=0; --i)
+        {
+            if(temp_caster->cur_traits >= ability->tiers[i].required_traits)
+            {
+                tier_index = i;
+                break;
+            }
+        }
+
+        if(tier_index <= 0) continue;
+
+        auto &ability_tier = ability->tiers[tier_index]; // alias
+
+        Array<BattleEvent> events = CreateTempArray<BattleEvent>(10);
+        GenerateEventsFromIntent(intent, &events, g::temp_unit_table);
+
+        for(auto event : events)
+        {
+            Unit *temp_target = GetUnitFromId(event.target_id, g::temp_unit_table);
+            if(!ValidUnit(temp_target));
+
+            temp_target->cur_traits += event.trait_changes;
+        }
+    }
+
+    for(auto unit_id : unit_ids)
+    {
+        Unit *unit_before_change = GetUnitFromId(unit_id, g::unit_table);
+        Unit *unit_after_change =  GetUnitFromId(unit_id, g::temp_unit_table);
+
+        Append(traitset_changes, unit_after_change->cur_traits - unit_before_change->cur_traits);
+    }
 }
 
 /*
@@ -399,7 +433,8 @@ DrawEnemyIntentThoughtBubbles(Battle *battle)
                 }
                 if(response.hovered)
                 {
-                    GenerateEventsFromIntent(intent, &battle->preview_events);
+                    battle->preview_intents += intent;
+                    //GenerateEventsFromIntent(intent, &battle->preview_events);
                 }
             }
             else
@@ -525,7 +560,7 @@ void InitBattle(Battle *battle, PoolId<Arena> arena_id)
     battle->arena_id = arena_id;
     ClearArena(arena_id);
     battle->units          = CreateArrayFromArena<UnitId>(2*c::max_party_size, battle->arena_id);
-    battle->preview_events = CreateArrayFromArena<BattleEvent>(100, battle->arena_id);
+    battle->preview_intents = CreateArrayFromArena<Intent>(8, battle->arena_id);
 
     battle->ai_arena_id = AllocArena("AI");
 
@@ -622,7 +657,7 @@ TickBattle(Battle *battle)
         battle->phase = BattlePhase::player_turn;
     }
 
-    ClearArray<BattleEvent>(&battle->preview_events);
+    ClearArray(&battle->preview_intents);
 
     bool mouse_in_hud = false; // @TODO: Implement this using the TakeMouseFocus() stuff.
 
@@ -998,7 +1033,7 @@ TickBattle(Battle *battle)
     bool enemy_intent_hovered = false;
     {
         if(player_intent.target_set.count > 0) player_intent_exists = true;
-        if(battle->preview_events.count > 0) enemy_intent_hovered = true;
+        if(battle->preview_intents.count > 0) enemy_intent_hovered = true;
     }
 
     { // Generate preview_events
@@ -1022,18 +1057,33 @@ TickBattle(Battle *battle)
 
         if(player_intent_exists)
         { // Priority 1 (ignoring shift functionality)
-            ClearArray(&battle->preview_events);
-            GenerateEventsFromIntent(player_intent, &battle->preview_events);
+            ClearArray(&battle->preview_intents);
+            battle->preview_intents += player_intent;
         }
         else if(Down(vk::shift) or end_button_turn_response.hovered)
         { // Priority 3
-            ClearArray(&battle->preview_events); // Clear preview_events and generate from scratch for each enemy
+            ClearArray(&battle->preview_intents); // Clear preview_events and generate from scratch for each enemy
+
+            int enemy_count = 0;
             for(auto unit_id : battle->units)
             {
-                Unit *caster = GetUnitFromId(unit_id);
-                if(!ValidUnit(caster) or caster->team != Team::enemies) continue;
+                Unit *unit = GetUnitFromId(unit_id);
+                if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
 
-                GenerateEventsFromIntent(caster->intent, &battle->preview_events);
+                ++enemy_count;
+            }
+            for(int i=0; i<enemy_count; ++i)
+            {
+                for(auto caster_id : battle->units)
+                { // Execute enemy intents
+                    Unit *caster = GetUnitFromId(caster_id);
+                    if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
+
+                    if(caster->intent.position == i)
+                    {
+                        battle->preview_intents += caster->intent;
+                    }
+                }
             }
         }
         else if(enemy_intent_hovered)
@@ -1110,8 +1160,13 @@ TickBattle(Battle *battle)
 
     { // Draw units
         //for(int i=0; i<battle->units.size; ++i)
-        for(auto unit_id : battle->units)
+        Array<TraitSet> preview_traitset_changes = CreateTempArray<TraitSet>(battle->units.count);
+        IntentTraitChangesForUnits(battle->preview_intents, battle->units, &preview_traitset_changes);
+
+        //for(auto unit_id : battle->units)
+        for(int i=0; i<battle->units.count; ++i)
         {
+            auto unit_id = battle->units[i];
             SetDrawDepth(c::field_draw_depth);
 
             Unit *unit = GetUnitFromId(unit_id);
@@ -1153,13 +1208,15 @@ TickBattle(Battle *battle)
                 Vec2f name_size = DrawText(unit_name_layout, origin + c::unit_slot_name_offset, unit->name).rect.size;
 
                 // Generate preview_trait_changes for this unit
-                TraitSet preview_trait_changes = EventTraitChangesForUnit(battle->preview_events, unit_id);
+//                TraitSet preview_trait_changes = EventTraitChangesForUnit(battle->preview_intents, unit_id);
+                TraitSet preview_trait_change = preview_traitset_changes[i];
+
 
                 // Draw trait bars
                 DrawTraitSetWithPreview(origin + Vec2f{0.f, name_size.y},
                                         unit->cur_traits,
                                         unit->max_traits,
-                                        unit->cur_traits + preview_trait_changes,
+                                        unit->cur_traits + preview_trait_change,
                                         battle->preview_damage_timer.cur);
 
                 // AP text
@@ -1168,6 +1225,7 @@ TickBattle(Battle *battle)
 
                 SetDrawDepth(c::battle_arrow_draw_depth);
                 // Draw directed arrows for previewed events
+                #if 0
                 for(auto event : battle->preview_events)
                 {
                     if(event.target_id != unit_id) continue;
@@ -1193,6 +1251,7 @@ TickBattle(Battle *battle)
                                      line_speed*end_vel,
                                      StringFromCString(""));
                 }
+                #endif
             }
 
             // Ability "buttons"/icons for allied units (enemy ones are drawn slightly differently

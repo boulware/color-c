@@ -61,7 +61,7 @@ struct Battle
     Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
 
     Array<UnitId> units;
-    Array<BattleEvent> preview_events;
+    Array<Intent> preview_intents;
 
     //bool is_player_turn;
     OscillatingTimer preview_damage_timer;
@@ -74,7 +74,8 @@ struct Battle
 void InitBattle(Battle *battle, PoolId<Arena> arena_id);
 BattleState TickBattle(Battle *battle);
 
-void GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events);
+//void GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events);
+void IntentTraitChangesForUnits(Array<Intent> intents, Array<UnitId> unit_ids, Array<TraitSet> *traitset_changes);
 
 void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
@@ -84,6 +85,8 @@ void DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int tier, Align align
 
 void UpdateHoveredUnit(Battle *battle);
 void UpdateHoveredAbility(Battle *battle);
+
+void GenerateEventsFromIntent(Intent intent, Array<BattleEvent> *events, Table<Unit> unit_table = g::unit_table);
 
 void ApplyBattleEvent(BattleEvent event);
 

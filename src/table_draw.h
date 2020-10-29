@@ -6,6 +6,7 @@ enum class TableDrawMode
     Ability,
     Breed,
     Unit,
+    TempUnit,
     COUNT
 };
 

@@ -4,7 +4,7 @@
 #include "text_render.h"
 #include "imgui.h"
 
-#include "unit.h"
+struct Unit;
 #include "passive_skill_tree.h"
 
 namespace g
@@ -16,6 +16,7 @@ namespace g
 	Table<Ability> ability_table;
 	Table<Breed> breed_table;
 	Table<Unit> unit_table;
+    Table<Unit> temp_unit_table;
 	// Table passive_skill_table;
 	// Table passive_node_table;
 
@@ -30,6 +31,7 @@ namespace g
 Table<Ability> *g_ability_table;
 Table<Breed> *g_breed_table;
 Table<Unit> *g_unit_table;
+Table<Unit> *g_temp_unit_table;
 
 
 #endif

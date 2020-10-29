@@ -44,6 +44,14 @@ DrawTable(TableDrawState *state, Table<Type> *table, Rect window_rect)
             state->ui_container.button_layout = c::inactive_debug_button;
         response = Button("Unit");
         if(response.pressed and TakeMouseFocus()) state->cur_mode = TableDrawMode::Unit;
+
+        // Unit
+        if(state->cur_mode == TableDrawMode::TempUnit)
+            state->ui_container.button_layout = c::active_debug_button;
+        else
+            state->ui_container.button_layout = c::inactive_debug_button;
+        response = Button("TempUnit");
+        if(response.pressed and TakeMouseFocus()) state->cur_mode = TableDrawMode::TempUnit;
     }
 
     Vec2f origin = Vec2f{window_rect.pos.x, BottomOfUiContainer(state->ui_container)};

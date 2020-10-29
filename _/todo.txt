@@ -105,3 +105,5 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 42) Actually implement enemy AI with the (janky) system we have now, so that the enemies will perform those actions.
 
 43) Battle arrows point from ability box rather than unit slot box.
+
+44) Fix preview damage for AI-generated ordered enemy intents
