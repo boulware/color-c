@@ -64,8 +64,31 @@ Vec2f ability_field_positions[] = {
 
 enum class BreedPropertyIndex : int
 {
+	search,
+	name,
+	vigor,
+	focus,
+	armor,
+	move1,
+	move2,
+	move3,
+	move4,
+	tier,
 	COUNT
 };
+
+InputElementType breed_property_types[] = {
+	InputElementType::String,
+	InputElementType::String,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::Integer,
+	InputElementType::String,
+	InputElementType::String,
+	InputElementType::String,
+	InputElementType::String,
+	InputElementType::Integer
+}; static_assert(ArrayCount(breed_property_types) == (int)BreedPropertyIndex::COUNT);
 
 struct InputElement
 {

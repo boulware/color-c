@@ -827,7 +827,7 @@ String MetaString(const Framebuffer *s)
 	AppendString(&string, MetaString(&s->texture));
 	AppendCString(&string, "(Texture)\n");
 
-	AppendCString(&string, "  depth_rbo: %u (u32)\n", s->depth_rbo);
+	AppendCString(&string, "  depth_stencil_rbo: %u (u32)\n", s->depth_stencil_rbo);
 
 	AppendCString(&string, "}");
 
@@ -994,6 +994,36 @@ String MetaString(const BreedPropertyIndex *s)
 	AppendCString(&string, "BreedPropertyIndex::");
 	switch(*s)
 	{
+		case(BreedPropertyIndex::search): {
+			AppendCString(&string, "search");
+		} break;
+		case(BreedPropertyIndex::name): {
+			AppendCString(&string, "name");
+		} break;
+		case(BreedPropertyIndex::vigor): {
+			AppendCString(&string, "vigor");
+		} break;
+		case(BreedPropertyIndex::focus): {
+			AppendCString(&string, "focus");
+		} break;
+		case(BreedPropertyIndex::armor): {
+			AppendCString(&string, "armor");
+		} break;
+		case(BreedPropertyIndex::move1): {
+			AppendCString(&string, "move1");
+		} break;
+		case(BreedPropertyIndex::move2): {
+			AppendCString(&string, "move2");
+		} break;
+		case(BreedPropertyIndex::move3): {
+			AppendCString(&string, "move3");
+		} break;
+		case(BreedPropertyIndex::move4): {
+			AppendCString(&string, "move4");
+		} break;
+		case(BreedPropertyIndex::tier): {
+			AppendCString(&string, "tier");
+		} break;
 		case(BreedPropertyIndex::COUNT): {
 			AppendCString(&string, "COUNT");
 		} break;

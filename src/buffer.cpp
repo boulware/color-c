@@ -39,7 +39,11 @@ BufferBytesRemaining(Buffer buffer)
     // p    ---------------------------------->
     if(buffer.p < buffer.data or buffer.p > buffer.data+buffer.byte_count)
     {
-        Log("Buffer *p (&data=%p) points to location outside buffer", buffer.data);
+        if(buffer.p > buffer.data+buffer.byte_count+1)
+        { // [p] must point within the buffer or at the first byte outside the buffer to be valid.
+            Log("Buffer *p (&data=%p) points to invalid location outside buffer", buffer.data);
+        }
+
         return 0;
     }
 

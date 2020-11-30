@@ -63,7 +63,7 @@ effect Heal all_allies (0,5,0)
 
 //22) Cache the values of UnitAbilityPotential() for the tier potential value.
 
-23) Meditate (for example) can be "clicked" on an enemy and it will just do nothing but use up AP? Probably the case with all self-targeting things if i had to guess.
+//23) Meditate (for example) can be "clicked" on an enemy and it will just do nothing but use up AP? Probably the case with all self-targeting things if i had to guess.
 
 24) Develop a better way to compare two scores (enemy AI).
 
@@ -88,7 +88,7 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 
 34) Text rendering is probably fast enough right now, but it would be a pretty easy fix to do the texture atlas and I think it would probably help significantly with GPU performance -- we don't know how long the GPU is actually taking, but large amounts of text do cause significant frametime increases (on the GPU, not CPU) -- it's a simple fix that we should probably do at some point just so we have the most amount of GPU time to work with as we can.
 
-35) Default arena for arrays that were not properly initialized, and having some proper fallback behavior for uninit'd arrays (like just lazy allocating from the default arena if we have user-level code that is trying to add elements to an array that has no memory allocated), and then we can just reserve this default arena (id=0) so that we can catch anything trying to allocate from it and deal with it explicitly -- but in the case that something DOES need to allocate memory without being properly init'd, it will still be able to do so reasonably safely.
+//35) Default arena for arrays that were not properly initialized, and having some proper fallback behavior for uninit'd arrays (like just lazy allocating from the default arena if we have user-level code that is trying to add elements to an array that has no memory allocated), and then we can just reserve this default arena (id=0) so that we can catch anything trying to allocate from it and deal with it explicitly -- but in the case that something DOES need to allocate memory without being properly init'd, it will still be able to do so reasonably safely.
 
 36) Convert ability_ids array member of struct Breed and struct Unit to an Array<AbilityId>
 
@@ -102,8 +102,18 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 
 41) WorkQueue visualization
 
-42) Actually implement enemy AI with the (janky) system we have now, so that the enemies will perform those actions.
+//42) Actually implement enemy AI with the (janky) system we have now, so that the enemies will perform those actions.
 
 43) Battle arrows point from ability box rather than unit slot box.
 
-44) Fix preview damage for AI-generated ordered enemy intents
+//44) Fix preview damage for AI-generated ordered enemy intents
+
+45) [See "odd_gpu_frame_behavior.png"] Our GPU frame has an odd periodicity in some situations -- in the image, you'll see it seems to spike somewhat predictable every 30 frames or something. This doesn't always happen, and seems to depend on what exactly we're drawing.
+
+// 46) There was a bug where a slime was intenting a strike that deals 4 damage vs a target with 0 armor, but it was only previewing and dealing 1 damage -- unsure of the origin. [99% sure this was an issue related to 47, which is now fixed]
+
+// 47) [Possibly related to 46] When a sequence of intents is generated for the enemies, each unit has an intent with an ordering number in it -- if the player kills one of the enemies during the player turn, those ordering numbers become invalid because one of the numbers got removed, so the number of living enemies no longer matches the number of ordering numbers -- this causes issues where intents are glitchy if a unit dies after intent generation -- so we need to adjust the intent ordering number appropriately when a unit dies. [Fixed by just not just adjusting enemy_count based on which enemies were dead or alive -- enemy_count includes dead enemies now, so that dead enemies won't throw the ordering numbers off]
+
+48) in `WIN32_BIND_OPENGL_EXTENSIONS`, we can combine our syntax a bit so that it automatically tries to bind as a base function, and if it fails, it will attempt to bind as an extended function -- this way all binding calls can be using the same function signature, and we don't have to do trial and error when writing code that binds new opengl calls. [This might not be possible, because we do base function bindings by simply directly referencing the function name (with macro paste stuff), so I think this has to be some kind of compile-time thing, which is a bit more difficult to do]
+
+49) Frame-rate independence

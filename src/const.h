@@ -59,8 +59,8 @@ namespace c
     const bool fullscreen = true;
     const int windowed_window_width = 1280;
     const int windowed_window_height = 720;
-    const int fullscreen_window_width = 1600;
-    const int fullscreen_window_height = 900;
+    const int fullscreen_window_width = 1920;
+    const int fullscreen_window_height = 1080;
     const float frametime_s = 1.f/60.f;
 
     const bool verbose_success_logging = false;
@@ -105,11 +105,6 @@ namespace c
 
     // Debug
     const float error_flash_speed = 0.017f;
-
-    Camera ui_camera = {
-        .pos = {800.f,450.f},
-        .view = {1600.f,900.f}
-    };
 
     // Drawing depths
     const float near_plane = 0.0f;

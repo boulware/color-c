@@ -296,13 +296,13 @@ InitCampaign(Campaign *campaign)
 
     Rect rect = {
         .pos  = Vec2f{0.f,0.f},
-        .size = Vec2f{1600.f, 900.f}
+        .size = game->window_size
     };
     MoveCameraToWorldRect(&game->camera, rect);
 
     campaign->player_party = CreateArrayFromArena<UnitId>(c::max_party_size, campaign->arena_id);
     campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
-    //campaign->player_party += CreateUnitByName("Warrior", Team::allies, campaign->arena_id);
+    campaign->player_party += CreateUnitByName("Rogue", Team::allies, campaign->arena_id);
     //AddUnitToUnitSet(CreateUnitByName("Warrior", Team::allies), &campaign->player_party);
 
     // Log("Thread %d started.", platform->StartJob(&params));
@@ -581,7 +581,7 @@ TickCampaign(Campaign *campaign)
                 InitBattle(&campaign->current_battle, campaign->battle_arena_id);
                 Array<UnitId> battle_units = CreateTempArray<UnitId>(2*c::max_party_size);
                 AppendArrayToArray(&battle_units, campaign->player_party); // Add ally units
-                int enemy_count = RandomU32(1,4);
+                int enemy_count = RandomU32(1,3);
                 for(int i=0; i<enemy_count; ++i)
                 { // Add enemy units
                     #if 1

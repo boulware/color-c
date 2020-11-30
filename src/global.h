@@ -3,6 +3,7 @@
 
 #include "text_render.h"
 #include "imgui.h"
+#include "camera.h"
 
 struct Unit;
 #include "passive_skill_tree.h"
@@ -10,8 +11,6 @@ struct Unit;
 namespace g
 {
 	Font default_font;
-
-
 
 	Table<Ability> ability_table;
 	Table<Breed> breed_table;
@@ -25,6 +24,10 @@ namespace g
 	bool error_flash_increasing = true;
 	float error_flash_counter = 0.f;
 
+    Camera ui_camera = {
+        .pos = {960.f,540.f},
+        .view = {1920.f,1080.f}
+    };
 };
 
 // Aliases until RemedyBG has namespace support

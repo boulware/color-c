@@ -75,8 +75,8 @@ DrawTable(TableDrawState *state, Table<Type> *table, Rect window_rect)
         Color cell_color = c::black;
         if(entry.active) cell_color = c::green;
 
-        DrawFilledRect(entry_rect, cell_color, true);
-        DrawUnfilledRect(entry_rect, c::white, true);
+        DrawFilledRect(entry_rect, cell_color);
+        DrawUnfilledRect(entry_rect, c::white);
     }
 }
 

@@ -34,6 +34,18 @@ AddFrametimeToGraph(FrametimeGraphState *state, float frametime_value)
     if(state->cur_frametime_index == state->entry_count) state->cur_frametime_index = 0;
 }
 
+float
+GetAverageFrametime(FrametimeGraphState *state)
+{
+    if(state->entry_count <= 0) return 0.f;
+
+    float sum = 0.f;
+    for(int i=0; i<state->entry_count; ++i)
+        sum += state->frametimes[i];
+
+    return(sum / state->entry_count);
+}
+
 void
 DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
 {
@@ -73,7 +85,7 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
         };
 
         Color bar_color = c::grey;
-        DrawFilledRect(bar_rect, bar_color, true);
+        DrawFilledRect(bar_rect, bar_color);
     }
 
     // Draw bars
@@ -94,7 +106,7 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
         else if(ratio_to_max > 1.f)
             bar_color = c::red;
 
-        DrawFilledRect(bar_rect, bar_color, true);
+        DrawFilledRect(bar_rect, bar_color);
     }
 
     Vec2f pen = RectTopRight(graph_rect) - Vec2f{2.f,2.f};
@@ -132,7 +144,7 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
             .size = Vec2f{bar_width, -clamped_ratio * graph_rect.size.y}
         };
 
-        DrawFilledRect(bar_rect, bar_color, true);
+        DrawFilledRect(bar_rect, bar_color);
     }
     // Draw bars
     //SetDrawDepth(c::debug_overlay_draw_depth);
@@ -172,6 +184,9 @@ DrawFrametimes(FrametimeGraphState *state, Rect graph_rect)
 
         response = Button("60fps");
         if(response.pressed and TakeMouseFocus()) state->graph_max = 1000.f * (1.f/60.f);
+
+        response = Button("144fps");
+        if(response.pressed and TakeMouseFocus()) state->graph_max = 1000.f * (1.f/144.f);
 
         response = Button("1ms");
         if(response.pressed and TakeMouseFocus()) state->graph_max = 1.f;

@@ -35,6 +35,8 @@ GameInit(GameInitData init_data)
     gl->Enable              ( GL_DEBUG_OUTPUT );
     gl->DebugMessageCallback( GlDebugMessageCallback, 0 );
 
+    LogGlVersion();
+
     memory::arena_pool_mutex_handle = init_data.arena_pool_mutex_handle;
     memory::per_frame_arena_id = init_data.per_frame_arena_id;
     memory::permanent_arena_id = init_data.permanent_arena_id;
@@ -261,6 +263,13 @@ GameUpdateAndRender()
     gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //opengl->UseProgram(game->prepass_shader);
 
+    if(Pressed(vk::F11))
+    { // Log average GPU frametime
+        Log("Average GPU frame (last %d frames): %.3fms",
+            game->gpu_frametime_graph_state->entry_count,
+            GetAverageFrametime(game->gpu_frametime_graph_state));
+    }
+
     // Reset pen position to container origin for all gui containers
     ResetImguiContainer(&game->debug_container);
     Camera pushed_camera = PushUiCamera();
@@ -317,8 +326,8 @@ GameUpdateAndRender()
             //game->debug_overlay.window_positions[(u8)OverlayOption::TimedBlocks] = timed_block_window_rect;
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
-            DrawFilledRect(window_rect, c::vdk_red, true);
-            DrawUnfilledRect(window_rect, c::white, true);
+            DrawFilledRect(window_rect, c::vdk_red);
+            DrawUnfilledRect(window_rect, c::white);
             DrawTimedBlockData(window_pos);
             DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
@@ -337,9 +346,9 @@ GameUpdateAndRender()
             Rect window_rect = {window_pos, window_size};
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
-            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawFilledRect(window_rect, c::vdk_red);
             DrawFrametimes(game->cpu_frametime_graph_state, window_rect);
-            DrawUnfilledRect(window_rect, c::white, true);
+            DrawUnfilledRect(window_rect, c::white);
 
             DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
@@ -358,9 +367,9 @@ GameUpdateAndRender()
             Rect window_rect = {window_pos, window_size};
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
-            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawFilledRect(window_rect, c::vdk_red);
             DrawFrametimes(game->gpu_frametime_graph_state, window_rect);
-            DrawUnfilledRect(window_rect, c::white, true);
+            DrawUnfilledRect(window_rect, c::white);
             DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())
@@ -378,7 +387,7 @@ GameUpdateAndRender()
             Rect window_rect = {window_pos, window_size};
             SetDrawDepth(cur_draw_depth);
             cur_draw_depth += 0.1f;
-            DrawFilledRect(window_rect, c::vdk_red, true);
+            DrawFilledRect(window_rect, c::vdk_red);
 
             if(game->table_draw_state.cur_mode == TableDrawMode::Ability) {
                 DrawTable(&game->table_draw_state, &g::ability_table, window_rect);
@@ -393,7 +402,7 @@ GameUpdateAndRender()
                 DrawTable(&game->table_draw_state, &g::temp_unit_table, window_rect);
             }
 
-            DrawUnfilledRect(window_rect, c::white, true);
+            DrawUnfilledRect(window_rect, c::white);
             DrawText(c::debug_window_label_text, RectTopLeft(window_rect), OverlayOption_userstrings[(int)current_index]);
 
             if(MouseInRect(window_rect) and TakeMouseFocus())

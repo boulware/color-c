@@ -37,9 +37,6 @@ Button(const char *label, ...)
 
 	// Set camera for UI drawing
 	auto initial_cam = PushUiCamera();
-	// Vec2f initial_cam_pos = game->camera.pos;
-	// Vec2f initial_cam_view = game->camera.view;
-	// MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
 
 	ImguiContainer *ui_container = imgui::active_container; // alias
 	ButtonLayout layout = ui_container->button_layout;
@@ -103,9 +100,6 @@ Button(const char *label, ...)
 
 	// Reset camera transform for non-UI stuff
 	PopUiCamera(initial_cam);
-    // SetCameraPos( &game->camera, initial_cam_pos);
-    // SetCameraView(&game->camera, initial_cam_view);
-
 
 	return response;
 }
@@ -281,45 +275,34 @@ ListPanelEntry(ListPanel_ *panel, const String entry_name)
 
 	Vec2f outer_padding = {20.f,2.f};
 	Vec2f inner_padding = {5.f,5.f};
-	Vec2f pen = panel->layout.rect.pos + Vec2f{0.f,20.f};
+	Vec2f pen = panel->layout.rect.pos + Vec2f{0.f, -panel->scroll_offset + 20.f};
+
 
 	// Calculate which entries should be drawn based on scroll_offset
-	float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineHeight(text_layout);
-	int index_of_first_drawn_entry = (int)(panel->scroll_offset / v_distance_between_entries);
-	float remainder = v_distance_between_entries*((panel->scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
-	//pen.y += remainder;
+	//float v_distance_between_entries = 2.0f*outer_padding.y + 2.0f*inner_padding.y + LineHeight(text_layout);
+	// int index_of_first_drawn_entry = (int)(panel->scroll_offset / v_distance_between_entries);
+	//float remainder = v_distance_between_entries*((panel->scroll_offset / v_distance_between_entries) - index_of_first_drawn_entry);
 
-	// DrawText(c::def_text_layout, MousePos(), "%d", index_of_first_drawn_entry);
-
-	// for(int i=0; i<entry_count; i++)
-	// {
 	int i = panel->cur_entry_count;
 	pen.y += i*(LineHeight(text_layout) + 2.f*(outer_padding+inner_padding).y);
-	if(i >= index_of_first_drawn_entry)
-	{
 
-		Rect entry_rect = {pen+outer_padding-Vec2f{0.0f, remainder}, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineHeight(text_layout)+2.f*inner_padding.y}};
+	Rect entry_rect = {pen+outer_padding, Vec2f{panel->layout.rect.size.x-2.f*outer_padding.x, LineHeight(text_layout)+2.f*inner_padding.y}};
 
-		if(PointInRect(entry_rect, MousePos()))
-		{ // Entry hovered
-			DrawFilledRect(entry_rect, c::grey);
-			DrawUnfilledRect(entry_rect, c::green);
-			response.hovered = true;
-			if(Pressed(vk::LMB)) response.pressed = true;
-		}
-		else
-		{ // Entry NOT hovered
-			DrawFilledRect(entry_rect, c::dk_grey);
-			DrawUnfilledRect(entry_rect, c::grey);
-		}
-
-		// @note: spooky! We should write a real implementation of DrawText that takes a String.
-		Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name).rect.size;
-		//SetDrawDepth(120.0f);
-
-
-		pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
+	if(PointInRect(entry_rect, MousePos()))
+	{ // Entry hovered
+		DrawFilledRect(entry_rect, c::grey);
+		DrawUnfilledRect(entry_rect, c::green);
+		response.hovered = true;
+		if(Pressed(vk::LMB)) response.pressed = true;
 	}
+	else
+	{ // Entry NOT hovered
+		DrawFilledRect(entry_rect, c::dk_grey);
+		DrawUnfilledRect(entry_rect, c::grey);
+	}
+
+	Vec2f text_size = DrawText(text_layout, entry_rect.pos + inner_padding, entry_name).rect.size;
+	//pen.y += text_size.y + 2.f*(outer_padding+inner_padding).y;
 
 	++panel->cur_entry_count;
 

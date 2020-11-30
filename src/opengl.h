@@ -112,6 +112,7 @@
 #define GL_VERTEX_ARRAY_BINDING 		  0x85B5
 #define GL_DEPTH_TEST                     0x0B71
 #define GL_DEPTH_BUFFER_BIT               0x00000100
+#define GL_STENCIL_BUFFER_BIT             0x00000400
 #define GL_COLOR_BUFFER_BIT               0x00004000
 #define GL_FRAMEBUFFER                    0x8D40
 #define GL_RENDERBUFFER                   0x8D41
@@ -190,6 +191,23 @@
 #define GL_FLOAT                          0x1406
 #define GL_FALSE                          0
 #define GL_TRUE                           1
+
+// Stencil buffer
+#define GL_STENCIL_TEST                   0x0B90
+#define GL_KEEP                           0x1E00
+#define GL_REPLACE                        0x1E01
+#define GL_DEPTH24_STENCIL8               0x88F0
+#define GL_DEPTH_STENCIL_ATTACHMENT       0x821A
+
+
+//
+#define GL_LESS                           0x0201
+#define GL_EQUAL                          0x0202
+#define GL_LEQUAL                         0x0203
+#define GL_GREATER                        0x0204
+#define GL_NOTEQUAL                       0x0205
+#define GL_GEQUAL                         0x0206
+#define GL_ALWAYS                         0x0207
 
 typedef size_t GLsizeiptr;
 typedef char GLchar;
@@ -371,6 +389,12 @@ typedef void        fnsig_glQueryCounter (GLuint id, GLenum target);
 typedef void        fnsig_glGetQueryObjecti64v (GLuint id, GLenum pname, GLint64 *params);
 typedef void        fnsig_glGetQueryObjectui64v (GLuint id, GLenum pname, GLuint64 *params);
 
+// Stencil buffer
+typedef void        fnsig_glStencilMask (GLuint mask);
+typedef void        fnsig_glStencilFunc (GLenum func, GLint ref, GLuint mask);
+typedef void        fnsig_glStencilOp (GLenum fail, GLenum zfail, GLenum zpass);
+
+typedef void        fnsig_glDepthFunc (GLenum func);
 
 #define mOpenGLFunction(name) fnsig_gl##name *name
 
@@ -534,6 +558,14 @@ struct OpenGL {
     mOpenGLFunction(QueryCounter);
     mOpenGLFunction(GetQueryObjecti64v);
     mOpenGLFunction(GetQueryObjectui64v);
+
+    // Stencil buffer
+    mOpenGLFunction(StencilMask);
+    mOpenGLFunction(StencilFunc);
+    mOpenGLFunction(StencilOp);
+
+    //
+    mOpenGLFunction(DepthFunc);
 };
 
 void LogGlError();

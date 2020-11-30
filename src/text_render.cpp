@@ -185,16 +185,11 @@ DrawText(TextLayout layout, Vec2f origin, const char *string, ...)
 Rect
 DrawUiText(TextLayout layout, Vec2f origin, String string)
 {
-    Camera initial_camera = game->camera;
-    MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
-    //float initial_cam_zoom = game->camera_zoom;
-    //SetCameraPos({0.f,0.f});
-    //SetCameraZoom(1.f);
+    Camera initial_cam = PushUiCamera();
 
     auto response = DrawText(layout, origin, string);
 
-    SetCameraPos(&game->camera, initial_camera.pos);
-    SetCameraView(&game->camera, initial_camera.view);
+    PopUiCamera(initial_cam);
 
     return response.rect;
 }
@@ -212,6 +207,61 @@ DrawUiText(TextLayout layout, Vec2f origin, const char *string, ...)
     return DrawUiText(layout, origin, StringFromCString(formatted_string));
 }
 
+Vec2f
+DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
+{
+    TIMED_BLOCK;
+
+    ActivateUvShader(layout.color);
+
+    Buffer buffer = BufferFromString(string);
+    Vec2f text_size = SizeText(layout, string);
+
+    origin = AlignRect({origin, text_size}, layout.align).pos;
+    Vec2f pen = origin;
+
+    u32 utf32_char;
+    while(NextAsUtf32Char(&buffer, &utf32_char))
+    {
+        if(utf32_char == '`')
+        { // beginning of color code
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Token color_name = NextToken(&buffer);
+            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
+            Color color = layout.color;
+
+            if(     TokenMatchesString(color_name, "reset")) color = layout.color;
+            else if(TokenMatchesString(color_name, "red")) color = c::red;
+            else if(TokenMatchesString(color_name, "green")) color = c::green;
+            else if(TokenMatchesString(color_name, "blue")) color = c::blue;
+            else if(TokenMatchesString(color_name, "lt_blue")) color = c::lt_blue;
+            else if(TokenMatchesString(color_name, "yellow")) color = c::yellow;
+            else if(TokenMatchesString(color_name, "gold")) color = c::gold;
+
+            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
+        }
+        else if(utf32_char == '\n')
+        {
+            if(pen.x > text_size.x) text_size.x = pen.x;
+
+            text_size.y += LineHeight(layout);
+            pen.x = origin.x;
+            pen.y += LineHeight(layout);
+        }
+        else
+        {
+            _RenderUtf32Char(utf32_char, &pen, layout.font_size, *layout.font);
+        }
+    }
+
+    if(layout.draw_debug)
+    {
+        DrawUnfilledRect({origin, text_size}, layout.color);
+    }
+
+    return text_size;
+}
+
 // @robustness: This doesn't actually return the width of the multiline text.
 //              It just uses the width of the first line. The height should be correct.
 //              I didn't fix this because I rarely use the width, but it's something
@@ -221,11 +271,12 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
 {
     TIMED_BLOCK;
 
-    ActivateUvShader(layout.color);
-
     char *formatted_string;
     mFormatString(formatted_string, string);
 
+    return DrawTextMultiline(layout, origin, StringFromCString(formatted_string));
+
+    #if 0
     Buffer buffer = BufferFromCString(formatted_string);
     u32 utf32_char;
     Vec2f text_size = SizeUtf8Line(layout, formatted_string);
@@ -271,58 +322,7 @@ DrawTextMultiline(TextLayout layout, Vec2f origin, const char *string, ...)
     }
 
     return text_size;
-}
-
-Vec2f
-DrawTextMultiline(TextLayout layout, Vec2f origin, String string)
-{
-    TIMED_BLOCK;
-
-    ActivateUvShader(layout.color);
-
-    Buffer buffer = BufferFromString(string);
-    Vec2f text_size = SizeText(layout, string);
-
-    origin = AlignRect({origin, text_size}, layout.align).pos;
-    Vec2f pen = origin;
-
-    u32 utf32_char;
-    while(NextAsUtf32Char(&buffer, &utf32_char))
-    {
-        if(utf32_char == '`')
-        { // beginning of color code
-            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
-            Token color_name = NextToken(&buffer);
-            ConfirmNextTokenType(&buffer, TokenType_::Backtick);
-            Color color = layout.color;
-
-            if(     TokenMatchesString(color_name, "reset")) color = layout.color;
-            else if(TokenMatchesString(color_name, "red")) color = c::red;
-            else if(TokenMatchesString(color_name, "green")) color = c::green;
-            else if(TokenMatchesString(color_name, "blue")) color = c::blue;
-            else if(TokenMatchesString(color_name, "lt_blue")) color = c::lt_blue;
-            else if(TokenMatchesString(color_name, "yellow")) color = c::yellow;
-            else if(TokenMatchesString(color_name, "gold")) color = c::gold;
-
-            gl->ProgramUniform4f(game->uv_shader, 2, color.r, color.g, color.b, color.a);
-        }
-        else if(utf32_char == '\n')
-        {
-            pen.x = origin.x;
-            pen.y += LineHeight(layout);
-        }
-        else
-        {
-            _RenderUtf32Char(utf32_char, &pen, layout.font_size, *layout.font);
-        }
-    }
-
-    if(layout.draw_debug)
-    {
-        DrawUnfilledRect({origin, text_size}, layout.color);
-    }
-
-    return text_size;
+    #endif
 }
 
 Vec2f

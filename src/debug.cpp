@@ -89,8 +89,7 @@ DrawTimedBlockData(Vec2f start_pos)
 			float line_size = LineHeight(function_cycles_layout);
 			DrawFilledRect({{max_right_extent, bar_y},
 						   {max_bar_width*(float)avg_cycles/(float)max_average_cycles, line_size}},
-						   c::green,
-						   true);
+						   c::green);
 			bar_y += line_size;
 		}
 	}

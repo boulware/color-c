@@ -49,15 +49,8 @@ SetDrawDepth(float depth)
 // }
 
 void
-DrawUnfilledRect(Rect rect, Color color, bool ui)
+DrawUnfilledRect(Rect rect, Color color)
 {
-    Vec2f initial_cam_pos = game->camera.pos;
-    Vec2f initial_cam_view = game->camera.view;
-    if(ui)
-    {
-        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
-    }
-
     ActivateColorShader(color);
 
     GLfloat verts[] = {
@@ -69,30 +62,17 @@ DrawUnfilledRect(Rect rect, Color color, bool ui)
 
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_LINE_LOOP, 0, 4);
-
-    if(ui)
-    {
-        SetCameraPos( &game->camera, initial_cam_pos);
-        SetCameraView(&game->camera, initial_cam_view);
-    }
 }
 
 void
-DrawUnfilledRect(Vec2f pos, Vec2f size, Color color, bool ui)
+DrawUnfilledRect(Vec2f pos, Vec2f size, Color color)
 {
-    return DrawUnfilledRect({pos,size}, color, ui);
+    return DrawUnfilledRect({pos,size}, color);
 }
 
 void
-DrawFilledRect(Rect rect, Color color, bool ui)
+DrawFilledRect(Rect rect, Color color)
 {
-    Vec2f initial_cam_pos =  game->camera.pos;
-    Vec2f initial_cam_view = game->camera.view;
-    if(ui)
-    {
-        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
-    }
-
     ActivateColorShader(color);
 
     GLfloat verts[] = {
@@ -104,18 +84,12 @@ DrawFilledRect(Rect rect, Color color, bool ui)
 
     gl->BufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW);
     gl->DrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    if(ui)
-    {
-        SetCameraPos( &game->camera, initial_cam_pos);
-        SetCameraView(&game->camera, initial_cam_view);
-    }
 }
 
 void
-DrawFilledRect(Vec2f pos, Vec2f size, Color color, bool ui)
+DrawFilledRect(Vec2f pos, Vec2f size, Color color)
 {
-    return DrawFilledRect({pos,size}, color, ui);
+    return DrawFilledRect({pos,size}, color);
 }
 
 void
@@ -195,7 +169,7 @@ DrawButton(ButtonLayout layout, Rect rect, String label)
     Camera initial_camera = game->camera;
     if(layout.is_ui)
     {
-        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, {1600.f,900.f}});
+        MoveCameraToWorldRect(&game->camera, {{0.f,0.f}, game->window_size});
     }
 
     ButtonResponse response = {};

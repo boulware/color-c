@@ -345,7 +345,66 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
         AbilityTier &tier = ability->tiers[i]; // alias
         //if(!tier.init) continue;
 
+        String tier_requirements_text = AllocStringDataFromArena(500, memory::per_frame_arena_id);
+        AppendCString(&tier_requirements_text, "Tier %d", i);
+        bool first_trait_printed = false;
+        if(tier.required_traits.vigor > 0)
+        {
+            if(first_trait_printed)
+            {
+                AppendCString(&tier_requirements_text, ", ");
+            }
+            else
+            {
+                first_trait_printed = true;
+                AppendCString(&tier_requirements_text, " (req ");
+            }
+
+            AppendCString(&tier_requirements_text, "`red`%dV", tier.required_traits.vigor);
+        }
+        if(tier.required_traits.focus > 0)
+        {
+            if(first_trait_printed)
+            {
+                AppendCString(&tier_requirements_text, ", ");
+            }
+            else
+            {
+                first_trait_printed = true;
+                AppendCString(&tier_requirements_text, " (req ");
+            }
+
+            AppendCString(&tier_requirements_text, "`lt_blue`%dF", tier.required_traits.focus);
+        }
+        if(tier.required_traits.armor > 0)
+        {
+            if(first_trait_printed)
+            {
+                AppendCString(&tier_requirements_text, ", ");
+            }
+            else
+            {
+                first_trait_printed = true;
+                AppendCString(&tier_requirements_text, " (req ");
+            }
+
+            AppendCString(&tier_requirements_text, "`gold`%dA", tier.required_traits.armor);
+        }
+
+        if(first_trait_printed)
+        {
+            AppendCString(&tier_requirements_text, "`reset`)");
+        }
+
+        AppendCString(&tier_requirements_text, ":\n    %s", GenerateAbilityTierText(tier));
+
+        TextLayout layout = tier_inactive_text_layout;
         if(i == active_tier_level)
+            layout = tier_active_text_layout;
+
+        pen.y += DrawTextMultiline(layout, pen, tier_requirements_text).y;
+
+        #if 0
         {
             pen.y += DrawTextMultiline(tier_active_text_layout, pen,
                                        "Tier %d (req `red`%dV, `lt_blue`%dF, `gold`%dA`reset`):\n    %s",
@@ -365,6 +424,7 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
                                        tier.required_traits.armor,
                                        GenerateAbilityTierText(tier)).y;
         }
+        #endif
 
         pen.y += c::tier_data_y_half_padding;
         DrawLine({pen.x, pen.y}, {pen.x + c::ability_info_box_size.x, pen.y}, c::grey);
@@ -601,7 +661,7 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
     for(Id<Unit> unit_id : battle->units)
     {
         Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit)) continue;
+        if(!ValidUnit(unit) or UnitIsDead(unit_id)) continue;
 
         if(     unit->team == Team::allies)  ally_unitset += unit_id;
         else if(unit->team == Team::enemies) enemy_unitset += unit_id;
@@ -1068,7 +1128,7 @@ TickBattle(Battle *battle)
             for(auto unit_id : battle->units)
             {
                 Unit *unit = GetUnitFromId(unit_id);
-                if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
+                if(!ValidUnit(unit) or unit->team != Team::enemies) continue;
 
                 ++enemy_count;
             }
@@ -1385,7 +1445,7 @@ TickBattle(Battle *battle)
         for(auto unit_id : battle->units)
         {
             Unit *unit = GetUnitFromId(unit_id);
-            if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
+            if(!ValidUnit(unit) or unit->team != Team::enemies) continue;
 
             ++enemy_count;
         }
@@ -1432,7 +1492,7 @@ TickBattle(Battle *battle)
         for(Id<Unit> unit_id : battle->units)
         {
             Unit *unit = GetUnitFromId(unit_id);
-            if(!ValidUnit(unit)) continue;
+            if(!ValidUnit(unit) or UnitIsDead(unit_id)) continue;
 
             if(     unit->team == Team::allies)  ally_unitset += unit_id;
             else if(unit->team == Team::enemies) enemy_unitset += unit_id;

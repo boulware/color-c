@@ -16,7 +16,7 @@ struct Framebuffer
     u32 id;
     int width, height;
     Texture texture;
-    u32 depth_rbo;
+    u32 depth_stencil_rbo;
 };
 
 struct DirectedLineLayout
@@ -32,11 +32,11 @@ struct DirectedLineLayout
 void ActivateColorShader(Color color);
 void ActivateUvShader(Color color);
 
-void DrawUnfilledRect(Rect rect, Color color, bool ui=false);
-void DrawUnfilledRect(Vec2f pos, Vec2f size, Color color, bool ui=false);
+void DrawUnfilledRect(Rect rect, Color color);
+void DrawUnfilledRect(Vec2f pos, Vec2f size, Color color);
 
-void DrawFilledRect(Rect rect, Color color, bool ui=false);
-void DrawFilledRect(Vec2f pos, Vec2f size, Color color, bool ui=false);
+void DrawFilledRect(Rect rect, Color color);
+void DrawFilledRect(Vec2f pos, Vec2f size, Color color);
 
 void DrawLine(Vec2f start, Vec2f end, Color color);
 void DrawDirectedLine(DirectedLineLayout layout,

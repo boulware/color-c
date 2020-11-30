@@ -66,11 +66,16 @@ CreateFramebuffer(int width, int height)
 
     framebuffer.texture = CreateEmptyTexture(width, height);
 
-    //GLuint prepass_depth_rbo;
-    gl->GenRenderbuffers(1, &framebuffer.depth_rbo);
-    gl->BindRenderbuffer(GL_RENDERBUFFER, framebuffer.depth_rbo);
-    gl->RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-    gl->FramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framebuffer.depth_rbo);
+    // Generate and attach depth RBO
+    gl->GenRenderbuffers(1, &framebuffer.depth_stencil_rbo);
+    gl->BindRenderbuffer(GL_RENDERBUFFER, framebuffer.depth_stencil_rbo);
+    gl->RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    gl->FramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, framebuffer.depth_stencil_rbo);
+
+    // Generate and attach stencil RBO
+    // gl->GenRenderbuffers(1, &framebuffer.stencil_rbo);
+    // gl->BindRenderbuffer(GL_RENDERBUFFER, framebuffer.stencil_rbo);
+    // gl->RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT8 )
 
     GLenum color_attachments[] = {GL_COLOR_ATTACHMENT0};
     gl->DrawBuffers(sizeof(color_attachments)/sizeof(GLenum), color_attachments);

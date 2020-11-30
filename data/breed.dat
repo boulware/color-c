@@ -1,5 +1,5 @@
 unit "Warrior"
-traits (24,1,6)
+traits (15,5,6)
 moveset "Rest" "Strike" "Repair" "Rig Up"
 tier 0
 
@@ -34,8 +34,8 @@ moveset "Strike" "Rally" "Taunt"
 tier 1
 
 unit "Slime"
-traits (8,6,2)
-moveset "Strike" "Steal Armor"
+traits (8,3,2)
+moveset "Germinate" "Corrode"
 tier 1
 
 unit "Dragon"

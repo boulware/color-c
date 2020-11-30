@@ -538,9 +538,11 @@ void CreateWindowAndOpenGlContext(HINSTANCE hInstance, int nCmdShow)
     pfd.iPixelType = PFD_TYPE_RGBA;
     pfd.cColorBits = 32;
     pfd.cDepthBits = 24;
+    pfd.cStencilBits = 8;
     int pfd_index = ChoosePixelFormat(wc.hdc, &pfd);
     if(pfd_index == 0) Log("ChoosePixelFormat() failed.");
     SetPixelFormat(wc.hdc, pfd_index, &pfd);
+    DescribePixelFormat(wc.hdc, pfd_index, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
     wc.rc = wglCreateContext(wc.hdc);
     wglMakeCurrent(wc.hdc, wc.rc);
 
@@ -744,6 +746,14 @@ void WIN32_BIND_OPENGL_EXTENSIONS(OpenGL *opengl) {
     mBindExtendedOpenGLFunction(GetQueryObjecti64v);
     mBindExtendedOpenGLFunction(GetQueryObjectui64v);
 
+    // Stencil buffer
+    mBindBaseOpenGLFunction(StencilMask);
+    mBindBaseOpenGLFunction(StencilFunc);
+    mBindBaseOpenGLFunction(StencilOp);
+
+    //
+    mBindBaseOpenGLFunction(DepthFunc);
+
     #undef mBindBaseOpenGLFunction
     #undef mBindExtendedOpenGLFunction
 
@@ -813,9 +823,9 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
     //Log("GameInit() time: %fms", win32_TimeElapsedMs(start_time, win32_CurrentTime()));
 
     MSG msg;
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glClearColor(0.f, 0.f, 0.f, 1.f);
+    gl->Enable(GL_DEPTH_TEST);
+    gl->DepthFunc(GL_LEQUAL);
+    gl->ClearColor(0.f, 0.f, 0.f, 1.f);
 
     //platform->SwapIntervalEXT(0);
     input::global_input = &game->input;
@@ -937,7 +947,7 @@ wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdS
             float gpu_time_ms = (float)(gpu_end_time - gpu_start_time) / 1000000.f;
             AddFrametimeToGraph(&gpu_frametime_graph_state, gpu_time_ms);
 
-            Vec2f pos = {1600.f,0.f};
+            Vec2f pos = {game->window_size.x,0.f};
             TextLayout frametime_layout = c::def_text_layout;
             frametime_layout.align = c::align_topright;
             auto cam = PushUiCamera();
