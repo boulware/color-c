@@ -1390,6 +1390,7 @@ TickBattle(Battle *battle)
                     DrawText(text_layout, tier_string_pos, tier_string);
 
                     // Required trait change to level up ability.
+                    #if 0
                     if(tier != max_tier)
                     {
                         int next_tier = tier + 1;
@@ -1443,6 +1444,25 @@ TickBattle(Battle *battle)
                         trait_change_text_layout.font_size = 32;
                         trait_change_text_layout.align = c::align_rightcenter;
                         DrawTextMultiline(trait_change_text_layout, RectRightCenter(padded_button_rect), trait_change_string);
+                    }
+                    #endif
+
+                    if(tier != max_tier)
+                    {
+                        AbilityTier &cur_tier  = ability->tiers[tier];   // alias
+                        AbilityTier &next_tier = ability->tiers[tier+1]; // alias
+                        TraitSet trait_ranges = next_tier.required_traits - cur_tier.required_traits;
+                        TraitSet cur_traits_in_range = unit->cur_traits - cur_tier.required_traits; // How many pips to color in within current range
+                        for(int i=0; i<c::trait_count; ++i)
+                        { // clamp between 0 and trait_range
+                            cur_traits_in_range[i] = m::Clamp(cur_traits_in_range[i], 0, trait_ranges[i]);
+                        }
+
+                        Vec2f req_bar_origin = RectTopRight(padded_button_rect);
+                        // Drawn in "opposite" trait order so from left to right it is vigor, focus, armor
+                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{  0.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::armor_color, c::bg_armor_color, cur_traits_in_range.armor, trait_ranges.armor);
+                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-20.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::focus_color, c::bg_focus_color, cur_traits_in_range.focus, trait_ranges.focus);
+                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-40.f,0.f},  {-20.f,padded_button_rect.size.y}}, c::vigor_color, c::bg_vigor_color, cur_traits_in_range.vigor, trait_ranges.vigor);
                     }
 
                     // Draw ability card if hovered and alt/LMB is down

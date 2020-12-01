@@ -167,6 +167,8 @@ DrawHealthbar()
 void
 DrawVerticalNotchedHealthbar(Rect rect, Color color, Color bg_color, int cur, int max)
 {
+    if(max == 0) return;
+
     // background
     DrawFilledRect(rect, bg_color);
 
