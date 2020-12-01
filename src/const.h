@@ -43,6 +43,14 @@ namespace c
     const Color silver = {215/255.f, 215/255.f, 215/255.f, 1.f};
     const Color gold   = {0.8f,0.8f,0.f,1.f};
 
+    const Color vigor_color = {1.f,0.f,0.f,1.f};
+    const Color focus_color = {0.3f,0.3f,1.f,1.f};
+    const Color armor_color = {0.8f,0.8f,0.f,1.f};
+
+    const Color bg_vigor_color = {0.3f,0.f,0.f,1.f};
+    const Color bg_focus_color = {0.1f,0.1f,0.3f,1.f};
+    const Color bg_armor_color = {0.3f,0.3f,0.f,1.f};
+
     // Alignments
     const Align align_topleft      = {AlignX::left, AlignY::top};
     const Align align_topright     = {AlignX::right, AlignY::top};
@@ -56,9 +64,9 @@ namespace c
 
     const int max_formatted_string_length = 1024;
 
-    const bool fullscreen = true;
-    const int windowed_window_width = 1280;
-    const int windowed_window_height = 720;
+    const bool fullscreen = false;
+    const int windowed_window_width = 1600;
+    const int windowed_window_height = 900;
     const int fullscreen_window_width = 1920;
     const int fullscreen_window_height = 1080;
     const float frametime_s = 1.f/60.f;

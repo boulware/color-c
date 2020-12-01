@@ -308,20 +308,37 @@ DrawUnitSet(Battle *battle)
 */
 
 void
-DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Align align)
+DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int active_tier_level, Align align)
 {
     SetDrawDepth(1.f);
+
     Ability *ability = GetAbilityFromId(ability_id);
     if(!ValidAbility(ability)) return;
+    Unit *caster = GetUnitFromId(caster_id);
+    if(!ValidUnit(caster)) return;
 
-    Rect infobox_aligned_rect = AlignRect({pos, c::ability_info_box_size}, align);
+    TextLayout name_layout = c::def_text_layout;
+    name_layout.align = c::align_topcenter;
+    TextLayout tier_inactive_text_layout = c::small_text_layout;
+    tier_inactive_text_layout.color = c::lt_grey;
+    TextLayout tier_active_text_layout = c::small_text_layout;
+    tier_active_text_layout.color = c::white;
+
+    Vec2f text_x_padding = {100.f, 0.f}; // The left-padding for where the text should start (to make room for req. bars)
+    float name_line_height = LineHeight(name_layout);
+    float tier_line_height = LineHeight(tier_active_text_layout);
+    float tier_box_height = 2*tier_line_height + 2*c::tier_data_y_half_padding;
+
+    int tier_count = ability->tiers.count-1; // -1 because this includes the "empty" tier
+    float ability_box_height = tier_count*tier_box_height + name_line_height;
+
+    Rect infobox_aligned_rect = AlignRect({pos, {c::ability_info_box_size.x, ability_box_height}}, align);
     Vec2f pen = infobox_aligned_rect.pos;
     DrawFilledRect(infobox_aligned_rect, c::ability_info_bg_color);
     DrawUnfilledRect(infobox_aligned_rect, c::white);
 
-    TextLayout layout = c::def_text_layout;
-    layout.align = c::align_topcenter;
-    Vec2f name_text_size = DrawText(layout, RectTopCenter(infobox_aligned_rect), ability->name).rect.size;
+    DrawText(name_layout, RectTopCenter(infobox_aligned_rect), ability->name);
+    pen.y += name_line_height;
     //pen.y += name_size.y;
 
 
@@ -330,20 +347,15 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
     // Vec2f target_text_size = DrawText(layout, RectTopRight(infobox_aligned_rect) + Vec2f{0.f, 0.5f*name_text_size.y},
     //                                "targets %s", TargetClass_userstrings[(int)ability->target_class]);
 
-    pen.y += name_text_size.y;
+    //pen.y += name_text_size.y;
     DrawLine(pen, pen + Vec2f{c::ability_info_box_size.x, 0.f});
-    pen.y += c::tier_data_y_half_padding;
 
-    TextLayout tier_inactive_text_layout = c::small_text_layout;
-    tier_inactive_text_layout.color = c::lt_grey;
-    TextLayout tier_active_text_layout = c::small_text_layout;
-    tier_active_text_layout.color = c::white;
+    Vec2f req_bar_origin = pen;
 
-    // i=1 because we skip the lowest tier (which is the "empty" tier)
-    for(int i=1; i<ability->tiers.count; i++)
+    pen.y += c::tier_data_y_half_padding; // Start padding of first tier
+    for(int i=tier_count; i>=1; --i) // Iterate backwards, from highest tier to lowest, so that the lowest tier is drawn at the bottom
     {
         AbilityTier &tier = ability->tiers[i]; // alias
-        //if(!tier.init) continue;
 
         String tier_requirements_text = AllocStringDataFromArena(500, memory::per_frame_arena_id);
         AppendCString(&tier_requirements_text, "Tier %d", i);
@@ -402,7 +414,7 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
         if(i == active_tier_level)
             layout = tier_active_text_layout;
 
-        pen.y += DrawTextMultiline(layout, pen, tier_requirements_text).y;
+        pen.y += DrawTextMultiline(layout, pen + text_x_padding, tier_requirements_text).y;
 
         #if 0
         {
@@ -426,7 +438,20 @@ DrawAbilityInfoBox(Vec2f pos, Id<Ability> ability_id, int active_tier_level, Ali
         }
         #endif
 
+        AbilityTier &prev_tier = ability->tiers[i-1]; // alias
+        TraitSet trait_ranges = tier.required_traits - prev_tier.required_traits;
+        TraitSet cur_traits_in_range = caster->cur_traits - prev_tier.required_traits; // How many pips to color in within current range
+        for(int i=0; i<c::trait_count; ++i)
+        { // clamp between 0 and trait_range
+            cur_traits_in_range[i] = m::Clamp(cur_traits_in_range[i], 0, trait_ranges[i]);
+        }
+
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{ 0.f,0.f}, {20.f,tier_box_height}}, c::vigor_color, c::bg_vigor_color, cur_traits_in_range.vigor, trait_ranges.vigor);
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{20.f,0.f}, {20.f,tier_box_height}}, c::focus_color, c::bg_focus_color, cur_traits_in_range.focus, trait_ranges.focus);
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{40.f,0.f}, {20.f,tier_box_height}}, c::armor_color, c::bg_armor_color, cur_traits_in_range.armor, trait_ranges.armor);
+
         pen.y += c::tier_data_y_half_padding;
+        req_bar_origin = pen;
         DrawLine({pen.x, pen.y}, {pen.x + c::ability_info_box_size.x, pen.y}, c::grey);
         pen.y += c::tier_data_y_half_padding;
     }
@@ -506,7 +531,7 @@ DrawEnemyIntentThoughtBubbles(Battle *battle)
 
             if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
             {
-                DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);
+                DrawAbilityInfoBox(MousePos(), caster_id, ability_id, tier, c::align_topleft);
             }
 
             pen.y -= (1 + response.rect.size.y); // 1 + so the button outlines don't overlap
@@ -897,6 +922,7 @@ TickBattle(Battle *battle)
                 if(active_tier >= 0)
                 {
                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,
+                                       battle->selected_unit_id,
                                        hovered_ability_id,
                                        active_tier,
                                        c::align_topleft);
@@ -908,6 +934,7 @@ TickBattle(Battle *battle)
                 if(active_tier >= 0)
                 {
                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,
+                                       battle->selected_unit_id,
                                        battle->selected_ability_id,
                                        active_tier,
                                        c::align_topleft);
@@ -1422,7 +1449,7 @@ TickBattle(Battle *battle)
                     if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
                     {
                         SetDrawDepth(c::ability_card_draw_depth);
-                        DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);
+                        DrawAbilityInfoBox(MousePos(), unit_id, ability_id, tier, c::align_topleft);
                     }
 
                     pen.y -= (1 + response.rect.size.y); // 1 + so the button outlines don't overlap

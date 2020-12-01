@@ -117,3 +117,9 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 48) in `WIN32_BIND_OPENGL_EXTENSIONS`, we can combine our syntax a bit so that it automatically tries to bind as a base function, and if it fails, it will attempt to bind as an extended function -- this way all binding calls can be using the same function signature, and we don't have to do trial and error when writing code that binds new opengl calls. [This might not be possible, because we do base function bindings by simply directly referencing the function name (with macro paste stuff), so I think this has to be some kind of compile-time thing, which is a bit more difficult to do]
 
 49) Frame-rate independence
+
+50) Anti-aliasing (esp. lines/primitives)
+
+51) Properly adjust viewport when resizing window; support easy switching between fullscreen/windowed
+
+52) Maybe we can show the req. bar on the ability button itself -- perhaps without ticks so it's not as visually messy. But just being able to see some little bars might give some indication of what needs to be done to raise or lower the tier of an ability. Additionally, the bars actually convey all the meaning we need at once. Raising both bars above their tops will raise the tier, and lowering either of the bars below their top will lower the tier.

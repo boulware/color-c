@@ -163,6 +163,30 @@ DrawHealthbar()
 
 }
 
+// A vertical "healthbar" with notches for each healthpoint.
+void
+DrawVerticalNotchedHealthbar(Rect rect, Color color, Color bg_color, int cur, int max)
+{
+    // background
+    DrawFilledRect(rect, bg_color);
+
+    // fill
+    float fill_ratio = cur/(float)max;
+    float fill_height = fill_ratio * rect.size.y;
+    Rect fill_rect = {RectBottomLeft(rect), {rect.size.x, -fill_height}};
+    DrawFilledRect(fill_rect, color);
+
+    // outline
+    DrawUnfilledRect(rect, c::white);
+
+    // notches
+    float pip_height = rect.size.y / max;
+    for(int i=1; i<max; ++i)
+    {
+        DrawLine(rect.pos + Vec2f{0.f, i*pip_height}, rect.pos + Vec2f{rect.size.x-1, i*pip_height});
+    }
+}
+
 ButtonResponse
 DrawButton(ButtonLayout layout, Rect rect, String label)
 {

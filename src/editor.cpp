@@ -181,19 +181,19 @@ TickEditor(Editor *editor)
             GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::name], &editor->temp_ability.name);
 
             // Tier 0 required
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[0].required_traits.vigor);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[0].required_traits.focus);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[0].required_traits.armor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_vigor], &editor->temp_ability.tiers[1].required_traits.vigor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_focus], &editor->temp_ability.tiers[1].required_traits.focus);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier0required_armor], &editor->temp_ability.tiers[1].required_traits.armor);
 
             // Tier 1 required
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_vigor], &editor->temp_ability.tiers[1].required_traits.vigor);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_focus], &editor->temp_ability.tiers[1].required_traits.focus);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_armor], &editor->temp_ability.tiers[1].required_traits.armor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_vigor], &editor->temp_ability.tiers[2].required_traits.vigor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier1required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
 
             // Tier 2 required
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_vigor], &editor->temp_ability.tiers[2].required_traits.vigor);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_focus], &editor->temp_ability.tiers[2].required_traits.focus);
-            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_armor], &editor->temp_ability.tiers[2].required_traits.armor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_vigor], &editor->temp_ability.tiers[3].required_traits.vigor);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_focus], &editor->temp_ability.tiers[3].required_traits.focus);
+            GenerateInputElementString(&editor->input_elements[(int)AbilityPropertyIndex::tier2required_armor], &editor->temp_ability.tiers[3].required_traits.armor);
 
     //          DrawTextMultiline(c::def_text_layout, MousePos(), MetaString(&editor->temp_ability.tiers[0]));
         }

@@ -304,6 +304,30 @@ bool PointInRect(Rect rect, Vec2f point)
             point.y < rect.pos.y + rect.size.y);
 }
 
+float
+RectLeft(Rect rect)
+{
+    return rect.pos.x;
+}
+
+float
+RectRight(Rect rect)
+{
+    return rect.pos.x + rect.size.x;
+}
+
+float
+RectTop(Rect rect)
+{
+    return rect.pos.y;
+}
+
+float
+RectBottom(Rect rect)
+{
+    return rect.pos.y + rect.size.y;
+}
+
 Vec2f
 RectTopLeft(Rect rect)
 {
