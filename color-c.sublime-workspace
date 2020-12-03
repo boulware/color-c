@@ -4,6 +4,62 @@
 		"selected_items":
 		[
 			[
+				"ability_icon",
+				"ability_icon_button_layout"
+			],
+			[
+				"trait_ra",
+				"trait_ranges"
+			],
+			[
+				"cur_traits",
+				"cur_traits_in_range"
+			],
+			[
+				"selectedunit",
+				"selected_unit_id"
+			],
+			[
+				"selected_unit",
+				"selected_unit_id"
+			],
+			[
+				"origi",
+				"req_bar_origin"
+			],
+			[
+				"DrawRec",
+				"DrawUnfilledRect"
+			],
+			[
+				"Gener",
+				"GenerateAbilityTierText"
+			],
+			[
+				"DrawText",
+				"DrawTextMultiline"
+			],
+			[
+				"tier_ac",
+				"tier_inactive_text_layout"
+			],
+			[
+				"first_trai",
+				"first_trait_printed"
+			],
+			[
+				"APpend",
+				"AppendCString"
+			],
+			[
+				"Editr",
+				"EditorMode"
+			],
+			[
+				"Input",
+				"InputElementType"
+			],
+			[
 				"GL_DEPTH",
 				"GL_DEPTH_COMPONENT24"
 			],
@@ -444,10 +500,6 @@
 				"outline_shader"
 			],
 			[
-				"Gener",
-				"GenerateComputeShaderFromFile"
-			],
-			[
 				"GLTEXT",
 				"GL_TEXTURE0"
 			],
@@ -462,85 +514,77 @@
 			[
 				"Bind",
 				"BindTexture"
-			],
-			[
-				"GLTE",
-				"GL_TEXTURE1"
-			],
-			[
-				"GL_TEXTU",
-				"GL_TEXTURE0"
-			],
-			[
-				"blurd",
-				"blur_dst_texture"
-			],
-			[
-				"Pro",
-				"ProgramUniform1i"
-			],
-			[
-				"blur_",
-				"blur_data"
-			],
-			[
-				"GL_TE",
-				"GL_TEXTURE_2D"
-			],
-			[
-				"prepasS_",
-				"prepass_texture"
-			],
-			[
-				"GL_TEXT",
-				"GL_TEXTURE0"
-			],
-			[
-				"GL_TEXTUR",
-				"GL_TEXTURE_2D"
-			],
-			[
-				"texco",
-				"texcoords_attr"
-			],
-			[
-				"guas",
-				"gaussian_blur_shader"
-			],
-			[
-				"trait_chang",
-				"trait_change_text_layout"
-			],
-			[
-				"trait_change",
-				"trait_change_string"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "src/editor.cpp",
+			"file": "src/battle.cpp",
 			"settings":
 			{
-				"buffer_size": 15490,
+				"buffer_size": 60474,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/text_render.cpp",
+			"file": "src/game_code_include.cpp",
 			"settings":
 			{
-				"buffer_size": 31565,
+				"buffer_size": 1321,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/game.cpp",
+			"file": "src/imgui.h",
 			"settings":
 			{
-				"buffer_size": 21791,
+				"buffer_size": 1954,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/todo_session.txt",
+			"settings":
+			{
+				"buffer_size": 183,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "data/ability.dat",
+			"settings":
+			{
+				"buffer_size": 2711,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/editor.cpp",
+			"settings":
+			{
+				"buffer_size": 16306,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/battle.h",
+			"settings":
+			{
+				"buffer_size": 2224,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "_/todo.txt",
+			"settings":
+			{
+				"buffer_size": 16367,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -549,34 +593,82 @@
 			"file": "logs/log.txt",
 			"settings":
 			{
-				"buffer_size": 9351289,
+				"buffer_size": 9450981,
 				"encoding": "Western (Windows 1252)",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/game.h",
+			"file": "src/draw.cpp",
 			"settings":
 			{
-				"buffer_size": 1894,
+				"buffer_size": 7433,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 149 files for \"ability_property_types\"\n\nC:\\color-c\\src\\editor.cpp:\n  145                  editor->temp_ability_id = entry.id;\n  146                  editor->mode = EditorMode::Ability;\n  147:                 for(int i=0; i<ArrayCount(ability_property_types); i++)\n  148                  {\n  149:                     editor->input_elements[i].type = ability_property_types[i];\n  150                  }\n  151              }\n\nC:\\color-c\\src\\editor.h:\n   35  };\n   36  \n   37: InputElementType ability_property_types[] = {\n   38  \tInputElementType::String,\n   39  \tInputElementType::String,\n   ..\n   47  \tInputElementType::Integer,\n   48  \tInputElementType::Integer,\n   49: }; static_assert(ArrayCount(ability_property_types) == (int)AbilityPropertyIndex::COUNT);\n   50  \n   51  Vec2f ability_field_positions[] = {\n\n4 matches across 2 files\n",
+			"contents": "Searching 149 files for \"RectTopRight\"\n\nC:\\color-c\\src\\battle.cpp:\n  342      // layout.font_size = 16;\n  343      // layout.align = c::align_rightcenter;\n  344:     // Vec2f target_text_size = DrawText(layout, RectTopRight(infobox_aligned_rect) + Vec2f{0.f, 0.5f*name_text_size.y},\n  345      //                                \"targets %s\", TargetClass_userstrings[(int)ability->target_class]);\n  346  \n  ...\n 1313                      float line_speed = 800.f;\n 1314                      Vec2f caster_pos = RectTopLeft(caster_rect);\n 1315:                     Vec2f target_pos = RectTopRight(target_rect);\n 1316                      Vec2f arrow_direction = Normalize(target_pos - caster_pos);\n 1317                      Vec2f start_vel = 0.5f*(Vec2f{0.f,-1.f} + arrow_direction);\n\nC:\\color-c\\src\\campaign.cpp:\n  551          Rect side_panel_rect = {{}, {200.f, game->window_size.y}};\n  552          DrawFilledRect(side_panel_rect, c::dk_grey);\n  553:         DrawLine(RectTopRight(side_panel_rect), RectBottomRight(side_panel_rect), c::white);\n  554          Vec2f pen = {5.f, 0.f};\n  555  \n\nC:\\color-c\\src\\frametimes_draw.cpp:\n  110      }\n  111  \n  112:     Vec2f pen = RectTopRight(graph_rect) - Vec2f{2.f,2.f};\n  113      pen.y += DrawText(c::frametime_max_text, pen, \"scale: %.2fms\", state->graph_max).rect.size.y;\n  114      {\n  ...\n  161      }\n  162  \n  163:     // DrawTextMultiline(c::frametime_max_text, RectTopRight(graph_rect) - Vec2f{2.f,2.f},\n  164      //                   \"scale: %.2fms\\nmin: %.2fms\\nmax: %.2fms\\navg: %.2fms\",\n  165      //                   state->graph_max,\n\nC:\\color-c\\src\\imgui.cpp:\n  211  // \tDrawFilledRect(layout.rect, Color{0.05f,0.05f,0.05f,1.f});\n  212  // \tDrawUnfilledRect(layout.rect, c::lt_grey);\n  213: // \t//DrawLine(RectTopRight(layout.rect), RectBottomRight(layout.rect), c::lt_grey);\n  214  \n  215  // \tTextLayout text_layout = c::def_text_layout;\n\nC:\\color-c\\src\\unit.cpp:\n  607  \n  608      Rect solid_rect = {bar_rect.pos, {solid_bar_width, c::trait_bar_size.y}};\n  609:     Rect flash_rect = {RectTopRight(solid_rect), {flash_bar_width, c::trait_bar_size.y}};\n  610  \n  611      DrawFilledRect(solid_rect, color);\n  ...\n  646      //  overheal_layout.font_size = 16;\n  647      //  overheal_layout.align = c::align_leftcenter;\n  648:     //  Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};\n  649  \n  650      //  if(overheal_change_sign == 0)\n  ...\n  670      // }\n  671  \n  672:      Vec2f trait_change_text_pos = RectTopRight(bar_rect) + Vec2f{c::trait_change_preview_h_offset, 0.5f*bar_rect.size.y};\n  673  \n  674      // Draw change to trait to the right of the trait bar\n\nC:\\color-c\\src\\vec.cpp:\n  318  \n  319  Vec2f\n  320: RectTopRight(Rect rect)\n  321  {\n  322      return rect.pos + Vec2f{rect.size.x, 0.f};\n\n10 matches across 6 files\n\n\nSearching 149 files for \"DrawAbilityInfoBox\"\n\nC:\\color-c\\src\\battle.cpp:\n  309  \n  310  void\n  311: DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int active_tier_level, Align align)\n  312  {\n  313      SetDrawDepth(1.f);\n  ...\n  527              if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))\n  528              {\n  529:                 DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);\n  530              }\n  531  \n  ...\n  917                  if(active_tier >= 0)\n  918                  {\n  919:                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,\n  920                                         hovered_ability_id,\n  921                                         active_tier,\n  ...\n  928                  if(active_tier >= 0)\n  929                  {\n  930:                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,\n  931                                         battle->selected_ability_id,\n  932                                         active_tier,\n  ...\n 1443                      {\n 1444                          SetDrawDepth(c::ability_card_draw_depth);\n 1445:                         DrawAbilityInfoBox(MousePos(), ability_id, tier, c::align_topleft);\n 1446                      }\n 1447  \n\nC:\\color-c\\src\\battle.h:\n   82  void DrawUnitHudData(Battle *battle);\n   83  void DrawTargetingInfo(Battle *battle);\n   84: void DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int tier, Align align = c::align_topleft);\n   85  \n   86  void UpdateHoveredUnit(Battle *battle);\n\nC:\\color-c\\src\\unit.h:\n   65  Vec2f DrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer);\n   66  void DrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer);\n   67: //void DrawAbilityInfoBox(Vec2f pos, Ability ability, Align align);\n   68  \n   69  //void AddUnitToUnitSet(Id<Unit> unit_id, UnitSet *target_set);\n\n7 matches across 3 files\n\n\nSearching 151 files for \"Invalid TargetClass encountered\"\n\nC:\\color-c\\src\\unit.cpp:\n  255  //  }\n  256  \n  257: //  Log(\"Invalid TargetClass encountered (%d)\", int(tc));\n  258  //  return false;\n  259  // }\n  ...\n  343      }\n  344  \n  345:     Log(\"Invalid TargetClass encountered (%d)\", int(tc));\n  346      return false;\n  347  }\n\n2 matches in 1 file\n\n\nSearching 151 files for \"GenerateInferred\"\n\nC:\\color-c\\src\\battle.cpp:\n  585              unit->intent.caster_id = unit_id;\n  586              unit->intent.ability_id = chosen_ability_id;\n  587:             GenerateInferredUnitSet(unit_id,\n  588                                      chosen_target_id,\n  589                                      tier.target_class,\n  ...\n  988                  if(tier_index >= 0)\n  989                  {\n  990:                     GenerateInferredUnitSet(battle->selected_unit_id,\n  991                                              hovered_unit_id,\n  992                                              selected_ability->tiers[tier_index].target_class,\n\nC:\\color-c\\src\\unit.cpp:\n  348  \n  349  void\n  350: GenerateInferredUnitSet(Id<Unit> caster_id,\n  351                          Id<Unit> selected_target_id,\n  352                          TargetClass tc,\n\nC:\\color-c\\src\\unit.h:\n   81  bool CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc);\n   82  \n   83: void GenerateInferredUnitSet(Id<Unit> caster_id,\n   84  \t                         Id<Unit> selected_target_id,\n   85  \t                         TargetClass tc,\n\n4 matches across 3 files\n\n\nSearching 151 files for \"CheckValidTarget\"\n\nC:\\color-c\\src\\battle.cpp:\n   87      for(Id target_id : all_units)\n   88      {\n   89:         if(!CheckValidTarget(caster_id, target_id, tc)) continue;\n   90  \n   91          *valid_selection_units += target_id;\n\nC:\\color-c\\src\\unit.cpp:\n  296  \n  297  bool\n  298: CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)\n  299  {\n  300      Unit *caster = GetUnitFromId(caster_id);\n  ...\n  361  \n  362      // Return empty target set if the selected target is invalid or not a valid target for the given target_class\n  363:     if(!CheckValidTarget(caster_id, selected_target_id, tc)) return;\n  364  \n  365      ClearArray(inferred_target_set);\n\nC:\\color-c\\src\\unit.h:\n   79  \n   80  bool UnitIsDead(UnitId unit_id);\n   81: bool CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc);\n   82  \n   83  void GenerateInferredUnitSet(Id<Unit> caster_id,\n\n4 matches across 3 files\n\n\nSearching 151 files for \"CheckValidTarget\"\n\nC:\\color-c\\src\\battle.cpp:\n   87      for(Id target_id : all_units)\n   88      {\n   89:         if(!CheckValidTarget(caster_id, target_id, tc)) continue;\n   90  \n   91          *valid_selection_units += target_id;\n\nC:\\color-c\\src\\unit.cpp:\n  296  \n  297  bool\n  298: CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)\n  299  {\n  300      Unit *caster = GetUnitFromId(caster_id);\n  ...\n  361  \n  362      // Return empty target set if the selected target is invalid or not a valid target for the given target_class\n  363:     if(!CheckValidTarget(caster_id, selected_target_id, tc)) return;\n  364  \n  365      ClearArray(inferred_target_set);\n\nC:\\color-c\\src\\unit.h:\n   79  \n   80  bool UnitIsDead(UnitId unit_id);\n   81: bool CheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc);\n   82  \n   83  void GenerateInferredUnitSet(Id<Unit> caster_id,\n\n4 matches across 3 files\n",
 			"settings":
 			{
-				"buffer_size": 847,
+				"buffer_size": 8407,
 				"line_ending": "Windows",
 				"name": "Find Results",
 				"scratch": true
 			}
 		},
 		{
-			"file": "src/editor.h",
+			"contents": "#include \"unit.h\"\n\n#include \"util.h\"\n#include \"text_parsing.h\"\n\n// Unit *UnitAtIndex(UnitSet set, int index)\n// {\n//  if(index < 0 or index >= set.size) return nullptr;\n\n//  return set.units[index];\n// }\n\nbool\nUnitIsDead(UnitId unit_id)\n{\n    Unit *unit = GetUnitFromId(unit_id);\n    if(!ValidUnit(unit) or unit->cur_traits.vigor <= 0) return true;\n    else return false;\n}\n\nbool\nParseNextAsBreedData(Buffer *buffer, Breed *breed, Table<Ability> ability_table)\n{\n    if(!buffer or !breed) return false;\n\n    bool valid_unit_data = true;\n    char *initial = buffer->p;\n    Breed temp_breed = {};\n    for(int i=0; i<c::moveset_max_size; i++)\n    {\n        temp_breed.ability_ids[i] = c::null_ability_id;\n    }\n\n    bool header_valid = ConfirmNextTokenAsIdentifier(buffer, \"unit\");\n    if(!header_valid)\n    {\n        // The current location in the buffer doesn't point to the beginning of a unit's data.\n        valid_unit_data = false;\n    }\n\n    Token name_token;\n    bool is_valid_name = NextTokenAsDoubleQuotedString(buffer, &name_token);\n    if(!is_valid_name)\n    {\n        // There is no name given or the string is misformatted for the unit's name.\n        valid_unit_data = false;\n    }\n\n    bool end_of_unit_data = false;\n    while(valid_unit_data and !end_of_unit_data)\n    {\n        char *before_token = buffer->p;\n        Token token = NextToken(buffer);\n\n        if(BufferBytesRemaining(*buffer) == 0 or TokenMatchesString(token, \"unit\"))\n        {\n            // reset buffer to before the previous token was fetched, since it's not part of the current\n            // ability data\n            buffer->p = before_token;\n            end_of_unit_data = true;\n        }\n        else if(TokenMatchesString(token, \"traits\"))\n        {\n            valid_unit_data = ParseNextAsTraitSet(buffer, &temp_breed.max_traits);\n        }\n        else if(TokenMatchesString(token, \"moveset\"))\n        {\n            // Look for *up to* moveset_max_size strings of ability names\n            for(int i=0; i<c::moveset_max_size; i++)\n            {\n                Token ability_name_token;\n                if(NextTokenAsDoubleQuotedString(buffer, &ability_name_token))\n                {\n                    temp_breed.ability_ids[i] = GetIndexFromName(ability_table, StringFromToken(ability_name_token));\n\n                    if(temp_breed.ability_ids[i] == c::null_ability_id)\n                    {\n                        // Found an ability name string for moveset, but it's not an ability\n                        // that exists in the ability table.\n                        valid_unit_data = false;\n                    }\n                }\n                else\n                {\n                    break;\n                }\n            }\n        }\n        else if(TokenMatchesString(token, \"tier\"))\n        {\n            valid_unit_data = ParseNextAsS32(buffer, &temp_breed.tier);\n        }\n        else\n        {\n            // Encountered invalid identifier token in unit data.\n            valid_unit_data = false;\n        }\n    }\n\n    if(valid_unit_data)\n    {\n        *breed = temp_breed;\n        breed->name = StringFromToken(name_token, memory::permanent_arena_id);\n        // CopyString()\n        // CopyString(breed->name, name_token.start, m::Min(sizeof(breed->name), name_token.length+1));\n\n        return true;\n    }\n    else\n    {\n        buffer->p = initial;\n        size_t number_of_bytes_to_print = m::Min(BufferBytesRemaining(*buffer), size_t(32));\n        Log(\"Encountered invalid unit data in buffer at address: %p (\\\"%.*s\\\")\",\n            buffer->p, number_of_bytes_to_print, buffer->p);\n\n        return false;\n    }\n}\n\nbool\nLoadBreedFile(const char *filename, Table<Breed> *breed_table, Table<Ability> ability_table)\n{\n    if(!filename or !breed_table) return false;\n\n    Buffer file;\n    bool load_success = platform->LoadFileIntoSizedBufferAndNullTerminate(filename, &file);\n    if(!load_success) return false;\n\n    size_t unit_count_loaded = 0;\n\n    while(BufferBytesRemaining(file) > 0)\n    {\n        bool found_unit = SeekNextLineThatBeginsWith(&file, \"unit\");\n        if(!found_unit) break;\n\n        Breed temp_breed = {};\n        if(ParseNextAsBreedData(&file, &temp_breed, ability_table))\n        {\n            auto breed_id = CreateEntry(breed_table);\n            Breed *breed = GetBreedFromId(breed_id);\n            if(breed == nullptr) break;\n\n            *breed = temp_breed;\n            breed->init = true;\n            ++unit_count_loaded;\n        }\n        else\n        {\n            ++file.p;\n            continue;\n        }\n    }\n\n    if(c::verbose_success_logging)\n    {\n        Log(\"Loaded %zu unit breeds from file: %s\", unit_count_loaded, filename);\n    }\n    FreeBuffer(&file);\n    return true;\n}\n\n// On success, returns pointer to newly created unit, which is placed in g::unit_table.\n// Returns nullptr if unit creation fails for any reason.\nId<Unit>\nCreateUnit(Id<Breed> breed_id, Team team, PoolId<Arena> arena_id)\n{\n    Breed *breed = GetBreedFromId(breed_id);\n    if(!ValidBreed(breed)) return c::null_unit_id;\n\n    auto unit_id = CreateEntry(&g::unit_table);\n    Unit *unit = GetUnitFromId(unit_id);\n    if(!unit) return c::null_unit_id;\n\n    unit->name = CopyString(breed->name, arena_id);\n    unit->team = team;\n    unit->max_traits = breed->max_traits;\n    unit->cur_traits = breed->max_traits;\n    for(int i=0; i<c::moveset_max_size; i++)\n    {\n        // @note: do we need to actually check that this ability is valid?\n        //        i.e., can a unit have a reference to an invalid ability? Maybe.\n        // Ability *ability = GetAbilityFromId(breed->ability_ids[i]);\n        // if(ability == nullptr) continue;\n\n        unit->ability_ids[i] = breed->ability_ids[i];\n    }\n    unit->cur_action_points = 0;\n    unit->max_action_points = 1;\n\n    unit->intent.target_set = CreateArrayFromArena<UnitId>(8, arena_id);\n\n    unit->init = true;\n    return unit_id;\n}\n\nId<Unit>\nCreateUnitByName(String name, Team team, PoolId<Arena> arena_id)\n{\n    Id breed_id = GetIndexFromName(g::breed_table, name);\n    return CreateUnit(breed_id, team, arena_id);\n}\n\nId<Unit>\nCreateUnitByName(char *name, Team team, PoolId<Arena> arena_id)\n{\n    String name_string = StringFromCString(name);\n    return CreateUnitByName(name_string, team, arena_id);\n}\n\n// bool\n// _CheckValidEffectTarget(Unit *caster, Unit *target, Effect *effect)\n// {\n//  if(!ValidUnit(caster) or !ValidUnit(target)) return false;\n\n//  TargetClass tc = effect->target_class;\n//  if(tc == TargetClass::self)\n//  {\n//      return(caster == target);\n//  }\n//  else if(tc == TargetClass::single_ally)\n//  {\n//      return(caster->team == target->team);\n//  }\n//  else if(tc == TargetClass::single_ally_not_self)\n//  {\n//      return(caster->team == target->team and caster != target);\n//  }\n//  else if(tc == TargetClass::all_allies)\n//  {\n//      return(caster->team == target->team);\n//  }\n//  else if(tc == TargetClass::all_allies_not_self)\n//  {\n//      return(caster->team == target->team and caster != target);\n//  }\n//  else if(tc == TargetClass::single_enemy)\n//  {\n//      return(caster->team != target->team);\n//  }\n//  else if(tc == TargetClass::all_enemies)\n//  {\n//      return(caster->team != target->team);\n//  }\n//  else if(tc == TargetClass::single_unit)\n//  {\n//      return true;\n//  }\n//  else if(tc == TargetClass::single_unit_not_self)\n//  {\n//      return(caster != target);\n//  }\n//  else if(tc == TargetClass::all_units)\n//  {\n//      return true;\n//  }\n\n//  Log(\"Invalid TargetClass encountered (%d)\", int(tc));\n//  return false;\n// }\n\n// void AddUnitToUnitSet(Id<Unit> unit_id, Array<UnitId> *unit_set)\n// {\n//  if(unit_set->count >= ArrayCount(unit_set->ids)) return; // Set is already full.\n\n//  bool unit_already_in_set = false;\n//  for(auto unit_in_set_id : *unit_set)\n//  {\n//      if(unit_id == unit_in_set_id) unit_already_in_set = true;\n//  }\n\n//  if(!unit_already_in_set)\n//  {\n//      unit_set->ids[unit_set->size++] = unit_id;\n//  }\n// }\n\n// UnitSet\n// CombineUnitSets(const UnitSet *a, const UnitSet *b)\n// {\n//  UnitSet combined = {};\n//  for(int i=0; i<a->size; i++)\n//  {\n//      AddUnitToUnitSet(a->ids[i], &combined);\n//  }\n\n//  for(int i=0; i<b->size; i++)\n//  {\n//      if(!UnitInUnitSet(b->ids[i], *a))\n//      {\n//          AddUnitToUnitSet(b->ids[i], &combined);\n//      }\n//  }\n\n//  return combined;\n// }\n\nbool\nCheckValidTarget(Id<Unit> caster_id, Id<Unit> target_id, TargetClass tc)\n{\n    Unit *caster = GetUnitFromId(caster_id);\n    Unit *target = GetUnitFromId(target_id);\n    if(!ValidUnit(caster) or !ValidUnit(target) or UnitIsDead(caster_id) or UnitIsDead(target_id)) return false;\n\n    if(tc == TargetClass::self)\n    {\n        return(caster_id == target_id);\n    }\n    else if(tc == TargetClass::single_ally)\n    {\n        return(caster->team == target->team);\n    }\n    else if(tc == TargetClass::single_ally_not_self)\n    {\n        return(caster->team == target->team and caster_id != target_id);\n    }\n    else if(tc == TargetClass::all_allies)\n    {\n        return(caster->team == target->team);\n    }\n    else if(tc == TargetClass::all_allies_not_self)\n    {\n        return(caster->team == target->team and caster_id != target_id);\n    }\n    else if(tc == TargetClass::single_enemy)\n    {\n        return(caster->team != target->team);\n    }\n    else if(tc == TargetClass::all_enemies)\n    {\n        return(caster->team != target->team);\n    }\n    else if(tc == TargetClass::single_unit)\n    {\n        return true;\n    }\n    else if(tc == TargetClass::single_unit_not_self)\n    {\n        return(caster_id != target_id);\n    }\n    else if(tc == TargetClass::all_units)\n    {\n        return true;\n    }\n\n    Log(\"Invalid TargetClass encountered (%d)\", int(tc));\n    return false;\n}\n\nvoid\nGenerateInferredUnitSet(Id<Unit> caster_id,\n                        Id<Unit> selected_target_id,\n                        TargetClass tc,\n                        Array<UnitId> all_targets,\n                        Array<UnitId> *inferred_target_set)\n{\n    TIMED_BLOCK;\n\n    Unit *caster = GetUnitFromId(caster_id);\n    Unit *selected_target = GetUnitFromId(selected_target_id);\n    if(!ValidUnit(caster) or !ValidUnit(selected_target)) return;\n\n    // Return empty target set if the selected target is invalid or not a valid target for the given target_class\n    if(!CheeckValidTargt(caster_id, selected_target_id, tc)) return;\n\n    ClearArray(inferred_target_set);\n\n    if(tc == TargetClass::all_allies)\n    {\n        // All targets that are on the same team as the caster\n        for(auto target_id : all_targets)\n        {\n            Unit *target = GetUnitFromId(target_id);\n            if(!ValidUnit(target)) continue;\n\n            if(target->team == caster->team and !UnitIsDead(target_id))\n            {\n                *inferred_target_set += target_id;\n            }\n        }\n    }\n    else if(tc == TargetClass::all_allies_not_self)\n    {\n        // All targets that are on the same team as the caster, excluding the caster.\n        for(auto target_id : all_targets)\n        {\n            Unit *target = GetUnitFromId(target_id);\n            if(!ValidUnit(target)) continue;\n\n            if(target_id != caster_id and target->team == caster->team and !UnitIsDead(target_id))\n            {\n                *inferred_target_set += target_id;\n            }\n        }\n    }\n    else if(tc == TargetClass::single_ally_not_self)\n    {\n        // if(selected target is ally _AND_ selected target is not self)\n        if(selected_target->team == caster->team and selected_target != caster and !UnitIsDead(selected_target_id))\n        {\n            *inferred_target_set += selected_target_id;\n        }\n    }\n    else if(tc == TargetClass::single_unit_not_self)\n    {\n        // if(selected target is not self)\n        if(selected_target != caster and !UnitIsDead(selected_target_id))\n        {\n            *inferred_target_set += selected_target_id;\n        }\n    }\n    else if(tc == TargetClass::all_enemies)\n    {\n        // All targets that are not on the same team as the caster.\n        for(auto target_id : all_targets)\n        {\n            Unit *target = GetUnitFromId(target_id);\n            if(!ValidUnit(target)) continue;\n\n            if(target->team != caster->team and !UnitIsDead(target_id))\n            {\n                *inferred_target_set += target_id;\n            }\n        }\n    }\n    else if(tc == TargetClass::all_units)\n    {\n        // All targets\n        for(auto target_id : all_targets)\n        {\n            if(UnitIsDead(target_id)) continue;\n            Unit *target = GetUnitFromId(target_id);\n            if(!ValidUnit(target)) continue;\n\n            *inferred_target_set += target_id;\n        }\n    }\n    else\n    {\n        // Single-target abilities need no inference. The inferred target set is\n        // always equal to the selected target if it's a valid target.\n        // At the time of writing this comment, this includes:\n        //      self, single_ally, single_enemy, single_unit\n\n        Unit *selected_target = GetUnitFromId(selected_target_id);\n        if(ValidUnit(selected_target) and !UnitIsDead(selected_target_id))\n        {\n            *inferred_target_set += selected_target_id;\n        }\n    }\n}\n\nbool\nUnitInUnitSet(Id<Unit> unit_id, Array<UnitId> target_set, int *index)\n{\n    Unit *unit = GetUnitFromId(unit_id);\n    if(!ValidUnit(unit)) return false;\n\n    for(int i=0; i<target_set.count; i++)\n    {\n        if(unit_id == target_set[i])\n        {\n            if(index) *index = i;\n            return true;\n        }\n    }\n\n    if(index) *index = -1;\n    return false;\n}\n\n// // @note: AOWTC this doesn't check that the unit_id is valid.\n// //        I figured this wouldn't be a problem, since it's not\n// //        necessarilly a bug for a unit id corresponding to an\n// //        invalid unit to be inside a unit set -- it's up to the\n// //        methods interpreting the unit set to check for that.\n// void\n// AddUnitIdToUnitSet(Id<Unit> unit_id, UnitSet *target_set)\n// {\n//  // Do nothing if target set is already at max size\n//  if(target_set->size >= ArrayCount(target_set->ids)) return;\n\n//  // Do nothing if [*unit] is already part of the set\n//  if(UnitInUnitSet(unit_id, *target_set)) return;\n\n//  // Add the unit to the set\n//  target_set->ids[target_set->size++] = unit_id;\n// }\n\nVec2f\nDrawTraitBarWithPreview(Vec2f pos, int current, int max, int preview, Color color, float flash_timer)\n{\n    TIMED_BLOCK;\n\n    const Rect bar_rect = {pos, c::trait_bar_size};\n\n    // If the max value is 0, don't draw the trait bar.\n    if(max <= 0)\n    {\n        //ErrorDrawText(pos, \"max <= 0\");\n        return Vec2f{};\n    }\n    else if(current < 0)\n    {\n        ErrorDrawText(pos, \"current < 0\");\n        return Vec2f{};\n    }\n    else if(preview < 0)\n    {\n        ErrorDrawText(pos, \"preview < 0\");\n        return Vec2f{};\n    }\n\n    // Cases:\n    //\n    // NO CHANGE\n    //      1) Trait is not being changed (preview == current)\n    //          => Color bar proportionally to current/max\n    //          => If there's overheal, draw it as \"X\", where X=current-max\n    //\n    // INCREASING\n    //      2) normal range => normal range\n    //          => Color bar proportionally to current/max\n    //          => Flash N pips, where N=preview-current\n    //      3) normal range => overheal\n    //          => Color bar proportionally to current/max\n    //          => Flash N pips, where N=max-current\n    //          => Draw \"0+X\" as overheal, where X=preview-max\n    //      4) overheal => overheal\n    //          => Fill bar\n    //          => Draw \"X+Y\" as overheal, where X=current_overheal, Y=preview-current\n    //\n    // DECREASING\n    //      5) normal range => normal range\n    //          => Color bar proportionally to preview/max\n    //          => Flash N pips, where N=current-preview\n    //      6) overheal => normal range\n    //          => Color bar proportionally to preview/max\n    //          => Flash N pips, where N=max-preview\n    //          => Draw \"X-Y\", where X=current_overheal, Y=current_overheal\n    //      7) overheal => overheal\n    //          => Fill bar\n    //          => Draw \"X-Y\" as overheal, where X=current_overheal, Y=current-preview\n\n    int solid_pip_count = 0;\n    int flash_pip_count = 0;\n    int overheal_change_sign = 0; // <0 if negative, 0 if unchanged, >0 if positive\n    if(preview == current)\n    {\n        // Case 1 (No change)\n        solid_pip_count = m::Max(0, m::Min(current, max));\n        flash_pip_count = 0;\n        overheal_change_sign = 0;\n    }\n    else if(preview > current and current <= max and preview <= max)\n    {\n        // Case 2 (increase; normal => normal)\n        solid_pip_count = current;\n        flash_pip_count = preview-current;\n        overheal_change_sign = 0;\n    }\n    else if(preview > current and current <= max and preview > max)\n    {\n        // Case 3 (increase; normal => overheal)\n        solid_pip_count = current;\n        flash_pip_count = max-current;\n        overheal_change_sign = 1;\n    }\n    else if(preview > current and current > max and preview > max)\n    {\n        // Case 4 (increase; overheal => overheal)\n        solid_pip_count = max;\n        flash_pip_count = 0.f;\n        overheal_change_sign = 1;\n    }\n    else if(preview < current and current <= max and preview <= max)\n    {\n        // Case 5 (decrease; normal => normal)\n        solid_pip_count = preview;\n        flash_pip_count = current-preview;\n        overheal_change_sign = 0;\n    }\n    else if(preview < current and current > max and preview <= max)\n    {\n        // Case 6 (decrease; overheal => normal)\n        solid_pip_count = preview;\n        flash_pip_count = max-preview;\n        overheal_change_sign = -1;\n    }\n    else if(preview < current and current > max and preview > max)\n    {\n        // Case 7 (decrease; overheal => overheal)\n        solid_pip_count = max;\n        flash_pip_count = 0;\n        overheal_change_sign = -1;\n    }\n    else if(c::verbose_error_logging)\n    {\n        Log(\"Invalid case encountered in function \" __FUNCTION__ \" (current:%d, max:%d, preview:%d)\",\n            current, max, preview);\n\n        return Vec2f{};\n    }\n\n    float pip_width = c::trait_bar_size.x / max;\n    float solid_bar_width = solid_pip_count * pip_width;\n    float flash_bar_width = flash_pip_count * pip_width;\n\n    Rect solid_rect = {bar_rect.pos, {solid_bar_width, c::trait_bar_size.y}};\n    Rect flash_rect = {RectTopRight(solid_rect), {flash_bar_width, c::trait_bar_size.y}};\n\n    DrawFilledRect(solid_rect, color);\n    if(preview < current)\n    {\n        // Flash red if trait is being decreased\n        Color flashing_red = {1.f, 0.f, 0.f, flash_timer};\n        DrawFilledRect(flash_rect, flashing_red);\n    }\n    if(preview > current)\n    {\n        // Flash green if trait is being increased\n        Color flashing_green = {0.f, 1.f, 0.f, flash_timer};\n        DrawFilledRect(flash_rect, flashing_green);\n    }\n\n    DrawUnfilledRect(bar_rect, c::white);\n\n\n    // for(int i=0; i<max; i++)\n    // {\n    //  // double-width line\n    //  DrawLine(bar_rect.pos + Vec2f{i*pip_width, 0.f},\n    //           bar_rect.pos + Vec2f{i*pip_width, bar_rect.size.y},\n    //           c::white);\n    //  DrawLine(bar_rect.pos + Vec2f{i*pip_width+1, 0.f},\n    //           bar_rect.pos + Vec2f{i*pip_width+1, bar_rect.size.y},\n    //           c::white);\n    // }\n\n    //DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), \"%d/%d\", m::Min(preview, max), max);\n    DrawText(c::trait_bar_value_text_layout, RectCenter(bar_rect), \"%d/%d\", preview, max);\n\n    // Draw overheal box and number value if there is any overheal (previewed overheal > 0)\n    // if(preview > max or current > max)\n    // {\n    //  TextLayout overheal_layout = c::def_text_layout;\n    //  overheal_layout.font_size = 16;\n    //  overheal_layout.align = c::align_leftcenter;\n    //  Vec2f overheal_text_pos = RectTopRight(bar_rect) + Vec2f{c::overheal_text_h_offset, 0.5f*c::trait_bar_size.y};\n\n    //  if(overheal_change_sign == 0)\n    //  {\n    //      DrawText(overheal_layout, overheal_text_pos, \"%d\", current-max);\n    //  }\n    //  else if(overheal_change_sign > 0)\n    //  {\n    //      overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, \"%d\", m::Max(0, current-max)).x;\n\n    //      Color flashing_color = {0.f, 1.f, 0.f, flash_timer};\n    //      overheal_layout.color = flashing_color;\n    //      DrawText(overheal_layout, overheal_text_pos, \" +%d\", preview-max);\n    //  }\n    //  else if(overheal_change_sign < 0)\n    //  {\n    //      overheal_text_pos.x += DrawText(overheal_layout, overheal_text_pos, \"%d\", current-max).x;\n\n    //      Color flashing_color = {1.f, 0.f, 0.f, flash_timer};\n    //      overheal_layout.color = flashing_color;\n    //      DrawText(overheal_layout, overheal_text_pos, \" -%d\", current-max);\n    //  }\n    // }\n\n     Vec2f trait_change_text_pos = RectTopRight(bar_rect) + Vec2f{c::trait_change_preview_h_offset, 0.5f*bar_rect.size.y};\n\n    // Draw change to trait to the right of the trait bar\n    if(preview == current)\n    {\n        // Draw nothing if no change.\n    }\n    else if(preview > current)\n    {\n        // Draw green \"+X\" if trait is increasing\n\n        TextLayout layout = c::trait_change_preview_text_layout;\n        layout.color = {0.f, 1.f, 0.f, flash_timer};\n        DrawText(layout, trait_change_text_pos, \"+%d\", preview-current);\n    }\n    else if(preview < current)\n    {\n        // Draw red \"-X\" if trait is decreasing\n\n        TextLayout layout = c::trait_change_preview_text_layout;\n        layout.color = {1.f, 0.f, 0.f, flash_timer};\n        DrawText(layout, trait_change_text_pos, \"-%d\", current-preview);\n    }\n\n    return(Vec2f{0.f, c::trait_bar_size.y});\n}\n\n// void\n// DrawTraitSet(Vec2f pos, TraitSet cur_traits, TraitSet max_traits)\n// {\n//  pos += DrawTraitBarWithPreview(pos, cur_traits.vigor, max_traits.vigor,\n//                                 cur_traits.vigor, c::red); // Vigor\n//  pos += DrawTraitBarWithPreview(pos, cur_traits.focus, max_traits.focus,\n//                                 cur_traits.focus, c::lt_blue); // Focus\n//  pos += DrawTraitBarWithPreview(pos, cur_traits.armor, max_traits.armor,\n//                                 cur_traits.armor, c::gold); // Armor\n// }\n\nvoid\nDrawTraitSetWithPreview(Vec2f pos, TraitSet cur_traits, TraitSet max_traits, TraitSet preview_traits, float flash_timer)\n{\n    pos += DrawTraitBarWithPreview(pos, cur_traits.vigor, max_traits.vigor,\n                                   preview_traits.vigor, c::red, flash_timer); // Vigor\n    pos += DrawTraitBarWithPreview(pos, cur_traits.focus, max_traits.focus,\n                                   preview_traits.focus, c::lt_blue, flash_timer); // Focus\n    pos += DrawTraitBarWithPreview(pos, cur_traits.armor, max_traits.armor,\n                                   preview_traits.armor, c::gold, flash_timer); // Armor\n}\n\nchar *\nTraitSetString(TraitSet traits)\n{\n    char *traitset_string = ScratchString(c::max_traitset_string_size);\n\n    bool prepend_space = false; // Track whether a trait has been written yet, so we know to prepend a space.\n    char *p = traitset_string;\n\n    const int trait_count = 3;\n    char trait_chars[trait_count+1] = \"VFA\";\n    for(int i=0; i<trait_count; i++)\n    {\n        if(traits[i] == 0) continue;\n\n        char format_string[5];\n        char *f = format_string;\n        if(prepend_space) *f++ = ' ';\n        *f++ = '%';\n        *f++ = 'd';\n        *f++ = trait_chars[i];\n        *f = '\\0';\n\n        int substring_length = snprintf(p, c::max_traitset_string_size, format_string, traits[i]);\n        if(substring_length < 0 or substring_length > c::max_traitset_string_size)\n        {\n            // snprintf had an encoding error or traitset_string wasn't large enough.\n            traitset_string[0] = '\\0';\n            return traitset_string;\n        }\n        p += substring_length;\n\n        prepend_space = true;\n    }\n\n    *p = '\\0';\n    return traitset_string;\n}\n\nint\nDetermineAbilityTier(Id<Unit> caster_id, Id<Ability> ability_id)\n{\n    TIMED_BLOCK;\n\n    Unit *caster = GetUnitFromId(caster_id);\n    Ability *ability = GetAbilityFromId(ability_id);\n    if(!ValidUnit(caster) or !ValidAbility(ability)) return -1;\n\n    for(int i=ability->tiers.count-1; i>=0; --i)\n    {\n        if(caster->cur_traits >= ability->tiers[i].required_traits) return i;\n    }\n\n    // The caster doesn't have the required traits to use the ability at all.\n    // We return a negative value to indicate this case.\n    return -1;\n}\n\n// Assumes outer context has already checked that *caster and *ability are valid.\nint\nDetermineAbilityTier(Unit *caster, Ability *ability)\n{\n    for(int i=ability->tiers.count-1; i>=0; --i)\n    {\n        if(caster->cur_traits >= ability->tiers[i].required_traits) return i;\n    }\n\n    // The caster doesn't have the required traits to use the ability at all.\n    // We return a negative value to indicate this case.\n    return -1;\n}\n\nBreed *\nGetBreedFromId(Id<Breed> id)\n{\n    return GetEntryFromId(g::breed_table, id);\n}\n\nUnit *\nGetUnitFromId(Id<Unit> id, Table<Unit> unit_table)\n{\n    TIMED_BLOCK;\n    return GetEntryFromId(unit_table, id);\n}\n\nvoid\nFullHealUnit(Id<Unit> id)\n{\n    Unit *unit = GetUnitFromId(id);\n    if(!unit) return;\n\n    unit->cur_traits = unit->max_traits;\n}\n\nId<Breed>\nRandomBreedIdByTier(int tier)\n{\n    Array<Id<Breed>> valid_ids = CreateTempArray<Id<Breed>>(g::breed_table.entry_count);\n    for(int i=0; i<g::breed_table.entry_count; ++i)\n    {\n        auto &entry = g::breed_table.entries[i]; // alias\n        Breed &breed = entry.data; // alias\n        if(!breed.init) continue;\n\n        if(breed.tier == tier) valid_ids += entry.id;\n    }\n\n    int chosen_index = RandomU32(0, valid_ids.count-1);\n    return valid_ids[chosen_index];\n}",
+			"file": "src/unit.cpp",
+			"file_size": 26598,
+			"file_write_time": 132484128240834498,
 			"settings":
 			{
-				"buffer_size": 2473,
+				"buffer_size": 25770,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/vec.cpp",
+			"settings":
+			{
+				"buffer_size": 8269,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/imgui.cpp",
+			"settings":
+			{
+				"buffer_size": 10242,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/ability_button.cpp",
+			"settings":
+			{
+				"buffer_size": 3788,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/ability_button.h",
+			"settings":
+			{
+				"buffer_size": 230,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/const.h",
+			"settings":
+			{
+				"buffer_size": 20700,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -721,39 +813,55 @@
 	],
 	"file_history":
 	[
+		"/C/color-c/logs/log.txt",
+		"/C/color-c/src/ability_button.h",
+		"/C/color-c/src/ability.h",
+		"/C/color-c/src/traitset.h",
+		"/C/color-c/src/traitset.cpp",
+		"/C/color-c/src/const.h",
+		"/C/color-c/src/ability.cpp",
+		"/D/work/programming/playground/src/main.cpp",
+		"/C/color-c/color-c.sublime-project",
+		"/C/color-c/game.exe",
+		"/D/work/programming/playground/playground.sublime-project",
+		"/C/color-c/src/text_render.cpp",
+		"/C/color-c/src/battle.cpp",
+		"/C/color-c/src/text_render.h",
+		"/C/color-c/src/global.h",
+		"/C/color-c/src/draw.cpp",
+		"/C/color-c/src/editor.h",
+		"/C/color-c/src/memory.cpp",
+		"/C/color-c/src/string.h",
+		"/C/color-c/src/string.cpp",
+		"/C/color-c/src/array.h",
+		"/C/color-c/src/editor.cpp",
+		"/C/color-c/_/todo.txt",
+		"/C/color-c/_/todo_design.txt",
+		"/C/color-c/data/breed.dat",
+		"/C/color-c/src/game.h",
+		"/C/color-c/src/game.cpp",
+		"/C/color-c/src/meta_text_parsing.cpp",
 		"/C/color-c/src/frametimes_draw.h",
 		"/C/color-c/src/frametimes_draw.cpp",
 		"/C/color-c/src/main_menu.cpp",
 		"/C/color-c/src/imgui.h",
 		"/C/color-c/src/imgui.cpp",
-		"/C/color-c/src/draw.cpp",
-		"/C/color-c/src/game.h",
 		"/C/color-c/src/draw.h",
 		"/C/color-c/src/opengl.cpp",
 		"/C/color-c/src/debug_overlay.h",
 		"/C/color-c/src/opengl.h",
 		"/C/color-c/src/buffer.cpp",
-		"/C/color-c/logs/log.txt",
-		"/C/color-c/src/editor.h",
-		"/C/color-c/src/text_render.cpp",
 		"/C/Users/Harm/Desktop/rbg-multiple-cu-breakpoints-bug/game.cpp",
 		"/C/Users/Harm/Desktop/rbg-multiple-cu-breakpoints-bug/platform.cpp",
 		"/C/Users/Harm/Desktop/rbg-multiple-cu-breakpoints-bug/util.cpp",
 		"/C/Users/Harm/Desktop/rbg-multiple-cu-breakpoints-bug/steps_to_reproduce.txt",
 		"/C/Users/Harm/Downloads/remedybg-breakpoint-bug-mwe/remedy-bug/platform.cpp",
 		"/C/Users/Harm/Downloads/remedybg-breakpoint-bug-mwe/remedy-bug/steps_to_reproduce.txt",
-		"/C/color-c/src/game.cpp",
-		"/C/color-c/_/todo.txt",
 		"/C/color-c/src/win32_platform.cpp",
-		"/C/color-c/src/editor.cpp",
 		"/C/color-c/src/unit.cpp",
 		"/C/color-c/src/campaign.cpp",
 		"/C/color-c/src/camera.cpp",
-		"/C/color-c/src/battle.cpp",
 		"/C/color-c/data/ability.dat",
-		"/C/color-c/src/const.h",
-		"/C/color-c/src/global.h",
-		"/C/color-c/data/breed.dat",
 		"/C/color-c/src/debug.cpp",
 		"/C/color-c/src/table_draw.cpp",
 		"/C/color-c/src/effect.cpp",
@@ -765,11 +873,7 @@
 		"/C/color-c/src/game_code_include.cpp",
 		"/C/color-c/src/enemy_ai.h",
 		"/C/color-c/src/battle.h",
-		"/C/color-c/src/traitset.cpp",
-		"/C/color-c/src/traitset.h",
 		"/C/color-c/src/intent.h",
-		"/C/color-c/src/array.h",
-		"/C/color-c/src/ability.h",
 		"/C/color-c/src/effect.h",
 		"/C/color-c/src/enemy_ai.cpp",
 		"/C/color-c/src/array.cpp",
@@ -783,21 +887,16 @@
 		"/C/color-c/src/shader/gaussian_blur.cs.glsl",
 		"/C/color-c/src/node_graph.cpp",
 		"/C/color-c/_/design.txt",
-		"/C/color-c/_/todo_design.txt",
 		"/C/color-c/_/todo_technical.txt",
 		"/C/color-c/_/performance_relevant_decisions.txt",
 		"/C/color-c/src/memory.h",
 		"/C/color-c/src/win32_work_queue.h",
 		"/C/color-c/src/random.cpp",
 		"/C/color-c/logs/critical.log",
-		"/C/color-c/src/string.h",
-		"/C/color-c/src/string.cpp",
 		"/C/color-c/src/pool.cpp",
-		"/C/color-c/src/memory.cpp",
 		"/C/color-c/build/work_queue_draw.cpp",
 		"/C/color-c/src/campaign.h",
 		"/C/color-c/src/memory_draw.cpp",
-		"/C/color-c/src/ability.cpp",
 		"/C/color-c/src/pool.h",
 		"/C/color-c/src/memory_draw.h",
 		"/C/color-c/src/ring_buffer.h",
@@ -811,9 +910,7 @@
 		"/C/color-c/src/meta.cpp",
 		"/C/color-c/src/macros.h",
 		"/C/color-c/src/battle_unit.h",
-		"/C/color-c/src/text_render.h",
 		"/C/color-c/src/meta_text_parsing.h",
-		"/C/color-c/src/meta_text_parsing.cpp",
 		"/C/color-c/src/options_menu.cpp",
 		"/C/color-c/src/input.cpp",
 		"/C/color-c/src/input.h",
@@ -843,12 +940,7 @@
 		"/C/color-c/src/font_loading.cpp",
 		"/C/color-c/src/sprite.cpp",
 		"/C/color-c/src/uv_fragment.glsl",
-		"/C/color-c/src/log.h",
-		"/C/color-c/build/freetype-2.9.1/builds/os2/os2-gcc.mk",
-		"/C/color-c/src/uv_vertex.glsl",
-		"/C/color-c/src/shader/gaussian_blur.vs.glsl",
-		"/C/color-c/src/color_fragment.glsl",
-		"/D/work/programming/fps/src/main.cpp"
+		"/C/color-c/src/log.h"
 	],
 	"find":
 	{
@@ -881,6 +973,30 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"CheckValidTarget",
+			"GenerateInferred",
+			"Invalid TargetClass encountered",
+			"intent",
+			"DrawAbilityButton",
+			"unit",
+			"DrawAbilityInfoBox",
+			"RectRight",
+			"RectTopRight",
+			"DrawLine",
+			"DrawAbilityInfoBox",
+			"Card",
+			"AbilityCard",
+			"DrawTextMultiline",
+			"StringDataFrom",
+			"ScratchString",
+			"Scratch",
+			"string",
+			"temp_string",
+			"temp",
+			"TempString",
+			"reset",
+			"req ",
+			"GenerateInputElementString",
 			"ability_property_types",
 			"F11",
 			"GPU Frametime",
@@ -984,31 +1100,7 @@
 			"GenerateInferredUnitSet",
 			"AppendEmptyElement",
 			"ValidArray",
-			"AllocateArrayFromPlatform",
-			"Copy",
-			"AddUnitToUnitSet",
-			"/*",
-			"all_unitset",
-			"arrays",
-			"battle->units_",
-			"end_of_player_turn",
-			"ValidSelectionUnitSet",
-			"GenerateEnemyIntents",
-			"ValidSelectionUnitSet",
-			"hovered_ability_valid_target_set",
-			"EventTraitChangesForUnit",
-			"DrawEnemyIntentThoughtBubbles",
-			"preview_events",
-			"DrawEnemyIntentThoughtBubble",
-			"struct Intent",
-			"DrawEnemyIntentThoughtBubble",
-			"StartBattle",
-			"battle->units",
-			"    //ClearArray<Intent>(&battle->intents);\nbattle->units",
-			"battle->units",
-			"units_",
-			"ally_pen",
-			"preview_events"
+			"AllocateArrayFromPlatform"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1154,33 +1246,34 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/editor.cpp",
+					"file": "src/battle.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15490,
+						"buffer_size": 60474,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4742,
-								4742
+								2898,
+								2898
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1527.0,
+						"translation.y": 784.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1188,79 +1281,76 @@
 				},
 				{
 					"buffer": 1,
-					"file": "src/text_render.cpp",
+					"file": "src/game_code_include.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 31565,
+						"buffer_size": 1321,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								908,
-								908
+								1321,
+								1321
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 156.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "src/game.cpp",
+					"file": "src/imgui.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 21791,
+						"buffer_size": 1954,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10064,
-								10064
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3133.0,
+						"translation.y": 429.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "logs/log.txt",
+					"file": "src/todo_session.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9351289,
+						"buffer_size": 183,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9350834,
-								9350834
+								183,
+								183
 							]
 						],
 						"settings":
@@ -1268,19 +1358,524 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5249523.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "data/ability.dat",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2711,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								624,
+								624
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 156.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 19,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/editor.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16306,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7346,
+								7346
+							],
+							[
+								7513,
+								7513
+							],
+							[
+								7680,
+								7680
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1919.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 18,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/battle.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2224,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1942,
+								1942
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 711.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "_/todo.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16367,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								15374,
+								15374
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1982.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "logs/log.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9450981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9442388,
+								9442388
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 5284857.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7433,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2274,
+								2274
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 780.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/game.h",
+					"buffer": 10,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1894,
+						"buffer_size": 8407,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										211,
+										223
+									],
+									[
+										581,
+										593
+									],
+									[
+										970,
+										982
+									],
+									[
+										1174,
+										1186
+									],
+									[
+										1417,
+										1429
+									],
+									[
+										1771,
+										1783
+									],
+									[
+										2054,
+										2066
+									],
+									[
+										2329,
+										2341
+									],
+									[
+										2539,
+										2551
+									],
+									[
+										2753,
+										2765
+									],
+									[
+										2969,
+										2987
+									],
+									[
+										3245,
+										3263
+									],
+									[
+										3444,
+										3462
+									],
+									[
+										3736,
+										3754
+									],
+									[
+										4074,
+										4092
+									],
+									[
+										4309,
+										4327
+									],
+									[
+										4769,
+										4787
+									],
+									[
+										5058,
+										5089
+									],
+									[
+										5187,
+										5218
+									],
+									[
+										5500,
+										5516
+									],
+									[
+										5757,
+										5773
+									],
+									[
+										6029,
+										6045
+									],
+									[
+										6310,
+										6326
+									],
+									[
+										6637,
+										6653
+									],
+									[
+										6804,
+										6820
+									],
+									[
+										7088,
+										7104
+									],
+									[
+										7285,
+										7301
+									],
+									[
+										7595,
+										7611
+									],
+									[
+										7762,
+										7778
+									],
+									[
+										8046,
+										8062
+									],
+									[
+										8243,
+										8259
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								7604,
+								7604
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 6,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2626.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/unit.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 25770,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9104,
+								9104
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3680.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/vec.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8269,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5470,
+								5470
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3692.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 9,
+					"file": "src/draw.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7433,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5360,
+								5346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2069.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 16,
+					"type": "text"
+				},
+				{
+					"buffer": 0,
+					"file": "src/battle.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 60474,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								39043,
+								39043
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 12234.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/unit.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 25770,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10187,
+								10187
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4403.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/imgui.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10242,
 						"regions":
 						{
 						},
@@ -1300,89 +1895,82 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 13,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 1,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 5,
+					"buffer": 14,
+					"file": "src/ability_button.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 847,
+						"buffer_size": 3788,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										244,
-										266
-									],
-									[
-										359,
-										381
-									],
-									[
-										500,
-										522
-									],
-									[
-										708,
-										730
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								513,
-								513
+								989,
+								989
 							]
 						],
 						"settings":
 						{
-							"detect_indentation": false,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 273.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "src/ability_button.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 230,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								189,
+								189
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "src/editor.h",
+					"buffer": 2,
+					"file": "src/imgui.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2473,
+						"buffer_size": 1954,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1240,
-								1240
+								119,
+								119
 							]
 						],
 						"settings":
@@ -1391,10 +1979,40 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 234.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 16,
+					"file": "src/const.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 20700,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20216,
+								20218
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7085.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -1460,16 +2078,84 @@
 		"selected_items":
 		[
 			[
-				"textre",
-				"src\\text_render.cpp"
-			],
-			[
 				"log",
 				"logs\\log.txt"
 			],
 			[
+				"todo",
+				"_\\todo.txt"
+			],
+			[
+				"const",
+				"src\\const.h"
+			],
+			[
+				"imgui",
+				"src\\imgui.h"
+			],
+			[
 				"game",
-				"src\\game.cpp"
+				"src\\game_code_include.cpp"
+			],
+			[
+				"imguih",
+				"src\\imgui.h"
+			],
+			[
+				"draw",
+				"src\\draw.cpp"
+			],
+			[
+				"sess",
+				"src\\todo_session.txt"
+			],
+			[
+				"batt",
+				"src\\battle.cpp"
+			],
+			[
+				"edit",
+				"src\\editor.cpp"
+			],
+			[
+				"abi",
+				"data\\ability.dat"
+			],
+			[
+				"trait",
+				"src\\traitset.cpp"
+			],
+			[
+				"ability",
+				"src\\ability.cpp"
+			],
+			[
+				"battle",
+				"src\\battle.cpp"
+			],
+			[
+				"cons",
+				"src\\const.h"
+			],
+			[
+				"globa",
+				"src\\global.h"
+			],
+			[
+				"textre",
+				"src\\text_render.cpp"
+			],
+			[
+				"memory",
+				"src\\memory.cpp"
+			],
+			[
+				"string",
+				"src\\string.cpp"
+			],
+			[
+				"breed",
+				"data\\breed.dat"
 			],
 			[
 				"editor",
@@ -1484,10 +2170,6 @@
 				"src\\opengl.h"
 			],
 			[
-				"imgui",
-				"src\\imgui.cpp"
-			],
-			[
 				"main",
 				"src\\main_menu.cpp"
 			],
@@ -1496,16 +2178,8 @@
 				"src\\opengl.cpp"
 			],
 			[
-				"todo",
-				"_\\todo.txt"
-			],
-			[
 				"win32",
 				"src\\win32_platform.cpp"
-			],
-			[
-				"edit",
-				"src\\editor.cpp"
 			],
 			[
 				"table",
@@ -1530,18 +2204,6 @@
 			[
 				"glob",
 				"src\\global.h"
-			],
-			[
-				"const",
-				"src\\const.h"
-			],
-			[
-				"breed",
-				"data\\breed.dat"
-			],
-			[
-				"batt",
-				"src\\battle.cpp"
 			],
 			[
 				"effec",
@@ -1586,14 +2248,6 @@
 			[
 				"traitset",
 				"src\\traitset.h"
-			],
-			[
-				"battle",
-				"src\\battle.cpp"
-			],
-			[
-				"ability",
-				"src\\ability.h"
 			],
 			[
 				"arrayh",
@@ -1644,10 +2298,6 @@
 				"src\\shader\\gaussian_blur.cs.glsl"
 			],
 			[
-				"draw",
-				"src\\draw.cpp"
-			],
-			[
 				"rand",
 				"src\\random.cpp"
 			],
@@ -1662,10 +2312,6 @@
 			[
 				"frametime",
 				"src\\frametimes_draw.cpp"
-			],
-			[
-				"string",
-				"src\\string.cpp"
 			],
 			[
 				"crit",
@@ -1796,10 +2442,6 @@
 				"src\\game_code_include.cpp"
 			],
 			[
-				"globa",
-				"src\\global.h"
-			],
-			[
 				"plat",
 				"src\\platform_include.cpp"
 			],
@@ -1876,10 +2518,6 @@
 				"_\\todo.txt"
 			],
 			[
-				"imguih",
-				"src\\imgui.h"
-			],
-			[
 				"iguih",
 				"src\\imgui.h"
 			],
@@ -1950,26 +2588,6 @@
 			[
 				"timin",
 				"logs\\DebugTimings.txt"
-			],
-			[
-				"utf",
-				"src\\utf32string.cpp"
-			],
-			[
-				"str",
-				"src\\string.cpp"
-			],
-			[
-				"ene",
-				"src\\enemy_ai.cpp"
-			],
-			[
-				"memory",
-				"src\\memory.cpp"
-			],
-			[
-				"memo",
-				"src\\memory.h"
 			]
 		],
 		"width": 0.0
@@ -1992,7 +2610,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 0,
+	"selected_group": 1,
 	"settings":
 	{
 	},

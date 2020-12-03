@@ -1,6 +1,7 @@
 #include "meta_print.h"
 
 #include "ability.h"
+#include "ability_button.h"
 #include "ai_explorer.h"
 #include "align.h"
 #include "array.h"
@@ -132,6 +133,10 @@ String MetaString(const Ability *s)
 
 	return string;
 }
+
+// ---------------FILE START---------------
+// ability_button.h
+// ------------------------------------------
 
 // ---------------FILE START---------------
 // ai_explorer.h

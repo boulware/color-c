@@ -81,7 +81,7 @@ void DrawUnits(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
 void DrawUnitHudData(Battle *battle);
 void DrawTargetingInfo(Battle *battle);
-void DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int tier, Align align = c::align_topleft);
+void DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, Align align = c::align_topleft);
 
 void UpdateHoveredUnit(Battle *battle);
 void UpdateHoveredAbility(Battle *battle);

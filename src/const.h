@@ -47,9 +47,9 @@ namespace c
     const Color focus_color = {0.3f,0.3f,1.f,1.f};
     const Color armor_color = {0.8f,0.8f,0.f,1.f};
 
-    const Color bg_vigor_color = {0.3f,0.f,0.f,1.f};
-    const Color bg_focus_color = {0.1f,0.1f,0.3f,1.f};
-    const Color bg_armor_color = {0.3f,0.3f,0.f,1.f};
+    const Color bg_vigor_color = {0.1f,0.f,0.f,1.f};
+    const Color bg_focus_color = {0.05f,0.05f,0.15f,1.f};
+    const Color bg_armor_color = {0.1f,0.1f,0.f,1.f};
 
     // Alignments
     const Align align_topleft      = {AlignX::left, AlignY::top};
@@ -532,6 +532,8 @@ namespace c
     };
 
     // Ability "icons" (above head)
+    const Vec2f ability_button_size = {150.f, 40.f};
+
     const Vec2f ability_icon_offset = {0.5f*unit_slot_size.x, -50.f};
     const Vec2f ability_icon_size = {150.f, 40.f};
     const ButtonLayout cannot_use_ability_button_layout = {
@@ -560,42 +562,12 @@ namespace c
         .label_hover_color = c::yellow,
         .align = c::align_bottomcenter
     };
-
-    // Enemy intents
-    const Vec2f enemy_intent_offset = {0.5f*unit_slot_size.x, -50.f};
-    const Vec2f enemy_intent_button_size = {150.f, 40.f};
-    const ButtonLayout enemy_cannot_use_button_layout = {
-        .label_layout = {
-            .font = &text_render::default_font,
-            .color = c::grey,
-            .font_size = 24,
-            .align = c::align_center,
-            .draw_debug = false
-        },
-        .button_color = c::grey,
-        .button_hover_color = c::lt_grey,
-        .label_hover_color = c::lt_grey,
-        .align = c::align_bottomcenter
-    };
-    const ButtonLayout enemy_can_use_button_layout = {
-        .label_layout = {
-            .font = &text_render::default_font,
-            .color = c::white,
-            .font_size = 24,
-            .align = c::align_center,
-            .draw_debug = false
-        },
-        .button_color = c::white,
-        .button_hover_color = c::yellow,
-        .label_hover_color = c::yellow,
-        .align = c::align_bottomcenter
-    };
-    const ButtonLayout enemy_intented_button_layout = {
+    const ButtonLayout intented_button_layout = {
         .label_layout = {
             .font = &text_render::default_font,
             .color = c::orange,
-            .font_size = 24,
-            .align = c::align_center,
+            .font_size = 16,
+            .align = c::align_topleft,
             .draw_debug = false
         },
         .button_color = c::orange,
@@ -603,6 +575,36 @@ namespace c
         .label_hover_color = c::red,
         .align = c::align_bottomcenter
     };
+
+    // Enemy intents
+    const Vec2f enemy_intent_offset = {0.5f*unit_slot_size.x, -50.f};
+    // const Vec2f enemy_intent_button_size = {150.f, 40.f};
+    // const ButtonLayout enemy_cannot_use_button_layout = {
+    //     .label_layout = {
+    //         .font = &text_render::default_font,
+    //         .color = c::grey,
+    //         .font_size = 24,
+    //         .align = c::align_center,
+    //         .draw_debug = false
+    //     },
+    //     .button_color = c::grey,
+    //     .button_hover_color = c::lt_grey,
+    //     .label_hover_color = c::lt_grey,
+    //     .align = c::align_bottomcenter
+    // };
+    // const ButtonLayout enemy_can_use_button_layout = {
+    //     .label_layout = {
+    //         .font = &text_render::default_font,
+    //         .color = c::white,
+    //         .font_size = 24,
+    //         .align = c::align_center,
+    //         .draw_debug = false
+    //     },
+    //     .button_color = c::white,
+    //     .button_hover_color = c::yellow,
+    //     .label_hover_color = c::yellow,
+    //     .align = c::align_bottomcenter
+    // };
 
     // traitset string format: "%dV %dF %dA"
     // This requires space for up to:

@@ -1,4 +1,5 @@
 #include "ability.h"
+#include "ability_button.h"
 #include "ai_explorer.h"
 #include "align.h"
 #include "array.h"

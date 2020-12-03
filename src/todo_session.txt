@@ -1,3 +1,4 @@
+//Show tier requirements on ability card
+//Use new ability buttons for enemy abilities as well.
+show intent for enemy ability buttons
 Show ability tier change alongside damage preview
-Show tier requirements on ability card
-Make enemies not allowed to attack other enemies by default.

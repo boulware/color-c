@@ -308,7 +308,7 @@ DrawUnitSet(Battle *battle)
 */
 
 void
-DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int active_tier_level, Align align)
+DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, Align align)
 {
     SetDrawDepth(1.f);
 
@@ -316,6 +316,8 @@ DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, int ac
     if(!ValidAbility(ability)) return;
     Unit *caster = GetUnitFromId(caster_id);
     if(!ValidUnit(caster)) return;
+
+    int active_tier_level = DetermineAbilityTier(caster_id, ability_id);
 
     TextLayout name_layout = c::def_text_layout;
     name_layout.align = c::align_topcenter;
@@ -491,50 +493,25 @@ DrawEnemyIntentThoughtBubbles(Battle *battle)
         }
 
         Vec2f pen = caster->slot_pos + c::enemy_intent_offset;
-        for(int j=0; j<ArrayCount(caster->ability_ids); ++j)
+        for(int ability_index=0; ability_index<ArrayCount(caster->ability_ids); ++ability_index)
         {
-            int ability_index = j;//ArrayCount(caster->ability_ids)-j-1;
             Id ability_id = caster->ability_ids[ability_index];
-            Ability *ability = GetAbilityFromId(ability_id);
-            if(!ValidAbility(ability)) continue;
+            Rect ability_button_rect = {pen, c::ability_button_size};
+            bool show_intent = (ability_id == intent.ability_id);
+            auto response = DrawAbilityButton(ability_button_rect, caster_id, ability_id, show_intent, c::align_bottomcenter);
 
-            int tier = DetermineAbilityTier(caster_id, ability_id);
 
-            ButtonResponse response = {};
-            if(tier <= 0)
-            {
-                response = DrawButton(c::enemy_cannot_use_button_layout,
-                                      {pen, c::enemy_intent_button_size},
-                                      ability->name);
-            }
-            else if(ability_id == intent.ability_id)
-            {
-                response = DrawButton(c::enemy_intented_button_layout,
-                                      {pen, c::enemy_intent_button_size},
-                                      ability->name);
-                if(response.just_now_hovered)
-                {
-                    ResetHigh(&battle->preview_damage_timer);
-                }
-                if(response.hovered)
-                {
-                    battle->preview_intents += intent;
-                    //GenerateEventsFromIntent(intent, &battle->preview_events);
-                }
-            }
-            else
-            {
-                response = DrawButton(c::enemy_can_use_button_layout,
-                                      {pen, c::enemy_intent_button_size},
-                                      ability->name);
-            }
+            // Ability *ability = GetAbilityFromId(ability_id);
+            // if(!ValidAbility(ability)) continue;
+
+            //int tier = DetermineAbilityTier(caster_id, ability_id);
 
             if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
             {
-                DrawAbilityInfoBox(MousePos(), caster_id, ability_id, tier, c::align_topleft);
+                DrawAbilityInfoBox(MousePos(), caster_id, ability_id, c::align_topleft);
             }
 
-            pen.y -= (1 + response.rect.size.y); // 1 + so the button outlines don't overlap
+            pen.y -= (1 + c::ability_button_size.y); // 1 + so the button outlines don't overlap
         }
     }
 
@@ -924,7 +901,6 @@ TickBattle(Battle *battle)
                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,
                                        battle->selected_unit_id,
                                        hovered_ability_id,
-                                       active_tier,
                                        c::align_topleft);
                 }
             }
@@ -936,7 +912,6 @@ TickBattle(Battle *battle)
                     DrawAbilityInfoBox(battle->hud.pos + c::hud_ability_info_offset,
                                        battle->selected_unit_id,
                                        battle->selected_ability_id,
-                                       active_tier,
                                        c::align_topleft);
                 }
             }
@@ -971,7 +946,7 @@ TickBattle(Battle *battle)
     { // Update valid target sets for hovered_ability and selected_ability if they exist.
         int hovered_tier_index = DetermineAbilityTier(battle->selected_unit_id, hovered_ability_id);
         Ability *hovered_ability = GetAbilityFromId(hovered_ability_id);
-        if(ValidAbility(hovered_ability) and hovered_tier_index >= 0)
+        if(ValidAbility(hovered_ability) and hovered_tier_index > 0)
         {
 
             ValidSelectionUnitSet(battle->selected_unit_id,
@@ -982,7 +957,7 @@ TickBattle(Battle *battle)
 
         int selected_tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
         Ability *selected_ability = GetAbilityFromId(battle->selected_ability_id);
-        if(ValidAbility(selected_ability) and selected_tier_index >= 0)
+        if(ValidAbility(selected_ability) and selected_tier_index > 0)
         {
 
             ValidSelectionUnitSet(battle->selected_unit_id,
@@ -1000,7 +975,7 @@ TickBattle(Battle *battle)
 
         //UnitSet all_units = AllBattleUnitsAsUnitSet(battle);
         int tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
-        if(tier_index >= 0)
+        if(tier_index > 0)
         {
             Ability *selected_ability = GetAbilityFromId(battle->selected_ability_id);
 
@@ -1008,16 +983,13 @@ TickBattle(Battle *battle)
             {
                 player_intent.caster_id = battle->selected_unit_id;
                 player_intent.ability_id = battle->selected_ability_id;
-                int tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
+                // int tier_index = DetermineAbilityTier(battle->selected_unit_id, battle->selected_ability_id);
 
-                if(tier_index >= 0)
-                {
-                    GenerateInferredUnitSet(battle->selected_unit_id,
-                                            hovered_unit_id,
-                                            selected_ability->tiers[tier_index].target_class,
-                                            battle->units,
-                                            &player_intent.target_set);
-                }
+                GenerateInferredUnitSet(battle->selected_unit_id,
+                                        hovered_unit_id,
+                                        selected_ability->tiers[tier_index].target_class,
+                                        battle->units,
+                                        &player_intent.target_set);
             }
         }
     }
@@ -1351,128 +1323,13 @@ TickBattle(Battle *battle)
                 for(int ability_index=ArrayCount(unit->ability_ids)-1; ability_index>=0; --ability_index)
                 {
                     Id ability_id = unit->ability_ids[ability_index];
-                    Ability *ability = GetAbilityFromId(ability_id);
-                    if(!ValidAbility(ability)) continue;
+                    // Ability *ability = GetAbilityFromId(ability_id);
+                    // if(!ValidAbility(ability)) continue;
 
-                    int tier = DetermineAbilityTier(unit_id, ability_id);
+                    Rect ability_button_rect = {pen, c::ability_button_size};
+                    DrawAbilityButton(ability_button_rect, unit_id, ability_id, false, c::align_bottomcenter);
 
-                    ButtonResponse response = {};
-                    ButtonLayout ability_icon_button_layout = {};
-                    if(tier <= 0) ability_icon_button_layout = c::cannot_use_ability_button_layout;
-                    else          ability_icon_button_layout = c::can_use_ability_button_layout;
-
-                    SetDrawDepth(c::field_draw_depth);
-                    response = DrawButton(ability_icon_button_layout,
-                                          {pen, c::ability_icon_size},
-                                          ability->name);
-
-                    Vec2f padding = {4.f,4.f};
-                    Rect padded_button_rect = {
-                        .pos = response.rect.pos + padding,
-                        .size = response.rect.size - 2*padding
-                    };
-
-
-                    // Tier string. e.g., "Tier: 2/3"
-                    Color tier_color = c::grey;
-                    int max_tier = ability->tiers.count - 1;
-                    if(tier == max_tier)          tier_color = c::gold;
-                    else if(tier == max_tier - 1) tier_color = c::silver;
-                    else if(tier == max_tier - 2) tier_color = c::bronze;
-
-                    String tier_string = AllocStringDataFromArena(20, memory::per_frame_arena_id);
-                    AppendCString(&tier_string, "%d/%d", tier, max_tier);
-                    TextLayout text_layout = ability_icon_button_layout.label_layout;
-                    text_layout.align = c::align_bottomleft;
-                    text_layout.color = tier_color;
-                    Vec2f tier_string_size = SizeText(text_layout, tier_string);
-                    Vec2f tier_string_pos = AlignSizeInRect(tier_string_size, padded_button_rect, text_layout.align);
-                    DrawText(text_layout, tier_string_pos, tier_string);
-
-                    // Required trait change to level up ability.
-                    #if 0
-                    if(tier != max_tier)
-                    {
-                        int next_tier = tier + 1;
-
-                        TraitSet cur_traits = unit->cur_traits;//ability->tiers[tier].required_traits;
-                        TraitSet next_required = ability->tiers[next_tier].required_traits;
-
-                        TraitSet required_diff = next_required - cur_traits;
-                        for(int &value : required_diff)
-                            value = m::Max(0, value);
-
-                        // Vigor
-                        String trait_change_string = AllocStringDataFromArena(30, memory::per_frame_arena_id);
-
-                        bool first_trait = true;
-                        if(required_diff.vigor > 0)
-                        {
-                            if(first_trait) {
-                                first_trait = false;
-                                AppendCString(&trait_change_string, "`green`+");
-                            }
-                            else {
-                                AppendCString(&trait_change_string, "");
-                            }
-                            AppendCString(&trait_change_string, "`red`%dV", required_diff.vigor);
-                        }
-                        if(required_diff.focus > 0)
-                        {
-                            if(first_trait) {
-                                first_trait = false;
-                                AppendCString(&trait_change_string, "`green`+");
-                            }
-                            else {
-                                AppendCString(&trait_change_string, "");
-                            }
-                            AppendCString(&trait_change_string, "`lt_blue`%dF", required_diff.focus);
-                        }
-                        if(required_diff.armor > 0)
-                        {
-                            if(first_trait) {
-                                first_trait = false;
-                                AppendCString(&trait_change_string, "`green`+");
-                            }
-                            else {
-                                AppendCString(&trait_change_string, "");
-                            }
-                            AppendCString(&trait_change_string, "`gold`%dA", required_diff.armor);
-                        }
-
-                        TextLayout trait_change_text_layout = c::small_text_layout;
-                        trait_change_text_layout.font_size = 32;
-                        trait_change_text_layout.align = c::align_rightcenter;
-                        DrawTextMultiline(trait_change_text_layout, RectRightCenter(padded_button_rect), trait_change_string);
-                    }
-                    #endif
-
-                    if(tier != max_tier)
-                    {
-                        AbilityTier &cur_tier  = ability->tiers[tier];   // alias
-                        AbilityTier &next_tier = ability->tiers[tier+1]; // alias
-                        TraitSet trait_ranges = next_tier.required_traits - cur_tier.required_traits;
-                        TraitSet cur_traits_in_range = unit->cur_traits - cur_tier.required_traits; // How many pips to color in within current range
-                        for(int i=0; i<c::trait_count; ++i)
-                        { // clamp between 0 and trait_range
-                            cur_traits_in_range[i] = m::Clamp(cur_traits_in_range[i], 0, trait_ranges[i]);
-                        }
-
-                        Vec2f req_bar_origin = RectTopRight(padded_button_rect);
-                        // Drawn in "opposite" trait order so from left to right it is vigor, focus, armor
-                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{  0.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::armor_color, c::bg_armor_color, cur_traits_in_range.armor, trait_ranges.armor);
-                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-20.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::focus_color, c::bg_focus_color, cur_traits_in_range.focus, trait_ranges.focus);
-                        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-40.f,0.f},  {-20.f,padded_button_rect.size.y}}, c::vigor_color, c::bg_vigor_color, cur_traits_in_range.vigor, trait_ranges.vigor);
-                    }
-
-                    // Draw ability card if hovered and alt/LMB is down
-                    if(response.hovered and (Down(vk::alt) or Down(vk::LMB)))
-                    {
-                        SetDrawDepth(c::ability_card_draw_depth);
-                        DrawAbilityInfoBox(MousePos(), unit_id, ability_id, tier, c::align_topleft);
-                    }
-
-                    pen.y -= (1 + response.rect.size.y); // 1 + so the button outlines don't overlap
+                    pen.y -= (1 + c::ability_button_size.y); // 1 + so the button outlines don't overlap
                 }
             }
         }
@@ -1590,8 +1447,10 @@ TickBattle(Battle *battle)
         }
         //float battle_state_score = ScoreBattleState(ally_traitsets, enemy_traitsets);
 
+        #if 0
         DrawTextMultiline(c::small_text_layout, {}, "%.*s",
                           battle->best_choice_string.length, battle->best_choice_string.data);
+        #endif
     }
 
     { // Set battle to finished if either all allies or all enemies are dead.

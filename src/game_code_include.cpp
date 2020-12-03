@@ -52,3 +52,4 @@
 #include "pool.cpp"
 #include "table_draw.cpp"
 #include "frametimes_draw.cpp"
+#include "ability_button.cpp"
