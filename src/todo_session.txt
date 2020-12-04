@@ -1,6 +1,7 @@
 Indicate enemy action ordering by arranging them horizontally, 1st to last, left to right, once their intents are chosen.
 Show ability tier change alongside damage preview
+Select abilities by clicking the ability button above head rather than having the HUD
 
 //Set/update unit->battle_slot_index
-IntentTraitChangesForUnits(), fix so it works if handed null unit IDs
-Select abilities by clicking the ability button above head rather than having the HUD
+//IntentTraitChangesForUnits(), fix so it works if handed null unit IDs
+//When an ability is at max level, show how much above the reqs it is (maybe a bar for smallish numbers, but once it gets to like +10, we can switch to a number)

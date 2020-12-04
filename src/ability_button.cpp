@@ -62,7 +62,8 @@ DrawAbilityButton(Rect rect, Id<Unit> caster_id, Id<Ability> ability_id, bool sh
     {
         AbilityTier &cur_tier  = ability->tiers[tier];   // alias
         AbilityTier &next_tier = ability->tiers[tier+1]; // alias
-        TraitSet trait_ranges = next_tier.required_traits - cur_tier.required_traits;
+
+        TraitSet trait_ranges = next_tier.required_traits - cur_tier.required_traits; // The number of total pips
         TraitSet cur_traits_in_range = caster->cur_traits - cur_tier.required_traits; // How many pips to color in within current range
         for(int i=0; i<c::trait_count; ++i)
         { // clamp between 0 and trait_range
@@ -74,6 +75,22 @@ DrawAbilityButton(Rect rect, Id<Unit> caster_id, Id<Ability> ability_id, bool sh
         DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{  0.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::armor_color, c::bg_armor_color, cur_traits_in_range.armor, trait_ranges.armor);
         DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-20.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::focus_color, c::bg_focus_color, cur_traits_in_range.focus, trait_ranges.focus);
         DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-40.f,0.f},  {-20.f,padded_button_rect.size.y}}, c::vigor_color, c::bg_vigor_color, cur_traits_in_range.vigor, trait_ranges.vigor);
+    }
+    else
+    { // Show excess as a req. bar (or a number if it's 'large' [10+?])
+        AbilityTier &cur_tier = ability->tiers[tier]; // alias
+
+        TraitSet excess_traits = caster->cur_traits - cur_tier.required_traits;
+        for(int i=0; i<c::trait_count; ++i)
+        {
+            if(cur_tier.required_traits[i] == 0)
+                excess_traits[i] = 0;
+        }
+
+        Vec2f req_bar_origin = RectTopRight(padded_button_rect);
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{  0.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::armor_color, c::bg_armor_color,  excess_traits.armor, excess_traits.armor);
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-20.f,0.f}, {-20.f,padded_button_rect.size.y}}, c::focus_color, c::bg_focus_color,  excess_traits.focus, excess_traits.focus);
+        DrawVerticalNotchedHealthbar({req_bar_origin+Vec2f{-40.f,0.f},  {-20.f,padded_button_rect.size.y}}, c::vigor_color, c::bg_vigor_color, excess_traits.vigor, excess_traits.vigor);
     }
 
     // Draw ability card if hovered and alt/LMB is down

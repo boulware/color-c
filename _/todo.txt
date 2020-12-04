@@ -129,3 +129,5 @@ arrays might use -- this did cause some clear overhead (frametime increased visi
 54) CPU time seems to go up after the game is running for a while (in this particular case, I was in the battle screen and it went up from 0.5-1ms to ~2.5ms after watching twitch in the background for 30 minutes or so). Unsure if it's actually the game, or if it's something to do with doing things in the background -- probably with the game. We'll need better tools to figure out what's going on. It also happened while it ran in the background while playing Tarkov.
 
 55) Reorder enemy units visually from left to right based on their attack order
+
+56) Multithread enemy AI
