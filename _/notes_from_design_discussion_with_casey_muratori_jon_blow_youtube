@@ -1,0 +1,9 @@
+https://youtu.be/rowyZyVrFHI
+
+1) Let the player make a plan, and execute the plan. (i.e., the system can be understood enough to make reasonable plans; it's not random, it's systematic)
+2) It can't be the same plan every time, or it's not interesting.
+3) What specific things did the player have to understand to make this plan? And then start exploring around that space, enumerate it precisely, what can we add to that list?
+4) Analogy with music: stating a theme, building the theme into something larger, revisiting themes, etc.
+5) Once you have at least two things, you can start combining them in variations (light/weak enemy, strong/heavy enemy, mortar guy, combine them in different ways).
+6) How do I make the map layout matter? Are different layouts really different in terms of gameplay? [What about having "themed" sections that give the player access to certain things, whether that's specific fights, drops, etc. e.g., a jungle area that has hard enemies but has good materials you can gather]
+7) Discontinuities (chaos) in game state. e.g., if the tree were 2 inches to the right, this whole plan wouldn't work at all because it blocks some line of sight -- these kinds of discontinuities make things interesting, rather than just a simple continuous/smooth optimization problem. The way to get these discontinuities is non-linearities and many-dimensional problem spaces.

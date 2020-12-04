@@ -77,5 +77,7 @@ template<typename Type> void        CopyArray(Array<Type> *dst, Array<Type> src)
 template<typename Type> Array<Type> CreateArrayFromArena(int max_count, PoolId<Arena> arena_id);
 template<typename Type> Array<Type> CreatePermanentArray(int max_count);
 template<typename Type> Array<Type> CreateTempArray(int max_count);
+template<typename Type> Array<Type> ArrayFromCArray(Type *c_array, int count, PoolId<Arena> arena_id);
+template<typename Type> void        FillArray(Array<Type> *array, int n);
 
 #endif

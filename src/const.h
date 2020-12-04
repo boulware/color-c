@@ -619,6 +619,7 @@ namespace c
     const int moveset_max_size = 4;
     const int max_party_size = 4;
     const int max_target_count = 2*max_party_size;
+    const int battle_unit_slot_count = 2*max_party_size;
 
     const int max_tree_node_children = 2;
     const int trait_count = 3;

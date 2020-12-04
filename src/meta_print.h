@@ -150,6 +150,9 @@ String MetaString(const BattleScore *s);
 
 String MetaString(const AiIntent *s);
 
+template<typename Type>
+String MetaString(const FixedArray<Type> *s);
+
 String MetaString(const FrametimeGraphState *s);
 
 String MetaString(const GameInitData *s);

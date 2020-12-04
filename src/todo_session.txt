@@ -1,4 +1,6 @@
-//Show tier requirements on ability card
-//Use new ability buttons for enemy abilities as well.
-show intent for enemy ability buttons
+Indicate enemy action ordering by arranging them horizontally, 1st to last, left to right, once their intents are chosen.
 Show ability tier change alongside damage preview
+
+//Set/update unit->battle_slot_index
+IntentTraitChangesForUnits(), fix so it works if handed null unit IDs
+Select abilities by clicking the ability button above head rather than having the HUD

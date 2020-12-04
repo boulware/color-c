@@ -253,12 +253,17 @@ IntentTraitChangesForUnits(Array<Intent> intents, Array<UnitId> unit_ids, Array<
         }
     }
 
+    ClearArray(traitset_changes);
     for(auto unit_id : unit_ids)
     {
         Unit *unit_before_change = GetUnitFromId(unit_id, g::unit_table);
         Unit *unit_after_change =  GetUnitFromId(unit_id, g::temp_unit_table);
 
-        Append(traitset_changes, unit_after_change->cur_traits - unit_before_change->cur_traits);
+        TraitSet *traitset = Append(traitset_changes, TraitSet{});
+
+        if(!ValidUnit(unit_before_change) or !ValidUnit(unit_after_change)) continue;
+
+        *traitset = unit_after_change->cur_traits - unit_before_change->cur_traits;
     }
 }
 
@@ -477,11 +482,8 @@ DrawAbilityInfoBox(Vec2f pos, Id<Unit> caster_id, Id<Ability> ability_id, Align 
 void
 DrawEnemyIntentThoughtBubbles(Battle *battle)
 {
-    for(int unit_index=0; unit_index<battle->units.count; ++unit_index)
+    for(UnitId caster_id : battle->unit_slots)
     {
-        SetDrawDepth(c::field_draw_depth);
-
-        auto caster_id = battle->units[unit_index];
         Unit *caster = GetUnitFromId(caster_id);
         if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
 
@@ -492,7 +494,9 @@ DrawEnemyIntentThoughtBubbles(Battle *battle)
             continue;
         }
 
-        Vec2f pen = caster->slot_pos + c::enemy_intent_offset;
+
+        SetDrawDepth(c::field_draw_depth);
+        Vec2f pen = battle->slot_positions[caster->battle_slot_index] + c::enemy_intent_offset;
         for(int ability_index=0; ability_index<ArrayCount(caster->ability_ids); ++ability_index)
         {
             Id ability_id = caster->ability_ids[ability_index];
@@ -523,77 +527,6 @@ DrawEnemyIntentThoughtBubbles(Battle *battle)
 }
 
 void
-GenerateEnemyIntents(Battle *battle)
-{
-    // Choose enemy intents randomly, equally distributed between abilities and possible targets.
-    for(int i=0; i<battle->units.count; i++)
-    {
-        Id unit_id = battle->units[i];
-        Unit *unit = GetUnitFromId(unit_id);
-        if(!ValidUnit(unit) or unit->team != Team::enemies or unit->cur_traits.vigor <= 0) continue;
-
-        u32 chosen_ability_index; // The index of the ability chosen to cast for this enemy
-        u32 chosen_target_index; // The index (into battle->units[])
-
-        int valid_ability_count = 0; // Number of valid abilities
-        int valid_ability_indices[c::moveset_max_size] = {}; // Indices of abilities that are initialized.
-        Array<UnitId> valid_target_sets[c::moveset_max_size] = {}; // Valid target sets corresponding to valid_ability_indices
-        for(int i=0; i<ArrayCount(unit->ability_ids); i++)
-        {
-            Id ability_id = unit->ability_ids[i];
-            int tier_index = DetermineAbilityTier(unit_id, ability_id);
-            if(tier_index < 0) continue;
-
-            Ability *ability = GetAbilityFromId(ability_id);
-            if(!ValidAbility(ability)) continue;
-
-            Array<UnitId> valid_target_set = CreateTempArray<UnitId>(2*c::max_party_size);
-            ValidSelectionUnitSet(unit_id, ability->tiers[tier_index].target_class, battle->units, &valid_target_set);
-            if(valid_target_set.count > 0)
-            {
-                valid_ability_indices[valid_ability_count] = i;
-                AssignArray(&valid_target_sets[i], valid_target_set);
-                ++valid_ability_count;
-            }
-
-        }
-
-        if(valid_ability_count <= 0) continue;
-
-        u32 index_into_valid_ability_indices = RandomU32(0, valid_ability_count-1);
-        if(index_into_valid_ability_indices != 0)
-        {
-            int a=0;
-        }
-        chosen_ability_index = valid_ability_indices[index_into_valid_ability_indices];
-
-        Id chosen_ability_id = unit->ability_ids[chosen_ability_index];
-        Array<UnitId> chosen_ability_valid_targets = valid_target_sets[chosen_ability_index];
-
-        chosen_target_index = RandomU32(0, chosen_ability_valid_targets.count-1);
-        Id chosen_target_id = chosen_ability_valid_targets[chosen_target_index];
-
-        int tier_index = DetermineAbilityTier(unit_id, chosen_ability_id);
-        if(tier_index >= 0)
-        {
-            Ability *chosen_ability = GetAbilityFromId(chosen_ability_id);
-            if(!ValidAbility(chosen_ability)) continue;
-            AbilityTier &tier = chosen_ability->tiers[tier_index]; // alias
-
-            //AbilityTier &active_tier = chosen_ability->tiers[tier_index];
-
-            unit->intent.caster_id = unit_id;
-            unit->intent.ability_id = chosen_ability_id;
-            GenerateInferredUnitSet(unit_id,
-                                    chosen_target_id,
-                                    tier.target_class,
-                                    battle->units,
-                                    &unit->intent.target_set);
-        }
-    }
-}
-
-void
 SetSelectedAbility(Battle *battle, Id<Ability> new_ability_id)
 {
     battle->selected_ability_id = new_ability_id;
@@ -621,8 +554,14 @@ void InitBattle(Battle *battle, PoolId<Arena> arena_id)
     // Memory allocation
     battle->arena_id = arena_id;
     ClearArena(arena_id);
-    battle->units          = CreateArrayFromArena<UnitId>(2*c::max_party_size, battle->arena_id);
-    battle->preview_intents = CreateArrayFromArena<Intent>(8, battle->arena_id);
+
+    battle->unit_slots = CreateArrayFromArena<UnitId>(c::battle_unit_slot_count, battle->arena_id);
+    FillArray(&battle->unit_slots, c::battle_unit_slot_count);
+
+    battle->slot_positions = CreateArrayFromArena<Vec2f>(c::battle_unit_slot_count, battle->arena_id);
+    FillArray(&battle->slot_positions, c::battle_unit_slot_count);
+
+    battle->preview_intents = CreateArrayFromArena<Intent>(c::battle_unit_slot_count, battle->arena_id);
 
     battle->ai_arena_id = AllocArena("AI");
 
@@ -642,11 +581,52 @@ void InitBattle(Battle *battle, PoolId<Arena> arena_id)
 void
 StartBattle(Battle *battle, Array<UnitId> battle_units)
 {
-    ClearArray(&battle->units);
-    AppendArrayToArray(&battle->units, battle_units); // Copy elements so we retain a permanent array of unit ids.
+    // Clear unit slots
+    for(UnitId &id : battle->unit_slots)
+        id = c::null_unit_id;
+
+    // Fill unit slots with UnitIds from battle_units. Slots 0-3 are allies, 4-7 are enemies (so long as max_party_size is 4)
+    int ally_count = 0;
+    int enemy_count = 0;
+    int first_ally_index = 0;
+    int first_enemy_index = c::max_party_size;
+    for(auto unit_id : battle_units)
+    {
+        Unit *unit = GetUnitFromId(unit_id);
+        if(!ValidUnit(unit)) continue;
+
+        if(unit->team == Team::allies)
+        {
+            if(ally_count >= c::max_party_size)
+            {
+                VerboseError("Too many allies given in battle_units array parameter of StartBattle(). Maximum is %d.", c::max_party_size);
+            }
+            else
+            {
+                int slot_index = first_ally_index + ally_count;
+                battle->unit_slots[slot_index] = unit_id;
+                unit->battle_slot_index = slot_index;
+                ++ally_count;
+            }
+        }
+        else if(unit->team == Team::enemies)
+        {
+            if(enemy_count >= c::max_party_size)
+            {
+                VerboseError("Too many enemies given in battle_units array parameter of StartBattle(). Maximum is %d.", c::max_party_size);
+            }
+            else
+            {
+                int slot_index = first_enemy_index + enemy_count;
+                battle->unit_slots[slot_index] = unit_id;
+                unit->battle_slot_index = slot_index;
+                ++enemy_count;
+            }
+        }
+    }
 
     // Set action points=1 for all units
-    for(Id<Unit> unit_id : battle->units)
+    for(auto unit_id : battle->unit_slots)
     {
         Unit *unit = GetUnitFromId(unit_id);
         if(!ValidUnit(unit)) continue;
@@ -654,13 +634,11 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
         unit->cur_action_points = unit->max_action_points;
     }
 
-    //GenerateEnemyIntents(battle);
-
     // Enemy AI (# of permutations)
     Array<UnitId> ally_unitset = CreateTempArray<UnitId>(4);
     Array<UnitId> enemy_unitset = CreateTempArray<UnitId>(4);
     Array<UnitId> ordered_battle_units = CreateTempArray<UnitId>(8);
-    for(Id<Unit> unit_id : battle->units)
+    for(auto unit_id : battle->unit_slots)
     {
         Unit *unit = GetUnitFromId(unit_id);
         if(!ValidUnit(unit) or UnitIsDead(unit_id)) continue;
@@ -674,24 +652,11 @@ StartBattle(Battle *battle, Array<UnitId> battle_units)
 
     { // Generate unit slot positions
         float x_between_slots = c::unit_slot_size.x + c::unit_slot_padding;
-        Vec2f ally_pen = {50.f, 300.f};
-        Vec2f enemy_pen = {50.f + c::max_party_size*x_between_slots, 300.f};
-
-        for(auto unit_id : battle->units)
+        Vec2f pen = {50.f, 300.f};
+        for(Vec2f &slot_pos : battle->slot_positions)
         {
-            Unit *unit = GetUnitFromId(unit_id);
-            if(!ValidUnit(unit)) continue;
-
-            if(unit->team == Team::allies)
-            {
-                unit->slot_pos = ally_pen;
-                ally_pen.x += x_between_slots;
-            }
-            else if(unit->team == Team::enemies)
-            {
-                unit->slot_pos = enemy_pen;
-                enemy_pen.x += x_between_slots;
-            }
+            slot_pos = pen;
+            pen.x += x_between_slots;
         }
     }
 
@@ -727,19 +692,19 @@ TickBattle(Battle *battle)
         // Ally unit selection with number keys (1-4)
         if(Pressed(KeyBind::SelectUnit1))
         {
-            SetSelectedUnit(battle, battle->units[0]);
+            SetSelectedUnit(battle, battle->unit_slots[0]);
         }
         if(Pressed(KeyBind::SelectUnit2))
         {
-            SetSelectedUnit(battle, battle->units[1]);
+            SetSelectedUnit(battle, battle->unit_slots[1]);
         }
         if(Pressed(KeyBind::SelectUnit3))
         {
-            SetSelectedUnit(battle, battle->units[2]);
+            SetSelectedUnit(battle, battle->unit_slots[2]);
         }
         if(Pressed(KeyBind::SelectUnit4))
         {
-            SetSelectedUnit(battle, battle->units[3]);
+            SetSelectedUnit(battle, battle->unit_slots[3]);
         }
 
         // Right click cancels selected ability if one is selected.
@@ -760,29 +725,50 @@ TickBattle(Battle *battle)
         // Tab to go to next ally unit
         if(PressedOrRepeated(KeyBind::CycleUnits))
         {
-            // Find index into battle->units of currently selected unit
-            int selected_unit_index = -1;
-            for(int i=0; i<battle->units.count; i++)
-            {
-                if(battle->units[i] == battle->selected_unit_id) selected_unit_index = i;
-            }
+            Unit *selected_unit = GetUnitFromId(battle->selected_unit_id);
+            if(ValidUnit(selected_unit))
+            { // If a unit is selected, search for the next filled slot, and newly select that unit
+                int start_index = selected_unit->battle_slot_index;
+                int cur_index = (start_index + 1) % c::battle_unit_slot_count;
 
-            if(selected_unit_index == -1)
-            {
-                // If no unit is selected, TAB selects the first unit
-                battle->selected_unit_id = battle->units[0];
+                while(cur_index != start_index)
+                {
+                    UnitId new_selected_id = battle->unit_slots[cur_index];
+                    Unit *new_selected_unit = GetUnitFromId(new_selected_id);
+                    if(!ValidUnit(new_selected_unit)) continue; // Skip empty slots
+
+                    battle->selected_unit_id = new_selected_id;
+                }
             }
             else
-            {
-                // @note: this assumes that the first [max_party_size] slots are all ally units and that
-                //        there are no other ally slots. This is probably fine for now, but if we go away
-                //        from that model, this will be invalidated (which should be obvious if I use the
-                //        tab functionality frequently)
-
-                // Go to next unit, except when the last unit it selected; then loop back to the first unit.
-                battle->selected_unit_id = battle->units[(selected_unit_index+1) % c::max_party_size];
-                battle->selected_ability_id = {};
+            { // If no unit is selected, TAB selects the first unit
+                //battle->selected_unit_id = battle->units[0];
+                battle->selected_unit_id = battle->unit_slots[0];
             }
+
+            // Find index into battle->units of currently selected unit
+            // int selected_unit_index = -1;
+            // for(int i=0; i<battle->units.count; i++)
+            // {
+            //     if(battle->units[i] == battle->selected_unit_id) selected_unit_index = i;
+            // }
+
+            // if(selected_unit_index == -1)
+            // {
+            //     // If no unit is selected, TAB selects the first unit
+            //     battle->selected_unit_id = battle->units[0];
+            // }
+            // else
+            // {
+            //     // @note: this assumes that the first [max_party_size] slots are all ally units and that
+            //     //        there are no other ally slots. This is probably fine for now, but if we go away
+            //     //        from that model, this will be invalidated (which should be obvious if I use the
+            //     //        tab functionality frequently)
+
+            //     // Go to next unit, except when the last unit it selected; then loop back to the first unit.
+            //     battle->selected_unit_id = battle->units[(selected_unit_index+1) % c::max_party_size];
+            //     battle->selected_ability_id = {};
+            // }
         }
 
         { // Ability selection (for currently selected unit) with QWER keys
@@ -919,21 +905,19 @@ TickBattle(Battle *battle)
     }
 
     Id<Unit> hovered_unit_id = c::null_unit_id;
-    //bool just_hovered = false;
     { // Update hovered_unit
         if(!mouse_in_hud)
         {
-            for(auto unit_id : battle->units)
+            for(int i=0; i<battle->slot_positions.count; ++i)
             {
-                Unit *unit = GetUnitFromId(unit_id);
-                if(!ValidUnit(unit)) continue;
+                Unit *hovered_unit = GetUnitFromId(battle->unit_slots[i]);
+                Rect slot_rect = Rect{battle->slot_positions[i], c::unit_slot_size};
 
-                Rect unit_slot_rect = Rect{unit->slot_pos, c::unit_slot_size};
-                if(MouseInRect(unit_slot_rect))
+                if(ValidUnit(hovered_unit) and MouseInRect(slot_rect))
                 {
-                    if(ValidUnit(unit))
-                        hovered_unit_id = unit_id;
-                    if(!PointInRect(unit_slot_rect, PrevMousePos()))
+                    hovered_unit_id = battle->unit_slots[i];
+
+                    if(!PointInRect(slot_rect, PrevMousePos()))
                         ResetHigh(&battle->preview_damage_timer);
                     break;
                 }
@@ -948,10 +932,9 @@ TickBattle(Battle *battle)
         Ability *hovered_ability = GetAbilityFromId(hovered_ability_id);
         if(ValidAbility(hovered_ability) and hovered_tier_index > 0)
         {
-
             ValidSelectionUnitSet(battle->selected_unit_id,
                                   hovered_ability->tiers[hovered_tier_index].target_class,
-                                  battle->units,
+                                  battle->unit_slots,
                                   &hovered_ability_valid_target_set);
         }
 
@@ -959,10 +942,9 @@ TickBattle(Battle *battle)
         Ability *selected_ability = GetAbilityFromId(battle->selected_ability_id);
         if(ValidAbility(selected_ability) and selected_tier_index > 0)
         {
-
             ValidSelectionUnitSet(battle->selected_unit_id,
                                   selected_ability->tiers[selected_tier_index].target_class,
-                                  battle->units,
+                                  battle->unit_slots,
                                   &selected_ability_valid_target_set);
         }
     }
@@ -988,7 +970,7 @@ TickBattle(Battle *battle)
                 GenerateInferredUnitSet(battle->selected_unit_id,
                                         hovered_unit_id,
                                         selected_ability->tiers[tier_index].target_class,
-                                        battle->units,
+                                        battle->unit_slots,
                                         &player_intent.target_set);
             }
         }
@@ -1124,7 +1106,7 @@ TickBattle(Battle *battle)
             ClearArray(&battle->preview_intents); // Clear preview_events and generate from scratch for each enemy
 
             int enemy_count = 0;
-            for(auto unit_id : battle->units)
+            for(auto unit_id : battle->unit_slots)
             {
                 Unit *unit = GetUnitFromId(unit_id);
                 if(!ValidUnit(unit) or unit->team != Team::enemies) continue;
@@ -1133,7 +1115,7 @@ TickBattle(Battle *battle)
             }
             for(int i=0; i<enemy_count; ++i)
             {
-                for(auto caster_id : battle->units)
+                for(auto caster_id : battle->unit_slots)
                 { // Execute enemy intents
                     Unit *caster = GetUnitFromId(caster_id);
                     if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
@@ -1197,14 +1179,14 @@ TickBattle(Battle *battle)
             // For each unit in the battle, draw TARGET above its unit slot if it's in the relevant target set
             if(!nothing_drawn)
             {
-                //for(int i=0; i<battle->units.count; i++)
-                for(auto unit_id : battle->units)
+                //for(int i=0; i<battle->unit_slots.count; i++)
+                for(auto unit_id : battle->unit_slots)
                 {
                     Unit *unit = GetUnitFromId(unit_id);
                     if(!ValidUnit(unit)) continue;
                     if(!UnitInUnitSet(unit_id, target_set)) continue;
 
-                    Vec2f origin = unit->slot_pos;
+                    Vec2f origin = battle->slot_positions[unit->battle_slot_index];
                     DrawText(target_indication_layout,
                              origin + Vec2f{0.5f*c::unit_slot_size.x, 0.f},
                              "TARGET");
@@ -1218,14 +1200,14 @@ TickBattle(Battle *battle)
     }
 
     { // Draw units
-        //for(int i=0; i<battle->units.size; ++i)
-        Array<TraitSet> preview_traitset_changes = CreateTempArray<TraitSet>(battle->units.count);
-        IntentTraitChangesForUnits(battle->preview_intents, battle->units, &preview_traitset_changes);
+        //for(int i=0; i<battle->unit_slots.size; ++i)
+        Array<TraitSet> preview_traitset_changes = CreateTempArray<TraitSet>(battle->unit_slots.count);
+        IntentTraitChangesForUnits(battle->preview_intents, battle->unit_slots, &preview_traitset_changes);
 
-        //for(auto unit_id : battle->units)
-        for(int i=0; i<battle->units.count; ++i)
+        //for(auto unit_id : battle->unit_slots)
+        for(int i=0; i<battle->unit_slots.count; ++i)
         {
-            auto unit_id = battle->units[i];
+            auto unit_id = battle->unit_slots[i];
             SetDrawDepth(c::field_draw_depth);
 
             Unit *unit = GetUnitFromId(unit_id);
@@ -1237,7 +1219,7 @@ TickBattle(Battle *battle)
                 dead_text_layout.color = c::dk_red;
                 dead_text_layout.align = c::align_center;
 
-                Vec2f origin = unit->slot_pos;
+                Vec2f origin = battle->slot_positions[unit->battle_slot_index];
                 Rect unit_rect = Rect{origin, c::unit_slot_size};
 
                 DrawText(dead_text_layout, RectCenter(unit_rect), "DEAD");
@@ -1255,7 +1237,7 @@ TickBattle(Battle *battle)
                     outline_color = c::grey;
                 }
 
-                Vec2f origin = unit->slot_pos;
+                Vec2f origin = battle->slot_positions[unit->battle_slot_index];
 
                 // Draw unit slot outline
                 DrawUnfilledRect(origin, c::unit_slot_size, outline_color);
@@ -1317,7 +1299,7 @@ TickBattle(Battle *battle)
             // in order to show intent)
             if(unit->team == Team::allies)
             {
-                Vec2f pen = unit->slot_pos + c::ability_icon_offset;
+                Vec2f pen = battle->slot_positions[unit->battle_slot_index] + c::ability_icon_offset;
                 // Iterate abilities backwards because we draw the icons from top to bottom
                 // and we want them to be in the same order as they appear in the HUD.
                 for(int ability_index=ArrayCount(unit->ability_ids)-1; ability_index>=0; --ability_index)
@@ -1346,7 +1328,7 @@ TickBattle(Battle *battle)
     {
         auto events = CreateTempArray<BattleEvent>(10);
         int enemy_count = 0;
-        for(auto unit_id : battle->units)
+        for(auto unit_id : battle->unit_slots)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit) or unit->team != Team::enemies) continue;
@@ -1356,7 +1338,7 @@ TickBattle(Battle *battle)
 
         for(int i=0; i<enemy_count; ++i)
         {
-            for(auto caster_id : battle->units)
+            for(auto caster_id : battle->unit_slots)
             { // Execute enemy intents
                 Unit *caster = GetUnitFromId(caster_id);
                 if(!ValidUnit(caster) or caster->team != Team::enemies or caster->cur_traits.vigor <= 0) continue;
@@ -1380,7 +1362,7 @@ TickBattle(Battle *battle)
 
 
         // Reset action points of all units
-        for(Id unit_id : battle->units)
+        for(Id unit_id : battle->unit_slots)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit)) continue;
@@ -1393,7 +1375,7 @@ TickBattle(Battle *battle)
         Array<UnitId> ally_unitset = CreateTempArray<UnitId>(4);
         Array<UnitId> enemy_unitset = CreateTempArray<UnitId>(4);
         Array<UnitId> ordered_battle_units = CreateTempArray<UnitId>(8);
-        for(Id<Unit> unit_id : battle->units)
+        for(Id<Unit> unit_id : battle->unit_slots)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit) or UnitIsDead(unit_id)) continue;
@@ -1413,7 +1395,7 @@ TickBattle(Battle *battle)
         if(battle->phase == BattlePhase::player_turn)
         {
             bool any_ally_has_ap = false;
-            for(Id unit_id : battle->units)
+            for(Id unit_id : battle->unit_slots)
             {
                 Unit *unit = GetUnitFromId(unit_id);
                 if(!ValidUnit(unit) or unit->cur_traits.vigor <= 0) continue;
@@ -1437,7 +1419,7 @@ TickBattle(Battle *battle)
     { // Battle Score
         Array<TraitSet> ally_traitsets  = CreateTempArray<TraitSet>(4);
         Array<TraitSet> enemy_traitsets = CreateTempArray<TraitSet>(4);
-        for(Id<Unit> unit_id : battle->units)
+        for(Id<Unit> unit_id : battle->unit_slots)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!ValidUnit(unit)) continue;
@@ -1456,7 +1438,7 @@ TickBattle(Battle *battle)
     { // Set battle to finished if either all allies or all enemies are dead.
         bool any_ally_is_alive = false;
         bool any_enemy_is_alive = false;
-        for(auto unit_id : battle->units)
+        for(auto unit_id : battle->unit_slots)
         {
             Unit *unit = GetUnitFromId(unit_id);
             if(!unit) continue;

@@ -95,21 +95,22 @@ AppendIfUnique(Array<Type> *array, Type value)
 	if(is_unique) Append(array, value);
 }
 
-// template<typename Type>
-// Type *
-// AppendEmptyElement(Array<Type> *array)
-// {
-// 	Assert(array->data != nullptr);
+template<typename Type>
+Type *
+AppendEmptyElement(Array<Type> *array)
+{
+	Assert(array->data != nullptr);
 
-// 	if(array->count >= array->max_count)
-// 	{
-// 		ResizeArray(array, 2*array->max_count);
-// 	}
+	if(array->count >= array->max_count)
+	{
+		ResizeArray(array, 2*array->max_count);
+	}
 
-// 	Type *entry = &array->data[array->count++];
-// 	ZeroMemoryBlock(entry, sizeof(Type));
-// 	return entry;
-// }
+	Type *entry = &array->data[array->count++];
+	*entry = Type{};
+
+	return entry;
+}
 
 template<typename Type>
 bool
@@ -254,4 +255,27 @@ Array<Type>
 CreateTempArray(int max_count)
 {
 	return CreateArrayFromArena<Type>(max_count, memory::per_frame_arena_id);
+}
+
+template<typename Type>
+Array<Type>
+ArrayFromCArray(Type *c_array, int count, PoolId<Arena> arena_id)
+{
+	Array<Type> array = CreateArrayFromArena<Type>(count, arena_id);
+	for(int i=0; i<count; ++i)
+	{
+		Append(&array, c_array[i]);
+	}
+
+	return array;
+}
+
+// Fills array with n zero-initialized elements.
+template<typename Type>
+void
+FillArray(Array<Type> *array, int n)
+{
+	ClearArray(array);
+	for(int i=0; i<n; ++i)
+		AppendEmptyElement(array);
 }

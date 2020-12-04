@@ -57,16 +57,20 @@ struct Battle
 
     BattlePhase phase;
 
-    Id<Unit> selected_unit_id;
-    Id<Ability> selected_ability_id; // @note: be careful that any time you deselect a unit, you also clear these ability pointers
+    UnitId selected_unit_id;
+    AbilityId selected_ability_id;
 
-    Array<UnitId> units;
+    Array<UnitId> unit_slots;
+    Array<Vec2f> slot_positions;
+
+    //UnitId unit_slots[c::battle_unit_slot_count];
+    //Intent unit_intents[c::battle_unit_slot_count];
+    //Vec2f slot_positions[c::battle_unit_slot_count];
+
     Array<Intent> preview_intents;
 
-    //bool is_player_turn;
     OscillatingTimer preview_damage_timer;
     Timer end_player_turn_timer;
-    //bool ending_player_turn;
 
     String best_choice_string;
 };

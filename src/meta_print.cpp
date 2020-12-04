@@ -372,15 +372,19 @@ String MetaString(const Battle *s)
 
 	AppendCString(&string, "  selected_unit_id: ");
 	AppendString(&string, MetaString(&s->selected_unit_id));
-	AppendCString(&string, "(Id<Unit>)\n");
+	AppendCString(&string, "(UnitId)\n");
 
 	AppendCString(&string, "  selected_ability_id: ");
 	AppendString(&string, MetaString(&s->selected_ability_id));
-	AppendCString(&string, "(Id<Ability>)\n");
+	AppendCString(&string, "(AbilityId)\n");
 
-	AppendCString(&string, "  units: ");
-	AppendString(&string, MetaString(&s->units));
+	AppendCString(&string, "  unit_slots: ");
+	AppendString(&string, MetaString(&s->unit_slots));
 	AppendCString(&string, "(Array<UnitId>)\n");
+
+	AppendCString(&string, "  slot_positions: ");
+	AppendString(&string, MetaString(&s->slot_positions));
+	AppendCString(&string, "(Array<Vec2f>)\n");
 
 	AppendCString(&string, "  preview_intents: ");
 	AppendString(&string, MetaString(&s->preview_intents));
@@ -1363,6 +1367,7 @@ String MetaString(const AiIntent *s)
 // ---------------FILE START---------------
 // fixed_array.h
 // ------------------------------------------
+
 
 // ---------------FILE START---------------
 // font_loading.h
@@ -3284,9 +3289,7 @@ String MetaString(const Unit *s)
 	AppendString(&string, MetaString(&s->intent));
 	AppendCString(&string, "(Intent)\n");
 
-	AppendCString(&string, "  slot_pos: ");
-	AppendString(&string, MetaString(&s->slot_pos));
-	AppendCString(&string, "(Vec2f)\n");
+	AppendCString(&string, "  battle_slot_index: %d (int)\n", s->battle_slot_index);
 
 	AppendCString(&string, "}");
 

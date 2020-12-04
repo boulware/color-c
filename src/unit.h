@@ -37,7 +37,7 @@ struct Unit
 
 	// Battle-relevant members
 	Intent intent;
-	Vec2f slot_pos;
+	int battle_slot_index;
 };
 
 typedef Array<UnitId> UnitSet;
